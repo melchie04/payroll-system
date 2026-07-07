@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { Modal as BsModal } from "bootstrap";
 import {
   StatCard,
   DataCard,
@@ -15,6 +16,9 @@ import {
   ActionsMenu,
   Modal,
   FormField,
+  DetailList,
+  DetailRow,
+  ProfileHeader,
   PageHeader,
   Pagination,
 } from "../components/ui/index.jsx";
@@ -37,6 +41,21 @@ export default function Clients() {
   const [selected, setSelected] = useState([]);
   const [target, setTarget] = useState(null); // client pending deletion
   const [form, setForm] = useState(emptyClient);
+
+  // View Details modal — plain read-only text, simple data-bs-toggle trigger.
+  const [viewTarget, setViewTarget] = useState(null);
+
+  // Edit modal — controlled form, opened programmatically so the fields are
+  // guaranteed pre-filled before the modal becomes visible.
+  const [editTarget, setEditTarget] = useState(null);
+  const [editForm, setEditForm] = useState(null);
+  const editModalInstance = useRef(null);
+
+  useEffect(() => {
+    editModalInstance.current = new BsModal(
+      document.getElementById("editClientModal"),
+    );
+  }, []);
 
   const toggleOne = (id) =>
     setSelected((prev) =>
@@ -64,6 +83,33 @@ export default function Clients() {
       setTarget(null);
     }
     document.getElementById("clientDeleteModalClose")?.click();
+  }
+
+  // --- Edit Client ---------------------------------------------------
+  function openEdit(client) {
+    setEditTarget(client);
+    setEditForm({
+      name: client.name,
+      contact: client.contact,
+      email: client.email,
+      phone: client.phone,
+      industry: client.industry,
+      status: client.status,
+    });
+    editModalInstance.current?.show();
+  }
+
+  function handleEditChange(e) {
+    setEditForm((f) => ({ ...f, [e.target.name]: e.target.value }));
+  }
+
+  function handleEditSubmit(e) {
+    e.preventDefault();
+    if (!editForm.name || !editForm.email) return;
+    setClients((prev) =>
+      prev.map((c) => (c.id === editTarget.id ? { ...c, ...editForm } : c)),
+    );
+    editModalInstance.current?.hide();
   }
 
   return (
@@ -201,8 +247,17 @@ export default function Clients() {
                 <Td>
                   <ActionsMenu
                     items={[
-                      { label: "View Details", icon: "fa-eye" },
-                      { label: "Edit", icon: "fa-pen" },
+                      {
+                        label: "View Details",
+                        icon: "fa-eye",
+                        modalTarget: "clientViewModal",
+                        onClick: () => setViewTarget(c),
+                      },
+                      {
+                        label: "Edit",
+                        icon: "fa-pen",
+                        onClick: () => openEdit(c),
+                      },
                       { divider: true },
                       {
                         label: "Delete",
@@ -327,6 +382,146 @@ export default function Clients() {
             </div>
           </div>
         </form>
+      </Modal>
+
+      {/* ========================================================== */}
+      {/* MODAL: VIEW CLIENT DETAILS                                 */}
+      {/* ========================================================== */}
+      <Modal
+        id="clientViewModal"
+        title="Client Details"
+        footer={<BtnSecondary data-bs-dismiss="modal">Close</BtnSecondary>}
+      >
+        {viewTarget && (
+          <div>
+            <ProfileHeader
+              name={viewTarget.name}
+              subtitle={viewTarget.industry}
+              subtitleIcon="fa-industry"
+              status={viewTarget.status}
+            />
+            <DetailList>
+              <DetailRow icon="fa-user" label="Contact Person">
+                {viewTarget.contact}
+              </DetailRow>
+              <DetailRow icon="fa-toggle-on" label="Status">
+                <Badge status={viewTarget.status} />
+              </DetailRow>
+              <DetailRow icon="fa-envelope" label="Email">
+                {viewTarget.email}
+              </DetailRow>
+              <DetailRow icon="fa-phone" label="Phone">
+                {viewTarget.phone}
+              </DetailRow>
+              <DetailRow icon="fa-users" label="Employees">
+                {viewTarget.employees}
+              </DetailRow>
+              <DetailRow icon="fa-file-invoice-dollar" label="Billing">
+                {viewTarget.billing}
+              </DetailRow>
+            </DetailList>
+          </div>
+        )}
+      </Modal>
+
+      {/* ========================================================== */}
+      {/* MODAL: EDIT CLIENT                                         */}
+      {/* ========================================================== */}
+      <Modal
+        id="editClientModal"
+        title="Edit Client"
+        footer={
+          <>
+            <BtnSecondary data-bs-dismiss="modal">Cancel</BtnSecondary>
+            <BtnPrimary type="submit" form="editClientForm">
+              <i className="fas fa-floppy-disk"></i> Save Changes
+            </BtnPrimary>
+          </>
+        }
+      >
+        {editForm && (
+          <form id="editClientForm" onSubmit={handleEditSubmit}>
+            <FormField label="Client / Company Name">
+              <input
+                type="text"
+                className="form-control"
+                name="name"
+                value={editForm.name}
+                onChange={handleEditChange}
+                required
+              />
+            </FormField>
+            <FormField label="Contact Person">
+              <input
+                type="text"
+                className="form-control"
+                name="contact"
+                value={editForm.contact}
+                onChange={handleEditChange}
+                required
+              />
+            </FormField>
+            <div className="row g-3">
+              <div className="col-6">
+                <FormField label="Email">
+                  <input
+                    type="email"
+                    className="form-control"
+                    name="email"
+                    value={editForm.email}
+                    onChange={handleEditChange}
+                    required
+                  />
+                </FormField>
+              </div>
+              <div className="col-6">
+                <FormField label="Phone">
+                  <input
+                    type="tel"
+                    className="form-control"
+                    name="phone"
+                    value={editForm.phone}
+                    onChange={handleEditChange}
+                  />
+                </FormField>
+              </div>
+            </div>
+            <div className="row g-3">
+              <div className="col-6">
+                <FormField label="Industry">
+                  <select
+                    className="form-select"
+                    name="industry"
+                    value={editForm.industry}
+                    onChange={handleEditChange}
+                  >
+                    <option>Manufacturing</option>
+                    <option>Technology</option>
+                    <option>Finance</option>
+                    <option>Food &amp; Beverage</option>
+                    <option>Logistics</option>
+                    <option>Retail</option>
+                    <option>Construction</option>
+                  </select>
+                </FormField>
+              </div>
+              <div className="col-6">
+                <FormField label="Status">
+                  <select
+                    className="form-select"
+                    name="status"
+                    value={editForm.status}
+                    onChange={handleEditChange}
+                  >
+                    <option>Active</option>
+                    <option>At Risk</option>
+                    <option>Inactive</option>
+                  </select>
+                </FormField>
+              </div>
+            </div>
+          </form>
+        )}
       </Modal>
 
       {/* ========================================================== */}

@@ -398,3 +398,98 @@ export function FormField({ label, children }) {
     </div>
   );
 }
+
+// --- View-modal building blocks ---------------------------------------------
+// A real bordered table for read-only detail views (Employee Profile,
+// Client Details) — visible row dividers and a rounded outer border so it
+// reads as a structured table, not just loose stacked text.
+export function DetailList({ children }) {
+  return (
+    <div className="border rounded-3 overflow-hidden">
+      <table className="table table-sm mb-0 align-middle">
+        <tbody>{children}</tbody>
+      </table>
+    </div>
+  );
+}
+
+export function DetailRow({ icon, label, children }) {
+  return (
+    <tr>
+      <th
+        scope="row"
+        className="fw-normal text-muted py-2 ps-3"
+        style={{ width: "44%" }}
+      >
+        <span
+          className="d-inline-flex align-items-center justify-content-center rounded-circle bg-light text-secondary me-2"
+          style={{ width: 28, height: 28, fontSize: "0.8rem" }}
+        >
+          <i className={`fas ${icon} fa-fw`}></i>
+        </span>
+        <span style={{ fontSize: "0.82rem" }}>{label}</span>
+      </th>
+      <td className="fw-semibold py-2 pe-3" style={{ fontSize: "0.92rem" }}>
+        {children}
+      </td>
+    </tr>
+  );
+}
+
+const statusDotColor = {
+  Active: "#198754",
+  Ready: "#198754",
+  Paid: "#198754",
+  "On Leave": "#997404",
+  "At Risk": "#997404",
+  Pending: "#997404",
+  Inactive: "#6c757d",
+  Overdue: "#dc3545",
+};
+
+export function ProfileHeader({ name, subtitle, subtitleIcon, status }) {
+  const initials = name
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((n) => n[0].toUpperCase())
+    .join("");
+
+  return (
+    <div className="d-flex align-items-center gap-3 pb-3 mb-3 border-bottom">
+      <div className="position-relative flex-shrink-0">
+        <div
+          className="d-flex align-items-center justify-content-center rounded-circle bg-dark text-white fw-semibold"
+          style={{ width: 60, height: 60, fontSize: "1.2rem" }}
+        >
+          {initials}
+        </div>
+        <span
+          className="position-absolute bottom-0 end-0 rounded-circle border border-2 border-white"
+          style={{
+            width: 15,
+            height: 15,
+            background: statusDotColor[status] || "#6c757d",
+          }}
+        ></span>
+      </div>
+      <div>
+        <div className="fw-bold fs-5 mb-0">{name}</div>
+        {subtitle && (
+          <div
+            className="text-muted d-flex align-items-center gap-1"
+            style={{ fontSize: "0.85rem" }}
+          >
+            {subtitleIcon && (
+              <i
+                className={`fas ${subtitleIcon}`}
+                style={{ fontSize: "0.75rem" }}
+              ></i>
+            )}
+            {subtitle}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

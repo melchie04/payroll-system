@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { Modal as BsModal } from "bootstrap";
 import {
   DataCard,
   Table,
@@ -14,6 +15,9 @@ import {
   ActionsMenu,
   Modal,
   FormField,
+  DetailList,
+  DetailRow,
+  ProfileHeader,
   PageHeader,
   Pagination,
 } from "../components/ui/index.jsx";
@@ -33,6 +37,24 @@ export default function Employees() {
   const [selected, setSelected] = useState([]);
   const [target, setTarget] = useState(null); // employee pending deletion
   const [form, setForm] = useState(emptyEmployee);
+
+  // View Profile modal — plain read-only text, so a simple data-bs-toggle
+  // trigger is enough (no risk of showing stale content since nothing is
+  // editable here).
+  const [viewTarget, setViewTarget] = useState(null);
+
+  // Edit modal — this is a form with controlled inputs, so it's opened
+  // programmatically via the Bootstrap JS API to guarantee the fields are
+  // already pre-filled before the modal becomes visible.
+  const [editTarget, setEditTarget] = useState(null);
+  const [editForm, setEditForm] = useState(null);
+  const editModalInstance = useRef(null);
+
+  useEffect(() => {
+    editModalInstance.current = new BsModal(
+      document.getElementById("editEmployeeModal"),
+    );
+  }, []);
 
   const toggleOne = (id) =>
     setSelected((prev) =>
@@ -64,6 +86,43 @@ export default function Employees() {
       setTarget(null);
     }
     document.getElementById("employeeDeleteModalClose")?.click();
+  }
+
+  // --- Edit Employee -----------------------------------------------------
+  function openEdit(emp) {
+    setEditTarget(emp);
+    setEditForm({
+      name: emp.name,
+      client: emp.client,
+      position: emp.position,
+      email: emp.email,
+      rate: String(emp.rate).replace(/^₱/, ""),
+      status: emp.status,
+    });
+    editModalInstance.current?.show();
+  }
+
+  function handleEditChange(e) {
+    setEditForm((f) => ({ ...f, [e.target.name]: e.target.value }));
+  }
+
+  function handleEditSubmit(e) {
+    e.preventDefault();
+    if (!editForm.name || !editForm.email) return;
+    setEmployees((prev) =>
+      prev.map((emp) =>
+        emp.id === editTarget.id
+          ? {
+              ...emp,
+              ...editForm,
+              rate: editForm.rate.startsWith("₱")
+                ? editForm.rate
+                : `₱${editForm.rate}`,
+            }
+          : emp,
+      ),
+    );
+    editModalInstance.current?.hide();
   }
 
   return (
@@ -177,8 +236,17 @@ export default function Employees() {
                 <Td>
                   <ActionsMenu
                     items={[
-                      { label: "View Profile", icon: "fa-id-card" },
-                      { label: "Edit", icon: "fa-pen" },
+                      {
+                        label: "View Profile",
+                        icon: "fa-id-card",
+                        modalTarget: "employeeViewModal",
+                        onClick: () => setViewTarget(emp),
+                      },
+                      {
+                        label: "Edit",
+                        icon: "fa-pen",
+                        onClick: () => openEdit(emp),
+                      },
                       { divider: true },
                       {
                         label: "Delete",
@@ -302,6 +370,139 @@ export default function Employees() {
             </div>
           </div>
         </form>
+      </Modal>
+
+      {/* ========================================================== */}
+      {/* MODAL: VIEW EMPLOYEE PROFILE                               */}
+      {/* ========================================================== */}
+      <Modal
+        id="employeeViewModal"
+        title="Employee Profile"
+        footer={<BtnSecondary data-bs-dismiss="modal">Close</BtnSecondary>}
+      >
+        {viewTarget && (
+          <div>
+            <ProfileHeader
+              name={viewTarget.name}
+              subtitle={viewTarget.position}
+              subtitleIcon="fa-briefcase"
+              status={viewTarget.status}
+            />
+            <DetailList>
+              <DetailRow icon="fa-building" label="Client">
+                {viewTarget.client}
+              </DetailRow>
+              <DetailRow icon="fa-toggle-on" label="Status">
+                <Badge status={viewTarget.status} />
+              </DetailRow>
+              <DetailRow icon="fa-envelope" label="Email">
+                {viewTarget.email}
+              </DetailRow>
+              <DetailRow icon="fa-sack-dollar" label="Rate">
+                {viewTarget.rate} / hr
+              </DetailRow>
+            </DetailList>
+          </div>
+        )}
+      </Modal>
+
+      {/* ========================================================== */}
+      {/* MODAL: EDIT EMPLOYEE                                       */}
+      {/* ========================================================== */}
+      <Modal
+        id="editEmployeeModal"
+        title="Edit Employee"
+        footer={
+          <>
+            <BtnSecondary data-bs-dismiss="modal">Cancel</BtnSecondary>
+            <BtnPrimary type="submit" form="editEmployeeForm">
+              <i className="fas fa-floppy-disk"></i> Save Changes
+            </BtnPrimary>
+          </>
+        }
+      >
+        {editForm && (
+          <form id="editEmployeeForm" onSubmit={handleEditSubmit}>
+            <FormField label="Full Name">
+              <input
+                type="text"
+                className="form-control"
+                name="name"
+                value={editForm.name}
+                onChange={handleEditChange}
+                required
+              />
+            </FormField>
+            <div className="row g-3">
+              <div className="col-6">
+                <FormField label="Client">
+                  <select
+                    className="form-select"
+                    name="client"
+                    value={editForm.client}
+                    onChange={handleEditChange}
+                  >
+                    <option>Acme Corp</option>
+                    <option>Globex Inc</option>
+                    <option>Initech</option>
+                    <option>Soylent Corp</option>
+                  </select>
+                </FormField>
+              </div>
+              <div className="col-6">
+                <FormField label="Position">
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="position"
+                    value={editForm.position}
+                    onChange={handleEditChange}
+                    required
+                  />
+                </FormField>
+              </div>
+            </div>
+            <FormField label="Email">
+              <input
+                type="email"
+                className="form-control"
+                name="email"
+                value={editForm.email}
+                onChange={handleEditChange}
+                required
+              />
+            </FormField>
+            <div className="row g-3">
+              <div className="col-6">
+                <FormField label="Rate (₱/hr)">
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    className="form-control"
+                    name="rate"
+                    value={editForm.rate}
+                    onChange={handleEditChange}
+                    required
+                  />
+                </FormField>
+              </div>
+              <div className="col-6">
+                <FormField label="Status">
+                  <select
+                    className="form-select"
+                    name="status"
+                    value={editForm.status}
+                    onChange={handleEditChange}
+                  >
+                    <option>Active</option>
+                    <option>On Leave</option>
+                  </select>
+                </FormField>
+              </div>
+            </div>
+          </form>
+        )}
       </Modal>
 
       {/* ========================================================== */}
