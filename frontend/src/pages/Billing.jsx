@@ -18,7 +18,10 @@ import {
   PageHeader,
   Pagination,
 } from "../components/ui/index.jsx";
-import { billingStats, invoices as initialInvoices } from "../data/index.js";
+import {
+  billingStats,
+  invoices as initialInvoices,
+} from "../assets/data/index.js";
 
 const emptyInvoice = {
   client: "Acme Corp",

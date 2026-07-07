@@ -13,7 +13,7 @@ import {
   payrollStatusData,
   recentActivity,
   upcomingPayroll,
-} from "../data/index.js";
+} from "../assets/data/index.js";
 
 export default function Dashboard() {
   return (

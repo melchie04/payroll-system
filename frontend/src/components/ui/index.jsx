@@ -1,6 +1,5 @@
 import { useState } from "react";
 
-// --- status -> Bootstrap color mapping -------------------------------------
 const statusVariant = {
   Ready: "success",
   Active: "success",

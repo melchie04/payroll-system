@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { DataCard, BtnSecondary, PageHeader } from "../components/ui/index.jsx";
-import { notifications as initialNotifications } from "../data/index.js";
+import { notifications as initialNotifications } from "../assets/data/index.js";
 
 export default function Notifications() {
   const [items, setItems] = useState(initialNotifications);

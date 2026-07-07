@@ -13,7 +13,7 @@ import {
 import {
   uploadedFiles as initialFiles,
   extractionSummary,
-} from "../data/index.js";
+} from "../assets/data/index.js";
 
 const fileIcons = { pdf: "📕", img: "🖼️" };
 const statusActions = {

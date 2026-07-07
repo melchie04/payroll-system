@@ -17,7 +17,7 @@ import {
   PageHeader,
   Pagination,
 } from "../components/ui/index.jsx";
-import { payrollStats, payrollEmployees } from "../data/index.js";
+import { payrollStats, payrollEmployees } from "../assets/data/index.js";
 
 export default function Payroll() {
   const [rows, setRows] = useState(payrollEmployees);

@@ -17,7 +17,7 @@ import {
   PageHeader,
   Pagination,
 } from "../components/ui/index.jsx";
-import { employees as initialEmployees } from "../data/index.js";
+import { employees as initialEmployees } from "../assets/data/index.js";
 
 const emptyEmployee = {
   name: "",

@@ -18,7 +18,10 @@ import {
   PageHeader,
   Pagination,
 } from "../components/ui/index.jsx";
-import { clientStats, clients as initialClients } from "../data/index.js";
+import {
+  clientStats,
+  clients as initialClients,
+} from "../assets/data/index.js";
 
 const emptyClient = {
   name: "",

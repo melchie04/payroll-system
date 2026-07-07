@@ -8,7 +8,7 @@ import {
   PageHeader,
   Pagination,
 } from "../components/ui/index.jsx";
-import { activityLog } from "../data/index.js";
+import { activityLog } from "../assets/data/index.js";
 
 const moduleVariant = {
   Payroll: "primary",
