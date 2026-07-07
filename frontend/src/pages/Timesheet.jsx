@@ -3,7 +3,7 @@ import { Modal as BsModal } from "bootstrap";
 import {
   DataCard,
   Badge,
-  BtnPrimary,
+  // BtnPrimary,
   BtnSecondary,
   FilterSelect,
   IconBtn,
@@ -75,13 +75,13 @@ export default function Timesheet() {
           <PageHeader
             title="Timesheet Upload / OCR Scan"
             description="Upload timesheet documents and extract data using OCR."
-            actions={
-              <BtnPrimary
-                onClick={() => document.getElementById("file-input").click()}
-              >
-                <i className="fas fa-upload"></i> Upload New
-              </BtnPrimary>
-            }
+            // actions={
+            //   <BtnPrimary
+            //     onClick={() => document.getElementById("file-input").click()}
+            //   >
+            //     <i className="fas fa-upload"></i> Upload New
+            //   </BtnPrimary>
+            // }
           />
         </div>
       </section>
