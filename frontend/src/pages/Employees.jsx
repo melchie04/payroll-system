@@ -33,33 +33,18 @@ const emptyEmployee = {
 };
 
 export default function Employees() {
+  // ============================================================
+  // TABLE / SELECTION
+  // ============================================================
   const [employees, setEmployees] = useState(initialEmployees);
   const [selected, setSelected] = useState([]);
-  const [target, setTarget] = useState(null); // employee pending deletion
+
+  const toggleOne = (id) => setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+
+  // ============================================================
+  // ADD EMPLOYEE
+  // ============================================================
   const [form, setForm] = useState(emptyEmployee);
-
-  // View Profile modal — plain read-only text, so a simple data-bs-toggle
-  // trigger is enough (no risk of showing stale content since nothing is
-  // editable here).
-  const [viewTarget, setViewTarget] = useState(null);
-
-  // Edit modal — this is a form with controlled inputs, so it's opened
-  // programmatically via the Bootstrap JS API to guarantee the fields are
-  // already pre-filled before the modal becomes visible.
-  const [editTarget, setEditTarget] = useState(null);
-  const [editForm, setEditForm] = useState(null);
-  const editModalInstance = useRef(null);
-
-  useEffect(() => {
-    editModalInstance.current = new BsModal(
-      document.getElementById("editEmployeeModal"),
-    );
-  }, []);
-
-  const toggleOne = (id) =>
-    setSelected((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
-    );
 
   function handleChange(e) {
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
@@ -80,15 +65,22 @@ export default function Employees() {
     document.getElementById("addEmployeeModalClose")?.click();
   }
 
-  function confirmDelete() {
-    if (target) {
-      setEmployees((prev) => prev.filter((e) => e.id !== target.id));
-      setTarget(null);
-    }
-    document.getElementById("employeeDeleteModalClose")?.click();
-  }
+  // ============================================================
+  // VIEW EMPLOYEE
+  // ============================================================
+  const [viewTarget, setViewTarget] = useState(null);
 
-  // --- Edit Employee -----------------------------------------------------
+  // ============================================================
+  // EDIT EMPLOYEE
+  // ============================================================
+  const [editTarget, setEditTarget] = useState(null);
+  const [editForm, setEditForm] = useState(null);
+  const editModalInstance = useRef(null);
+
+  useEffect(() => {
+    editModalInstance.current = new BsModal(document.getElementById("editEmployeeModal"));
+  }, []);
+
   function openEdit(emp) {
     setEditTarget(emp);
     setEditForm({
@@ -115,14 +107,25 @@ export default function Employees() {
           ? {
               ...emp,
               ...editForm,
-              rate: editForm.rate.startsWith("₱")
-                ? editForm.rate
-                : `₱${editForm.rate}`,
+              rate: editForm.rate.startsWith("₱") ? editForm.rate : `₱${editForm.rate}`,
             }
           : emp,
       ),
     );
     editModalInstance.current?.hide();
+  }
+
+  // ============================================================
+  // DELETE EMPLOYEE
+  // ============================================================
+  const [target, setTarget] = useState(null); // employee pending deletion
+
+  function confirmDelete() {
+    if (target) {
+      setEmployees((prev) => prev.filter((e) => e.id !== target.id));
+      setTarget(null);
+    }
+    document.getElementById("employeeDeleteModalClose")?.click();
   }
 
   return (
@@ -136,10 +139,7 @@ export default function Employees() {
             title="Employees"
             description="Manage your employee roster across all clients."
             actions={
-              <BtnPrimary
-                data-bs-toggle="modal"
-                data-bs-target="#addEmployeeModal"
-              >
+              <BtnPrimary data-bs-toggle="modal" data-bs-target="#addEmployeeModal">
                 <i className="fas fa-plus"></i> Add Employee
               </BtnPrimary>
             }
@@ -175,20 +175,8 @@ export default function Employees() {
             <div className="d-flex gap-2 align-items-center w-100">
               <SearchInput placeholder="Search employee" />
               <FilterMenu>
-                <FilterCheckGroup
-                  label="Status"
-                  options={["Active", "On Leave"]}
-                />
-                <FilterCheckGroup
-                  label="Position"
-                  options={[
-                    "Developer",
-                    "UI/UX Designer",
-                    "QA Engineer",
-                    "Business Analyst",
-                    "Project Manager",
-                  ]}
-                />
+                <FilterCheckGroup label="Status" options={["Active", "On Leave"]} />
+                <FilterCheckGroup label="Position" options={["Developer", "UI/UX Designer", "QA Engineer", "Business Analyst", "Project Manager"]} />
               </FilterMenu>
             </div>
           </div>
@@ -203,27 +191,11 @@ export default function Employees() {
       {/* ========================================================== */}
       <section className="mb-3">
         <DataCard>
-          <Table
-            headers={[
-              "",
-              "Name",
-              "Client",
-              "Position",
-              "Email",
-              "Rate (₱/hr)",
-              "Status",
-              "Actions",
-            ]}
-          >
+          <Table headers={["", "Name", "Client", "Position", "Email", "Rate (₱/hr)", "Status", "Actions"]}>
             {employees.map((emp) => (
               <Tr key={emp.id}>
                 <Td>
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    checked={selected.includes(emp.id)}
-                    onChange={() => toggleOne(emp.id)}
-                  />
+                  <input className="form-check-input" type="checkbox" checked={selected.includes(emp.id)} onChange={() => toggleOne(emp.id)} />
                 </Td>
                 <Td bold>{emp.name}</Td>
                 <Td>{emp.client}</Td>
@@ -261,11 +233,7 @@ export default function Employees() {
               </Tr>
             ))}
           </Table>
-          <Pagination
-            current={1}
-            total={5}
-            label={`Showing 1 to ${employees.length} of 32 employees`}
-          />
+          <Pagination current={1} total={5} label={`Showing 1 to ${employees.length} of 32 employees`} />
         </DataCard>
       </section>
 
@@ -301,12 +269,7 @@ export default function Employees() {
           <div className="row g-3">
             <div className="col-6">
               <FormField label="Client">
-                <select
-                  className="form-select"
-                  name="client"
-                  value={form.client}
-                  onChange={handleChange}
-                >
+                <select className="form-select" name="client" value={form.client} onChange={handleChange}>
                   <option>Acme Corp</option>
                   <option>Globex Inc</option>
                   <option>Initech</option>
@@ -357,12 +320,7 @@ export default function Employees() {
             </div>
             <div className="col-6">
               <FormField label="Status">
-                <select
-                  className="form-select"
-                  name="status"
-                  value={form.status}
-                  onChange={handleChange}
-                >
+                <select className="form-select" name="status" value={form.status} onChange={handleChange}>
                   <option>Active</option>
                   <option>On Leave</option>
                 </select>
@@ -375,19 +333,10 @@ export default function Employees() {
       {/* ========================================================== */}
       {/* MODAL: VIEW EMPLOYEE PROFILE                               */}
       {/* ========================================================== */}
-      <Modal
-        id="employeeViewModal"
-        title="Employee Profile"
-        footer={<BtnSecondary data-bs-dismiss="modal">Close</BtnSecondary>}
-      >
+      <Modal id="employeeViewModal" title="Employee Profile" footer={<BtnSecondary data-bs-dismiss="modal">Close</BtnSecondary>}>
         {viewTarget && (
           <div>
-            <ProfileHeader
-              name={viewTarget.name}
-              subtitle={viewTarget.position}
-              subtitleIcon="fa-briefcase"
-              status={viewTarget.status}
-            />
+            <ProfileHeader name={viewTarget.name} subtitle={viewTarget.position} subtitleIcon="fa-briefcase" status={viewTarget.status} />
             <DetailList>
               <DetailRow icon="fa-building" label="Client">
                 {viewTarget.client}
@@ -424,24 +373,12 @@ export default function Employees() {
         {editForm && (
           <form id="editEmployeeForm" onSubmit={handleEditSubmit}>
             <FormField label="Full Name">
-              <input
-                type="text"
-                className="form-control"
-                name="name"
-                value={editForm.name}
-                onChange={handleEditChange}
-                required
-              />
+              <input type="text" className="form-control" name="name" value={editForm.name} onChange={handleEditChange} required />
             </FormField>
             <div className="row g-3">
               <div className="col-6">
                 <FormField label="Client">
-                  <select
-                    className="form-select"
-                    name="client"
-                    value={editForm.client}
-                    onChange={handleEditChange}
-                  >
+                  <select className="form-select" name="client" value={editForm.client} onChange={handleEditChange}>
                     <option>Acme Corp</option>
                     <option>Globex Inc</option>
                     <option>Initech</option>
@@ -451,26 +388,12 @@ export default function Employees() {
               </div>
               <div className="col-6">
                 <FormField label="Position">
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="position"
-                    value={editForm.position}
-                    onChange={handleEditChange}
-                    required
-                  />
+                  <input type="text" className="form-control" name="position" value={editForm.position} onChange={handleEditChange} required />
                 </FormField>
               </div>
             </div>
             <FormField label="Email">
-              <input
-                type="email"
-                className="form-control"
-                name="email"
-                value={editForm.email}
-                onChange={handleEditChange}
-                required
-              />
+              <input type="email" className="form-control" name="email" value={editForm.email} onChange={handleEditChange} required />
             </FormField>
             <div className="row g-3">
               <div className="col-6">
@@ -489,12 +412,7 @@ export default function Employees() {
               </div>
               <div className="col-6">
                 <FormField label="Status">
-                  <select
-                    className="form-select"
-                    name="status"
-                    value={editForm.status}
-                    onChange={handleEditChange}
-                  >
+                  <select className="form-select" name="status" value={editForm.status} onChange={handleEditChange}>
                     <option>Active</option>
                     <option>On Leave</option>
                   </select>
@@ -516,19 +434,14 @@ export default function Employees() {
             <BtnSecondary id="employeeDeleteModalClose" data-bs-dismiss="modal">
               Cancel
             </BtnSecondary>
-            <button
-              type="button"
-              className="btn btn-danger btn-sm"
-              onClick={confirmDelete}
-            >
+            <button type="button" className="btn btn-danger btn-sm" onClick={confirmDelete}>
               <i className="fas fa-trash"></i> Delete
             </button>
           </>
         }
       >
         <p className="mb-0">
-          Are you sure you want to delete <strong>{target?.name}</strong> from
-          your employee roster? This action cannot be undone.
+          Are you sure you want to delete <strong>{target?.name}</strong> from your employee roster? This action cannot be undone.
         </p>
       </Modal>
     </>

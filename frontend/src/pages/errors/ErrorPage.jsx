@@ -1,13 +1,6 @@
 import { Link } from "react-router-dom";
 
-export default function ErrorPage({
-  code,
-  icon,
-  accent = "#1a1a1a",
-  title,
-  description,
-  children,
-}) {
+export default function ErrorPage({ code, icon, accent = "#1a1a1a", title, description, children }) {
   return (
     <>
       <div
@@ -36,10 +29,7 @@ export default function ErrorPage({
       </div>
 
       <h1 className="h4 fw-semibold mb-2">{title}</h1>
-      <p
-        className="text-muted mb-4"
-        style={{ maxWidth: 420, fontSize: "0.95rem" }}
-      >
+      <p className="text-muted mb-4" style={{ maxWidth: 420, fontSize: "0.95rem" }}>
         {description}
       </p>
 
@@ -50,10 +40,7 @@ export default function ErrorPage({
 
 export function BackToDashboardLink() {
   return (
-    <Link
-      to="/"
-      className="btn btn-dark rounded-pill px-4 py-2 fw-medium shadow-sm"
-    >
+    <Link to="/" className="btn btn-dark rounded-pill px-4 py-2 fw-medium shadow-sm">
       <i className="fas fa-house me-2"></i>
       Back to Dashboard
     </Link>

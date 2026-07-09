@@ -20,14 +20,18 @@ import {
 import { payrollStats, payrollEmployees } from "../assets/data/index.js";
 
 export default function Payroll() {
+  // ============================================================
+  // TABLE / SELECTION
+  // ============================================================
   const [rows, setRows] = useState(payrollEmployees);
   const [selected, setSelected] = useState([]);
-  const [target, setTarget] = useState(null); // row pending deletion
 
-  const toggleOne = (id) =>
-    setSelected((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
-    );
+  const toggleOne = (id) => setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+
+  // ============================================================
+  // DELETE ROW (remove from payroll run)
+  // ============================================================
+  const [target, setTarget] = useState(null); // row pending deletion
 
   function confirmDelete() {
     if (target) {
@@ -109,28 +113,14 @@ export default function Payroll() {
           </div>
 
           <div className="col-12 col-md-3">
-            <label
-              className="form-label text-uppercase text-muted fw-semibold mb-1 d-block"
-              style={{ fontSize: 11, letterSpacing: 0.5 }}
-            >
+            <label className="form-label text-uppercase text-muted fw-semibold mb-1 d-block" style={{ fontSize: 11, letterSpacing: 0.5 }}>
               Search Employee
             </label>
             <div className="d-flex gap-2 align-items-center w-100">
               <SearchInput placeholder="Search employee" />
               <FilterMenu>
-                <FilterCheckGroup
-                  label="Status"
-                  options={["Ready", "Pending"]}
-                />
-                <FilterCheckGroup
-                  label="Client"
-                  options={[
-                    "Acme Corp",
-                    "Globex Inc",
-                    "Initech",
-                    "Soylent Corp",
-                  ]}
-                />
+                <FilterCheckGroup label="Status" options={["Ready", "Pending"]} />
+                <FilterCheckGroup label="Client" options={["Acme Corp", "Globex Inc", "Initech", "Soylent Corp"]} />
               </FilterMenu>
             </div>
           </div>
@@ -145,28 +135,11 @@ export default function Payroll() {
       {/* ========================================================== */}
       <section className="mb-3">
         <DataCard>
-          <Table
-            headers={[
-              "",
-              "Employee",
-              "Client",
-              "Position",
-              "Hours",
-              "Rate (₱)",
-              "Gross Pay (₱)",
-              "Status",
-              "Actions",
-            ]}
-          >
+          <Table headers={["", "Employee", "Client", "Position", "Hours", "Rate (₱)", "Gross Pay (₱)", "Status", "Actions"]}>
             {rows.map((row) => (
               <Tr key={row.id}>
                 <Td>
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    checked={selected.includes(row.id)}
-                    onChange={() => toggleOne(row.id)}
-                  />
+                  <input className="form-check-input" type="checkbox" checked={selected.includes(row.id)} onChange={() => toggleOne(row.id)} />
                 </Td>
                 <Td bold>{row.name}</Td>
                 <Td>{row.client}</Td>
@@ -197,11 +170,7 @@ export default function Payroll() {
               </Tr>
             ))}
           </Table>
-          <Pagination
-            current={1}
-            total={5}
-            label={`Showing 1 to ${rows.length} of 32 employees`}
-          />
+          <Pagination current={1} total={5} label={`Showing 1 to ${rows.length} of 32 employees`} />
         </DataCard>
       </section>
 
@@ -216,19 +185,14 @@ export default function Payroll() {
             <BtnSecondary id="payrollDeleteModalClose" data-bs-dismiss="modal">
               Cancel
             </BtnSecondary>
-            <button
-              type="button"
-              className="btn btn-danger btn-sm"
-              onClick={confirmDelete}
-            >
+            <button type="button" className="btn btn-danger btn-sm" onClick={confirmDelete}>
               <i className="fas fa-trash"></i> Remove
             </button>
           </>
         }
       >
         <p className="mb-0">
-          Are you sure you want to remove <strong>{target?.name}</strong> from
-          this payroll run? This action cannot be undone.
+          Are you sure you want to remove <strong>{target?.name}</strong> from this payroll run? This action cannot be undone.
         </p>
       </Modal>
     </>

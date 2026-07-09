@@ -22,10 +22,7 @@ import {
   PageHeader,
   Pagination,
 } from "../components/ui/index.jsx";
-import {
-  clientStats,
-  clients as initialClients,
-} from "../assets/data/index.js";
+import { clientStats, clients as initialClients } from "../assets/data/index.js";
 
 const emptyClient = {
   name: "",
@@ -37,30 +34,18 @@ const emptyClient = {
 };
 
 export default function Clients() {
+  // ============================================================
+  // TABLE / SELECTION
+  // ============================================================
   const [clients, setClients] = useState(initialClients);
   const [selected, setSelected] = useState([]);
-  const [target, setTarget] = useState(null); // client pending deletion
+
+  const toggleOne = (id) => setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+
+  // ============================================================
+  // ADD CLIENT
+  // ============================================================
   const [form, setForm] = useState(emptyClient);
-
-  // View Details modal — plain read-only text, simple data-bs-toggle trigger.
-  const [viewTarget, setViewTarget] = useState(null);
-
-  // Edit modal — controlled form, opened programmatically so the fields are
-  // guaranteed pre-filled before the modal becomes visible.
-  const [editTarget, setEditTarget] = useState(null);
-  const [editForm, setEditForm] = useState(null);
-  const editModalInstance = useRef(null);
-
-  useEffect(() => {
-    editModalInstance.current = new BsModal(
-      document.getElementById("editClientModal"),
-    );
-  }, []);
-
-  const toggleOne = (id) =>
-    setSelected((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
-    );
 
   function handleChange(e) {
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
@@ -69,23 +54,30 @@ export default function Clients() {
   function handleAddClient(e) {
     e.preventDefault();
     if (!form.name || !form.email) return;
-    setClients((prev) => [
-      ...prev,
-      { id: Date.now(), ...form, employees: 0, billing: "₱0.00" },
-    ]);
+    setClients((prev) => [...prev, { id: Date.now(), ...form, employees: 0, billing: "₱0.00" }]);
     setForm(emptyClient);
     document.getElementById("addClientModalClose")?.click();
   }
 
-  function confirmDelete() {
-    if (target) {
-      setClients((prev) => prev.filter((c) => c.id !== target.id));
-      setTarget(null);
-    }
-    document.getElementById("clientDeleteModalClose")?.click();
-  }
+  // ============================================================
+  // VIEW CLIENT
+  // ============================================================
+  // Plain read-only text, simple data-bs-toggle trigger.
+  const [viewTarget, setViewTarget] = useState(null);
 
-  // --- Edit Client ---------------------------------------------------
+  // ============================================================
+  // EDIT CLIENT
+  // ============================================================
+  // Controlled form, opened programmatically so the fields are
+  // guaranteed pre-filled before the modal becomes visible.
+  const [editTarget, setEditTarget] = useState(null);
+  const [editForm, setEditForm] = useState(null);
+  const editModalInstance = useRef(null);
+
+  useEffect(() => {
+    editModalInstance.current = new BsModal(document.getElementById("editClientModal"));
+  }, []);
+
   function openEdit(client) {
     setEditTarget(client);
     setEditForm({
@@ -106,10 +98,21 @@ export default function Clients() {
   function handleEditSubmit(e) {
     e.preventDefault();
     if (!editForm.name || !editForm.email) return;
-    setClients((prev) =>
-      prev.map((c) => (c.id === editTarget.id ? { ...c, ...editForm } : c)),
-    );
+    setClients((prev) => prev.map((c) => (c.id === editTarget.id ? { ...c, ...editForm } : c)));
     editModalInstance.current?.hide();
+  }
+
+  // ============================================================
+  // DELETE CLIENT
+  // ============================================================
+  const [target, setTarget] = useState(null); // client pending deletion
+
+  function confirmDelete() {
+    if (target) {
+      setClients((prev) => prev.filter((c) => c.id !== target.id));
+      setTarget(null);
+    }
+    document.getElementById("clientDeleteModalClose")?.click();
   }
 
   return (
@@ -123,10 +126,7 @@ export default function Clients() {
             title="Clients"
             description="Manage your client accounts and their billing details."
             actions={
-              <BtnPrimary
-                data-bs-toggle="modal"
-                data-bs-target="#addClientModal"
-              >
+              <BtnPrimary data-bs-toggle="modal" data-bs-target="#addClientModal">
                 <i className="fas fa-plus"></i> Add Client
               </BtnPrimary>
             }
@@ -179,23 +179,14 @@ export default function Clients() {
             </FilterSelect>
           </div>
           <div className="col-12 col-md-4">
-            <label
-              className="form-label text-uppercase text-muted fw-semibold mb-1 d-block"
-              style={{ fontSize: 11, letterSpacing: 0.5 }}
-            >
+            <label className="form-label text-uppercase text-muted fw-semibold mb-1 d-block" style={{ fontSize: 11, letterSpacing: 0.5 }}>
               Search Client
             </label>
             <div className="d-flex gap-2 align-items-center w-100">
               <SearchInput placeholder="Search client" />
               <FilterMenu>
-                <FilterCheckGroup
-                  label="Status"
-                  options={["Active", "At Risk", "Inactive"]}
-                />
-                <FilterCheckGroup
-                  label="Industry"
-                  options={["Manufacturing", "Technology", "Finance", "Retail"]}
-                />
+                <FilterCheckGroup label="Status" options={["Active", "At Risk", "Inactive"]} />
+                <FilterCheckGroup label="Industry" options={["Manufacturing", "Technology", "Finance", "Retail"]} />
               </FilterMenu>
             </div>
           </div>
@@ -210,29 +201,11 @@ export default function Clients() {
       {/* ========================================================== */}
       <section className="mb-3">
         <DataCard>
-          <Table
-            headers={[
-              "",
-              "Client",
-              "Contact Person",
-              "Email",
-              "Phone",
-              "Industry",
-              "Employees",
-              "Billing (₱)",
-              "Status",
-              "Actions",
-            ]}
-          >
+          <Table headers={["", "Client", "Contact Person", "Email", "Phone", "Industry", "Employees", "Billing (₱)", "Status", "Actions"]}>
             {clients.map((c) => (
               <Tr key={c.id}>
                 <Td>
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    checked={selected.includes(c.id)}
-                    onChange={() => toggleOne(c.id)}
-                  />
+                  <input className="form-check-input" type="checkbox" checked={selected.includes(c.id)} onChange={() => toggleOne(c.id)} />
                 </Td>
                 <Td bold>{c.name}</Td>
                 <Td>{c.contact}</Td>
@@ -272,11 +245,7 @@ export default function Clients() {
               </Tr>
             ))}
           </Table>
-          <Pagination
-            current={1}
-            total={2}
-            label={`Showing 1 to ${clients.length} of 12 clients`}
-          />
+          <Pagination current={1} total={2} label={`Showing 1 to ${clients.length} of 12 clients`} />
         </DataCard>
       </section>
 
@@ -299,15 +268,7 @@ export default function Clients() {
       >
         <form id="addClientForm" onSubmit={handleAddClient}>
           <FormField label="Client / Company Name">
-            <input
-              type="text"
-              className="form-control"
-              name="name"
-              value={form.name}
-              onChange={handleChange}
-              placeholder="e.g. Acme Corp"
-              required
-            />
+            <input type="text" className="form-control" name="name" value={form.name} onChange={handleChange} placeholder="e.g. Acme Corp" required />
           </FormField>
           <FormField label="Contact Person">
             <input
@@ -336,26 +297,14 @@ export default function Clients() {
             </div>
             <div className="col-6">
               <FormField label="Phone">
-                <input
-                  type="tel"
-                  className="form-control"
-                  name="phone"
-                  value={form.phone}
-                  onChange={handleChange}
-                  placeholder="+63 900 000 0000"
-                />
+                <input type="tel" className="form-control" name="phone" value={form.phone} onChange={handleChange} placeholder="+63 900 000 0000" />
               </FormField>
             </div>
           </div>
           <div className="row g-3">
             <div className="col-6">
               <FormField label="Industry">
-                <select
-                  className="form-select"
-                  name="industry"
-                  value={form.industry}
-                  onChange={handleChange}
-                >
+                <select className="form-select" name="industry" value={form.industry} onChange={handleChange}>
                   <option>Manufacturing</option>
                   <option>Technology</option>
                   <option>Finance</option>
@@ -368,12 +317,7 @@ export default function Clients() {
             </div>
             <div className="col-6">
               <FormField label="Status">
-                <select
-                  className="form-select"
-                  name="status"
-                  value={form.status}
-                  onChange={handleChange}
-                >
+                <select className="form-select" name="status" value={form.status} onChange={handleChange}>
                   <option>Active</option>
                   <option>At Risk</option>
                   <option>Inactive</option>
@@ -387,19 +331,10 @@ export default function Clients() {
       {/* ========================================================== */}
       {/* MODAL: VIEW CLIENT DETAILS                                 */}
       {/* ========================================================== */}
-      <Modal
-        id="clientViewModal"
-        title="Client Details"
-        footer={<BtnSecondary data-bs-dismiss="modal">Close</BtnSecondary>}
-      >
+      <Modal id="clientViewModal" title="Client Details" footer={<BtnSecondary data-bs-dismiss="modal">Close</BtnSecondary>}>
         {viewTarget && (
           <div>
-            <ProfileHeader
-              name={viewTarget.name}
-              subtitle={viewTarget.industry}
-              subtitleIcon="fa-industry"
-              status={viewTarget.status}
-            />
+            <ProfileHeader name={viewTarget.name} subtitle={viewTarget.industry} subtitleIcon="fa-industry" status={viewTarget.status} />
             <DetailList>
               <DetailRow icon="fa-user" label="Contact Person">
                 {viewTarget.contact}
@@ -442,59 +377,27 @@ export default function Clients() {
         {editForm && (
           <form id="editClientForm" onSubmit={handleEditSubmit}>
             <FormField label="Client / Company Name">
-              <input
-                type="text"
-                className="form-control"
-                name="name"
-                value={editForm.name}
-                onChange={handleEditChange}
-                required
-              />
+              <input type="text" className="form-control" name="name" value={editForm.name} onChange={handleEditChange} required />
             </FormField>
             <FormField label="Contact Person">
-              <input
-                type="text"
-                className="form-control"
-                name="contact"
-                value={editForm.contact}
-                onChange={handleEditChange}
-                required
-              />
+              <input type="text" className="form-control" name="contact" value={editForm.contact} onChange={handleEditChange} required />
             </FormField>
             <div className="row g-3">
               <div className="col-6">
                 <FormField label="Email">
-                  <input
-                    type="email"
-                    className="form-control"
-                    name="email"
-                    value={editForm.email}
-                    onChange={handleEditChange}
-                    required
-                  />
+                  <input type="email" className="form-control" name="email" value={editForm.email} onChange={handleEditChange} required />
                 </FormField>
               </div>
               <div className="col-6">
                 <FormField label="Phone">
-                  <input
-                    type="tel"
-                    className="form-control"
-                    name="phone"
-                    value={editForm.phone}
-                    onChange={handleEditChange}
-                  />
+                  <input type="tel" className="form-control" name="phone" value={editForm.phone} onChange={handleEditChange} />
                 </FormField>
               </div>
             </div>
             <div className="row g-3">
               <div className="col-6">
                 <FormField label="Industry">
-                  <select
-                    className="form-select"
-                    name="industry"
-                    value={editForm.industry}
-                    onChange={handleEditChange}
-                  >
+                  <select className="form-select" name="industry" value={editForm.industry} onChange={handleEditChange}>
                     <option>Manufacturing</option>
                     <option>Technology</option>
                     <option>Finance</option>
@@ -507,12 +410,7 @@ export default function Clients() {
               </div>
               <div className="col-6">
                 <FormField label="Status">
-                  <select
-                    className="form-select"
-                    name="status"
-                    value={editForm.status}
-                    onChange={handleEditChange}
-                  >
+                  <select className="form-select" name="status" value={editForm.status} onChange={handleEditChange}>
                     <option>Active</option>
                     <option>At Risk</option>
                     <option>Inactive</option>
@@ -535,19 +433,14 @@ export default function Clients() {
             <BtnSecondary id="clientDeleteModalClose" data-bs-dismiss="modal">
               Cancel
             </BtnSecondary>
-            <button
-              type="button"
-              className="btn btn-danger btn-sm"
-              onClick={confirmDelete}
-            >
+            <button type="button" className="btn btn-danger btn-sm" onClick={confirmDelete}>
               <i className="fas fa-trash"></i> Delete
             </button>
           </>
         }
       >
         <p className="mb-0">
-          Are you sure you want to delete <strong>{target?.name}</strong>? This
-          will remove them from your client list. This action cannot be undone.
+          Are you sure you want to delete <strong>{target?.name}</strong>? This will remove them from your client list. This action cannot be undone.
         </p>
       </Modal>
     </>

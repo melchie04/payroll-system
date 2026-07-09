@@ -10,10 +10,7 @@ import {
   Modal,
   PageHeader,
 } from "../components/ui/index.jsx";
-import {
-  uploadedFiles as initialFiles,
-  extractionSummary,
-} from "../assets/data/index.js";
+import { uploadedFiles as initialFiles, extractionSummary } from "../assets/data/index.js";
 
 const fileIcons = { pdf: "📕", img: "🖼️" };
 const statusActions = {
@@ -23,15 +20,20 @@ const statusActions = {
 };
 
 export default function Timesheet() {
+  // ============================================================
+  // DROPZONE (drag & drop file upload)
+  // ============================================================
   const [drag, setDrag] = useState(false);
+
+  // ============================================================
+  // UPLOADED FILES / CONFIRM ACTION
+  // ============================================================
   const [files, setFiles] = useState(initialFiles);
   const [target, setTarget] = useState(null); // file pending confirmation
   const modalInstance = useRef(null);
 
   useEffect(() => {
-    modalInstance.current = new BsModal(
-      document.getElementById("timesheetConfirmModal"),
-    );
+    modalInstance.current = new BsModal(document.getElementById("timesheetConfirmModal"));
   }, []);
 
   function openConfirm(file) {
@@ -46,11 +48,7 @@ export default function Timesheet() {
       setFiles((prev) => prev.filter((f) => f.id !== target.id));
     } else if (target.status === "Failed") {
       // Retry: flip it back to Processing
-      setFiles((prev) =>
-        prev.map((f) =>
-          f.id === target.id ? { ...f, status: "Processing" } : f,
-        ),
-      );
+      setFiles((prev) => prev.map((f) => (f.id === target.id ? { ...f, status: "Processing" } : f)));
     }
     // Extracted (view) has no state change — it's just informational.
     modalInstance.current?.hide();
@@ -59,13 +57,7 @@ export default function Timesheet() {
 
   return (
     <>
-      <input
-        type="file"
-        id="file-input"
-        className="d-none"
-        multiple
-        accept=".pdf,.jpg,.png"
-      />
+      <input type="file" id="file-input" className="d-none" multiple accept=".pdf,.jpg,.png" />
 
       {/* ========================================================== */}
       {/* DIVISION 1: HEADER                                         */}
@@ -145,15 +137,10 @@ export default function Timesheet() {
               <div className="mb-2" style={{ fontSize: 40 }}>
                 <i className="fas fa-cloud-arrow-up text-muted"></i>
               </div>
-              <div className="fw-medium mb-1">
-                Drag and drop timesheet files here
-              </div>
+              <div className="fw-medium mb-1">Drag and drop timesheet files here</div>
               <div className="text-muted small mb-3">or</div>
               <BtnSecondary
                 onClick={(e) => {
-                  // Stop the click from also bubbling to the dropzone div
-                  // (which would otherwise try to open the dialog a second time),
-                  // then open the native file browser ourselves.
                   e.stopPropagation();
                   document.getElementById("file-input").click();
                 }}
@@ -165,47 +152,29 @@ export default function Timesheet() {
               </div>
             </div>
             <div className="text-muted mt-3" style={{ fontSize: 11.5 }}>
-              <i className="fas fa-lock"></i> Your files are secure and will
-              only be used for data extraction.
+              <i className="fas fa-lock"></i> Your files are secure and will only be used for data extraction.
             </div>
           </div>
           <div className="col-lg-7 d-flex flex-column gap-3">
             <DataCard title="Uploaded Files">
               <div className="list-group list-group-flush">
-                {files.length === 0 && (
-                  <div className="text-center text-muted py-4 small">
-                    No files uploaded yet.
-                  </div>
-                )}
+                {files.length === 0 && <div className="text-center text-muted py-4 small">No files uploaded yet.</div>}
                 {files.map((file) => (
-                  <div
-                    className="list-group-item d-flex align-items-start gap-3 py-2"
-                    key={file.id}
-                  >
-                    <span
-                      className="flex-shrink-0"
-                      style={{ fontSize: 24, marginTop: "2px" }}
-                    >
+                  <div className="list-group-item d-flex align-items-start gap-3 py-2" key={file.id}>
+                    <span className="flex-shrink-0" style={{ fontSize: 24, marginTop: "2px" }}>
                       {fileIcons[file.type]}
                     </span>
                     <div className="d-flex flex-column flex-sm-row flex-grow-1 justify-content-sm-between align-items-sm-center gap-2 min-w-0 small">
                       <div className="text-truncate">
-                        <div className="small fw-semibold text-dark text-wrap text-sm-truncate">
-                          {file.name}
-                        </div>
+                        <div className="small fw-semibold text-dark text-wrap text-sm-truncate">{file.name}</div>
                         <div className="text-muted" style={{ fontSize: 11.5 }}>
                           Uploaded on {file.uploaded}
                         </div>
                       </div>
                       <div className="d-flex align-items-center gap-2 ms-sm-auto flex-shrink-0">
                         <Badge status={file.status} />
-                        <IconBtn
-                          title={statusActions[file.status]?.label}
-                          onClick={() => openConfirm(file)}
-                        >
-                          <i
-                            className={`fas ${statusActions[file.status]?.icon}`}
-                          ></i>
+                        <IconBtn title={statusActions[file.status]?.label} onClick={() => openConfirm(file)}>
+                          <i className={`fas ${statusActions[file.status]?.icon}`}></i>
                         </IconBtn>
                       </div>
                     </div>
@@ -218,16 +187,10 @@ export default function Timesheet() {
                 {extractionSummary.map((s) => (
                   <div className="col-6 col-md-3" key={s.label}>
                     <div className="border rounded bg-light p-3 h-100 d-flex flex-column justify-content-between">
-                      <div
-                        className="text-muted fw-medium text-capitalize"
-                        style={{ fontSize: 13 }}
-                      >
+                      <div className="text-muted fw-medium text-capitalize" style={{ fontSize: 13 }}>
                         {s.label.toLowerCase()}
                       </div>
-                      <div
-                        className="fs-3 fw-bold mt-auto"
-                        style={{ color: s.color }}
-                      >
+                      <div className="fs-3 fw-bold mt-auto" style={{ color: s.color }}>
                         {s.value}
                       </div>
                     </div>
@@ -248,19 +211,14 @@ export default function Timesheet() {
         footer={
           <>
             <BtnSecondary data-bs-dismiss="modal">Cancel</BtnSecondary>
-            <button
-              type="button"
-              className={`btn btn-sm ${target?.status === "Failed" ? "btn-dark" : "btn-danger"}`}
-              onClick={handleConfirm}
-            >
+            <button type="button" className={`btn btn-sm ${target?.status === "Failed" ? "btn-dark" : "btn-danger"}`} onClick={handleConfirm}>
               Yes, Continue
             </button>
           </>
         }
       >
         <p className="mb-0">
-          Are you sure you want to {statusActions[target?.status]?.label}{" "}
-          <strong>{target?.name}</strong>?
+          Are you sure you want to {statusActions[target?.status]?.label} <strong>{target?.name}</strong>?
         </p>
       </Modal>
     </>

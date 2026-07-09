@@ -18,10 +18,7 @@ import {
   PageHeader,
   Pagination,
 } from "../components/ui/index.jsx";
-import {
-  billingStats,
-  invoices as initialInvoices,
-} from "../assets/data/index.js";
+import { billingStats, invoices as initialInvoices } from "../assets/data/index.js";
 
 const emptyInvoice = {
   client: "Acme Corp",
@@ -32,15 +29,20 @@ const emptyInvoice = {
 };
 
 export default function Billing() {
+  // ============================================================
+  // INVOICES TABLE
+  // ============================================================
   const [invoices, setInvoices] = useState(initialInvoices);
   const [hidden, setHidden] = useState([]); // invoice ids with masked amount
-  const [form, setForm] = useState(emptyInvoice);
 
   function toggleHidden(id) {
-    setHidden((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
-    );
+    setHidden((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
   }
+
+  // ============================================================
+  // CREATE INVOICE
+  // ============================================================
+  const [form, setForm] = useState(emptyInvoice);
 
   function handleChange(e) {
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
@@ -80,10 +82,7 @@ export default function Billing() {
                 <BtnSecondary>
                   <i className="fas fa-download"></i> Export
                 </BtnSecondary>
-                <BtnPrimary
-                  data-bs-toggle="modal"
-                  data-bs-target="#createInvoiceModal"
-                >
+                <BtnPrimary data-bs-toggle="modal" data-bs-target="#createInvoiceModal">
                   <i className="fas fa-plus"></i> Create Invoice
                 </BtnPrimary>
               </>
@@ -139,28 +138,14 @@ export default function Billing() {
           </div>
 
           <div className="col-12 col-md-3">
-            <label
-              className="form-label text-uppercase text-muted fw-semibold mb-1 d-block"
-              style={{ fontSize: 11, letterSpacing: 0.5 }}
-            >
+            <label className="form-label text-uppercase text-muted fw-semibold mb-1 d-block" style={{ fontSize: 11, letterSpacing: 0.5 }}>
               Search Invoice
             </label>
             <div className="d-flex gap-2 align-items-center w-100">
               <SearchInput placeholder="Search invoice" />
               <FilterMenu>
-                <FilterCheckGroup
-                  label="Status"
-                  options={["Sent", "Paid", "Overdue", "Partially Paid"]}
-                />
-                <FilterCheckGroup
-                  label="Client"
-                  options={[
-                    "Acme Corp",
-                    "Globex Inc",
-                    "Initech",
-                    "Soylent Corp",
-                  ]}
-                />
+                <FilterCheckGroup label="Status" options={["Sent", "Paid", "Overdue", "Partially Paid"]} />
+                <FilterCheckGroup label="Client" options={["Acme Corp", "Globex Inc", "Initech", "Soylent Corp"]} />
               </FilterMenu>
             </div>
           </div>
@@ -175,17 +160,7 @@ export default function Billing() {
       {/* ========================================================== */}
       <section className="mb-3">
         <DataCard>
-          <Table
-            headers={[
-              "Invoice #",
-              "Client",
-              "Invoice Date",
-              "Due Date",
-              "Amount (₱)",
-              "Status",
-              "Actions",
-            ]}
-          >
+          <Table headers={["Invoice #", "Client", "Invoice Date", "Due Date", "Amount (₱)", "Status", "Actions"]}>
             {invoices.map((inv) => {
               const isHidden = hidden.includes(inv.id);
               return (
@@ -199,24 +174,15 @@ export default function Billing() {
                     <Badge status={inv.status} />
                   </Td>
                   <Td>
-                    <IconBtn
-                      title={isHidden ? "Show amount" : "Hide amount"}
-                      onClick={() => toggleHidden(inv.id)}
-                    >
-                      <i
-                        className={`fas ${isHidden ? "fa-eye-slash" : "fa-eye"}`}
-                      ></i>
+                    <IconBtn title={isHidden ? "Show amount" : "Hide amount"} onClick={() => toggleHidden(inv.id)}>
+                      <i className={`fas ${isHidden ? "fa-eye-slash" : "fa-eye"}`}></i>
                     </IconBtn>
                   </Td>
                 </Tr>
               );
             })}
           </Table>
-          <Pagination
-            current={1}
-            total={3}
-            label={`Showing 1 to ${invoices.length} of 18 invoices`}
-          />
+          <Pagination current={1} total={3} label={`Showing 1 to ${invoices.length} of 18 invoices`} />
         </DataCard>
       </section>
 
@@ -239,12 +205,7 @@ export default function Billing() {
       >
         <form id="createInvoiceForm" onSubmit={handleCreateInvoice}>
           <FormField label="Client">
-            <select
-              className="form-select"
-              name="client"
-              value={form.client}
-              onChange={handleChange}
-            >
+            <select className="form-select" name="client" value={form.client} onChange={handleChange}>
               <option>Acme Corp</option>
               <option>Globex Inc</option>
               <option>Initech</option>
@@ -254,26 +215,12 @@ export default function Billing() {
           <div className="row g-3">
             <div className="col-6">
               <FormField label="Invoice Date">
-                <input
-                  type="date"
-                  className="form-control"
-                  name="invoiceDate"
-                  value={form.invoiceDate}
-                  onChange={handleChange}
-                  required
-                />
+                <input type="date" className="form-control" name="invoiceDate" value={form.invoiceDate} onChange={handleChange} required />
               </FormField>
             </div>
             <div className="col-6">
               <FormField label="Due Date">
-                <input
-                  type="date"
-                  className="form-control"
-                  name="dueDate"
-                  value={form.dueDate}
-                  onChange={handleChange}
-                  required
-                />
+                <input type="date" className="form-control" name="dueDate" value={form.dueDate} onChange={handleChange} required />
               </FormField>
             </div>
           </div>
@@ -291,12 +238,7 @@ export default function Billing() {
             />
           </FormField>
           <FormField label="Status">
-            <select
-              className="form-select"
-              name="status"
-              value={form.status}
-              onChange={handleChange}
-            >
+            <select className="form-select" name="status" value={form.status} onChange={handleChange}>
               <option>Sent</option>
               <option>Paid</option>
               <option>Partially Paid</option>

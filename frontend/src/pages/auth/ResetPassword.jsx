@@ -8,10 +8,7 @@ function RequirementRow({ met, label }) {
         className={`fas ${met ? "fa-circle-check text-success" : "fa-circle text-muted"}`}
         style={{ fontSize: "0.7rem", opacity: met ? 1 : 0.4 }}
       ></i>
-      <span
-        className={met ? "text-dark" : "text-muted"}
-        style={{ fontSize: "0.8rem" }}
-      >
+      <span className={met ? "text-dark" : "text-muted"} style={{ fontSize: "0.8rem" }}>
         {label}
       </span>
     </div>
@@ -51,21 +48,13 @@ export default function ResetPassword() {
         >
           <i className="fas fa-circle-check"></i>
         </div>
-        <h1
-          className="fw-normal text-secondary mb-2"
-          style={{ fontSize: "1.35rem", color: "#777777" }}
-        >
+        <h1 className="fw-normal text-secondary mb-2" style={{ fontSize: "1.35rem", color: "#777777" }}>
           Password reset
         </h1>
         <p className="text-muted mb-4" style={{ fontSize: "0.9rem" }}>
-          Your password has been updated. You can now sign in with your new
-          password.
+          Your password has been updated. You can now sign in with your new password.
         </p>
-        <Link
-          to="/login"
-          className="btn btn-dark rounded-pill w-100 text-white py-2 fw-normal shadow-sm"
-          style={{ fontSize: "0.95rem" }}
-        >
+        <Link to="/login" className="btn btn-dark rounded-pill w-100 text-white py-2 fw-normal shadow-sm" style={{ fontSize: "0.95rem" }}>
           Back to Sign In
         </Link>
       </div>
@@ -85,10 +74,7 @@ export default function ResetPassword() {
       >
         Reset Password
       </h1>
-      <p
-        className="text-center text-muted mb-4"
-        style={{ fontSize: "0.85rem" }}
-      >
+      <p className="text-center text-muted mb-4" style={{ fontSize: "0.85rem" }}>
         Choose a new password for your account.
       </p>
 
@@ -96,10 +82,7 @@ export default function ResetPassword() {
         {/* New Password Input Group */}
         <div className="mb-3 position-relative">
           <div className="input-group">
-            <span
-              className="input-group-text bg-white border-end-0 rounded-start-pill text-muted px-3"
-              style={{ borderColor: "#cccccc" }}
-            >
+            <span className="input-group-text bg-white border-end-0 rounded-start-pill text-muted px-3" style={{ borderColor: "#cccccc" }}>
               <div
                 className="d-flex align-items-center justify-content-center border rounded-circle text-muted"
                 style={{
@@ -137,9 +120,7 @@ export default function ResetPassword() {
                   borderColor: "#cccccc",
                 }}
               >
-                <i
-                  className={`fas ${showPassword ? "fa-eye-slash" : "fa-eye"}`}
-                ></i>
+                <i className={`fas ${showPassword ? "fa-eye-slash" : "fa-eye"}`}></i>
               </div>
             </button>
           </div>
@@ -148,10 +129,7 @@ export default function ResetPassword() {
         {/* Confirm Password Input Group */}
         <div className="mb-3 position-relative">
           <div className="input-group">
-            <span
-              className="input-group-text bg-white border-end-0 rounded-start-pill text-muted px-3"
-              style={{ borderColor: "#cccccc" }}
-            >
+            <span className="input-group-text bg-white border-end-0 rounded-start-pill text-muted px-3" style={{ borderColor: "#cccccc" }}>
               <div
                 className="d-flex align-items-center justify-content-center border rounded-circle text-muted"
                 style={{
@@ -189,9 +167,7 @@ export default function ResetPassword() {
                   borderColor: "#cccccc",
                 }}
               >
-                <i
-                  className={`fas ${showConfirm ? "fa-eye-slash" : "fa-eye"}`}
-                ></i>
+                <i className={`fas ${showConfirm ? "fa-eye-slash" : "fa-eye"}`}></i>
               </div>
             </button>
           </div>
@@ -200,43 +176,26 @@ export default function ResetPassword() {
         {/* Live requirement checklist instead of a static caption */}
         <div className="bg-light rounded-3 px-3 py-2 mb-4">
           <RequirementRow met={hasLength} label="At least 8 characters" />
-          <RequirementRow
-            met={hasCase}
-            label="Contains uppercase and lowercase letters"
-          />
+          <RequirementRow met={hasCase} label="Contains uppercase and lowercase letters" />
           <RequirementRow met={hasNumber} label="Contains a number" />
-          <RequirementRow
-            met={hasSpecial}
-            label="Contains a special character"
-          />
+          <RequirementRow met={hasSpecial} label="Contains a special character" />
           <RequirementRow met={matches} label="Passwords match" />
         </div>
 
         {touched && !canSubmit && (
-          <div
-            className="text-danger text-center mb-3"
-            style={{ fontSize: "0.8rem" }}
-          >
+          <div className="text-danger text-center mb-3" style={{ fontSize: "0.8rem" }}>
             Please meet both requirements above before continuing.
           </div>
         )}
 
         {/* Dark Custom Submit Button */}
-        <button
-          type="submit"
-          className="btn btn-dark rounded-pill w-100 text-white py-2 fw-normal shadow-sm"
-          style={{ fontSize: "0.95rem" }}
-        >
+        <button type="submit" className="btn btn-dark rounded-pill w-100 text-white py-2 fw-normal shadow-sm" style={{ fontSize: "0.95rem" }}>
           Reset Password
         </button>
 
         {/* Back to Sign In Link */}
         <div className="text-center mt-3">
-          <Link
-            to="/login"
-            className="auth-link text-decoration-none text-muted"
-            style={{ fontSize: "0.85rem" }}
-          >
+          <Link to="/login" className="auth-link text-decoration-none text-muted" style={{ fontSize: "0.85rem" }}>
             <i className="fas fa-arrow-left me-1"></i>
             Back to Sign In
           </Link>
@@ -247,10 +206,7 @@ export default function ResetPassword() {
           Remove this block once a real API validates the token. */}
       {token && (
         <div className="text-center mt-3">
-          <span
-            className="badge bg-white border text-muted fw-normal"
-            style={{ fontSize: "0.7rem" }}
-          >
+          <span className="badge bg-white border text-muted fw-normal" style={{ fontSize: "0.7rem" }}>
             Dev preview — token: {token}
           </span>
         </div>

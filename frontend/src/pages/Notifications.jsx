@@ -14,9 +14,7 @@ export default function Notifications() {
   }
 
   function markOneRead(id) {
-    setItems((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, read: true } : n)),
-    );
+    setItems((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)));
   }
 
   return (
@@ -33,12 +31,8 @@ export default function Notifications() {
                 description={`You have ${unreadCount} unread notification${unreadCount === 1 ? "" : "s"}.`}
                 actions={
                   <div className="mt-2 mt-sm-0">
-                    <BtnSecondary
-                      onClick={markAllRead}
-                      className="w-100 w-sm-auto"
-                    >
-                      <i className="fas fa-check-double me-1"></i> Mark all as
-                      read
+                    <BtnSecondary onClick={markAllRead} className="w-100 w-sm-auto">
+                      <i className="fas fa-check-double me-1"></i> Mark all as read
                     </BtnSecondary>
                   </div>
                 }
@@ -55,10 +49,7 @@ export default function Notifications() {
       {/* DIVISION 2: FILTER TABS                                    */}
       {/* ========================================================== */}
       <section>
-        <div
-          className="overflow-x-auto pb-1"
-          style={{ WebkitOverflowScrolling: "touch" }}
-        >
+        <div className="overflow-x-auto pb-1" style={{ WebkitOverflowScrolling: "touch" }}>
           <ul className="nav nav-pills mb-4 gap-2 flex-nowrap">
             {["All", "Unread"].map((tab) => (
               <li className="nav-item text-nowrap" key={tab}>
@@ -68,11 +59,7 @@ export default function Notifications() {
                   onClick={() => setFilter(tab)}
                 >
                   {tab}
-                  {tab === "Unread" && unreadCount > 0 && (
-                    <span className="badge rounded-pill bg-danger ms-2">
-                      {unreadCount}
-                    </span>
-                  )}
+                  {tab === "Unread" && unreadCount > 0 && <span className="badge rounded-pill bg-danger ms-2">{unreadCount}</span>}
                 </button>
               </li>
             ))}
@@ -86,16 +73,9 @@ export default function Notifications() {
       <section className="mb-3">
         <DataCard>
           <div className="list-group list-group-flush">
-            {visible.length === 0 && (
-              <div className="text-center text-muted py-5 small">
-                You're all caught up!
-              </div>
-            )}
+            {visible.length === 0 && <div className="text-center text-muted py-5 small">You're all caught up!</div>}
             {visible.map((n) => (
-              <div
-                className={`list-group-item d-flex align-items-start gap-2 gap-sm-3 py-3 ${!n.read ? "bg-light" : ""}`}
-                key={n.id}
-              >
+              <div className={`list-group-item d-flex align-items-start gap-2 gap-sm-3 py-3 ${!n.read ? "bg-light" : ""}`} key={n.id}>
                 <div
                   className="d-flex align-items-center justify-content-center flex-shrink-0 border rounded-2 bg-white text-secondary"
                   style={{ width: 32, height: 32, fontSize: 13 }}
@@ -106,20 +86,14 @@ export default function Notifications() {
                   <div className="d-flex flex-column flex-sm-row justify-content-between align-items-start gap-1 gap-sm-2 mb-1.5">
                     <div className="small text-dark lh-sm text-wrap word-break">
                       <span>{n.title} </span>
-                      <strong className="fw-semibold">{n.bold}</strong>{" "}
-                      <span>{n.sub}</span>
+                      <strong className="fw-semibold">{n.bold}</strong> <span>{n.sub}</span>
                     </div>
-                    <div
-                      className="text-muted text-sm-end mt-0.5 mt-sm-0"
-                      style={{ fontSize: "11px", minWidth: "75px" }}
-                    >
+                    <div className="text-muted text-sm-end mt-0.5 mt-sm-0" style={{ fontSize: "11px", minWidth: "75px" }}>
                       {n.time}
                     </div>
                   </div>
                   <div className="d-flex align-items-center flex-wrap gap-2">
-                    <span className="badge rounded-pill bg-secondary bg-opacity-10 text-secondary fw-normal py-1">
-                      {n.type}
-                    </span>
+                    <span className="badge rounded-pill bg-secondary bg-opacity-10 text-secondary fw-normal py-1">{n.type}</span>
                     {!n.read && (
                       <button
                         type="button"

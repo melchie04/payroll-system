@@ -399,10 +399,6 @@ export function FormField({ label, children }) {
   );
 }
 
-// --- View-modal building blocks ---------------------------------------------
-// A real bordered table for read-only detail views (Employee Profile,
-// Client Details) — visible row dividers and a rounded outer border so it
-// reads as a structured table, not just loose stacked text.
 export function DetailList({ children }) {
   return (
     <div className="border rounded-3 overflow-hidden">

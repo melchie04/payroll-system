@@ -1,13 +1,4 @@
-import {
-  DataCard,
-  Table,
-  Tr,
-  Td,
-  FilterSelect,
-  SearchInput,
-  PageHeader,
-  Pagination,
-} from "../components/ui/index.jsx";
+import { DataCard, Table, Tr, Td, FilterSelect, SearchInput, PageHeader, Pagination } from "../components/ui/index.jsx";
 import { activityLog } from "../assets/data/index.js";
 
 const moduleVariant = {
@@ -28,10 +19,7 @@ export default function ActivityLog() {
       {/* ========================================================== */}
       <section>
         <div className="mt-4">
-          <PageHeader
-            title="Activity Log"
-            description="Track every action taken across your payroll system."
-          />
+          <PageHeader title="Activity Log" description="Track every action taken across your payroll system." />
         </div>
       </section>
 
@@ -65,10 +53,7 @@ export default function ActivityLog() {
             </FilterSelect>
           </div>
           <div className="col-12 col-md-4">
-            <label
-              className="form-label text-uppercase text-muted fw-semibold mb-1 d-block"
-              style={{ fontSize: 11, letterSpacing: 0.5 }}
-            >
+            <label className="form-label text-uppercase text-muted fw-semibold mb-1 d-block" style={{ fontSize: 11, letterSpacing: 0.5 }}>
               Search Log
             </label>
             <SearchInput placeholder="Search activity" />
@@ -101,11 +86,7 @@ export default function ActivityLog() {
               </Tr>
             ))}
           </Table>
-          <Pagination
-            current={1}
-            total={3}
-            label="Showing 1 to 8 of 24 activities"
-          />
+          <Pagination current={1} total={3} label="Showing 1 to 8 of 24 activities" />
         </DataCard>
       </section>
     </>

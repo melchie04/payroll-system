@@ -28,10 +28,7 @@ export default function Login() {
         {/* Username/Email Input Group */}
         <div className="mb-3 position-relative">
           <div className="input-group">
-            <span
-              className="input-group-text bg-white border-end-0 rounded-start-pill text-muted px-3"
-              style={{ borderColor: "#cccccc" }}
-            >
+            <span className="input-group-text bg-white border-end-0 rounded-start-pill text-muted px-3" style={{ borderColor: "#cccccc" }}>
               <div
                 className="d-flex align-items-center justify-content-center border rounded-circle text-muted"
                 style={{
@@ -58,10 +55,7 @@ export default function Login() {
         {/* Password Input Group */}
         <div className="mb-4 position-relative">
           <div className="input-group">
-            <span
-              className="input-group-text bg-white border-end-0 rounded-start-pill text-muted px-3"
-              style={{ borderColor: "#cccccc" }}
-            >
+            <span className="input-group-text bg-white border-end-0 rounded-start-pill text-muted px-3" style={{ borderColor: "#cccccc" }}>
               <div
                 className="d-flex align-items-center justify-content-center border rounded-circle text-muted"
                 style={{
@@ -97,9 +91,7 @@ export default function Login() {
                   borderColor: "#cccccc",
                 }}
               >
-                <i
-                  className={`fas ${showPassword ? "fa-eye-slash" : "fa-eye"}`}
-                ></i>
+                <i className={`fas ${showPassword ? "fa-eye-slash" : "fa-eye"}`}></i>
               </div>
             </button>
           </div>
@@ -118,11 +110,7 @@ export default function Login() {
 
         {/* Forgot Password Link */}
         <div className="text-center mt-3">
-          <Link
-            to="/forgot-password"
-            className="auth-link text-decoration-none text-muted"
-            style={{ fontSize: "0.85rem" }}
-          >
+          <Link to="/forgot-password" className="auth-link text-decoration-none text-muted" style={{ fontSize: "0.85rem" }}>
             Forgot password?
           </Link>
         </div>

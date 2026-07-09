@@ -19,21 +19,13 @@ export default function ForgotPassword() {
         >
           <i className="fas fa-envelope-circle-check"></i>
         </div>
-        <h1
-          className="fw-normal text-secondary mb-2"
-          style={{ fontSize: "1.35rem", color: "#777777" }}
-        >
+        <h1 className="fw-normal text-secondary mb-2" style={{ fontSize: "1.35rem", color: "#777777" }}>
           Check your email
         </h1>
         <p className="text-muted mb-4" style={{ fontSize: "0.9rem" }}>
-          If an account exists for <strong>{email}</strong>, we&rsquo;ve sent a
-          link to reset your password.
+          If an account exists for <strong>{email}</strong>, we&rsquo;ve sent a link to reset your password.
         </p>
-        <Link
-          to="/login"
-          className="btn btn-dark rounded-pill w-100 text-white py-2 fw-normal shadow-sm"
-          style={{ fontSize: "0.95rem" }}
-        >
+        <Link to="/login" className="btn btn-dark rounded-pill w-100 text-white py-2 fw-normal shadow-sm" style={{ fontSize: "0.95rem" }}>
           Back to Sign In
         </Link>
       </div>
@@ -53,10 +45,7 @@ export default function ForgotPassword() {
       >
         Forgot Password
       </h1>
-      <p
-        className="text-center text-muted mb-4"
-        style={{ fontSize: "0.85rem" }}
-      >
+      <p className="text-center text-muted mb-4" style={{ fontSize: "0.85rem" }}>
         Enter your email to reset your password.
       </p>
 
@@ -64,10 +53,7 @@ export default function ForgotPassword() {
         {/* Email Input Group */}
         <div className="mb-4 position-relative">
           <div className="input-group">
-            <span
-              className="input-group-text bg-white border-end-0 rounded-start-pill text-muted px-3"
-              style={{ borderColor: "#cccccc" }}
-            >
+            <span className="input-group-text bg-white border-end-0 rounded-start-pill text-muted px-3" style={{ borderColor: "#cccccc" }}>
               <div
                 className="d-flex align-items-center justify-content-center border rounded-circle text-muted"
                 style={{
@@ -94,21 +80,13 @@ export default function ForgotPassword() {
         </div>
 
         {/* Dark Custom Submit Button */}
-        <button
-          type="submit"
-          className="btn btn-dark rounded-pill w-100 text-white py-2 fw-normal shadow-sm"
-          style={{ fontSize: "0.95rem" }}
-        >
+        <button type="submit" className="btn btn-dark rounded-pill w-100 text-white py-2 fw-normal shadow-sm" style={{ fontSize: "0.95rem" }}>
           Send Reset Link
         </button>
 
         {/* Back to Sign In Link */}
         <div className="text-center mt-3">
-          <Link
-            to="/login"
-            className="auth-link text-decoration-none text-muted"
-            style={{ fontSize: "0.85rem" }}
-          >
+          <Link to="/login" className="auth-link text-decoration-none text-muted" style={{ fontSize: "0.85rem" }}>
             <i className="fas fa-arrow-left me-1"></i>
             Back to Sign In
           </Link>

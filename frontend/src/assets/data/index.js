@@ -533,15 +533,7 @@ export const roles = [
     name: "Administrator",
     description: "Full access to every module, including settings.",
     users: 1,
-    permissions: [
-      "Dashboard",
-      "Payroll",
-      "Billing",
-      "Timesheet",
-      "Employees",
-      "Clients",
-      "Settings",
-    ],
+    permissions: ["Dashboard", "Payroll", "Billing", "Timesheet", "Employees", "Clients", "Settings"],
   },
   {
     id: 2,
