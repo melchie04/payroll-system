@@ -9,13 +9,16 @@ import "./assets/scss/styles.scss";
 import "./assets/scss/custom.scss";
 
 import { ThemeProvider } from "./context/ThemeContext.jsx";
+import { EmployeesProvider } from "./context/EmployeesContext.jsx";
 import App from "./App.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
       <ThemeProvider>
-        <App />
+        <EmployeesProvider>
+          <App />
+        </EmployeesProvider>
       </ThemeProvider>
     </BrowserRouter>
   </StrictMode>,

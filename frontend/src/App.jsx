@@ -13,11 +13,14 @@ import Dashboard from "./pages/Dashboard.jsx";
 import Payroll from "./pages/Payroll.jsx";
 import Billing from "./pages/Billing.jsx";
 import Timesheet from "./pages/Timesheet.jsx";
-import Employees from "./pages/Employees.jsx";
 import Clients from "./pages/Clients.jsx";
 import Notifications from "./pages/Notifications.jsx";
 import Settings from "./pages/Settings.jsx";
 import ActivityLog from "./pages/ActivityLog.jsx";
+
+import Employees from "./pages/employees/Employees.jsx";
+import EmployeeProfile from "./pages/employees/EmployeeProfile.jsx";
+import EmployeeForm from "./pages/employees/EmployeeForm.jsx";
 
 import NotFound from "./pages/errors/NotFound.jsx";
 import AccessDenied from "./pages/errors/AccessDenied.jsx";
@@ -39,7 +42,12 @@ export default function App() {
         <Route path="/payroll" element={<Payroll />} />
         <Route path="/billing" element={<Billing />} />
         <Route path="/timesheet" element={<Timesheet />} />
+
         <Route path="/employees" element={<Employees />} />
+        <Route path="/employees/new" element={<EmployeeForm />} />
+        <Route path="/employees/:id" element={<EmployeeProfile />} />
+        <Route path="/employees/:id/edit" element={<EmployeeForm />} />
+
         <Route path="/clients" element={<Clients />} />
         <Route path="/notifications" element={<Notifications />} />
         <Route path="/settings" element={<Settings />} />

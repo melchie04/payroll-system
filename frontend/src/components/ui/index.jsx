@@ -22,39 +22,18 @@ const statusVariant = {
 export function Badge({ status }) {
   const variant = statusVariant[status] || "secondary";
   const textClass = variant === "warning" ? "text-dark" : "";
-  return (
-    <span className={`badge rounded-pill bg-${variant} ${textClass}`}>
-      {status}
-    </span>
-  );
+  return <span className={`badge rounded-pill bg-${variant} ${textClass}`}>{status}</span>;
 }
 
-export function BtnPrimary({
-  children,
-  onClick,
-  type = "button",
-  className = "",
-  ...rest
-}) {
+export function BtnPrimary({ children, onClick, type = "button", className = "", ...rest }) {
   return (
-    <button
-      type={type}
-      className={`btn btn-dark btn-sm d-inline-flex align-items-center gap-2 ${className}`}
-      onClick={onClick}
-      {...rest}
-    >
+    <button type={type} className={`btn btn-dark btn-sm d-inline-flex align-items-center gap-2 ${className}`} onClick={onClick} {...rest}>
       {children}
     </button>
   );
 }
 
-export function BtnSecondary({
-  children,
-  onClick,
-  type = "button",
-  className = "",
-  ...rest
-}) {
+export function BtnSecondary({ children, onClick, type = "button", className = "", ...rest }) {
   return (
     <button
       type={type}
@@ -69,13 +48,7 @@ export function BtnSecondary({
 
 export function IconBtn({ children, title, onClick, className = "", ...rest }) {
   return (
-    <button
-      type="button"
-      className={`btn btn-sm btn-link text-muted p-1 ${className}`}
-      title={title}
-      onClick={onClick}
-      {...rest}
-    >
+    <button type="button" className={`btn btn-sm btn-link text-muted p-1 ${className}`} title={title} onClick={onClick} {...rest}>
       {children}
     </button>
   );
@@ -85,23 +58,14 @@ export function StatCard({ label, value, sub, valueColor, subColor }) {
   return (
     <div className="card h-100">
       <div className="card-body">
-        <div
-          className="text-uppercase text-muted fw-semibold mb-1 small"
-          style={{ fontSize: 11, letterSpacing: 0.5 }}
-        >
+        <div className="text-uppercase text-muted fw-semibold mb-1 small" style={{ fontSize: 11, letterSpacing: 0.5 }}>
           {label}
         </div>
-        <div
-          className="fs-4 fw-bold"
-          style={valueColor ? { color: valueColor } : undefined}
-        >
+        <div className="fs-4 fw-bold" style={valueColor ? { color: valueColor } : undefined}>
           {value}
         </div>
         {sub && (
-          <div
-            className="small mt-1"
-            style={{ color: subColor || "var(--bs-secondary-color)" }}
-          >
+          <div className="small mt-1" style={{ color: subColor || "var(--bs-secondary-color)" }}>
             {sub}
           </div>
         )}
@@ -152,13 +116,7 @@ export function Tr({ children }) {
 }
 
 export function Td({ children, bold, className = "" }) {
-  return (
-    <td
-      className={`${bold ? "fw-semibold" : ""} small py-3 py-md-2 ${className}`}
-    >
-      {children}
-    </td>
-  );
+  return <td className={`${bold ? "fw-semibold" : ""} small py-3 py-md-2 ${className}`}>{children}</td>;
 }
 
 export function Pagination({ current = 1, total = 1, label }) {
@@ -171,10 +129,7 @@ export function Pagination({ current = 1, total = 1, label }) {
       <nav aria-label="Pagination">
         <ul className="pagination pagination-sm mb-0">
           <li className={`page-item ${page === 1 ? "disabled" : ""}`}>
-            <button
-              className="page-link"
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-            >
+            <button className="page-link" onClick={() => setPage((p) => Math.max(1, p - 1))}>
               &lsaquo;
             </button>
           </li>
@@ -186,10 +141,7 @@ export function Pagination({ current = 1, total = 1, label }) {
             </li>
           ))}
           <li className={`page-item ${page === total ? "disabled" : ""}`}>
-            <button
-              className="page-link"
-              onClick={() => setPage((p) => Math.min(total, p + 1))}
-            >
+            <button className="page-link" onClick={() => setPage((p) => Math.min(total, p + 1))}>
               &rsaquo;
             </button>
           </li>
@@ -203,10 +155,7 @@ export function FilterSelect({ label, children }) {
   return (
     <div>
       {label && (
-        <label
-          className="form-label text-uppercase text-muted fw-semibold mb-1 d-block"
-          style={{ fontSize: 11, letterSpacing: 0.5 }}
-        >
+        <label className="form-label text-uppercase text-muted fw-semibold mb-1 d-block" style={{ fontSize: 11, letterSpacing: 0.5 }}>
           {label}
         </label>
       )}
@@ -244,10 +193,7 @@ export function ActionsMenu({ items }) {
       <IconBtn title="More" data-bs-toggle="dropdown" aria-expanded="false">
         <i className="fas fa-ellipsis-vertical"></i>
       </IconBtn>
-      <ul
-        className="dropdown-menu dropdown-menu-end shadow-sm"
-        style={{ fontSize: "0.85rem" }}
-      >
+      <ul className="dropdown-menu dropdown-menu-end shadow-sm" style={{ fontSize: "0.85rem" }}>
         {items.map((item, i) =>
           item.divider ? (
             <li key={`divider-${i}`}>
@@ -257,18 +203,12 @@ export function ActionsMenu({ items }) {
             <li key={item.label}>
               <button
                 type="button"
-                className={`dropdown-item d-flex align-items-center gap-2 ${
-                  item.danger ? "text-danger" : ""
-                }`}
+                className={`dropdown-item d-flex align-items-center gap-2 ${item.danger ? "text-danger" : ""}`}
                 onClick={item.onClick}
                 data-bs-toggle={item.modalTarget ? "modal" : undefined}
-                data-bs-target={
-                  item.modalTarget ? `#${item.modalTarget}` : undefined
-                }
+                data-bs-target={item.modalTarget ? `#${item.modalTarget}` : undefined}
               >
-                {item.icon && (
-                  <i className={`fas ${item.icon} fa-fw opacity-75`}></i>
-                )}
+                {item.icon && <i className={`fas ${item.icon} fa-fw opacity-75`}></i>}
                 {item.label}
               </button>
             </li>
@@ -298,24 +238,14 @@ export function FilterMenu({ children, onReset }) {
       >
         <i className="fas fa-filter"></i>
       </button>
-      <div
-        className="dropdown-menu dropdown-menu-end shadow-sm p-3"
-        style={{ minWidth: 240 }}
-      >
-        <div
-          className="text-uppercase text-muted fw-semibold mb-2 small"
-          style={{ fontSize: 11, letterSpacing: 0.5 }}
-        >
+      <div className="dropdown-menu dropdown-menu-end shadow-sm p-3" style={{ minWidth: 240 }}>
+        <div className="text-uppercase text-muted fw-semibold mb-2 small" style={{ fontSize: 11, letterSpacing: 0.5 }}>
           Filter Options
         </div>
         <div className="d-flex flex-column gap-3">{children}</div>
         <hr className="my-3" />
         <div className="d-flex justify-content-between gap-2">
-          <button
-            type="button"
-            className="btn btn-sm btn-outline-secondary w-50"
-            onClick={onReset}
-          >
+          <button type="button" className="btn btn-sm btn-outline-secondary w-50" onClick={onReset}>
             Reset
           </button>
           <button type="button" className="btn btn-sm btn-dark w-50">
@@ -330,23 +260,13 @@ export function FilterMenu({ children, onReset }) {
 export function FilterCheckGroup({ label, options }) {
   return (
     <div>
-      <div
-        className="text-uppercase text-muted fw-semibold mb-1"
-        style={{ fontSize: 10.5, letterSpacing: 0.5 }}
-      >
+      <div className="text-uppercase text-muted fw-semibold mb-1" style={{ fontSize: 10.5, letterSpacing: 0.5 }}>
         {label}
       </div>
       {options.map((opt) => (
         <div className="form-check" key={opt}>
-          <input
-            className="form-check-input"
-            type="checkbox"
-            id={`chk-${label}-${opt}`.replace(/\s+/g, "-")}
-          />
-          <label
-            className="form-check-label small"
-            htmlFor={`chk-${label}-${opt}`.replace(/\s+/g, "-")}
-          >
+          <input className="form-check-input" type="checkbox" id={`chk-${label}-${opt}`.replace(/\s+/g, "-")} />
+          <label className="form-check-label small" htmlFor={`chk-${label}-${opt}`.replace(/\s+/g, "-")}>
             {opt}
           </label>
         </div>
@@ -357,25 +277,14 @@ export function FilterCheckGroup({ label, options }) {
 
 export function Modal({ id, title, children, footer, size = "" }) {
   return (
-    <div
-      className="modal fade"
-      id={id}
-      tabIndex="-1"
-      aria-labelledby={`${id}Label`}
-      aria-hidden="true"
-    >
+    <div className="modal fade" id={id} tabIndex="-1" aria-labelledby={`${id}Label`} aria-hidden="true">
       <div className={`modal-dialog modal-dialog-centered ${size}`}>
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title fw-semibold" id={`${id}Label`}>
               {title}
             </h5>
-            <button
-              type="button"
-              className="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
+            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div className="modal-body">{children}</div>
           {footer && <div className="modal-footer">{footer}</div>}
@@ -388,10 +297,7 @@ export function Modal({ id, title, children, footer, size = "" }) {
 export function FormField({ label, children }) {
   return (
     <div className="mb-3">
-      <label
-        className="form-label text-uppercase text-muted fw-semibold mb-1 d-block"
-        style={{ fontSize: 11, letterSpacing: 0.5 }}
-      >
+      <label className="form-label text-uppercase text-muted fw-semibold mb-1 d-block" style={{ fontSize: 11, letterSpacing: 0.5 }}>
         {label}
       </label>
       {children}
@@ -402,33 +308,27 @@ export function FormField({ label, children }) {
 export function DetailList({ children }) {
   return (
     <div className="border rounded-3 overflow-hidden">
-      <table className="table table-sm mb-0 align-middle">
-        <tbody>{children}</tbody>
-      </table>
+      <div className="list-group list-group-flush">{children}</div>
     </div>
   );
 }
 
 export function DetailRow({ icon, label, children }) {
   return (
-    <tr>
-      <th
-        scope="row"
-        className="fw-normal text-muted py-2 ps-3"
-        style={{ width: "44%" }}
-      >
+    <div className="list-group-item d-flex flex-column flex-sm-row align-items-sm-center gap-1 gap-sm-3 py-2 px-3">
+      <div className="d-flex align-items-center gap-2 text-muted flex-shrink-0" style={{ minWidth: 170 }}>
         <span
-          className="d-inline-flex align-items-center justify-content-center rounded-circle bg-light text-secondary me-2"
+          className="d-inline-flex align-items-center justify-content-center rounded-circle bg-light text-secondary flex-shrink-0"
           style={{ width: 28, height: 28, fontSize: "0.8rem" }}
         >
           <i className={`fas ${icon} fa-fw`}></i>
         </span>
         <span style={{ fontSize: "0.82rem" }}>{label}</span>
-      </th>
-      <td className="fw-semibold py-2 pe-3" style={{ fontSize: "0.92rem" }}>
+      </div>
+      <div className="fw-semibold" style={{ fontSize: "0.92rem" }}>
         {children}
-      </td>
-    </tr>
+      </div>
+    </div>
   );
 }
 
@@ -472,16 +372,8 @@ export function ProfileHeader({ name, subtitle, subtitleIcon, status }) {
       <div>
         <div className="fw-bold fs-5 mb-0">{name}</div>
         {subtitle && (
-          <div
-            className="text-muted d-flex align-items-center gap-1"
-            style={{ fontSize: "0.85rem" }}
-          >
-            {subtitleIcon && (
-              <i
-                className={`fas ${subtitleIcon}`}
-                style={{ fontSize: "0.75rem" }}
-              ></i>
-            )}
+          <div className="text-muted d-flex align-items-center gap-1" style={{ fontSize: "0.85rem" }}>
+            {subtitleIcon && <i className={`fas ${subtitleIcon}`} style={{ fontSize: "0.75rem" }}></i>}
             {subtitle}
           </div>
         )}

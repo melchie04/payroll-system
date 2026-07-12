@@ -565,8 +565,16 @@ export const employees = [
     client: "Acme Corp",
     position: "Developer",
     email: "johndoe@acme.com",
+    phone: "+63 917 555 0101",
     rate: "₱812.50",
     status: "Active",
+    dateHired: "Jan 15, 2023",
+    address: "123 Mabini St, Makati City, Metro Manila",
+    emergencyContact: {
+      name: "Maria Doe",
+      relationship: "Spouse",
+      phone: "+63 917 555 0102",
+    },
   },
   {
     id: 2,
@@ -574,8 +582,16 @@ export const employees = [
     client: "Globex Inc",
     position: "QA Engineer",
     email: "jsmith@globex.com",
+    phone: "+63 917 555 0201",
     rate: "₱728.48",
     status: "Active",
+    dateHired: "Mar 3, 2023",
+    address: "45 Rizal Ave, Quezon City, Metro Manila",
+    emergencyContact: {
+      name: "Robert Smith",
+      relationship: "Father",
+      phone: "+63 917 555 0202",
+    },
   },
   {
     id: 3,
@@ -583,8 +599,16 @@ export const employees = [
     client: "Initech",
     position: "Business Analyst",
     email: "mbrown@initech.com",
+    phone: "+63 917 555 0301",
     rate: "₱750.00",
     status: "Active",
+    dateHired: "Jun 20, 2023",
+    address: "78 Katipunan Ave, Quezon City, Metro Manila",
+    emergencyContact: {
+      name: "Linda Brown",
+      relationship: "Spouse",
+      phone: "+63 917 555 0302",
+    },
   },
   {
     id: 4,
@@ -592,8 +616,16 @@ export const employees = [
     client: "Soylent Corp",
     position: "Project Manager",
     email: "edavis@soylent.com",
+    phone: "+63 917 555 0401",
     rate: "₱875.00",
     status: "On Leave",
+    dateHired: "Sep 11, 2022",
+    address: "12 Bonifacio St, Taguig City, Metro Manila",
+    emergencyContact: {
+      name: "Mark Davis",
+      relationship: "Spouse",
+      phone: "+63 917 555 0402",
+    },
   },
   {
     id: 5,
@@ -601,8 +633,16 @@ export const employees = [
     client: "Acme Corp",
     position: "Developer",
     email: "cwilson@acme.com",
+    phone: "+63 917 555 0501",
     rate: "₱812.50",
     status: "Active",
+    dateHired: "Feb 1, 2024",
+    address: "90 Aguinaldo Hwy, Imus, Cavite",
+    emergencyContact: {
+      name: "Susan Wilson",
+      relationship: "Mother",
+      phone: "+63 917 555 0502",
+    },
   },
   {
     id: 6,
@@ -610,8 +650,16 @@ export const employees = [
     client: "Globex Inc",
     position: "UI/UX Designer",
     email: "smartinez@globex.com",
+    phone: "+63 917 555 0601",
     rate: "₱735.29",
     status: "Active",
+    dateHired: "Nov 8, 2023",
+    address: "33 Marcos Hwy, Antipolo, Rizal",
+    emergencyContact: {
+      name: "Carlos Martinez",
+      relationship: "Spouse",
+      phone: "+63 917 555 0602",
+    },
   },
   {
     id: 7,
@@ -619,7 +667,38 @@ export const employees = [
     client: "Initech",
     position: "Developer",
     email: "dlee@initech.com",
+    phone: "+63 917 555 0701",
     rate: "₱812.50",
     status: "Active",
+    dateHired: "Apr 17, 2024",
+    address: "56 EDSA, Mandaluyong City, Metro Manila",
+    emergencyContact: {
+      name: "Grace Lee",
+      relationship: "Sister",
+      phone: "+63 917 555 0702",
+    },
   },
+];
+
+export const payslipHistory = [
+  { id: "PS-2405-01", employeeId: 1, period: "May 12–25, 2024", grossPay: "₱65,000.00", netPay: "₱55,200.00", status: "Paid" },
+  { id: "PS-2404-02", employeeId: 1, period: "Apr 28–May 11, 2024", grossPay: "₱65,000.00", netPay: "₱55,200.00", status: "Paid" },
+  { id: "PS-2404-01", employeeId: 1, period: "Apr 14–27, 2024", grossPay: "₱65,000.00", netPay: "₱55,200.00", status: "Paid" },
+  { id: "PS-2405-01", employeeId: 2, period: "May 12–25, 2024", grossPay: "₱58,278.40", netPay: "₱49,536.64", status: "Paid" },
+  { id: "PS-2404-02", employeeId: 2, period: "Apr 28–May 11, 2024", grossPay: "₱58,278.40", netPay: "₱49,536.64", status: "Paid" },
+  { id: "PS-2405-01", employeeId: 3, period: "May 12–25, 2024", grossPay: "₱60,000.00", netPay: "₱51,000.00", status: "Pending" },
+];
+
+export const timesheetHistory = [
+  { id: 1, employeeId: 1, period: "May 12–25, 2024", hoursLogged: 80, status: "Extracted", submitted: "May 26, 2024" },
+  { id: 2, employeeId: 1, period: "Apr 28–May 11, 2024", hoursLogged: 78.5, status: "Extracted", submitted: "May 12, 2024" },
+  { id: 3, employeeId: 2, period: "May 12–25, 2024", hoursLogged: 80, status: "Extracted", submitted: "May 26, 2024" },
+  { id: 4, employeeId: 3, period: "May 12–25, 2024", hoursLogged: 76, status: "Processing", submitted: "May 26, 2024" },
+];
+
+export const employeeDocuments = [
+  { id: 1, employeeId: 1, name: "Employment Contract.pdf", type: "pdf", uploaded: "Jan 15, 2023" },
+  { id: 2, employeeId: 1, name: "Government ID.jpg", type: "img", uploaded: "Jan 15, 2023" },
+  { id: 3, employeeId: 1, name: "NDA Agreement.pdf", type: "pdf", uploaded: "Jan 16, 2023" },
+  { id: 4, employeeId: 2, name: "Employment Contract.pdf", type: "pdf", uploaded: "Mar 3, 2023" },
 ];
