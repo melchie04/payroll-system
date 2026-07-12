@@ -287,6 +287,13 @@ export const clients = [
     employees: 8,
     billing: "₱145,200.00",
     status: "Active",
+    clientSince: "Feb 10, 2022",
+    address: "88 Industrial Ave, Parañaque City, Metro Manila",
+    secondaryContact: {
+      name: "Liza Fernandez",
+      role: "Finance Manager",
+      phone: "+63 917 123 4568",
+    },
   },
   {
     id: 2,
@@ -298,6 +305,13 @@ export const clients = [
     employees: 6,
     billing: "₱98,450.00",
     status: "Active",
+    clientSince: "Jul 3, 2022",
+    address: "200 IT Park, Cebu City, Cebu",
+    secondaryContact: {
+      name: "Paul Reyes",
+      role: "HR Director",
+      phone: "+63 918 234 5679",
+    },
   },
   {
     id: 3,
@@ -309,6 +323,13 @@ export const clients = [
     employees: 5,
     billing: "₱72,300.00",
     status: "Active",
+    clientSince: "Nov 21, 2022",
+    address: "5th Floor, Ayala Tower, Makati City, Metro Manila",
+    secondaryContact: {
+      name: "Diane Cruz",
+      role: "Accounts Payable Lead",
+      phone: "+63 919 345 6790",
+    },
   },
   {
     id: 4,
@@ -320,6 +341,13 @@ export const clients = [
     employees: 4,
     billing: "₱56,230.00",
     status: "At Risk",
+    clientSince: "Mar 14, 2023",
+    address: "12 Commerce St, Pasig City, Metro Manila",
+    secondaryContact: {
+      name: "Noel Ramos",
+      role: "Operations Manager",
+      phone: "+63 920 456 7891",
+    },
   },
   {
     id: 5,
@@ -331,6 +359,13 @@ export const clients = [
     employees: 3,
     billing: "₱41,800.00",
     status: "Active",
+    clientSince: "Aug 9, 2023",
+    address: "45 Port Area, Manila, Metro Manila",
+    secondaryContact: {
+      name: "Rina Aquino",
+      role: "Logistics Coordinator",
+      phone: "+63 921 567 8902",
+    },
   },
   {
     id: 6,
@@ -342,6 +377,13 @@ export const clients = [
     employees: 3,
     billing: "₱0.00",
     status: "Inactive",
+    clientSince: "Jan 5, 2021",
+    address: "9 Retail Row, Quezon City, Metro Manila",
+    secondaryContact: {
+      name: "Oscar Villanueva",
+      role: "Store Operations Head",
+      phone: "+63 922 678 9013",
+    },
   },
   {
     id: 7,
@@ -353,7 +395,22 @@ export const clients = [
     employees: 3,
     billing: "₱38,950.00",
     status: "Active",
+    clientSince: "May 30, 2023",
+    address: "77 Builder's Rd, Taguig City, Metro Manila",
+    secondaryContact: {
+      name: "Carla Mendoza",
+      role: "Project Coordinator",
+      phone: "+63 923 789 0124",
+    },
   },
+];
+
+// Keyed by clientId, same pattern as employeeDocuments — the Client
+// Profile page's Documents tab filters this by clientId.
+export const clientDocuments = [
+  { id: 1, clientId: 1, name: "Master Service Agreement.pdf", type: "pdf", uploaded: "Feb 10, 2022" },
+  { id: 2, clientId: 1, name: "NDA.pdf", type: "pdf", uploaded: "Feb 10, 2022" },
+  { id: 3, clientId: 2, name: "Master Service Agreement.pdf", type: "pdf", uploaded: "Jul 3, 2022" },
 ];
 
 export const notifications = [

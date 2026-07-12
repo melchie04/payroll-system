@@ -10,15 +10,18 @@ import "./assets/scss/custom.scss";
 
 import { ThemeProvider } from "./context/ThemeContext.jsx";
 import { EmployeesProvider } from "./context/EmployeesContext.jsx";
+import { ClientsProvider } from "./context/ClientsContext.jsx";
 import App from "./App.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
       <ThemeProvider>
-        <EmployeesProvider>
-          <App />
-        </EmployeesProvider>
+        <ClientsProvider>
+          <EmployeesProvider>
+            <App />
+          </EmployeesProvider>
+        </ClientsProvider>
       </ThemeProvider>
     </BrowserRouter>
   </StrictMode>,
