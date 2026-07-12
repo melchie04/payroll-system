@@ -87,7 +87,7 @@ export default function EmployeeForm() {
     }
   }
 
-  const backTo = isEdit ? `/employees/${existing.id}` : "/employees";
+  const backLabel = isEdit ? "Back to Profile" : "Back to Employees";
 
   return (
     <>
@@ -96,9 +96,13 @@ export default function EmployeeForm() {
       {/* ========================================================== */}
       <section>
         <div className="mt-4">
-          <Link to={backTo} className="text-muted small text-decoration-none d-inline-flex align-items-center gap-1 mb-2">
-            <i className="fas fa-arrow-left"></i> {isEdit ? "Back to Profile" : "Back to Employees"}
-          </Link>
+          <button
+            type="button"
+            onClick={() => navigate(-1)}
+            className="btn btn-link text-muted small text-decoration-none d-inline-flex align-items-center gap-1 mb-2 p-0"
+          >
+            <i className="fas fa-arrow-left"></i> {backLabel}
+          </button>
           <PageHeader
             title={isEdit ? "Edit Employee" : "Add Employee"}
             description={isEdit ? `Update details for ${existing.name}.` : "Add a new employee to your roster."}
@@ -269,9 +273,9 @@ export default function EmployeeForm() {
               <BtnPrimary type="submit">
                 <i className="fas fa-floppy-disk"></i> {isEdit ? "Save Changes" : "Add Employee"}
               </BtnPrimary>
-              <Link to={backTo} className="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2">
+              <button type="button" onClick={() => navigate(-1)} className="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2">
                 Cancel
-              </Link>
+              </button>
             </div>
           </form>
         </DataCard>

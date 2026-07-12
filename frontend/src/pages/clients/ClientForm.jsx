@@ -80,7 +80,7 @@ export default function ClientForm() {
     }
   }
 
-  const backTo = isEdit ? `/clients/${existing.id}` : "/clients";
+  const backLabel = isEdit ? "Back to Profile" : "Back to Clients";
 
   return (
     <>
@@ -89,17 +89,16 @@ export default function ClientForm() {
       {/* ========================================================== */}
       <section>
         <div className="mt-4">
-          <Link
-            to={backTo}
-            className="text-muted small text-decoration-none d-inline-flex align-items-center gap-1 mb-2"
+          <button
+            type="button"
+            onClick={() => navigate(-1)}
+            className="btn btn-link text-muted small text-decoration-none d-inline-flex align-items-center gap-1 mb-2 p-0"
           >
-            <i className="fas fa-arrow-left"></i> {isEdit ? "Back to Profile" : "Back to Clients"}
-          </Link>
+            <i className="fas fa-arrow-left"></i> {backLabel}
+          </button>
           <PageHeader
             title={isEdit ? "Edit Client" : "Add Client"}
-            description={
-              isEdit ? `Update details for ${existing.name}.` : "Add a new client account."
-            }
+            description={isEdit ? `Update details for ${existing.name}.` : "Add a new client account."}
           />
         </div>
       </section>
@@ -155,14 +154,7 @@ export default function ClientForm() {
             </div>
             <div className="col-12 col-md-6">
               <FormField label="Phone">
-                <input
-                  type="tel"
-                  className="form-control"
-                  name="phone"
-                  value={form.phone}
-                  onChange={handleChange}
-                  placeholder="+63 900 000 0000"
-                />
+                <input type="tel" className="form-control" name="phone" value={form.phone} onChange={handleChange} placeholder="+63 900 000 0000" />
               </FormField>
             </div>
 
@@ -216,10 +208,7 @@ export default function ClientForm() {
 
             <div className="col-12">
               <hr className="my-2" />
-              <div
-                className="text-uppercase text-muted fw-semibold mb-3"
-                style={{ fontSize: 11, letterSpacing: 0.5 }}
-              >
+              <div className="text-uppercase text-muted fw-semibold mb-3" style={{ fontSize: 11, letterSpacing: 0.5 }}>
                 Secondary Contact
               </div>
             </div>
@@ -265,12 +254,9 @@ export default function ClientForm() {
               <BtnPrimary type="submit">
                 <i className="fas fa-floppy-disk"></i> {isEdit ? "Save Changes" : "Add Client"}
               </BtnPrimary>
-              <Link
-                to={backTo}
-                className="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2"
-              >
+              <button type="button" onClick={() => navigate(-1)} className="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2">
                 Cancel
-              </Link>
+              </button>
             </div>
           </form>
         </DataCard>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   DataCard,
   Table,
@@ -42,6 +42,7 @@ function formatFileSize(bytes) {
 
 export default function EmployeeProfile() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [tab, setTab] = useState("overview");
 
   const { getEmployeeById, getDocumentsByEmployee, addDocument, deleteDocument } = useEmployees();
@@ -128,9 +129,13 @@ export default function EmployeeProfile() {
       {/* ========================================================== */}
       <section>
         <div className="mt-4">
-          <Link to="/employees" className="text-muted small text-decoration-none d-inline-flex align-items-center gap-1 mb-2">
-            <i className="fas fa-arrow-left"></i> Back to Employees
-          </Link>
+          <button
+            type="button"
+            onClick={() => navigate(-1)}
+            className="btn btn-link text-muted small text-decoration-none d-inline-flex align-items-center gap-1 mb-2 p-0"
+          >
+            <i className="fas fa-arrow-left"></i> Back
+          </button>
           <PageHeader
             title={employee.name}
             description={`${employee.position} · ${employee.client}`}

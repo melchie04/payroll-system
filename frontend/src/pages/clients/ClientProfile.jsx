@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   DataCard,
   Table,
@@ -43,6 +43,7 @@ function formatFileSize(bytes) {
 
 export default function ClientProfile() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [tab, setTab] = useState("overview");
 
   const { getClientById, getDocumentsByClient, addDocument, deleteDocument } = useClients();
@@ -130,20 +131,18 @@ export default function ClientProfile() {
       {/* ========================================================== */}
       <section>
         <div className="mt-4">
-          <Link
-            to="/clients"
-            className="text-muted small text-decoration-none d-inline-flex align-items-center gap-1 mb-2"
+          <button
+            type="button"
+            onClick={() => navigate(-1)}
+            className="btn btn-link text-muted small text-decoration-none d-inline-flex align-items-center gap-1 mb-2 p-0"
           >
-            <i className="fas fa-arrow-left"></i> Back to Clients
-          </Link>
+            <i className="fas fa-arrow-left"></i> Back
+          </button>
           <PageHeader
             title={client.name}
             description={`${client.industry} · Client since ${client.clientSince || "—"}`}
             actions={
-              <Link
-                to={`/clients/${client.id}/edit`}
-                className="btn btn-dark btn-sm d-inline-flex align-items-center gap-2"
-              >
+              <Link to={`/clients/${client.id}/edit`} className="btn btn-dark btn-sm d-inline-flex align-items-center gap-2">
                 <i className="fas fa-pen"></i> Edit
               </Link>
             }
@@ -161,11 +160,7 @@ export default function ClientProfile() {
         <ul className="nav nav-tabs mb-4">
           {TABS.map((t) => (
             <li className="nav-item" key={t.key}>
-              <button
-                type="button"
-                className={`nav-link ${tab === t.key ? "active fw-semibold" : "text-muted"}`}
-                onClick={() => setTab(t.key)}
-              >
+              <button type="button" className={`nav-link ${tab === t.key ? "active fw-semibold" : "text-muted"}`} onClick={() => setTab(t.key)}>
                 <i className={`fas ${t.icon} me-2 opacity-75`}></i>
                 {t.label}
               </button>
@@ -244,9 +239,7 @@ export default function ClientProfile() {
         <section className="mb-3">
           <DataCard>
             {clientInvoices.length === 0 ? (
-              <div className="text-center text-muted py-5 small">
-                No invoices on record yet.
-              </div>
+              <div className="text-center text-muted py-5 small">No invoices on record yet.</div>
             ) : (
               <>
                 <Table headers={["Invoice #", "Invoice Date", "Due Date", "Amount", "Status"]}>
@@ -262,11 +255,7 @@ export default function ClientProfile() {
                     </Tr>
                   ))}
                 </Table>
-                <Pagination
-                  current={1}
-                  total={1}
-                  label={`Showing 1 to ${clientInvoices.length} of ${clientInvoices.length} invoices`}
-                />
+                <Pagination current={1} total={1} label={`Showing 1 to ${clientInvoices.length} of ${clientInvoices.length} invoices`} />
               </>
             )}
           </DataCard>
@@ -280,9 +269,7 @@ export default function ClientProfile() {
         <section className="mb-3">
           <DataCard>
             {assignedEmployees.length === 0 ? (
-              <div className="text-center text-muted py-5 small">
-                No employees currently assigned to this client.
-              </div>
+              <div className="text-center text-muted py-5 small">No employees currently assigned to this client.</div>
             ) : (
               <>
                 <Table headers={["Name", "Position", "Email", "Rate (₱/hr)", "Status"]}>
@@ -302,11 +289,7 @@ export default function ClientProfile() {
                     </Tr>
                   ))}
                 </Table>
-                <Pagination
-                  current={1}
-                  total={1}
-                  label={`Showing 1 to ${assignedEmployees.length} of ${assignedEmployees.length} employees`}
-                />
+                <Pagination current={1} total={1} label={`Showing 1 to ${assignedEmployees.length} of ${assignedEmployees.length} employees`} />
               </>
             )}
           </DataCard>
@@ -327,16 +310,11 @@ export default function ClientProfile() {
             }
           >
             {documents.length === 0 ? (
-              <div className="text-center text-muted py-5 small">
-                No documents uploaded yet.
-              </div>
+              <div className="text-center text-muted py-5 small">No documents uploaded yet.</div>
             ) : (
               <div className="list-group list-group-flush">
                 {documents.map((doc) => (
-                  <div
-                    className="list-group-item d-flex align-items-center justify-content-between gap-3 py-3"
-                    key={doc.id}
-                  >
+                  <div className="list-group-item d-flex align-items-center justify-content-between gap-3 py-3" key={doc.id}>
                     <div className="d-flex align-items-center gap-3">
                       <span style={{ fontSize: 22 }}>{fileIcons[doc.type]}</span>
                       <div>
@@ -375,11 +353,7 @@ export default function ClientProfile() {
         title="Upload Document"
         footer={
           <>
-            <BtnSecondary
-              id="uploadDocumentModalClose"
-              data-bs-dismiss="modal"
-              onClick={resetUploadForm}
-            >
+            <BtnSecondary id="uploadDocumentModalClose" data-bs-dismiss="modal" onClick={resetUploadForm}>
               Cancel
             </BtnSecondary>
             <BtnPrimary type="submit" form="uploadDocumentForm" disabled={!docFile}>
@@ -389,13 +363,7 @@ export default function ClientProfile() {
         }
       >
         <form id="uploadDocumentForm" onSubmit={handleUploadDocument}>
-          <input
-            type="file"
-            id="client-document-file-input"
-            className="d-none"
-            accept=".pdf,.jpg,.jpeg,.png"
-            onChange={handleFileInputChange}
-          />
+          <input type="file" id="client-document-file-input" className="d-none" accept=".pdf,.jpg,.jpeg,.png" onChange={handleFileInputChange} />
 
           {!docFile ? (
             <div
@@ -415,9 +383,7 @@ export default function ClientProfile() {
               <div className="mb-2" style={{ fontSize: 28 }}>
                 <i className="fas fa-cloud-arrow-up text-muted"></i>
               </div>
-              <div className="small fw-medium mb-1">
-                Drag and drop a file here, or click to browse
-              </div>
+              <div className="small fw-medium mb-1">Drag and drop a file here, or click to browse</div>
               <div className="text-muted" style={{ fontSize: 11 }}>
                 Supports: PDF, JPG, PNG
               </div>
@@ -450,11 +416,7 @@ export default function ClientProfile() {
             />
           </FormField>
           <FormField label="Type">
-            <select
-              className="form-select"
-              value={docType}
-              onChange={(e) => setDocType(e.target.value)}
-            >
+            <select className="form-select" value={docType} onChange={(e) => setDocType(e.target.value)}>
               <option value="pdf">PDF</option>
               <option value="img">Image</option>
             </select>
@@ -480,8 +442,7 @@ export default function ClientProfile() {
         }
       >
         <p className="mb-0">
-          Are you sure you want to delete <strong>{deleteDocTarget?.name}</strong>?
-          This action cannot be undone.
+          Are you sure you want to delete <strong>{deleteDocTarget?.name}</strong>? This action cannot be undone.
         </p>
       </Modal>
     </>
