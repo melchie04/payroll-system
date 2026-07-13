@@ -28,6 +28,12 @@ export default function Payroll() {
 
   const toggleOne = (id) => setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
 
+  const allSelected = rows.length > 0 && selected.length === rows.length;
+
+  function toggleAll() {
+    setSelected(allSelected ? [] : rows.map((r) => r.id));
+  }
+
   // ============================================================
   // DELETE ROW (remove from payroll run)
   // ============================================================
@@ -39,6 +45,20 @@ export default function Payroll() {
       setTarget(null);
     }
     document.getElementById("payrollDeleteModalClose")?.click();
+  }
+
+  // ============================================================
+  // BULK ACTIONS (selected rows)
+  // ============================================================
+  function bulkMarkReady() {
+    setRows((prev) => prev.map((r) => (selected.includes(r.id) ? { ...r, status: "Ready" } : r)));
+    setSelected([]);
+  }
+
+  function confirmBulkDelete() {
+    setRows((prev) => prev.filter((r) => !selected.includes(r.id)));
+    setSelected([]);
+    document.getElementById("bulkDeleteModalClose")?.click();
   }
 
   return (
@@ -135,7 +155,41 @@ export default function Payroll() {
       {/* ========================================================== */}
       <section className="mb-3">
         <DataCard>
-          <Table headers={["", "Employee", "Client", "Position", "Hours", "Rate (₱)", "Gross Pay (₱)", "Status", "Actions"]}>
+          {/* Bulk actions bar — only shows once at least one row is checked */}
+          {selected.length > 0 && (
+            <div className="d-flex align-items-center justify-content-between gap-2 px-3 py-2 bg-light border-bottom flex-wrap">
+              <span className="small fw-semibold">
+                {selected.length} employee{selected.length === 1 ? "" : "s"} selected
+              </span>
+              <div className="d-flex gap-2">
+                <button type="button" className="btn btn-sm btn-outline-secondary" onClick={() => setSelected([])}>
+                  Clear Selection
+                </button>
+                <button type="button" className="btn btn-sm btn-outline-success" onClick={bulkMarkReady}>
+                  <i className="fas fa-check"></i> Mark as Ready
+                </button>
+                <button type="button" className="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#bulkDeleteModal">
+                  <i className="fas fa-trash"></i> Delete Selected
+                </button>
+              </div>
+            </div>
+          )}
+
+          <Table
+            headers={[
+              <span key="select-all">
+                <input type="checkbox" className="form-check-input" checked={allSelected} onChange={toggleAll} />
+              </span>,
+              "Employee",
+              "Client",
+              "Position",
+              "Hours",
+              "Rate (₱)",
+              "Gross Pay (₱)",
+              "Status",
+              "Actions",
+            ]}
+          >
             {rows.map((row) => (
               <Tr key={row.id}>
                 <Td>
@@ -193,6 +247,32 @@ export default function Payroll() {
       >
         <p className="mb-0">
           Are you sure you want to remove <strong>{target?.name}</strong> from this payroll run? This action cannot be undone.
+        </p>
+      </Modal>
+
+      {/* ========================================================== */}
+      {/* MODAL: CONFIRM BULK DELETE                                 */}
+      {/* ========================================================== */}
+      <Modal
+        id="bulkDeleteModal"
+        title="Remove Selected From Payroll Run"
+        footer={
+          <>
+            <BtnSecondary id="bulkDeleteModalClose" data-bs-dismiss="modal">
+              Cancel
+            </BtnSecondary>
+            <button type="button" className="btn btn-danger btn-sm" onClick={confirmBulkDelete}>
+              <i className="fas fa-trash"></i> Remove {selected.length || ""}
+            </button>
+          </>
+        }
+      >
+        <p className="mb-0">
+          Are you sure you want to remove{" "}
+          <strong>
+            {selected.length} employee{selected.length === 1 ? "" : "s"}
+          </strong>{" "}
+          from this payroll run? This action cannot be undone.
         </p>
       </Modal>
     </>
