@@ -122,7 +122,7 @@ export default function ClientForm() {
       {/* ========================================================== */}
       <section className="mb-3">
         <DataCard title="Client Details">
-          <form className="card-body row g-3" onSubmit={handleSubmit}>
+          <form className="card-body row" onSubmit={handleSubmit}>
             <div className="col-12 col-md-6">
               <FormField label="Client / Company Name">
                 <input

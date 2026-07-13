@@ -29,10 +29,7 @@ export default function Clients() {
   // ============================================================
   const [selected, setSelected] = useState([]);
 
-  const toggleOne = (id) =>
-    setSelected((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
-    );
+  const toggleOne = (id) => setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
 
   const allSelected = clients.length > 0 && selected.length === clients.length;
 
@@ -73,10 +70,7 @@ export default function Clients() {
             title="Clients"
             description="Manage your client accounts and their billing details."
             actions={
-              <Link
-                to="/clients/new"
-                className="btn btn-dark btn-sm d-inline-flex align-items-center gap-2"
-              >
+              <Link to="/clients/new" className="btn btn-dark btn-sm d-inline-flex align-items-center gap-2">
                 <i className="fas fa-plus"></i> Add Client
               </Link>
             }
@@ -91,7 +85,7 @@ export default function Clients() {
       {/* DIVISION 2: STATUS CARDS                                   */}
       {/* ========================================================== */}
       <section>
-        <div className="row g-3 mb-4">
+        <div className="row g-3">
           {clientStats.map((s) => (
             <div className="col-xl-3 col-md-6" key={s.label}>
               <StatCard {...s} />
@@ -107,7 +101,7 @@ export default function Clients() {
       {/* DIVISION 3: CONTROLS                                       */}
       {/* ========================================================== */}
       <section>
-        <div className="row g-3 align-items-end mb-4">
+        <div className="row g-3 align-items-end">
           <div className="col-12 col-md-4">
             <FilterSelect label="Status">
               <option>All Statuses</option>
@@ -129,23 +123,14 @@ export default function Clients() {
             </FilterSelect>
           </div>
           <div className="col-12 col-md-4">
-            <label
-              className="form-label text-uppercase text-muted fw-semibold mb-1 d-block"
-              style={{ fontSize: 11, letterSpacing: 0.5 }}
-            >
+            <label className="form-label text-uppercase text-muted fw-semibold mb-1 d-block" style={{ fontSize: 11, letterSpacing: 0.5 }}>
               Search Client
             </label>
             <div className="d-flex gap-2 align-items-center w-100">
               <SearchInput placeholder="Search client" />
               <FilterMenu>
-                <FilterCheckGroup
-                  label="Status"
-                  options={["Active", "At Risk", "Inactive"]}
-                />
-                <FilterCheckGroup
-                  label="Industry"
-                  options={["Manufacturing", "Technology", "Finance", "Retail"]}
-                />
+                <FilterCheckGroup label="Status" options={["Active", "At Risk", "Inactive"]} />
+                <FilterCheckGroup label="Industry" options={["Manufacturing", "Technology", "Finance", "Retail"]} />
               </FilterMenu>
             </div>
           </div>
@@ -167,19 +152,10 @@ export default function Clients() {
                 {selected.length} client{selected.length === 1 ? "" : "s"} selected
               </span>
               <div className="d-flex gap-2">
-                <button
-                  type="button"
-                  className="btn btn-sm btn-outline-secondary"
-                  onClick={() => setSelected([])}
-                >
+                <button type="button" className="btn btn-sm btn-outline-secondary" onClick={() => setSelected([])}>
                   Clear Selection
                 </button>
-                <button
-                  type="button"
-                  className="btn btn-sm btn-danger"
-                  data-bs-toggle="modal"
-                  data-bs-target="#bulkDeleteModal"
-                >
+                <button type="button" className="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#bulkDeleteModal">
                   <i className="fas fa-trash"></i> Delete Selected
                 </button>
               </div>
@@ -189,12 +165,7 @@ export default function Clients() {
           <Table
             headers={[
               <span key="select-all">
-                <input
-                  type="checkbox"
-                  className="form-check-input"
-                  checked={allSelected}
-                  onChange={toggleAll}
-                />
+                <input type="checkbox" className="form-check-input" checked={allSelected} onChange={toggleAll} />
               </span>,
               "Client",
               "Contact Person",
@@ -210,12 +181,7 @@ export default function Clients() {
             {clients.map((c) => (
               <Tr key={c.id}>
                 <Td>
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    checked={selected.includes(c.id)}
-                    onChange={() => toggleOne(c.id)}
-                  />
+                  <input className="form-check-input" type="checkbox" checked={selected.includes(c.id)} onChange={() => toggleOne(c.id)} />
                 </Td>
                 <Td bold>
                   <Link to={`/clients/${c.id}`} className="text-decoration-none">
@@ -239,12 +205,7 @@ export default function Clients() {
                     <IconBtn title="Edit" onClick={() => navigate(`/clients/${c.id}/edit`)}>
                       <i className="fas fa-pen"></i>
                     </IconBtn>
-                    <IconBtn
-                      title="Delete"
-                      data-bs-toggle="modal"
-                      data-bs-target="#clientDeleteModal"
-                      onClick={() => setTarget(c)}
-                    >
+                    <IconBtn title="Delete" data-bs-toggle="modal" data-bs-target="#clientDeleteModal" onClick={() => setTarget(c)}>
                       <i className="fas fa-trash text-danger"></i>
                     </IconBtn>
                   </div>
@@ -252,11 +213,7 @@ export default function Clients() {
               </Tr>
             ))}
           </Table>
-          <Pagination
-            current={1}
-            total={2}
-            label={`Showing 1 to ${clients.length} of 12 clients`}
-          />
+          <Pagination current={1} total={2} label={`Showing 1 to ${clients.length} of 12 clients`} />
         </DataCard>
       </section>
 
@@ -278,8 +235,7 @@ export default function Clients() {
         }
       >
         <p className="mb-0">
-          Are you sure you want to delete <strong>{target?.name}</strong>? This
-          will remove them from your client list. This action cannot be undone.
+          Are you sure you want to delete <strong>{target?.name}</strong>? This will remove them from your client list. This action cannot be undone.
         </p>
       </Modal>
 
