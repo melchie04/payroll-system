@@ -9,6 +9,7 @@ import {
   Badge,
   IconBtn,
   BtnSecondary,
+  ExportMenu,
   FilterSelect,
   FilterMenu,
   FilterCheckGroup,
@@ -19,6 +20,13 @@ import {
 } from "../../components/ui/index.jsx";
 import { clientStats } from "../../assets/data/index.js";
 import { useClients } from "../../context/ClientsContext.jsx";
+import { exportToCsv } from "../../utils/exportToCsv.js";
+
+const CSV_HEADERS = ["Client", "Contact Person", "Email", "Phone", "Industry", "Employees", "Billing", "Status"];
+
+function toCsvRows(list) {
+  return list.map((c) => [c.name, c.contact, c.email, c.phone, c.industry, c.employees, c.billing, c.status]);
+}
 
 export default function Clients() {
   const navigate = useNavigate();
@@ -59,6 +67,18 @@ export default function Clients() {
     document.getElementById("bulkDeleteModalClose")?.click();
   }
 
+  // ============================================================
+  // EXPORT
+  // ============================================================
+  function handleExportAll() {
+    exportToCsv("clients", CSV_HEADERS, toCsvRows(clients));
+  }
+
+  function handleExportSelected() {
+    const rows = clients.filter((c) => selected.includes(c.id));
+    exportToCsv("clients-selected", CSV_HEADERS, toCsvRows(rows));
+  }
+
   return (
     <>
       {/* ========================================================== */}
@@ -70,9 +90,12 @@ export default function Clients() {
             title="Clients"
             description="Manage your client accounts and their billing details."
             actions={
-              <Link to="/clients/new" className="btn btn-dark btn-sm d-inline-flex align-items-center gap-2">
-                <i className="fas fa-plus"></i> Add Client
-              </Link>
+              <>
+                <ExportMenu onExportCsv={handleExportAll} />
+                <Link to="/clients/new" className="btn btn-dark btn-sm d-inline-flex align-items-center gap-2">
+                  <i className="fas fa-plus"></i> Add Client
+                </Link>
+              </>
             }
           />
         </div>
@@ -143,7 +166,7 @@ export default function Clients() {
       {/* ========================================================== */}
       {/* DIVISION 4: TABLES                                         */}
       {/* ========================================================== */}
-      <section className="mb-3">
+      <section className="mb-3 print-area">
         <DataCard>
           {/* Bulk actions bar — only shows once at least one row is checked */}
           {selected.length > 0 && (
@@ -154,6 +177,9 @@ export default function Clients() {
               <div className="d-flex gap-2">
                 <button type="button" className="btn btn-sm btn-outline-secondary" onClick={() => setSelected([])}>
                   Clear Selection
+                </button>
+                <button type="button" className="btn btn-sm btn-outline-secondary" onClick={handleExportSelected}>
+                  <i className="fas fa-download"></i> Export Selected
                 </button>
                 <button type="button" className="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#bulkDeleteModal">
                   <i className="fas fa-trash"></i> Delete Selected

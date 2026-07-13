@@ -1,5 +1,6 @@
-import { DataCard, Table, Tr, Td, FilterSelect, SearchInput, PageHeader, Pagination } from "../components/ui/index.jsx";
+import { DataCard, Table, Tr, Td, FilterSelect, SearchInput, ExportMenu, PageHeader, Pagination } from "../components/ui/index.jsx";
 import { activityLog } from "../assets/data/index.js";
+import { exportToCsv } from "../utils/exportToCsv.js";
 
 const moduleVariant = {
   Payroll: "primary",
@@ -12,6 +13,14 @@ const moduleVariant = {
 };
 
 export default function ActivityLog() {
+  function handleExportAll() {
+    exportToCsv(
+      "activity-log",
+      ["User", "Action", "Details", "Module", "Timestamp"],
+      activityLog.map((log) => [log.user, log.action, log.detail, log.module, log.timestamp]),
+    );
+  }
+
   return (
     <>
       {/* ========================================================== */}
@@ -19,7 +28,11 @@ export default function ActivityLog() {
       {/* ========================================================== */}
       <section>
         <div className="mt-4">
-          <PageHeader title="Activity Log" description="Track every action taken across your payroll system." />
+          <PageHeader
+            title="Activity Log"
+            description="Track every action taken across your payroll system."
+            actions={<ExportMenu onExportCsv={handleExportAll} />}
+          />
         </div>
       </section>
 
@@ -67,7 +80,7 @@ export default function ActivityLog() {
       {/* ========================================================== */}
       {/* DIVISION 3: TABLE                                          */}
       {/* ========================================================== */}
-      <section className="mb-3">
+      <section className="mb-3 print-area">
         <DataCard>
           <Table headers={["User", "Action", "Details", "Module", "Timestamp"]}>
             {activityLog.map((log) => (

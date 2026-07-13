@@ -8,6 +8,7 @@ import {
   Badge,
   BtnPrimary,
   BtnSecondary,
+  ExportMenu,
   FilterSelect,
   FilterMenu,
   FilterCheckGroup,
@@ -18,6 +19,13 @@ import {
   Pagination,
 } from "../components/ui/index.jsx";
 import { payrollStats, payrollEmployees } from "../assets/data/index.js";
+import { exportToCsv } from "../utils/exportToCsv.js";
+
+const CSV_HEADERS = ["Employee", "Client", "Position", "Hours", "Rate", "Gross Pay", "Status"];
+
+function toCsvRows(list) {
+  return list.map((r) => [r.name, r.client, r.position, r.hours, r.rate, r.gross, r.status]);
+}
 
 export default function Payroll() {
   // ============================================================
@@ -61,6 +69,18 @@ export default function Payroll() {
     document.getElementById("bulkDeleteModalClose")?.click();
   }
 
+  // ============================================================
+  // EXPORT
+  // ============================================================
+  function handleExportAll() {
+    exportToCsv("payroll", CSV_HEADERS, toCsvRows(rows));
+  }
+
+  function handleExportSelected() {
+    const selectedRows = rows.filter((r) => selected.includes(r.id));
+    exportToCsv("payroll-selected", CSV_HEADERS, toCsvRows(selectedRows));
+  }
+
   return (
     <>
       {/* ========================================================== */}
@@ -73,6 +93,7 @@ export default function Payroll() {
             description="Manage and process payroll for your employees."
             actions={
               <>
+                <ExportMenu onExportCsv={handleExportAll} />
                 <BtnSecondary>
                   <i className="fas fa-upload"></i> Import Timesheet
                 </BtnSecondary>
@@ -153,7 +174,7 @@ export default function Payroll() {
       {/* ========================================================== */}
       {/* DIVISION 4: TABLES                                         */}
       {/* ========================================================== */}
-      <section className="mb-3">
+      <section className="mb-3 print-area">
         <DataCard>
           {/* Bulk actions bar — only shows once at least one row is checked */}
           {selected.length > 0 && (
@@ -167,6 +188,9 @@ export default function Payroll() {
                 </button>
                 <button type="button" className="btn btn-sm btn-outline-success" onClick={bulkMarkReady}>
                   <i className="fas fa-check"></i> Mark as Ready
+                </button>
+                <button type="button" className="btn btn-sm btn-outline-secondary" onClick={handleExportSelected}>
+                  <i className="fas fa-download"></i> Export Selected
                 </button>
                 <button type="button" className="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#bulkDeleteModal">
                   <i className="fas fa-trash"></i> Delete Selected

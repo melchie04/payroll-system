@@ -219,6 +219,33 @@ export function ActionsMenu({ items }) {
   );
 }
 
+export function ExportMenu({ onExportCsv, label = "Export" }) {
+  return (
+    <div className="dropdown">
+      <button
+        type="button"
+        className="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+      >
+        <i className="fas fa-download"></i> {label}
+      </button>
+      <ul className="dropdown-menu dropdown-menu-end shadow-sm">
+        <li>
+          <button type="button" className="dropdown-item d-flex align-items-center gap-2" onClick={onExportCsv}>
+            <i className="fas fa-file-csv fa-fw opacity-75"></i> Export as CSV
+          </button>
+        </li>
+        <li>
+          <button type="button" className="dropdown-item d-flex align-items-center gap-2" onClick={() => window.print()}>
+            <i className="fas fa-file-pdf fa-fw opacity-75"></i> Print / Save as PDF
+          </button>
+        </li>
+      </ul>
+    </div>
+  );
+}
+
 export function FilterMenu({ children, onReset }) {
   return (
     <div className="dropdown">

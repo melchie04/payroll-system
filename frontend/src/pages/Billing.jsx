@@ -8,6 +8,7 @@ import {
   Badge,
   BtnPrimary,
   BtnSecondary,
+  ExportMenu,
   FilterSelect,
   FilterMenu,
   FilterCheckGroup,
@@ -19,6 +20,7 @@ import {
   Pagination,
 } from "../components/ui/index.jsx";
 import { billingStats, invoices as initialInvoices } from "../assets/data/index.js";
+import { exportToCsv } from "../utils/exportToCsv.js";
 
 const emptyInvoice = {
   client: "Acme Corp",
@@ -67,6 +69,17 @@ export default function Billing() {
     document.getElementById("createInvoiceModalClose")?.click();
   }
 
+  // ============================================================
+  // EXPORT
+  // ============================================================
+  function handleExportAll() {
+    exportToCsv(
+      "invoices",
+      ["Invoice #", "Client", "Invoice Date", "Due Date", "Amount", "Status"],
+      invoices.map((inv) => [inv.id, inv.client, inv.invoiceDate, inv.dueDate, inv.amount, inv.status]),
+    );
+  }
+
   return (
     <>
       {/* ========================================================== */}
@@ -79,9 +92,7 @@ export default function Billing() {
             description="Create invoices and track billing for your clients."
             actions={
               <>
-                <BtnSecondary>
-                  <i className="fas fa-download"></i> Export
-                </BtnSecondary>
+                <ExportMenu onExportCsv={handleExportAll} />
                 <BtnPrimary data-bs-toggle="modal" data-bs-target="#createInvoiceModal">
                   <i className="fas fa-plus"></i> Create Invoice
                 </BtnPrimary>
@@ -158,7 +169,7 @@ export default function Billing() {
       {/* ========================================================== */}
       {/* DIVISION 4: TABLES                                         */}
       {/* ========================================================== */}
-      <section className="mb-3">
+      <section className="mb-3 print-area">
         <DataCard>
           <Table headers={["Invoice #", "Client", "Invoice Date", "Due Date", "Amount (₱)", "Status", "Actions"]}>
             {invoices.map((inv) => {

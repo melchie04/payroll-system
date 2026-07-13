@@ -15,3 +15,29 @@
     overflow: visible;
   }
 }
+
+/* Print / "Save as PDF" support — mark the section that should actually
+   print (the table + its card) with .print-area; everything else on the
+   page (sidebar, topnav, filters, buttons, dropdowns) gets hidden. This
+   works regardless of layout structure, since it targets .print-area by
+   class rather than hardcoding sidebar/topnav element IDs. */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .print-area,
+  .print-area * {
+    visibility: visible;
+  }
+  .print-area {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+  .print-area .btn,
+  .print-area .dropdown,
+  .print-area .form-check-input {
+    display: none !important;
+  }
+}

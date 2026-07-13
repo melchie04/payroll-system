@@ -8,6 +8,7 @@ import {
   Badge,
   IconBtn,
   BtnSecondary,
+  ExportMenu,
   FilterSelect,
   FilterMenu,
   FilterCheckGroup,
@@ -17,6 +18,13 @@ import {
   Pagination,
 } from "../../components/ui/index.jsx";
 import { useEmployees } from "../../context/EmployeesContext.jsx";
+import { exportToCsv } from "../../utils/exportToCsv.js";
+
+const CSV_HEADERS = ["Name", "Client", "Position", "Email", "Rate", "Status"];
+
+function toCsvRows(list) {
+  return list.map((e) => [e.name, e.client, e.position, e.email, e.rate, e.status]);
+}
 
 export default function Employees() {
   const navigate = useNavigate();
@@ -57,6 +65,18 @@ export default function Employees() {
     document.getElementById("bulkDeleteModalClose")?.click();
   }
 
+  // ============================================================
+  // EXPORT
+  // ============================================================
+  function handleExportAll() {
+    exportToCsv("employees", CSV_HEADERS, toCsvRows(employees));
+  }
+
+  function handleExportSelected() {
+    const rows = employees.filter((e) => selected.includes(e.id));
+    exportToCsv("employees-selected", CSV_HEADERS, toCsvRows(rows));
+  }
+
   return (
     <>
       {/* ========================================================== */}
@@ -68,9 +88,12 @@ export default function Employees() {
             title="Employees"
             description="Manage your employee roster across all clients."
             actions={
-              <Link to="/employees/new" className="btn btn-dark btn-sm d-inline-flex align-items-center gap-2">
-                <i className="fas fa-plus"></i> Add Employee
-              </Link>
+              <>
+                <ExportMenu onExportCsv={handleExportAll} />
+                <Link to="/employees/new" className="btn btn-dark btn-sm d-inline-flex align-items-center gap-2">
+                  <i className="fas fa-plus"></i> Add Employee
+                </Link>
+              </>
             }
           />
         </div>
@@ -119,7 +142,7 @@ export default function Employees() {
       {/* ========================================================== */}
       {/* DIVISION 4: TABLES                                         */}
       {/* ========================================================== */}
-      <section className="mb-3">
+      <section className="mb-3 print-area">
         <DataCard>
           {/* Bulk actions bar — only shows once at least one row is checked */}
           {selected.length > 0 && (
@@ -130,6 +153,9 @@ export default function Employees() {
               <div className="d-flex gap-2">
                 <button type="button" className="btn btn-sm btn-outline-secondary" onClick={() => setSelected([])}>
                   Clear Selection
+                </button>
+                <button type="button" className="btn btn-sm btn-outline-secondary" onClick={handleExportSelected}>
+                  <i className="fas fa-download"></i> Export Selected
                 </button>
                 <button type="button" className="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#bulkDeleteModal">
                   <i className="fas fa-trash"></i> Delete Selected
