@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { DataCard, BtnPrimary, FormField, PageHeader } from "../../components/ui/index.jsx";
 import { useClients } from "../../context/ClientsContext.jsx";
 
@@ -20,6 +20,7 @@ const emptyForm = {
 export default function ClientForm() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const { getClientById, addClient, updateClient } = useClients();
 
   const isEdit = Boolean(id);
@@ -81,6 +82,16 @@ export default function ClientForm() {
   }
 
   const backLabel = isEdit ? "Back to Profile" : "Back to Clients";
+  const fallbackPath = isEdit ? `/clients/${existing.id}` : "/clients";
+  // location.key is "default" when there's no in-app history to go back to
+  // (direct URL load, refresh, bookmark) — fall back to a real route then,
+  // otherwise use actual browser history so we land on wherever the user
+  // really came from.
+  const hasHistory = location.key !== "default";
+  function handleBack() {
+    if (hasHistory) navigate(-1);
+    else navigate(fallbackPath);
+  }
 
   return (
     <>
@@ -91,7 +102,7 @@ export default function ClientForm() {
         <div className="mt-4">
           <button
             type="button"
-            onClick={() => navigate(-1)}
+            onClick={handleBack}
             className="btn btn-link text-muted small text-decoration-none d-inline-flex align-items-center gap-1 mb-2 p-0"
           >
             <i className="fas fa-arrow-left"></i> {backLabel}
@@ -254,7 +265,7 @@ export default function ClientForm() {
               <BtnPrimary type="submit">
                 <i className="fas fa-floppy-disk"></i> {isEdit ? "Save Changes" : "Add Client"}
               </BtnPrimary>
-              <button type="button" onClick={() => navigate(-1)} className="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2">
+              <button type="button" onClick={handleBack} className="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2">
                 Cancel
               </button>
             </div>
