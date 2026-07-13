@@ -108,7 +108,7 @@ export default function Payroll() {
       {/* DIVISION 3: CONTROLS                                       */}
       {/* ========================================================== */}
       <section>
-        <div className="row g-3 align-items-end mb-4">
+        <div className="row g-3 align-items-end">
           <div className="col-12 col-md-3">
             <FilterSelect label="Client">
               <option>All Clients</option>
