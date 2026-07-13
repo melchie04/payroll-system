@@ -85,7 +85,7 @@ export default function Timesheet() {
       {/* DIVISION 2: CONTROLS                                       */}
       {/* ========================================================== */}
       <section>
-        <div className="row g-3 align-items-end mb-4">
+        <div className="row g-3 align-items-end">
           <div className="col-12 col-md-4">
             <FilterSelect label="Client">
               <option>Select Client</option>
