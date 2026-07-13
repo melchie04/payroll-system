@@ -98,7 +98,7 @@ export default function Billing() {
       {/* DIVISION 2: STATUS CARDS                                   */}
       {/* ========================================================== */}
       <section>
-        <div className="row g-3 mb-4">
+        <div className="row g-3">
           {billingStats.map((s) => (
             <div className="col-xl-3 col-md-6" key={s.label}>
               <StatCard {...s} />
@@ -114,7 +114,7 @@ export default function Billing() {
       {/* DIVISION 3: CONTROLS                                       */}
       {/* ========================================================== */}
       <section>
-        <div className="row g-3 align-items-end mb-4">
+        <div className="row g-3 align-items-end">
           <div className="col-12 col-md-3">
             <FilterSelect label="Client">
               <option>All Clients</option>
