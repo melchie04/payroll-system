@@ -7,7 +7,7 @@ const TABS = [
 
 export function SettingsTabsNav({ tab, onSwitch }) {
   return (
-    <ul className="nav nav-tabs mb-4">
+    <ul className="nav nav-tabs mb-2">
       {TABS.map((t) => (
         <li className="nav-item" key={t.key}>
           <button type="button" className={`nav-link ${tab === t.key ? "active fw-semibold" : "text-muted"}`} onClick={() => onSwitch(t.key)}>

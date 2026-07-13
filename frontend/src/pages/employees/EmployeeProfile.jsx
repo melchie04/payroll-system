@@ -166,7 +166,7 @@ export default function EmployeeProfile() {
       {/* DIVISION 2: TABS                                           */}
       {/* ========================================================== */}
       <section>
-        <ul className="nav nav-tabs">
+        <ul className="nav nav-tabs mb-2">
           {TABS.map((t) => (
             <li className="nav-item" key={t.key}>
               <button type="button" className={`nav-link ${tab === t.key ? "active fw-semibold" : "text-muted"}`} onClick={() => setTab(t.key)}>
