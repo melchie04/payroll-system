@@ -16,11 +16,19 @@ import {
   IconBtn,
   Modal,
   FormField,
+  DetailList,
+  DetailRow,
   PageHeader,
   Pagination,
 } from "../components/ui/index.jsx";
-import { billingStats, invoices as initialInvoices } from "../assets/data/index.js";
+import { billingStats, invoices as initialInvoices, clients } from "../assets/data/index.js";
 import { exportToCsv } from "../utils/exportToCsv.js";
+
+const COMPANY = {
+  name: "Payroll System Inc.",
+  email: "support@payrollsys.com",
+  address: "8th Floor, One Global Place, Taguig City, Metro Manila",
+};
 
 const emptyInvoice = {
   client: "Acme Corp",
@@ -39,6 +47,16 @@ export default function Billing() {
 
   function toggleHidden(id) {
     setHidden((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+  }
+
+  // ============================================================
+  // VIEW INVOICE — plain read-only detail + PDF download, simple
+  // data-bs-toggle trigger since nothing here is editable.
+  // ============================================================
+  const [viewTarget, setViewTarget] = useState(null);
+
+  function getClientInfo(clientName) {
+    return clients.find((c) => c.name === clientName);
   }
 
   // ============================================================
@@ -176,7 +194,17 @@ export default function Billing() {
               const isHidden = hidden.includes(inv.id);
               return (
                 <Tr key={inv.id}>
-                  <Td bold>{inv.id}</Td>
+                  <Td bold>
+                    <button
+                      type="button"
+                      className="btn btn-link p-0 fw-semibold text-decoration-none"
+                      data-bs-toggle="modal"
+                      data-bs-target="#viewInvoiceModal"
+                      onClick={() => setViewTarget(inv)}
+                    >
+                      {inv.id}
+                    </button>
+                  </Td>
                   <Td>{inv.client}</Td>
                   <Td>{inv.invoiceDate}</Td>
                   <Td>{inv.dueDate}</Td>
@@ -185,9 +213,14 @@ export default function Billing() {
                     <Badge status={inv.status} />
                   </Td>
                   <Td>
-                    <IconBtn title={isHidden ? "Show amount" : "Hide amount"} onClick={() => toggleHidden(inv.id)}>
-                      <i className={`fas ${isHidden ? "fa-eye-slash" : "fa-eye"}`}></i>
-                    </IconBtn>
+                    <div className="d-flex align-items-center gap-1">
+                      <IconBtn title="View Invoice" data-bs-toggle="modal" data-bs-target="#viewInvoiceModal" onClick={() => setViewTarget(inv)}>
+                        <i className="fas fa-file-invoice"></i>
+                      </IconBtn>
+                      <IconBtn title={isHidden ? "Show amount" : "Hide amount"} onClick={() => toggleHidden(inv.id)}>
+                        <i className={`fas ${isHidden ? "fa-eye-slash" : "fa-eye"}`}></i>
+                      </IconBtn>
+                    </div>
                   </Td>
                 </Tr>
               );
@@ -257,6 +290,102 @@ export default function Billing() {
             </select>
           </FormField>
         </form>
+      </Modal>
+
+      {/* ========================================================== */}
+      {/* MODAL: VIEW INVOICE                                        */}
+      {/* ========================================================== */}
+      <Modal
+        id="viewInvoiceModal"
+        title="Invoice"
+        size="modal-lg"
+        footer={
+          <>
+            <BtnSecondary data-bs-dismiss="modal">Close</BtnSecondary>
+            <button type="button" className="btn btn-dark btn-sm" onClick={() => window.print()}>
+              <i className="fas fa-file-pdf"></i> Download PDF
+            </button>
+          </>
+        }
+      >
+        {viewTarget &&
+          (() => {
+            const billTo = getClientInfo(viewTarget.client);
+            return (
+              <div className="print-area">
+                <div className="d-flex flex-wrap justify-content-between gap-3 mb-4">
+                  <div>
+                    <div className="fw-bold fs-5">{COMPANY.name}</div>
+                    <div className="text-muted small">{COMPANY.address}</div>
+                    <div className="text-muted small">{COMPANY.email}</div>
+                  </div>
+                  <div className="text-sm-end">
+                    <div className="fw-bold fs-5">{viewTarget.id}</div>
+                    <div className="mb-1">
+                      <Badge status={viewTarget.status} />
+                    </div>
+                    <div className="text-muted small">Invoice Date: {viewTarget.invoiceDate}</div>
+                    <div className="text-muted small">Due Date: {viewTarget.dueDate}</div>
+                  </div>
+                </div>
+
+                <div className="text-uppercase text-muted fw-semibold mb-2" style={{ fontSize: 11, letterSpacing: 0.5 }}>
+                  Bill To
+                </div>
+                {billTo ? (
+                  <DetailList>
+                    <DetailRow icon="fa-building" label="Client">
+                      {billTo.name}
+                    </DetailRow>
+                    <DetailRow icon="fa-user" label="Contact Person">
+                      {billTo.contact}
+                    </DetailRow>
+                    <DetailRow icon="fa-envelope" label="Email">
+                      {billTo.email}
+                    </DetailRow>
+                    <DetailRow icon="fa-phone" label="Phone">
+                      {billTo.phone}
+                    </DetailRow>
+                    <DetailRow icon="fa-location-dot" label="Address">
+                      {billTo.address}
+                    </DetailRow>
+                  </DetailList>
+                ) : (
+                  <p className="text-muted small">{viewTarget.client}</p>
+                )}
+
+                <div className="text-uppercase text-muted fw-semibold mt-4 mb-2" style={{ fontSize: 11, letterSpacing: 0.5 }}>
+                  Line Items
+                </div>
+                <div className="border rounded-3 overflow-hidden">
+                  <table className="table table-sm mb-0 align-middle">
+                    <thead className="table-light">
+                      <tr>
+                        <th className="small text-muted fw-semibold ps-3">Description</th>
+                        <th className="small text-muted fw-semibold text-end pe-3">Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td className="ps-3">
+                          Staffing services — {viewTarget.client}
+                          <div className="text-muted" style={{ fontSize: 11.5 }}>
+                            {viewTarget.invoiceDate} to {viewTarget.dueDate}
+                          </div>
+                        </td>
+                        <td className="text-end pe-3">{viewTarget.amount}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div className="d-flex justify-content-between align-items-center border-top pt-3 mt-3">
+                  <span className="fw-semibold">Total Due</span>
+                  <span className="fw-bold fs-5">{viewTarget.amount}</span>
+                </div>
+              </div>
+            );
+          })()}
       </Modal>
     </>
   );
