@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useCurrentUser } from "../../context/CurrentUserContext.jsx";
 
 function RequirementRow({ met, label }) {
   return (
@@ -17,7 +18,7 @@ function RequirementRow({ met, label }) {
 
 export default function ChangePassword() {
   const navigate = useNavigate();
-  const { token } = useParams();
+  const { updateUser } = useCurrentUser();
 
   const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({
@@ -43,6 +44,7 @@ export default function ChangePassword() {
     e.preventDefault();
     setTouched(true);
     if (!canSubmit) return;
+    updateUser({ mustChangePassword: false });
     setDone(true);
   }
 
@@ -87,7 +89,7 @@ export default function ChangePassword() {
         Change Password
       </h1>
       <p className="text-center text-muted mb-4" style={{ fontSize: "0.85rem" }}>
-        This is your first time signing in. Enter the temporary password we emailed you, then choose a new one.
+        This is your first time signing in. Enter the temporary password provided by your administrator, then choose a new one.
       </p>
 
       <form onSubmit={handleSubmit} noValidate>
@@ -104,7 +106,7 @@ export default function ChangePassword() {
                   borderColor: "#cccccc",
                 }}
               >
-                <i className="fas fa-envelope-open-text"></i>
+                <i className="fas fa-key"></i>
               </div>
             </span>
             <input
@@ -225,16 +227,6 @@ export default function ChangePassword() {
           Set New Password
         </button>
       </form>
-
-      {/* Dev-only preview of the token carried by the emailed link.
-          Remove this block once a real API validates the token. */}
-      {token && (
-        <div className="text-center mt-3">
-          <span className="badge bg-white border text-muted fw-normal" style={{ fontSize: "0.7rem" }}>
-            Dev preview — token: {token}
-          </span>
-        </div>
-      )}
     </div>
   );
 }

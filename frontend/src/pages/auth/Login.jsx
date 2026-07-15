@@ -1,13 +1,17 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useCurrentUser } from "../../context/CurrentUserContext.jsx";
 
 export default function Login() {
   const navigate = useNavigate();
+  const { user } = useCurrentUser();
   const [showPassword, setShowPassword] = useState(false);
 
   function handleSubmit(e) {
     e.preventDefault();
-    navigate("/");
+    // A brand-new account or an admin-issued password always forces a
+    // change before reaching the dashboard.
+    navigate(user.mustChangePassword ? "/change-password" : "/");
   }
 
   return (
@@ -107,13 +111,6 @@ export default function Login() {
         >
           Login
         </button>
-
-        {/* Forgot Password Link */}
-        <div className="text-center mt-3">
-          <Link to="/forgot-password" className="auth-link text-decoration-none text-muted" style={{ fontSize: "0.85rem" }}>
-            Forgot password?
-          </Link>
-        </div>
       </form>
     </div>
   );

@@ -5,8 +5,6 @@ import AuthLayout from "./layouts/AuthLayout.jsx";
 import ErrorLayout from "./layouts/ErrorLayout.jsx";
 
 import Login from "./pages/auth/Login.jsx";
-import ForgotPassword from "./pages/auth/ForgotPassword.jsx";
-import ResetPassword from "./pages/auth/ResetPassword.jsx";
 import ChangePassword from "./pages/auth/ChangePassword.jsx";
 
 import Dashboard from "./pages/Dashboard.jsx";
@@ -35,9 +33,6 @@ export default function App() {
     <Routes>
       <Route element={<AuthLayout />}>
         <Route path="/login" element={<Login />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password/:token" element={<ResetPassword />} />
-        <Route path="/change-password/:token" element={<ChangePassword />} />
         <Route path="/change-password" element={<ChangePassword />} />
       </Route>
 
