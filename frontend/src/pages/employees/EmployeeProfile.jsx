@@ -14,11 +14,14 @@ import {
   DetailList,
   DetailRow,
   ProfileHeader,
+  PayslipDetails,
   PageHeader,
   Pagination,
 } from "../../components/ui/index.jsx";
 import { payslipHistory, timesheetHistory } from "../../assets/data/index.js";
 import { useEmployees } from "../../context/EmployeesContext.jsx";
+import { formatCurrency } from "../../utils/currency.js";
+import { computeDeductions } from "../../utils/payslip.js";
 
 const fileIcons = { pdf: "📕", img: "🖼️" };
 
@@ -112,6 +115,11 @@ export default function EmployeeProfile() {
     document.getElementById("deleteDocumentModalClose")?.click();
   }
 
+  // ============================================================
+  // VIEW PAYSLIP — plain read-only breakdown, simple data-bs-toggle trigger
+  // ============================================================
+  const [payslipTarget, setPayslipTarget] = useState(null);
+
   // location.key is "default" when there's no in-app history to go back to
   // (direct URL load, refresh, bookmark) — fall back to the list page then,
   // otherwise use actual browser history so we land on wherever the user
@@ -166,7 +174,7 @@ export default function EmployeeProfile() {
       {/* DIVISION 2: TABS                                           */}
       {/* ========================================================== */}
       <section>
-        <ul className="nav nav-tabs mb-2">
+        <ul className="nav nav-tabs mb-4">
           {TABS.map((t) => (
             <li className="nav-item" key={t.key}>
               <button type="button" className={`nav-link ${tab === t.key ? "active fw-semibold" : "text-muted"}`} onClick={() => setTab(t.key)}>
@@ -251,7 +259,7 @@ export default function EmployeeProfile() {
               <div className="text-center text-muted py-5 small">No payslips on record yet.</div>
             ) : (
               <>
-                <Table headers={["Payslip #", "Pay Period", "Gross Pay", "Net Pay", "Status"]}>
+                <Table headers={["Payslip #", "Pay Period", "Gross Pay", "Net Pay", "Status", "Actions"]}>
                   {payslips.map((p) => (
                     <Tr key={p.id}>
                       <Td bold>{p.id}</Td>
@@ -260,6 +268,11 @@ export default function EmployeeProfile() {
                       <Td>{p.netPay}</Td>
                       <Td>
                         <Badge status={p.status} />
+                      </Td>
+                      <Td>
+                        <IconBtn title="View Payslip" data-bs-toggle="modal" data-bs-target="#viewPayslipModal" onClick={() => setPayslipTarget(p)}>
+                          <i className="fas fa-eye"></i>
+                        </IconBtn>
                       </Td>
                     </Tr>
                   ))}
@@ -448,6 +461,45 @@ export default function EmployeeProfile() {
         <p className="mb-0">
           Are you sure you want to delete <strong>{deleteDocTarget?.name}</strong>? This action cannot be undone.
         </p>
+      </Modal>
+
+      {/* ========================================================== */}
+      {/* MODAL: VIEW PAYSLIP                                        */}
+      {/* ========================================================== */}
+      <Modal
+        id="viewPayslipModal"
+        title="Payslip"
+        footer={
+          <>
+            <BtnSecondary data-bs-dismiss="modal">Close</BtnSecondary>
+            <button type="button" className="btn btn-dark btn-sm" onClick={() => window.print()}>
+              <i className="fas fa-file-pdf"></i> Download PDF
+            </button>
+          </>
+        }
+      >
+        {payslipTarget &&
+          (() => {
+            const p = computeDeductions(payslipTarget.grossPay);
+            return (
+              <div className="print-area">
+                <PayslipDetails
+                  employeeName={employee.name}
+                  subtitle={`${employee.position} · ${employee.client}`}
+                  status={payslipTarget.status}
+                  period={payslipTarget.period}
+                  summaryRows={[{ icon: "fa-money-bill-wave", label: "Gross Pay", value: formatCurrency(p.gross) }]}
+                  deductionRows={[
+                    { icon: "fa-shield-halved", label: "SSS", value: formatCurrency(p.sss) },
+                    { icon: "fa-briefcase-medical", label: "PhilHealth", value: formatCurrency(p.philhealth) },
+                    { icon: "fa-house", label: "Pag-IBIG", value: formatCurrency(p.pagibig) },
+                    { icon: "fa-receipt", label: "Withholding Tax", value: formatCurrency(p.tax) },
+                  ]}
+                  netPay={payslipTarget.netPay}
+                />
+              </div>
+            );
+          })()}
       </Modal>
     </>
   );

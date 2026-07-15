@@ -18,27 +18,19 @@ import {
   ActionsMenu,
   Modal,
   FormField,
-  DetailList,
-  DetailRow,
-  ProfileHeader,
+  PayslipDetails,
   PageHeader,
   Pagination,
 } from "../components/ui/index.jsx";
 import { payrollStats, payrollEmployees } from "../assets/data/index.js";
 import { exportToCsv } from "../utils/exportToCsv.js";
+import { parseCurrency, formatCurrency } from "../utils/currency.js";
+import { computeDeductions } from "../utils/payslip.js";
 
 const CSV_HEADERS = ["Employee", "Client", "Position", "Hours", "Rate", "Gross Pay", "Status"];
 
 function toCsvRows(list) {
   return list.map((r) => [r.name, r.client, r.position, r.hours, r.rate, r.gross, r.status]);
-}
-
-function parseCurrency(str) {
-  return Number(String(str).replace(/[₱,]/g, "")) || 0;
-}
-
-function formatCurrency(num) {
-  return `₱${num.toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
 function formatFileSize(bytes) {
@@ -98,18 +90,6 @@ function PayrollRow({ row, checked, onToggle, onViewPayslip, onEditHours, onMark
       </Td>
     </Tr>
   );
-}
-
-// Approximate Philippine payroll deduction rates, for display purposes only
-// (this is a front-end prototype with no real payroll engine behind it).
-function computePayslip(row) {
-  const gross = parseCurrency(row.gross);
-  const sss = gross * 0.045;
-  const philhealth = gross * 0.025;
-  const pagibig = 200;
-  const tax = gross * 0.08;
-  const totalDeductions = sss + philhealth + pagibig + tax;
-  return { gross, sss, philhealth, pagibig, tax, net: gross - totalDeductions };
 }
 
 export default function Payroll() {
@@ -532,51 +512,41 @@ export default function Payroll() {
       {/* ========================================================== */}
       {/* MODAL: VIEW PAYSLIP                                        */}
       {/* ========================================================== */}
-      <Modal id="viewPayslipModal" title="Payslip" footer={<BtnSecondary data-bs-dismiss="modal">Close</BtnSecondary>}>
+      <Modal
+        id="viewPayslipModal"
+        title="Payslip"
+        footer={
+          <>
+            <BtnSecondary data-bs-dismiss="modal">Close</BtnSecondary>
+            <button type="button" className="btn btn-dark btn-sm" onClick={() => window.print()}>
+              <i className="fas fa-file-pdf"></i> Download PDF
+            </button>
+          </>
+        }
+      >
         {payslipTarget &&
           (() => {
-            const p = computePayslip(payslipTarget);
+            const p = computeDeductions(payslipTarget.gross);
             return (
-              <div>
-                <ProfileHeader
-                  name={payslipTarget.name}
+              <div className="print-area">
+                <PayslipDetails
+                  employeeName={payslipTarget.name}
                   subtitle={`${payslipTarget.position} · ${payslipTarget.client}`}
-                  subtitleIcon="fa-briefcase"
                   status={payslipTarget.status}
+                  period="May 12 – 25, 2024"
+                  summaryRows={[
+                    { icon: "fa-clock", label: "Hours Worked", value: payslipTarget.hours },
+                    { icon: "fa-sack-dollar", label: "Rate", value: `${payslipTarget.rate} / hr` },
+                    { icon: "fa-money-bill-wave", label: "Gross Pay", value: formatCurrency(p.gross) },
+                  ]}
+                  deductionRows={[
+                    { icon: "fa-shield-halved", label: "SSS", value: formatCurrency(p.sss) },
+                    { icon: "fa-briefcase-medical", label: "PhilHealth", value: formatCurrency(p.philhealth) },
+                    { icon: "fa-house", label: "Pag-IBIG", value: formatCurrency(p.pagibig) },
+                    { icon: "fa-receipt", label: "Withholding Tax", value: formatCurrency(p.tax) },
+                  ]}
+                  netPay={formatCurrency(p.net)}
                 />
-                <div className="text-muted small mb-2">Pay Period: May 12 – 25, 2024</div>
-                <DetailList>
-                  <DetailRow icon="fa-clock" label="Hours Worked">
-                    {payslipTarget.hours}
-                  </DetailRow>
-                  <DetailRow icon="fa-sack-dollar" label="Rate">
-                    {payslipTarget.rate} / hr
-                  </DetailRow>
-                  <DetailRow icon="fa-money-bill-wave" label="Gross Pay">
-                    {formatCurrency(p.gross)}
-                  </DetailRow>
-                </DetailList>
-                <div className="text-uppercase text-muted fw-semibold mt-3 mb-2" style={{ fontSize: 11, letterSpacing: 0.5 }}>
-                  Deductions
-                </div>
-                <DetailList>
-                  <DetailRow icon="fa-shield-halved" label="SSS">
-                    {formatCurrency(p.sss)}
-                  </DetailRow>
-                  <DetailRow icon="fa-briefcase-medical" label="PhilHealth">
-                    {formatCurrency(p.philhealth)}
-                  </DetailRow>
-                  <DetailRow icon="fa-house" label="Pag-IBIG">
-                    {formatCurrency(p.pagibig)}
-                  </DetailRow>
-                  <DetailRow icon="fa-receipt" label="Withholding Tax">
-                    {formatCurrency(p.tax)}
-                  </DetailRow>
-                </DetailList>
-                <div className="d-flex justify-content-between align-items-center border-top pt-3 mt-3">
-                  <span className="fw-semibold">Net Pay</span>
-                  <span className="fw-bold fs-5">{formatCurrency(p.net)}</span>
-                </div>
               </div>
             );
           })()}

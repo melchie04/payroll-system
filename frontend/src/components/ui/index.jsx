@@ -408,3 +408,33 @@ export function ProfileHeader({ name, subtitle, subtitleIcon, status }) {
     </div>
   );
 }
+
+export function PayslipDetails({ employeeName, subtitle, status, period, summaryRows, deductionRows, netPay }) {
+  return (
+    <div>
+      <ProfileHeader name={employeeName} subtitle={subtitle} subtitleIcon="fa-briefcase" status={status} />
+      <div className="text-muted small mb-2">Pay Period: {period}</div>
+      <DetailList>
+        {summaryRows.map((r) => (
+          <DetailRow key={r.label} icon={r.icon} label={r.label}>
+            {r.value}
+          </DetailRow>
+        ))}
+      </DetailList>
+      <div className="text-uppercase text-muted fw-semibold mt-3 mb-2" style={{ fontSize: 11, letterSpacing: 0.5 }}>
+        Deductions
+      </div>
+      <DetailList>
+        {deductionRows.map((r) => (
+          <DetailRow key={r.label} icon={r.icon} label={r.label}>
+            {r.value}
+          </DetailRow>
+        ))}
+      </DetailList>
+      <div className="d-flex justify-content-between align-items-center border-top pt-3 mt-3">
+        <span className="fw-semibold">Net Pay</span>
+        <span className="fw-bold fs-5">{netPay}</span>
+      </div>
+    </div>
+  );
+}
