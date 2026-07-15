@@ -15,6 +15,7 @@ import Billing from "./pages/Billing.jsx";
 import Timesheet from "./pages/Timesheet.jsx";
 import Notifications from "./pages/Notifications.jsx";
 import Settings from "./pages/Settings.jsx";
+import MyProfile from "./pages/MyProfile.jsx";
 import ActivityLog from "./pages/ActivityLog.jsx";
 
 import Employees from "./pages/employees/Employees.jsx";
@@ -58,6 +59,7 @@ export default function App() {
 
         <Route path="/notifications" element={<Notifications />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/profile" element={<MyProfile />} />
         <Route path="/activity-log" element={<ActivityLog />} />
       </Route>
 

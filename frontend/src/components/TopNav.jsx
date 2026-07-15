@@ -1,8 +1,19 @@
 import { Link } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext.jsx";
+import { useCurrentUser } from "../context/CurrentUserContext.jsx";
+
+function initialsOf(name = "") {
+  return name
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((n) => n[0].toUpperCase())
+    .join("");
+}
 
 export default function TopNav({ onToggleSidebar }) {
   const { theme, setTheme } = useTheme();
+  const { user } = useCurrentUser();
   const isDark = theme === "dark";
 
   const toggleTheme = () => {
@@ -10,14 +21,9 @@ export default function TopNav({ onToggleSidebar }) {
   };
 
   return (
-    <nav
-      className={`sb-topnav navbar navbar-expand ${isDark ? "navbar-dark bg-dark" : "navbar-light bg-white"} border-bottom px-2 px-md-3`}
-    >
+    <nav className={`sb-topnav navbar navbar-expand ${isDark ? "navbar-dark bg-dark" : "navbar-light bg-white"} border-bottom px-2 px-md-3`}>
       {/* Navbar Brand*/}
-      <Link
-        className="navbar-brand ps-1 ps-md-3 d-flex align-items-center gap-2"
-        to="/"
-      >
+      <Link className="navbar-brand ps-1 ps-md-3 d-flex align-items-center gap-2" to="/">
         <span
           className="d-inline-flex align-items-center justify-content-center rounded-2 fw-bold"
           style={{
@@ -34,11 +40,7 @@ export default function TopNav({ onToggleSidebar }) {
       </Link>
 
       {/* Sidebar Toggle*/}
-      <button
-        className="btn btn-link btn-sm me-1 me-lg-0 ms-3 ms-lg-4 fs-6"
-        id="sidebarToggle"
-        onClick={onToggleSidebar}
-      >
+      <button className="btn btn-link btn-sm me-1 me-lg-0 ms-3 ms-lg-4 fs-6" id="sidebarToggle" onClick={onToggleSidebar}>
         <i className="fas fa-bars fa-lg"></i>
       </button>
 
@@ -64,10 +66,7 @@ export default function TopNav({ onToggleSidebar }) {
                   <span className="visually-hidden">New notifications</span>
                 </span>
               </span>
-              <i
-                className="fas fa-caret-down text-secondary"
-                style={{ fontSize: "0.65rem" }}
-              ></i>
+              <i className="fas fa-caret-down text-secondary" style={{ fontSize: "0.65rem" }}></i>
             </a>
             <ul
               className="dropdown-menu dropdown-menu-end position-absolute shadow-sm"
@@ -80,10 +79,7 @@ export default function TopNav({ onToggleSidebar }) {
             >
               {/* Header with Icon */}
               <li>
-                <div
-                  className="dropdown-header d-flex align-items-center gap-2 py-2 text-dark fw-bold"
-                  style={{ fontSize: "inherit" }}
-                >
+                <div className="dropdown-header d-flex align-items-center gap-2 py-2 text-dark fw-bold" style={{ fontSize: "inherit" }}>
                   <i className="fas fa-bell fa-fw opacity-75 pt-1"></i>
                   Notifications
                 </div>
@@ -157,7 +153,7 @@ export default function TopNav({ onToggleSidebar }) {
         <ul className="navbar-nav">
           <li className="nav-item dropdown">
             <a
-              className="nav-link d-flex align-items-center gap-1 px-1 px-lg-2"
+              className="nav-link d-flex align-items-center gap-2 px-1 px-lg-2"
               id="navbarDropdown"
               href="#"
               role="button"
@@ -165,11 +161,17 @@ export default function TopNav({ onToggleSidebar }) {
               aria-expanded="false"
               style={{ fontSize: "0.95rem" }}
             >
-              <i className="fas fa-circle-user fa-lg"></i>
-              <i
-                className="fas fa-caret-down text-secondary"
-                style={{ fontSize: "0.65rem" }}
-              ></i>
+              {user.avatarImage ? (
+                <img src={user.avatarImage} alt={user.name} className="rounded-circle" style={{ width: 28, height: 28, objectFit: "cover" }} />
+              ) : (
+                <span
+                  className="d-inline-flex align-items-center justify-content-center rounded-circle text-white fw-semibold"
+                  style={{ width: 28, height: 28, fontSize: "0.75rem", background: user.avatarColor }}
+                >
+                  {initialsOf(user.name)}
+                </span>
+              )}
+              <i className="fas fa-caret-down text-secondary" style={{ fontSize: "0.65rem" }}></i>
             </a>
 
             <ul
@@ -179,24 +181,29 @@ export default function TopNav({ onToggleSidebar }) {
             >
               {/* Name Header */}
               <li>
-                <div
-                  className="dropdown-header d-flex align-items-center gap-2 py-2 text-dark fw-bold"
-                  style={{ fontSize: "inherit" }}
-                >
-                  <i className="fas fa-user-shield fa-fw opacity-75"></i>
-                  Admin
+                <div className="dropdown-header py-2" style={{ fontSize: "inherit" }}>
+                  <div className="d-flex align-items-center gap-2 text-dark fw-bold">
+                    <i className="fas fa-user-shield fa-fw opacity-75"></i>
+                    {user.name}
+                  </div>
+                  <div className="text-muted small ps-4">{user.role}</div>
                 </div>
               </li>
               <li>
                 <hr className="dropdown-divider mt-1" />
               </li>
 
+              {/* My Profile */}
+              <li>
+                <Link className="dropdown-item d-flex align-items-center gap-2 py-2" to="/profile">
+                  <i className="fas fa-id-badge fa-fw opacity-75"></i>
+                  My Profile
+                </Link>
+              </li>
+
               {/* Settings */}
               <li>
-                <Link
-                  className="dropdown-item d-flex align-items-center gap-2 py-2"
-                  to="/settings"
-                >
+                <Link className="dropdown-item d-flex align-items-center gap-2 py-2" to="/settings">
                   <i className="fas fa-gear fa-fw opacity-75"></i>
                   Settings
                 </Link>
@@ -204,10 +211,7 @@ export default function TopNav({ onToggleSidebar }) {
 
               {/* Activity Log */}
               <li>
-                <Link
-                  className="dropdown-item d-flex align-items-center gap-2 py-2"
-                  to="/activity-log"
-                >
+                <Link className="dropdown-item d-flex align-items-center gap-2 py-2" to="/activity-log">
                   <i className="fas fa-list-check fa-fw opacity-75"></i>
                   Activity Log
                 </Link>
@@ -218,20 +222,12 @@ export default function TopNav({ onToggleSidebar }) {
 
               {/* Theme Toggle */}
               <li>
-                <button
-                  type="button"
-                  className="dropdown-item d-flex align-items-center justify-content-between gap-4 py-2"
-                  onClick={toggleTheme}
-                >
+                <button type="button" className="dropdown-item d-flex align-items-center justify-content-between gap-4 py-2" onClick={toggleTheme}>
                   <span className="d-flex align-items-center gap-2">
-                    <i
-                      className={`fas ${isDark ? "fa-moon" : "fa-sun"} fa-fw opacity-75`}
-                    ></i>
+                    <i className={`fas ${isDark ? "fa-moon" : "fa-sun"} fa-fw opacity-75`}></i>
                     Theme
                   </span>
-                  <span className="badge rounded-pill bg-secondary text-capitalize fw-normal">
-                    {theme}
-                  </span>
+                  <span className="badge rounded-pill bg-secondary text-capitalize fw-normal">{theme}</span>
                 </button>
               </li>
               <li>
@@ -240,10 +236,7 @@ export default function TopNav({ onToggleSidebar }) {
 
               {/* Logout */}
               <li>
-                <Link
-                  className="dropdown-item d-flex align-items-center gap-2 py-2 text-danger"
-                  to="/login"
-                >
+                <Link className="dropdown-item d-flex align-items-center gap-2 py-2 text-danger" to="/login">
                   <i className="fas fa-right-from-bracket fa-fw opacity-75"></i>
                   Logout
                 </Link>
