@@ -37,3 +37,50 @@
     display: none !important;
   }
 }
+
+/* Auth pages (Login, Change Password) — soft blurred color blobs in the
+   corners add some life to what is otherwise a plain white page, without
+   touching the actual form styling (still grayscale/minimalist). */
+.auth-bg {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.auth-bg::before,
+.auth-bg::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.3;
+  pointer-events: none;
+}
+.auth-bg::before {
+  width: 420px;
+  height: 420px;
+  top: -140px;
+  left: -120px;
+  background: #4f8cff;
+}
+.auth-bg::after {
+  width: 380px;
+  height: 380px;
+  bottom: -150px;
+  right: -110px;
+  background: #ff8a65;
+}
+
+@keyframes authFadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.auth-animate {
+  animation: authFadeInUp 0.5s ease-out both;
+}
