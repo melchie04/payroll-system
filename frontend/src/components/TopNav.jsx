@@ -22,8 +22,17 @@ export default function TopNav({ onToggleSidebar }) {
 
   return (
     <nav className={`sb-topnav navbar navbar-expand ${isDark ? "navbar-dark bg-dark" : "navbar-light bg-white"} border-bottom px-2 px-md-3`}>
-      {/* Navbar Brand*/}
-      <Link className="navbar-brand ps-1 ps-md-3 d-flex align-items-center gap-2" to="/">
+      {/* Sidebar Toggle */}
+      <button
+        className="nav-box-btn d-flex align-items-center justify-content-center order-1 order-md-0 me-2 me-md-0 ms-1 ms-md-4"
+        id="sidebarToggle"
+        onClick={onToggleSidebar}
+      >
+        <i className="fas fa-bars"></i>
+      </button>
+
+      {/* Navbar Brand */}
+      <Link className="navbar-brand d-flex align-items-center gap-2 order-2 order-md-1 ps-1 ps-md-3" to="/">
         <span
           className="d-inline-flex align-items-center justify-content-center rounded-2 fw-bold"
           style={{
@@ -36,21 +45,16 @@ export default function TopNav({ onToggleSidebar }) {
         >
           P
         </span>
-        <span className="fs-6 fw-semibold tracking-wider">PAYROLL</span>
+        <span className="fs-6 fw-semibold tracking-wider d-inline">PAYROLL</span>
       </Link>
 
-      {/* Sidebar Toggle*/}
-      <button className="btn btn-link btn-sm me-1 me-lg-0 ms-3 ms-lg-4 fs-6" id="sidebarToggle" onClick={onToggleSidebar}>
-        <i className="fas fa-bars fa-lg"></i>
-      </button>
-
       {/* Navigation Controls Wrapper */}
-      <div className="d-flex align-items-center ms-auto gap-1 gap-md-2">
-        {/* Notification Bell*/}
+      <div className="d-flex align-items-center ms-auto order-3 gap-1 gap-md-2">
+        {/* Notification Bell */}
         <ul className="navbar-nav">
           <li className="nav-item dropdown">
             <a
-              className="nav-link d-flex align-items-center px-1 px-lg-2"
+              className="nav-circle-btn d-flex align-items-center justify-content-center text-decoration-none"
               id="navbarNotificationsDropdown"
               href="#"
               role="button"
@@ -58,15 +62,14 @@ export default function TopNav({ onToggleSidebar }) {
               aria-expanded="false"
             >
               <span className="position-relative d-inline-block">
-                <i className="fas fa-bell fa-lg"></i>
+                <i className="fas fa-bell"></i>
                 <span
-                  className="position-absolute top-0 start-100 translate-middle bg-danger border border-dark rounded-circle"
-                  style={{ width: 7, height: 7 }}
+                  className="position-absolute top-0 start-100 translate-middle rounded-circle"
+                  style={{ width: 8, height: 8, background: "#ff9c55", border: "1.5px solid var(--bs-body-bg)" }}
                 >
                   <span className="visually-hidden">New notifications</span>
                 </span>
               </span>
-              <i className="fas fa-caret-down text-secondary" style={{ fontSize: "0.65rem" }}></i>
             </a>
             <ul
               className="dropdown-menu dropdown-menu-end position-absolute shadow-sm"
@@ -77,9 +80,11 @@ export default function TopNav({ onToggleSidebar }) {
                 fontSize: "0.9rem",
               }}
             >
-              {/* Header with Icon */}
               <li>
-                <div className="dropdown-header d-flex align-items-center gap-2 py-2 text-dark fw-bold" style={{ fontSize: "inherit" }}>
+                <div
+                  className="dropdown-header d-flex align-items-center gap-2 py-2 text-body fw-bold text-decoration-none"
+                  style={{ fontSize: "inherit" }}
+                >
                   <i className="fas fa-bell fa-fw opacity-75 pt-1"></i>
                   Notifications
                 </div>
@@ -87,8 +92,6 @@ export default function TopNav({ onToggleSidebar }) {
               <li>
                 <hr className="dropdown-divider mt-1" />
               </li>
-
-              {/* Notification Items */}
               <li>
                 <a
                   className="dropdown-item py-2 text-wrap border-bottom border-light-subtle"
@@ -134,8 +137,6 @@ export default function TopNav({ onToggleSidebar }) {
               <li>
                 <hr className="dropdown-divider" />
               </li>
-
-              {/* Footer Action */}
               <li>
                 <Link
                   className="dropdown-item d-flex align-items-center justify-content-center gap-2 py-2 text-center text-primary fw-semibold"
@@ -149,11 +150,11 @@ export default function TopNav({ onToggleSidebar }) {
           </li>
         </ul>
 
-        {/* Navbar Dropdown */}
+        {/* User Account Dropdown */}
         <ul className="navbar-nav">
           <li className="nav-item dropdown">
             <a
-              className="nav-link d-flex align-items-center gap-2 px-1 px-lg-2"
+              className="nav-user-btn d-flex align-items-center gap-2 text-decoration-none"
               id="navbarDropdown"
               href="#"
               role="button"
@@ -162,27 +163,26 @@ export default function TopNav({ onToggleSidebar }) {
               style={{ fontSize: "0.95rem" }}
             >
               {user.avatarImage ? (
-                <img src={user.avatarImage} alt={user.name} className="rounded-circle" style={{ width: 28, height: 28, objectFit: "cover" }} />
+                <img src={user.avatarImage} alt={user.name} className="rounded-circle" style={{ width: 36, height: 36, objectFit: "cover" }} />
               ) : (
                 <span
-                  className="d-inline-flex align-items-center justify-content-center rounded-circle text-white fw-semibold"
-                  style={{ width: 28, height: 28, fontSize: "0.75rem", background: user.avatarColor }}
+                  className="d-inline-flex align-items-center justify-content-center rounded-circle text-white fw-semibold flex-shrink-0"
+                  style={{ width: 36, height: 36, fontSize: "0.85rem", background: user.avatarColor }}
                 >
                   {initialsOf(user.name)}
                 </span>
               )}
-              <i className="fas fa-caret-down text-secondary" style={{ fontSize: "0.65rem" }}></i>
+              <span className="d-none d-sm-inline fw-medium text-body">{user.name}</span>
+              <i className="fas fa-chevron-down text-secondary" style={{ fontSize: "0.6rem" }}></i>
             </a>
-
             <ul
               className="dropdown-menu dropdown-menu-end position-absolute shadow-sm"
               aria-labelledby="navbarDropdown"
               style={{ fontSize: "0.9rem" }}
             >
-              {/* Name Header */}
               <li>
-                <div className="dropdown-header py-2" style={{ fontSize: "inherit" }}>
-                  <div className="d-flex align-items-center gap-2 text-dark fw-bold">
+                <div className="dropdown-header py-2 text-decoration-none" style={{ fontSize: "inherit" }}>
+                  <div className="d-flex align-items-center gap-2 text-body fw-bold">
                     <i className="fas fa-user-shield fa-fw opacity-75"></i>
                     {user.name}
                   </div>
@@ -192,24 +192,18 @@ export default function TopNav({ onToggleSidebar }) {
               <li>
                 <hr className="dropdown-divider mt-1" />
               </li>
-
-              {/* My Profile */}
               <li>
                 <Link className="dropdown-item d-flex align-items-center gap-2 py-2" to="/profile">
                   <i className="fas fa-id-badge fa-fw opacity-75"></i>
                   My Profile
                 </Link>
               </li>
-
-              {/* Settings */}
               <li>
                 <Link className="dropdown-item d-flex align-items-center gap-2 py-2" to="/settings">
                   <i className="fas fa-gear fa-fw opacity-75"></i>
                   Settings
                 </Link>
               </li>
-
-              {/* Activity Log */}
               <li>
                 <Link className="dropdown-item d-flex align-items-center gap-2 py-2" to="/activity-log">
                   <i className="fas fa-list-check fa-fw opacity-75"></i>
@@ -219,8 +213,6 @@ export default function TopNav({ onToggleSidebar }) {
               <li>
                 <hr className="dropdown-divider" />
               </li>
-
-              {/* Theme Toggle */}
               <li>
                 <button type="button" className="dropdown-item d-flex align-items-center justify-content-between gap-4 py-2" onClick={toggleTheme}>
                   <span className="d-flex align-items-center gap-2">
@@ -233,8 +225,6 @@ export default function TopNav({ onToggleSidebar }) {
               <li>
                 <hr className="dropdown-divider" />
               </li>
-
-              {/* Logout */}
               <li>
                 <Link className="dropdown-item d-flex align-items-center gap-2 py-2 text-danger" to="/login">
                   <i className="fas fa-right-from-bracket fa-fw opacity-75"></i>

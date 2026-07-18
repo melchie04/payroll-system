@@ -84,3 +84,56 @@
 .auth-animate {
   animation: authFadeInUp 0.5s ease-out both;
 }
+
+/* ============================================================
+   TopNav buttons — sidebar toggle (bordered box), notifications
+   (soft circle), and the user trigger (plain hover), matching the
+   reference template while reusing this project's own theme
+   variables so light/dark mode both work automatically.
+   ============================================================ */
+
+.nav-box-btn {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--bs-border-color);
+  border-radius: 0.5rem;
+  background-color: var(--bs-body-bg);
+  color: var(--bs-body-color);
+  font-size: 1.05rem;
+  transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+}
+.nav-box-btn:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+[data-bs-theme="dark"] .nav-box-btn:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+.nav-circle-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--bs-tertiary-bg);
+  color: var(--bs-body-color);
+  font-size: 1rem;
+  transition: background-color 0.15s ease-in-out;
+}
+.nav-circle-btn:hover {
+  background-color: rgba(0, 0, 0, 0.06);
+}
+[data-bs-theme="dark"] .nav-circle-btn:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.nav-user-btn {
+  padding: 0.3rem 0.5rem;
+  border-radius: 0.5rem;
+  color: var(--bs-body-color);
+  transition: background-color 0.15s ease-in-out;
+}
+.nav-user-btn:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+[data-bs-theme="dark"] .nav-user-btn:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+}

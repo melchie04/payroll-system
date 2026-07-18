@@ -22,29 +22,16 @@ export default function SideNav() {
   }
 
   return (
-    <nav
-      className={`sb-sidenav accordion sb-sidenav-${theme} border-end`}
-      id="sidenavAccordion"
-    >
+    <nav className={`sb-sidenav accordion sb-sidenav-${theme} border-end`} id="sidenavAccordion">
       {/* Sidebar Menu */}
       <div className="sb-sidenav-menu">
         <div className="nav">
-          <div className="sb-sidenav-menu-heading fs-8 fs-md-7 text-uppercase tracking-wider">
-            Menu
-          </div>
+          <div className="sb-sidenav-menu-heading fs-8 fs-md-7 text-uppercase tracking-wider">Menu</div>
           {NAV_ITEMS.map((item) => (
-            <NavLink
-              className={navLinkClass}
-              to={item.to}
-              end={item.end}
-              key={item.to}
-            >
+            <NavLink className={navLinkClass} to={item.to} end={item.end} key={item.to}>
               {({ isActive }) => (
                 <>
-                  <div
-                    className={`sb-nav-link-icon me-2 ${isActive ? "text-secondary text-opacity-75" : ""}`}
-                    style={{ minWidth: "1.5rem" }}
-                  >
+                  <div className={`sb-nav-link-icon me-2 ${isActive ? "text-secondary text-opacity-75" : ""}`} style={{ minWidth: "1.5rem" }}>
                     <i className={`fas ${item.icon} fa-fw`}></i>{" "}
                   </div>
                   <span className="text-wrap">{item.label}</span>
@@ -65,10 +52,7 @@ export default function SideNav() {
           }}
           onClick={() => console.log("Help clicked")}
         >
-          <div
-            className="sb-nav-link-icon me-2 d-flex align-items-center"
-            style={{ minWidth: "1.5rem" }}
-          >
+          <div className="sb-nav-link-icon me-2 d-flex align-items-center" style={{ minWidth: "1.5rem" }}>
             <i className="far fa-circle-question fa-fw"></i>
           </div>
           <span>Help</span>
