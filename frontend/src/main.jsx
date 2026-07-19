@@ -12,6 +12,7 @@ import { ThemeProvider } from "./context/ThemeContext.jsx";
 import { EmployeesProvider } from "./context/EmployeesContext.jsx";
 import { ClientsProvider } from "./context/ClientsContext.jsx";
 import { CurrentUserProvider } from "./context/CurrentUserContext.jsx";
+import { NotificationsProvider } from "./context/NotificationsContext.jsx";
 import App from "./App.jsx";
 
 // App entry point — mounts the router, global providers, and styles.
@@ -20,11 +21,13 @@ createRoot(document.getElementById("root")).render(
     <BrowserRouter>
       <ThemeProvider>
         <CurrentUserProvider>
-          <ClientsProvider>
-            <EmployeesProvider>
-              <App />
-            </EmployeesProvider>
-          </ClientsProvider>
+          <NotificationsProvider>
+            <ClientsProvider>
+              <EmployeesProvider>
+                <App />
+              </EmployeesProvider>
+            </ClientsProvider>
+          </NotificationsProvider>
         </CurrentUserProvider>
       </ThemeProvider>
     </BrowserRouter>

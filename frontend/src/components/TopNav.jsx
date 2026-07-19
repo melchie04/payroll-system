@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext.jsx";
 import { useCurrentUser } from "../context/CurrentUserContext.jsx";
+import { useNotifications } from "../context/NotificationsContext.jsx";
 
 // Returns up to two uppercase initials from a full name.
 function initialsOf(name = "") {
@@ -15,6 +16,9 @@ function initialsOf(name = "") {
 
 // NotificationsMenu — notifications dropdown shared by the desktop and mobile triggers.
 function NotificationsMenu({ id, align = "end" }) {
+  const { notifications } = useNotifications();
+  const recent = notifications.slice(0, 3);
+
   return (
     <ul
       className={`topnav-dropdown-menu dropdown-menu dropdown-menu-${align} position-absolute shadow-sm`}
@@ -34,48 +38,29 @@ function NotificationsMenu({ id, align = "end" }) {
       <li>
         <hr className="dropdown-divider mt-1" />
       </li>
-      <li>
-        <a
-          className="dropdown-item py-2 text-wrap border-bottom border-light-subtle"
-          href="#!"
-          style={{
-            display: "-webkit-box",
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: "vertical",
-            overflow: "hidden",
-          }}
-        >
-          <span>Payroll run for Acme Corp is ready to review</span>
-        </a>
-      </li>
-      <li>
-        <a
-          className="dropdown-item py-2 text-wrap border-bottom border-light-subtle"
-          href="#!"
-          style={{
-            display: "-webkit-box",
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: "vertical",
-            overflow: "hidden",
-          }}
-        >
-          <span>Invoice #1042 is overdue</span>
-        </a>
-      </li>
-      <li>
-        <a
-          className="dropdown-item py-2 text-wrap"
-          href="#!"
-          style={{
-            display: "-webkit-box",
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: "vertical",
-            overflow: "hidden",
-          }}
-        >
-          <span>Timesheet extraction completed for 3 files</span>
-        </a>
-      </li>
+      {recent.length === 0 && (
+        <li>
+          <div className="dropdown-item-text py-2 text-muted small">No notifications yet.</div>
+        </li>
+      )}
+      {recent.map((n, i) => (
+        <li key={n.id}>
+          <Link
+            className={`dropdown-item py-2 text-wrap ${i < recent.length - 1 ? "border-bottom border-light-subtle" : ""}`}
+            to="/notifications"
+            style={{
+              display: "-webkit-box",
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+            }}
+          >
+            <span className={!n.read ? "fw-semibold" : ""}>
+              {n.title} {n.bold} {n.sub}
+            </span>
+          </Link>
+        </li>
+      ))}
       <li>
         <hr className="dropdown-divider" />
       </li>
@@ -94,16 +79,20 @@ function NotificationsMenu({ id, align = "end" }) {
 
 // NotificationsTrigger — notification bell icon button.
 function NotificationsTrigger({ id }) {
+  const { unreadCount } = useNotifications();
+
   return (
     <a className="nav-icon-btn text-decoration-none" id={id} href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
       <span className="position-relative d-inline-block">
         <i className="fas fa-bell"></i>
-        <span
-          className="position-absolute top-0 start-100 translate-middle rounded-circle"
-          style={{ width: 8, height: 8, background: "#ff9c55", border: "1.5px solid var(--bs-body-bg)" }}
-        >
-          <span className="visually-hidden">New notifications</span>
-        </span>
+        {unreadCount > 0 && (
+          <span
+            className="position-absolute top-0 start-100 translate-middle rounded-circle"
+            style={{ width: 8, height: 8, background: "#ff9c55", border: "1.5px solid var(--bs-body-bg)" }}
+          >
+            <span className="visually-hidden">New notifications</span>
+          </span>
+        )}
       </span>
     </a>
   );

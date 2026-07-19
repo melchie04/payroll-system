@@ -1,22 +1,13 @@
 import { useState } from "react";
 import { DataCard, BtnSecondary, PageHeader } from "../components/ui/index.jsx";
-import { notifications as initialNotifications } from "../assets/data/index.js";
+import { useNotifications } from "../context/NotificationsContext.jsx";
 
 // Notifications — notification list with all/unread filters and mark-as-read actions.
 export default function Notifications() {
-  const [items, setItems] = useState(initialNotifications);
+  const { notifications, unreadCount, markAllRead, markOneRead } = useNotifications();
   const [filter, setFilter] = useState("All");
 
-  const unreadCount = items.filter((n) => !n.read).length;
-  const visible = filter === "All" ? items : items.filter((n) => !n.read);
-
-  function markAllRead() {
-    setItems((prev) => prev.map((n) => ({ ...n, read: true })));
-  }
-
-  function markOneRead(id) {
-    setItems((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)));
-  }
+  const visible = filter === "All" ? notifications : notifications.filter((n) => !n.read);
 
   return (
     <>
