@@ -15,7 +15,6 @@ import {
   DetailRow,
   ProfileHeader,
   PageHeader,
-  Pagination,
   TabsNav,
 } from "../../components/ui/index.jsx";
 import { invoices } from "../../assets/data/index.js";
@@ -223,7 +222,7 @@ export default function ClientProfile() {
               <div className="text-center text-muted py-5 small">No invoices on record yet.</div>
             ) : (
               <>
-                <Table headers={["Invoice #", "Invoice Date", "Due Date", "Amount", "Status"]}>
+                <Table headers={["Invoice #", "Invoice Date", "Due Date", "Amount", "Status"]} itemLabel="invoices">
                   {clientInvoices.map((inv) => (
                     <Tr key={inv.id}>
                       <Td bold>{inv.id}</Td>
@@ -236,7 +235,6 @@ export default function ClientProfile() {
                     </Tr>
                   ))}
                 </Table>
-                <Pagination current={1} total={1} label={`Showing 1 to ${clientInvoices.length} of ${clientInvoices.length} invoices`} />
               </>
             )}
           </DataCard>
@@ -250,7 +248,7 @@ export default function ClientProfile() {
               <div className="text-center text-muted py-5 small">No employees currently assigned to this client.</div>
             ) : (
               <>
-                <Table headers={["Name", "Position", "Email", "Rate (₱/hr)", "Status"]}>
+                <Table headers={["Name", "Position", "Email", "Rate (₱/hr)", "Status"]} itemLabel="employees">
                   {assignedEmployees.map((emp) => (
                     <Tr key={emp.id}>
                       <Td bold>
@@ -267,7 +265,6 @@ export default function ClientProfile() {
                     </Tr>
                   ))}
                 </Table>
-                <Pagination current={1} total={1} label={`Showing 1 to ${assignedEmployees.length} of ${assignedEmployees.length} employees`} />
               </>
             )}
           </DataCard>

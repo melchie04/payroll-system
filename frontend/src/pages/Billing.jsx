@@ -19,7 +19,6 @@ import {
   DetailList,
   DetailRow,
   PageHeader,
-  Pagination,
 } from "../components/ui/index.jsx";
 import { billingStats, invoices as initialInvoices, clients } from "../assets/data/index.js";
 import { exportToCsv } from "../utils/exportToCsv.js";
@@ -162,7 +161,7 @@ export default function Billing() {
 
       <section className="mb-3 print-area">
         <DataCard>
-          <Table headers={["Invoice #", "Client", "Invoice Date", "Due Date", "Amount (₱)", "Status", "Actions"]}>
+          <Table headers={["Invoice #", "Client", "Invoice Date", "Due Date", "Amount (₱)", "Status", "Actions"]} itemLabel="invoices">
             {invoices.map((inv) => {
               const isHidden = hidden.includes(inv.id);
               return (
@@ -199,7 +198,6 @@ export default function Billing() {
               );
             })}
           </Table>
-          <Pagination current={1} total={3} label={`Showing 1 to ${invoices.length} of 18 invoices`} />
         </DataCard>
       </section>
 

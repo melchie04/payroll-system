@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Children, cloneElement, createContext, isValidElement, useContext, useState } from "react";
 
 // Shared UI building blocks used across all pages.
 const statusVariant = {
@@ -95,44 +95,82 @@ export function DataCard({ title, action, children }) {
   );
 }
 
-// Table — responsive table with a styled header row.
-export function Table({ headers, children }) {
+// Column headers, shared with Tr so each cell can label itself on mobile.
+const TableHeadersContext = createContext([]);
+
+// Table — responsive table that stacks into cards on mobile and paginates itself.
+export function Table({ headers, children, pageSize = 5, itemLabel = "records" }) {
+  const rows = Children.toArray(children);
+  const [page, setPage] = useState(1);
+
+  const totalPages = Math.max(1, Math.ceil(rows.length / pageSize));
+  if (page > totalPages) setPage(totalPages);
+
+  const paginated = rows.length > pageSize;
+  const start = (page - 1) * pageSize;
+  const visible = paginated ? rows.slice(start, start + pageSize) : rows;
+
   return (
-    <div className="table-responsive">
-      <table className="table table-hover mb-0 align-middle">
-        <thead className="table-light">
-          <tr>
-            {headers.map((h, i) => (
-              <th
-                key={i}
-                className={`text-uppercase text-muted small fw-semibold text-nowrap ${h.props?.className || ""}`}
-                style={{ fontSize: 11, letterSpacing: 0.5 }}
-              >
-                {h}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>{children}</tbody>
-      </table>
-    </div>
+    <TableHeadersContext.Provider value={headers}>
+      <div className="table-responsive">
+        <table className="table table-hover table-stack mb-0 align-middle">
+          <thead className="table-light">
+            <tr>
+              {headers.map((h, i) => (
+                <th
+                  key={i}
+                  className={`text-uppercase text-muted small fw-semibold text-nowrap ${h.props?.className || ""}`}
+                  style={{ fontSize: 11, letterSpacing: 0.5 }}
+                >
+                  {h}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>{visible}</tbody>
+        </table>
+      </div>
+      {paginated && (
+        <Pagination
+          page={page}
+          totalPages={totalPages}
+          onChange={setPage}
+          label={`Showing ${start + 1} to ${Math.min(start + pageSize, rows.length)} of ${rows.length} ${itemLabel}`}
+        />
+      )}
+    </TableHeadersContext.Provider>
   );
 }
 
-// Tr — table row.
+// Tr — table row; passes each column header down to its cells.
 export function Tr({ children }) {
-  return <tr className="small">{children}</tr>;
+  const headers = useContext(TableHeadersContext);
+
+  return (
+    <tr className="small">
+      {Children.map(children, (child, i) =>
+        isValidElement(child) ? cloneElement(child, { label: typeof headers[i] === "string" ? headers[i] : undefined }) : child,
+      )}
+    </tr>
+  );
 }
 
 // Td — table cell.
-export function Td({ children, bold, className = "" }) {
-  return <td className={`${bold ? "fw-semibold" : ""} small py-3 py-md-2 ${className}`}>{children}</td>;
+export function Td({ children, bold, className = "", label }) {
+  return (
+    <td className={`${bold ? "fw-semibold" : ""} small py-md-2 ${className}`} data-label={label}>
+      {children}
+    </td>
+  );
 }
 
-// Pagination — table footer pager.
-export function Pagination({ current = 1, total = 1, label }) {
-  const [page, setPage] = useState(current);
-  const pages = Array.from({ length: Math.min(total, 5) }, (_, i) => i + 1);
+// Pagination — table footer pager, rendered by Table when the rows overflow one page.
+function Pagination({ page, totalPages, onChange, label }) {
+  const windowSize = 5;
+  let first = Math.max(1, page - Math.floor(windowSize / 2));
+  const last = Math.min(totalPages, first + windowSize - 1);
+  first = Math.max(1, last - windowSize + 1);
+  const pages = Array.from({ length: last - first + 1 }, (_, i) => first + i);
 
   return (
     <div className="d-flex flex-column flex-md-row align-items-center justify-content-between flex-wrap gap-2 px-3 py-2 border-top small">
@@ -140,19 +178,19 @@ export function Pagination({ current = 1, total = 1, label }) {
       <nav aria-label="Pagination">
         <ul className="pagination pagination-sm mb-0">
           <li className={`page-item ${page === 1 ? "disabled" : ""}`}>
-            <button className="page-link" onClick={() => setPage((p) => Math.max(1, p - 1))}>
+            <button className="page-link" onClick={() => onChange(Math.max(1, page - 1))}>
               &lsaquo;
             </button>
           </li>
           {pages.map((n) => (
             <li className={`page-item ${n === page ? "active" : ""}`} key={n}>
-              <button className="page-link" onClick={() => setPage(n)}>
+              <button className="page-link" onClick={() => onChange(n)}>
                 {n}
               </button>
             </li>
           ))}
-          <li className={`page-item ${page === total ? "disabled" : ""}`}>
-            <button className="page-link" onClick={() => setPage((p) => Math.min(total, p + 1))}>
+          <li className={`page-item ${page === totalPages ? "disabled" : ""}`}>
+            <button className="page-link" onClick={() => onChange(Math.min(totalPages, page + 1))}>
               &rsaquo;
             </button>
           </li>

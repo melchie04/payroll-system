@@ -1,4 +1,4 @@
-import { DataCard, Table, Tr, Td, FilterSelect, SearchInput, ExportMenu, PageHeader, Pagination } from "../components/ui/index.jsx";
+import { DataCard, Table, Tr, Td, FilterSelect, SearchInput, ExportMenu, PageHeader } from "../components/ui/index.jsx";
 import { activityLog } from "../assets/data/index.js";
 import { exportToCsv } from "../utils/exportToCsv.js";
 
@@ -72,7 +72,7 @@ export default function ActivityLog() {
 
       <section className="mb-3 print-area">
         <DataCard>
-          <Table headers={["User", "Action", "Details", "Module", "Timestamp"]}>
+          <Table headers={["User", "Action", "Details", "Module", "Timestamp"]} itemLabel="activities">
             {activityLog.map((log) => (
               <Tr key={log.id}>
                 <Td bold>{log.user}</Td>
@@ -89,7 +89,6 @@ export default function ActivityLog() {
               </Tr>
             ))}
           </Table>
-          <Pagination current={1} total={3} label="Showing 1 to 8 of 24 activities" />
         </DataCard>
       </section>
     </>

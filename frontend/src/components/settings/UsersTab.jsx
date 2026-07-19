@@ -12,7 +12,7 @@ export function UsersTab({ users, onEditUser, onResetPassword, onDeleteUser }) {
           </BtnPrimary>
         }
       >
-        <Table headers={["Name", "Email", "Role", "Status", "Actions"]}>
+        <Table headers={["Name", "Email", "Role", "Status", "Actions"]} itemLabel="users">
           {users.map((u) => (
             <Tr key={u.id}>
               <Td bold>{u.name}</Td>

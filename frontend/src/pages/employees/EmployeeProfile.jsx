@@ -16,7 +16,6 @@ import {
   ProfileHeader,
   PayslipDetails,
   PageHeader,
-  Pagination,
   TabsNav,
 } from "../../components/ui/index.jsx";
 import { payslipHistory, timesheetHistory } from "../../assets/data/index.js";
@@ -226,7 +225,7 @@ export default function EmployeeProfile() {
               <div className="text-center text-muted py-5 small">No payslips on record yet.</div>
             ) : (
               <>
-                <Table headers={["Payslip #", "Pay Period", "Gross Pay", "Net Pay", "Status", "Actions"]}>
+                <Table headers={["Payslip #", "Pay Period", "Gross Pay", "Net Pay", "Status", "Actions"]} itemLabel="payslips">
                   {payslips.map((p) => (
                     <Tr key={p.id}>
                       <Td bold>{p.id}</Td>
@@ -244,7 +243,6 @@ export default function EmployeeProfile() {
                     </Tr>
                   ))}
                 </Table>
-                <Pagination current={1} total={1} label={`Showing 1 to ${payslips.length} of ${payslips.length} payslips`} />
               </>
             )}
           </DataCard>
@@ -258,7 +256,7 @@ export default function EmployeeProfile() {
               <div className="text-center text-muted py-5 small">No timesheets on record yet.</div>
             ) : (
               <>
-                <Table headers={["Pay Period", "Hours Logged", "Status", "Submitted"]}>
+                <Table headers={["Pay Period", "Hours Logged", "Status", "Submitted"]} itemLabel="timesheets">
                   {timesheets.map((t) => (
                     <Tr key={t.id}>
                       <Td bold>{t.period}</Td>
@@ -270,7 +268,6 @@ export default function EmployeeProfile() {
                     </Tr>
                   ))}
                 </Table>
-                <Pagination current={1} total={1} label={`Showing 1 to ${timesheets.length} of ${timesheets.length} timesheets`} />
               </>
             )}
           </DataCard>

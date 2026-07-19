@@ -16,7 +16,6 @@ import {
   SearchInput,
   Modal,
   PageHeader,
-  Pagination,
 } from "../../components/ui/index.jsx";
 import { clientStats } from "../../assets/data/index.js";
 import { useClients } from "../../context/ClientsContext.jsx";
@@ -176,6 +175,7 @@ export default function Clients() {
               "Status",
               "Actions",
             ]}
+            itemLabel="clients"
           >
             {clients.map((c) => (
               <Tr key={c.id}>
@@ -212,7 +212,6 @@ export default function Clients() {
               </Tr>
             ))}
           </Table>
-          <Pagination current={1} total={2} label={`Showing 1 to ${clients.length} of 12 clients`} />
         </DataCard>
       </section>
 

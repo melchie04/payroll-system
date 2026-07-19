@@ -20,7 +20,6 @@ import {
   FormField,
   PayslipDetails,
   PageHeader,
-  Pagination,
 } from "../components/ui/index.jsx";
 import { payrollStats, payrollEmployees } from "../assets/data/index.js";
 import { exportToCsv } from "../utils/exportToCsv.js";
@@ -335,6 +334,7 @@ export default function Payroll() {
               "Status",
               "Actions",
             ]}
+            itemLabel="employees"
           >
             {rows.map((row) => (
               <PayrollRow
@@ -349,7 +349,6 @@ export default function Payroll() {
               />
             ))}
           </Table>
-          <Pagination current={1} total={5} label={`Showing 1 to ${rows.length} of 32 employees`} />
         </DataCard>
       </section>
 

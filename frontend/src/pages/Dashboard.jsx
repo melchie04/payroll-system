@@ -169,7 +169,7 @@ export default function Dashboard() {
 
       <section className="mb-3">
         <DataCard title="Upcoming Payroll">
-          <Table headers={["Employee", "Client", "Pay Period", "Status", "Gross Pay", "Net Pay"]}>
+          <Table headers={["Employee", "Client", "Pay Period", "Status", "Gross Pay", "Net Pay"]} itemLabel="payroll runs">
             {upcomingPayroll.map((row, i) => (
               <Tr key={i}>
                 <Td>{row.employee}</Td>

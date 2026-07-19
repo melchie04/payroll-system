@@ -15,7 +15,6 @@ import {
   SearchInput,
   Modal,
   PageHeader,
-  Pagination,
 } from "../../components/ui/index.jsx";
 import { useEmployees } from "../../context/EmployeesContext.jsx";
 import { exportToCsv } from "../../utils/exportToCsv.js";
@@ -154,6 +153,7 @@ export default function Employees() {
               "Status",
               "Actions",
             ]}
+            itemLabel="employees"
           >
             {employees.map((emp) => (
               <Tr key={emp.id}>
@@ -188,7 +188,6 @@ export default function Employees() {
               </Tr>
             ))}
           </Table>
-          <Pagination current={1} total={5} label={`Showing 1 to ${employees.length} of 32 employees`} />
         </DataCard>
       </section>
 
