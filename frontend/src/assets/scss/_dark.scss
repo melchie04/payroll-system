@@ -134,6 +134,31 @@
   color: var(--app-dark-text);
 }
 
+// Disabled and read-only fields. The .form-control rule above is more specific
+// than Bootstrap's .form-control:disabled, so without this they keep the
+// editable background and read as active inputs. Mirrors the light theme,
+// where disabled moves from white toward grey — here it moves up from the
+// inset input tone toward the same mid surface.
+[data-bs-theme="dark"] #layoutSidenav_content .form-control:disabled,
+[data-bs-theme="dark"] #layoutSidenav_content .form-control[readonly],
+[data-bs-theme="dark"] #layoutSidenav_content .form-select:disabled,
+[data-bs-theme="dark"] .modal-content .form-control:disabled,
+[data-bs-theme="dark"] .modal-content .form-control[readonly],
+[data-bs-theme="dark"] .modal-content .form-select:disabled {
+  background-color: var(--app-dark-surface-2);
+  border-color: var(--app-dark-border);
+  color: var(--app-dark-text-muted);
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+[data-bs-theme="dark"] #layoutSidenav_content .form-check-input:disabled,
+[data-bs-theme="dark"] .modal-content .form-check-input:disabled {
+  background-color: var(--app-dark-surface-2);
+  border-color: var(--app-dark-border);
+  cursor: not-allowed;
+}
+
 [data-bs-theme="dark"] #layoutSidenav_content .form-control::placeholder,
 [data-bs-theme="dark"] .modal-content .form-control::placeholder {
   color: var(--app-dark-text-muted);
