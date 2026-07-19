@@ -211,6 +211,164 @@
   border-top-color: rgba(255, 255, 255, 0.12);
 }
 
+/* ============================================================
+   SideNav — readability + hover fixes
+   ============================================================
+   1) The dark sidenav was using very low opacity white for its
+      text/icons (0.5 / 0.25) and the "MENU" heading (0.25), which
+      made the labels nearly unreadable against the dark background.
+      Bumped to values that stay on-theme but are actually legible.
+   2) Hover no longer changes text color at all — it only applies a
+      neutral background tint, matching TopNav's icon buttons
+      (.nav-icon-btn / .nav-user-btn), which never swap color on
+      hover either (rgba(0,0,0,.08) on light, rgba(255,255,255,.14)
+      on dark). The vendor styles.scss still ships its own
+      .nav-link:hover { color: ... } rules for the sidenav, so the
+      color is pinned back to the resting value here to cancel them
+      out — otherwise the text would still shift on hover even
+      without a background-driven reason to.
+      Active keeps a slightly stronger version of that same neutral
+      tint, still no color change — just enough extra weight to read
+      as "the current page" next to a hover.
+   3) The pill's margin/border-radius is now owned here (rather than
+      split across .mx-2/.rounded utility classes) so hover and
+      active always line up with identical spacing against the
+      sidebar edges — no shift on hover.
+   ============================================================ */
+
+.sb-sidenav .sb-sidenav-menu .nav .nav-link {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+  margin-bottom: 0.25rem;
+  width: calc(100% - 1rem);
+  border-radius: 0.375rem;
+}
+
+.sb-sidenav-dark .sb-sidenav-menu .sb-sidenav-menu-heading {
+  color: rgba(255, 255, 255, 0.4);
+}
+.sb-sidenav-dark .sb-sidenav-menu .nav-link {
+  color: rgba(255, 255, 255, 0.85);
+}
+.sb-sidenav-dark .sb-sidenav-menu .nav-link .sb-nav-link-icon {
+  color: rgba(255, 255, 255, 0.55);
+}
+.sb-sidenav-dark .sb-sidenav-menu .nav-link:hover,
+.sb-sidenav-dark .sb-sidenav-menu .nav-link:focus-visible {
+  color: rgba(255, 255, 255, 0.85);
+  background-color: rgba(255, 255, 255, 0.14);
+}
+.sb-sidenav-dark .sb-sidenav-menu .nav-link.active {
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+.sb-sidenav-dark .sb-sidenav-menu .nav-link.active .sb-nav-link-icon {
+  color: #fff;
+}
+
+.sb-sidenav-light .sb-sidenav-menu .sb-sidenav-menu-heading {
+  color: #8a929a;
+}
+.sb-sidenav-light .sb-sidenav-menu .nav-link:hover,
+.sb-sidenav-light .sb-sidenav-menu .nav-link:focus-visible {
+  color: #212529;
+  background-color: rgba(0, 0, 0, 0.08);
+}
+.sb-sidenav-light .sb-sidenav-menu .nav-link.active {
+  color: #212529;
+  background-color: rgba(0, 0, 0, 0.12);
+}
+.sb-sidenav-light .sb-sidenav-menu .nav-link.active .sb-nav-link-icon {
+  color: #212529;
+}
+
+/* ============================================================
+   SideNav — desktop minimize/maximize (icon-only rail)
+   ============================================================
+   The toggle button (#sidebarToggle in TopNav) flips the same
+   body.sb-sidenav-toggled class on every breakpoint. Below 992px
+   that class still means "fully closed / open" exactly as before —
+   untouched here. At 992px+ it's redefined to mean "minimized to a
+   72px icon-only rail" instead of "hidden", so the sidenav is always
+   at least partially visible on desktop.
+
+   Both the flex-based nav (#layoutSidenav_nav width) and the fixed
+   variant (.sb-nav-fixed, which this app uses by default — position:
+   fixed nav + content padding-left) are covered, since the vendor
+   stylesheet handles their expanded widths differently.
+   ============================================================ */
+$sidenav-collapsed-width: 72px;
+$sidenav-expanded-width: 225px;
+
+@media (min-width: 992px) {
+  #layoutSidenav #layoutSidenav_nav {
+    transition: transform 0.15s ease-in-out, width 0.15s ease-in-out;
+  }
+  #layoutSidenav #layoutSidenav_content {
+    transition: margin 0.15s ease-in-out, padding-left 0.15s ease-in-out;
+  }
+
+  .sb-sidenav-toggled #layoutSidenav #layoutSidenav_nav {
+    transform: translateX(0);
+    width: $sidenav-collapsed-width;
+  }
+  .sb-nav-fixed.sb-sidenav-toggled #layoutSidenav #layoutSidenav_nav {
+    width: $sidenav-collapsed-width;
+  }
+  .sb-sidenav-toggled #layoutSidenav #layoutSidenav_content {
+    margin-left: 0;
+  }
+  .sb-nav-fixed.sb-sidenav-toggled #layoutSidenav #layoutSidenav_content {
+    padding-left: $sidenav-collapsed-width;
+  }
+  .sb-sidenav-toggled #layoutSidenav #layoutSidenav_content:before {
+    display: none;
+  }
+
+  /* Icon-only rail contents: center each icon, drop the labels/heading */
+  .sb-sidenav-toggled .sb-sidenav-menu-heading {
+    display: none;
+  }
+  .sb-sidenav-toggled .sb-sidenav-menu .nav {
+    padding-top: 1rem;
+  }
+  .sb-sidenav-toggled .sb-sidenav .nav .nav-link {
+    justify-content: center;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .sb-sidenav-toggled .sb-sidenav .nav .nav-link .sb-nav-link-icon {
+    margin-right: 0 !important;
+  }
+  .sb-sidenav-toggled .sb-sidenav .nav .nav-link .text-wrap {
+    display: none;
+  }
+  .sb-sidenav-toggled .sb-sidenav-footer > div {
+    justify-content: center;
+  }
+  .sb-sidenav-toggled .sb-sidenav-footer .sb-nav-link-icon {
+    margin-right: 0 !important;
+  }
+  .sb-sidenav-toggled .sb-sidenav-footer > div > span {
+    display: none;
+  }
+
+  /* Keep the page content a fixed width instead of stretching to fill
+     the space the sidenav frees up when minimized. The container is
+     pinned to the width it has when the sidenav is fully expanded
+     (viewport - 225px) at all times, then centered with auto margins
+     inside whatever room is actually available — which is wider once
+     the rail shrinks to 72px. Net effect: the page looks identical,
+     just recentered, whether the sidenav is maximized or minimized. */
+  #layoutSidenav #layoutSidenav_content > main > .container-fluid {
+    max-width: calc(100vw - #{$sidenav-expanded-width});
+    margin-left: auto;
+    margin-right: auto;
+    transition: max-width 0.15s ease-in-out;
+  }
+}
+
+
 /* Mobile-only: center the brand between the sidebar toggle (left) and
    the "..." button (right). Taking it out of the flex flow (absolute,
    centered on the navbar itself, which is already position: fixed)
