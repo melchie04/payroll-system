@@ -17,6 +17,7 @@ import {
   PayslipDetails,
   PageHeader,
   Pagination,
+  TabsNav,
 } from "../../components/ui/index.jsx";
 import { payslipHistory, timesheetHistory } from "../../assets/data/index.js";
 import { useEmployees } from "../../context/EmployeesContext.jsx";
@@ -155,16 +156,7 @@ export default function EmployeeProfile() {
       <hr className="my-3 opacity-25" />
 
       <section>
-        <ul className="nav nav-tabs mb-4">
-          {TABS.map((t) => (
-            <li className="nav-item" key={t.key}>
-              <button type="button" className={`nav-link ${tab === t.key ? "active fw-semibold" : "text-muted"}`} onClick={() => setTab(t.key)}>
-                <i className={`fas ${t.icon} me-2 opacity-75`}></i>
-                {t.label}
-              </button>
-            </li>
-          ))}
-        </ul>
+        <TabsNav tabs={TABS} active={tab} onChange={setTab} />
       </section>
 
       {tab === "overview" && (

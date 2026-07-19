@@ -201,6 +201,30 @@ export function PageHeader({ title, description, actions }) {
   );
 }
 
+// TabsNav — page tab navigation; styling and states live in _tabs.scss.
+export function TabsNav({ tabs, active, onChange }) {
+  return (
+    <div className="tabs-nav">
+      {tabs.map((t) => {
+        const isActive = active === t.key;
+        return (
+          <button
+            key={t.key}
+            type="button"
+            className={`tabs-nav-item ${isActive ? "active" : ""}`}
+            aria-current={isActive ? "page" : undefined}
+            onClick={() => onChange(t.key)}
+          >
+            {t.icon && <i className={`fas ${t.icon} opacity-75`}></i>}
+            <span>{t.label}</span>
+            {t.badge ? <span className="badge rounded-pill bg-danger">{t.badge}</span> : null}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 // ActionsMenu — per-row "..." dropdown menu.
 export function ActionsMenu({ items }) {
   return (

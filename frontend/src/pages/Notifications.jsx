@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { DataCard, BtnSecondary, PageHeader } from "../components/ui/index.jsx";
+import { DataCard, BtnSecondary, PageHeader, TabsNav } from "../components/ui/index.jsx";
 import { useNotifications } from "../context/NotificationsContext.jsx";
 
 // Notifications — notification list with all/unread filters and mark-as-read actions.
@@ -30,22 +30,14 @@ export default function Notifications() {
       <hr className="my-3 opacity-25" />
 
       <section>
-        <div className="overflow-x-auto pb-1" style={{ WebkitOverflowScrolling: "touch" }}>
-          <ul className="nav nav-pills mb-4 gap-2 flex-nowrap">
-            {["All", "Unread"].map((tab) => (
-              <li className="nav-item text-nowrap" key={tab}>
-                <button
-                  type="button"
-                  className={`nav-link btn-sm ${filter === tab ? "active bg-dark" : "text-muted"}`}
-                  onClick={() => setFilter(tab)}
-                >
-                  {tab}
-                  {tab === "Unread" && unreadCount > 0 && <span className="badge rounded-pill bg-danger ms-2">{unreadCount}</span>}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <TabsNav
+          tabs={[
+            { key: "All", label: "All" },
+            { key: "Unread", label: "Unread", badge: unreadCount > 0 ? unreadCount : null },
+          ]}
+          active={filter}
+          onChange={setFilter}
+        />
       </section>
 
       <section className="mb-3">
