@@ -15,8 +15,7 @@ const emptyForm = {
   secondaryContact: { name: "", role: "", phone: "" },
 };
 
-// Shared by both /clients/new (no :id — "add" mode) and
-// /clients/:id/edit ("edit" mode) since the fields are identical.
+// ClientForm — add/edit client form shared by /clients/new and /clients/:id/edit.
 export default function ClientForm() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -83,10 +82,6 @@ export default function ClientForm() {
 
   const backLabel = isEdit ? "Back to Profile" : "Back to Clients";
   const fallbackPath = isEdit ? `/clients/${existing.id}` : "/clients";
-  // location.key is "default" when there's no in-app history to go back to
-  // (direct URL load, refresh, bookmark) — fall back to a real route then,
-  // otherwise use actual browser history so we land on wherever the user
-  // really came from.
   const hasHistory = location.key !== "default";
   function handleBack() {
     if (hasHistory) navigate(-1);
@@ -95,9 +90,6 @@ export default function ClientForm() {
 
   return (
     <>
-      {/* ========================================================== */}
-      {/* DIVISION 1: HEADER                                         */}
-      {/* ========================================================== */}
       <section>
         <div className="mt-4">
           <button
@@ -114,12 +106,8 @@ export default function ClientForm() {
         </div>
       </section>
 
-      {/* LINE DIVIDER */}
       <hr className="my-3 opacity-25" />
 
-      {/* ========================================================== */}
-      {/* DIVISION 2: FORM                                           */}
-      {/* ========================================================== */}
       <section className="mb-3">
         <DataCard title="Client Details">
           <form className="card-body row" onSubmit={handleSubmit}>

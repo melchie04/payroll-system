@@ -43,6 +43,7 @@ function formatFileSize(bytes) {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
+// EmployeeProfile — employee detail page with Overview, Payslip History, Timesheet History, and Documents tabs.
 export default function EmployeeProfile() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -57,10 +58,7 @@ export default function EmployeeProfile() {
   const timesheets = timesheetHistory.filter((t) => t.employeeId === employee?.id);
   const documents = employee ? getDocumentsByEmployee(employee.id) : [];
 
-  // ============================================================
-  // UPLOAD DOCUMENT
-  // ============================================================
-  const [docFile, setDocFile] = useState(null); // the actual File object picked
+  const [docFile, setDocFile] = useState(null);
   const [docName, setDocName] = useState("");
   const [docType, setDocType] = useState("pdf");
   const [dragOver, setDragOver] = useState(false);
@@ -102,9 +100,6 @@ export default function EmployeeProfile() {
     document.getElementById("uploadDocumentModalClose")?.click();
   }
 
-  // ============================================================
-  // DELETE DOCUMENT
-  // ============================================================
   const [deleteDocTarget, setDeleteDocTarget] = useState(null);
 
   function confirmDeleteDocument() {
@@ -115,15 +110,8 @@ export default function EmployeeProfile() {
     document.getElementById("deleteDocumentModalClose")?.click();
   }
 
-  // ============================================================
-  // VIEW PAYSLIP — plain read-only breakdown, simple data-bs-toggle trigger
-  // ============================================================
   const [payslipTarget, setPayslipTarget] = useState(null);
 
-  // location.key is "default" when there's no in-app history to go back to
-  // (direct URL load, refresh, bookmark) — fall back to the list page then,
-  // otherwise use actual browser history so we land on wherever the user
-  // really came from (e.g. a client's Assigned Employees tab).
   const hasHistory = location.key !== "default";
   function handleBack() {
     if (hasHistory) navigate(-1);
@@ -143,9 +131,6 @@ export default function EmployeeProfile() {
 
   return (
     <>
-      {/* ========================================================== */}
-      {/* DIVISION 1: HEADER                                         */}
-      {/* ========================================================== */}
       <section>
         <div className="mt-4">
           <button
@@ -167,12 +152,8 @@ export default function EmployeeProfile() {
         </div>
       </section>
 
-      {/* LINE DIVIDER */}
       <hr className="my-3 opacity-25" />
 
-      {/* ========================================================== */}
-      {/* DIVISION 2: TABS                                           */}
-      {/* ========================================================== */}
       <section>
         <ul className="nav nav-tabs mb-4">
           {TABS.map((t) => (
@@ -186,9 +167,6 @@ export default function EmployeeProfile() {
         </ul>
       </section>
 
-      {/* ========================================================== */}
-      {/* DIVISION 3: OVERVIEW TAB                                   */}
-      {/* ========================================================== */}
       {tab === "overview" && (
         <section className="mb-3">
           <div className="row g-3">
@@ -249,9 +227,6 @@ export default function EmployeeProfile() {
         </section>
       )}
 
-      {/* ========================================================== */}
-      {/* DIVISION 4: PAYSLIP HISTORY TAB                            */}
-      {/* ========================================================== */}
       {tab === "payslips" && (
         <section className="mb-3">
           <DataCard>
@@ -284,9 +259,6 @@ export default function EmployeeProfile() {
         </section>
       )}
 
-      {/* ========================================================== */}
-      {/* DIVISION 5: TIMESHEET HISTORY TAB                          */}
-      {/* ========================================================== */}
       {tab === "timesheets" && (
         <section className="mb-3">
           <DataCard>
@@ -313,9 +285,6 @@ export default function EmployeeProfile() {
         </section>
       )}
 
-      {/* ========================================================== */}
-      {/* DIVISION 6: DOCUMENTS TAB                                  */}
-      {/* ========================================================== */}
       {tab === "documents" && (
         <section className="mb-3">
           <DataCard
@@ -362,9 +331,6 @@ export default function EmployeeProfile() {
         </section>
       )}
 
-      {/* ========================================================== */}
-      {/* MODAL: UPLOAD DOCUMENT                                     */}
-      {/* ========================================================== */}
       <Modal
         id="uploadDocumentModal"
         title="Upload Document"
@@ -441,9 +407,6 @@ export default function EmployeeProfile() {
         </form>
       </Modal>
 
-      {/* ========================================================== */}
-      {/* MODAL: CONFIRM DELETE DOCUMENT                             */}
-      {/* ========================================================== */}
       <Modal
         id="deleteDocumentModal"
         title="Delete Document"
@@ -463,9 +426,6 @@ export default function EmployeeProfile() {
         </p>
       </Modal>
 
-      {/* ========================================================== */}
-      {/* MODAL: VIEW PAYSLIP                                        */}
-      {/* ========================================================== */}
       <Modal
         id="viewPayslipModal"
         title="Payslip"

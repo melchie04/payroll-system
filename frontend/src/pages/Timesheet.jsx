@@ -3,7 +3,6 @@ import { Modal as BsModal } from "bootstrap";
 import {
   DataCard,
   Badge,
-  // BtnPrimary,
   BtnSecondary,
   FilterSelect,
   IconBtn,
@@ -19,17 +18,12 @@ const statusActions = {
   Failed: { icon: "fa-rotate-left", label: "retry the upload for" },
 };
 
+// Timesheet — timesheet upload dropzone with uploaded-file list and extraction summary.
 export default function Timesheet() {
-  // ============================================================
-  // DROPZONE (drag & drop file upload)
-  // ============================================================
   const [drag, setDrag] = useState(false);
 
-  // ============================================================
-  // UPLOADED FILES / CONFIRM ACTION
-  // ============================================================
   const [files, setFiles] = useState(initialFiles);
-  const [target, setTarget] = useState(null); // file pending confirmation
+  const [target, setTarget] = useState(null);
   const modalInstance = useRef(null);
 
   useEffect(() => {
@@ -44,13 +38,10 @@ export default function Timesheet() {
   function handleConfirm() {
     if (!target) return;
     if (target.status === "Processing") {
-      // Cancel: remove the file from the list
       setFiles((prev) => prev.filter((f) => f.id !== target.id));
     } else if (target.status === "Failed") {
-      // Retry: flip it back to Processing
       setFiles((prev) => prev.map((f) => (f.id === target.id ? { ...f, status: "Processing" } : f)));
     }
-    // Extracted (view) has no state change — it's just informational.
     modalInstance.current?.hide();
     setTarget(null);
   }
@@ -59,31 +50,17 @@ export default function Timesheet() {
     <>
       <input type="file" id="file-input" className="d-none" multiple accept=".pdf,.jpg,.png" />
 
-      {/* ========================================================== */}
-      {/* DIVISION 1: HEADER                                         */}
-      {/* ========================================================== */}
       <section>
         <div className="mt-4">
           <PageHeader
             title="Timesheet Upload / OCR Scan"
             description="Upload timesheet documents and extract data using OCR."
-            // actions={
-            //   <BtnPrimary
-            //     onClick={() => document.getElementById("file-input").click()}
-            //   >
-            //     <i className="fas fa-upload"></i> Upload New
-            //   </BtnPrimary>
-            // }
           />
         </div>
       </section>
 
-      {/* LINE DIVIDER */}
       <hr className="my-3 opacity-25" />
 
-      {/* ========================================================== */}
-      {/* DIVISION 2: CONTROLS                                       */}
-      {/* ========================================================== */}
       <section>
         <div className="row g-3 align-items-end">
           <div className="col-12 col-md-4">
@@ -108,12 +85,8 @@ export default function Timesheet() {
         </div>
       </section>
 
-      {/* LINE DIVIDER */}
       <hr className="my-3 opacity-25" />
 
-      {/* ========================================================== */}
-      {/* DIVISION 3: DATA CARDS                                     */}
-      {/* ========================================================== */}
       <section className="mb-3">
         <div className="row g-3">
           <div className="col-lg-5">
@@ -202,9 +175,6 @@ export default function Timesheet() {
         </div>
       </section>
 
-      {/* ========================================================== */}
-      {/* MODAL: CONFIRM FILE ACTION                                 */}
-      {/* ========================================================== */}
       <Modal
         id="timesheetConfirmModal"
         title="Please Confirm"

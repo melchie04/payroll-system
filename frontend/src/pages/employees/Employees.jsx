@@ -26,13 +26,11 @@ function toCsvRows(list) {
   return list.map((e) => [e.name, e.client, e.position, e.email, e.rate, e.status]);
 }
 
+// Employees — employee list with selection, bulk actions, filters, and export.
 export default function Employees() {
   const navigate = useNavigate();
   const { employees, deleteEmployee } = useEmployees();
 
-  // ============================================================
-  // TABLE / SELECTION
-  // ============================================================
   const [selected, setSelected] = useState([]);
 
   const toggleOne = (id) => setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
@@ -43,10 +41,7 @@ export default function Employees() {
     setSelected(allSelected ? [] : employees.map((e) => e.id));
   }
 
-  // ============================================================
-  // DELETE EMPLOYEE (single row)
-  // ============================================================
-  const [target, setTarget] = useState(null); // employee pending deletion
+  const [target, setTarget] = useState(null);
 
   function confirmDelete() {
     if (target) {
@@ -56,18 +51,12 @@ export default function Employees() {
     document.getElementById("employeeDeleteModalClose")?.click();
   }
 
-  // ============================================================
-  // BULK DELETE (selected rows)
-  // ============================================================
   function confirmBulkDelete() {
     selected.forEach((id) => deleteEmployee(id));
     setSelected([]);
     document.getElementById("bulkDeleteModalClose")?.click();
   }
 
-  // ============================================================
-  // EXPORT
-  // ============================================================
   function handleExportAll() {
     exportToCsv("employees", CSV_HEADERS, toCsvRows(employees));
   }
@@ -79,9 +68,6 @@ export default function Employees() {
 
   return (
     <>
-      {/* ========================================================== */}
-      {/* DIVISION 1: HEADER                                         */}
-      {/* ========================================================== */}
       <section>
         <div className="mt-4">
           <PageHeader
@@ -99,12 +85,8 @@ export default function Employees() {
         </div>
       </section>
 
-      {/* LINE DIVIDER */}
       <hr className="my-3 opacity-25" />
 
-      {/* ========================================================== */}
-      {/* DIVISION 3: CONTROLS                                       */}
-      {/* ========================================================== */}
       <section>
         <div className="row g-3 align-items-end">
           <div className="col-12 col-md-4">
@@ -136,15 +118,10 @@ export default function Employees() {
         </div>
       </section>
 
-      {/* LINE DIVIDER */}
       <hr className="my-3 opacity-25" />
 
-      {/* ========================================================== */}
-      {/* DIVISION 4: TABLES                                         */}
-      {/* ========================================================== */}
       <section className="mb-3 print-area">
         <DataCard>
-          {/* Bulk actions bar — only shows once at least one row is checked */}
           {selected.length > 0 && (
             <div className="d-flex align-items-center justify-content-between gap-2 px-3 py-2 bg-light border-bottom flex-wrap">
               <span className="small fw-semibold">
@@ -215,9 +192,6 @@ export default function Employees() {
         </DataCard>
       </section>
 
-      {/* ========================================================== */}
-      {/* MODAL: CONFIRM DELETE (single row)                         */}
-      {/* ========================================================== */}
       <Modal
         id="employeeDeleteModal"
         title="Delete Employee"
@@ -237,9 +211,6 @@ export default function Employees() {
         </p>
       </Modal>
 
-      {/* ========================================================== */}
-      {/* MODAL: CONFIRM BULK DELETE                                 */}
-      {/* ========================================================== */}
       <Modal
         id="bulkDeleteModal"
         title="Delete Selected Employees"

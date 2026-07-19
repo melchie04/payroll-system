@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useTheme } from "../context/ThemeContext.jsx";
 import { useCurrentUser } from "../context/CurrentUserContext.jsx";
 
+// Returns up to two uppercase initials from a full name.
 function initialsOf(name = "") {
   return name
     .split(" ")
@@ -12,8 +13,7 @@ function initialsOf(name = "") {
     .join("");
 }
 
-/* Shared notification dropdown menu — used by both the desktop trigger
-   and the mobile trigger so the two stay in sync automatically. */
+// NotificationsMenu — notifications dropdown shared by the desktop and mobile triggers.
 function NotificationsMenu({ id, align = "end" }) {
   return (
     <ul
@@ -92,9 +92,7 @@ function NotificationsMenu({ id, align = "end" }) {
   );
 }
 
-/* Notification bell trigger — uses the same .nav-icon-btn class as
-   every other topnav icon button (sidebar toggle, theme, "..."), so
-   sizing/shape/hover are identical everywhere on desktop and mobile. */
+// NotificationsTrigger — notification bell icon button.
 function NotificationsTrigger({ id }) {
   return (
     <a className="nav-icon-btn text-decoration-none" id={id} href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -111,9 +109,7 @@ function NotificationsTrigger({ id }) {
   );
 }
 
-/* User avatar + name trigger. nameClassName controls whether the name is
-   hidden on very small screens (desktop copy) or always shown (mobile
-   copy, where it has its own dedicated row so there's room for it). */
+// UserTrigger — user avatar + name dropdown trigger.
 function UserTrigger({ id, user, nameClassName = "d-none d-sm-inline" }) {
   return (
     <a
@@ -141,8 +137,7 @@ function UserTrigger({ id, user, nameClassName = "d-none d-sm-inline" }) {
   );
 }
 
-/* Shared user dropdown menu — used by both the desktop trigger and the
-   mobile trigger so profile/settings/logout stay in sync. */
+// UserMenu — user dropdown with profile, settings, activity log, and logout.
 function UserMenu({ id, user }) {
   return (
     <ul
@@ -193,6 +188,7 @@ function UserMenu({ id, user }) {
   );
 }
 
+// TopNav — fixed top navbar with brand, sidebar toggle, theme switch, notifications, and user menu.
 export default function TopNav({ onToggleSidebar }) {
   const { theme, setTheme } = useTheme();
   const { user } = useCurrentUser();
@@ -204,14 +200,6 @@ export default function TopNav({ onToggleSidebar }) {
     setTheme(isDark ? "light" : "dark");
   };
 
-  // This project's fixed-navbar layout (body.sb-nav-fixed) hardcodes a
-  // 56px offset for the page content, matching the navbar's old fixed
-  // single-row height. Now that the navbar can grow taller on mobile
-  // (the quick-actions row below), that hardcoded offset would leave a
-  // gap where the navbar has no background and the page content
-  // underneath shows through / overlaps it. We measure the navbar's
-  // real height here and publish it as --topnav-offset, which
-  // custom.scss uses instead of the old hardcoded 56px.
   useEffect(() => {
     const navEl = navRef.current;
     if (!navEl) return undefined;
@@ -237,13 +225,7 @@ export default function TopNav({ onToggleSidebar }) {
       ref={navRef}
       className={`sb-topnav navbar navbar-expand flex-wrap ${isDark ? "navbar-dark bg-dark" : "navbar-light bg-white"} border-bottom px-2 px-md-3`}
     >
-      {/* Row 1: brand, sidebar toggle, desktop controls / mobile "more" toggle.
-          This is its own position:relative wrapper so the absolutely-centered
-          mobile brand (see .nav-brand-mobile in custom.scss) centers within
-          row 1's own height only — not the whole <nav>, which grows taller
-          once row 2 (mobile quick-actions) is revealed below. */}
       <div className="d-flex align-items-center w-100 position-relative">
-        {/* Navbar Brand*/}
         <Link
           className="nav-brand-mobile navbar-brand ps-1 ps-md-3 d-flex justify-content-center justify-content-md-start align-items-center gap-2"
           to="/"
@@ -263,12 +245,10 @@ export default function TopNav({ onToggleSidebar }) {
           <span className="fs-6 fw-semibold tracking-wider">PAYROLL</span>
         </Link>
 
-        {/* Sidebar Toggle*/}
         <button className="nav-icon-btn me-1 me-lg-0 ms-0 ms-md-3 ms-lg-4" id="sidebarToggle" onClick={onToggleSidebar}>
           <i className="fas fa-bars"></i>
         </button>
 
-        {/* Desktop Navigation Controls */}
         <div className="d-none d-md-flex align-items-center ms-auto gap-1 gap-md-2">
           <button type="button" className="nav-icon-btn" onClick={toggleTheme} aria-label="Toggle theme">
             <i className={`fas ${isDark ? "fa-moon" : "fa-sun"}`}></i>
@@ -289,7 +269,6 @@ export default function TopNav({ onToggleSidebar }) {
           </ul>
         </div>
 
-        {/* Mobile "more" toggle — reveals the quick-actions row below */}
         <button
           type="button"
           className="nav-icon-btn d-md-none ms-auto"
@@ -302,7 +281,6 @@ export default function TopNav({ onToggleSidebar }) {
         </button>
       </div>
 
-      {/* Mobile quick-actions row (theme, notifications, user) */}
       {mobileControlsOpen && (
         <div
           id="topnavMobileControls"

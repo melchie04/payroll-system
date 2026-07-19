@@ -2,12 +2,9 @@
 import { createContext, useContext, useState } from "react";
 import { clients as initialClients, clientDocuments as initialDocuments } from "../assets/data/index.js";
 
-// Same reasoning as EmployeesContext: clients now live across three
-// separate routes (list, profile, add/edit form), so their state has to
-// live above all three instead of inside the list page's own useState —
-// otherwise navigating away and back would lose any adds/edits/deletes.
 const ClientsContext = createContext(null);
 
+// ClientsProvider — clients and client documents state shared across the client routes.
 export function ClientsProvider({ children }) {
   const [clients, setClients] = useState(initialClients);
   const [documents, setDocuments] = useState(initialDocuments);

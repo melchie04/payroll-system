@@ -1,5 +1,6 @@
 import { Modal, BtnSecondary } from "../ui/index.jsx";
 
+// DeleteRoleModal — confirmation modal for deleting a role.
 export function DeleteRoleModal({ target, onConfirm }) {
   return (
     <Modal

@@ -5,6 +5,7 @@ const TABS = [
   { key: "password", label: "Change Password", icon: "fa-key" },
 ];
 
+// SettingsTabsNav — tab navigation for the Settings page.
 export function SettingsTabsNav({ tab, onSwitch }) {
   return (
     <ul className="nav nav-tabs mb-2">

@@ -1,17 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useState } from "react";
 
-// There's no real authentication in this prototype (Login accepts anything
-// and just navigates onward), so there's no actual logged-in user to read
-// from a session. This context represents "whoever is using the app right
-// now" — seeded with the same Admin identity used elsewhere (Settings'
-// system users, Activity Log), editable from the My Profile page, and read
-// by TopNav so the header reflects it live instead of a hardcoded "Admin".
-//
-// mustChangePassword simulates "this account has a temporary/admin-set
-// password that's never been changed" — defaults to true so the first
-// login demonstrates the forced Change Password redirect. Login checks it
-// to decide where to send you; ChangePassword clears it on success.
 const CurrentUserContext = createContext(null);
 
 const defaultUser = {
@@ -19,10 +8,11 @@ const defaultUser = {
   email: "admin@payrollsys.com",
   role: "Administrator",
   avatarColor: "#1a1a1a",
-  avatarImage: null, // data URL once a photo is uploaded, otherwise initials
+  avatarImage: null,
   mustChangePassword: true,
 };
 
+// CurrentUserProvider — current signed-in user state, editable from My Profile.
 export function CurrentUserProvider({ children }) {
   const [user, setUser] = useState(defaultUser);
 

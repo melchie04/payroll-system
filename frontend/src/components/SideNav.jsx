@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { to: "/clients", label: "Clients", icon: "fa-building" },
 ];
 
+// SideNav — sidebar navigation menu with a Help footer.
 export default function SideNav({ onNavItemSelect }) {
   const { theme } = useTheme();
 
@@ -20,7 +21,6 @@ export default function SideNav({ onNavItemSelect }) {
 
   return (
     <nav className={`sb-sidenav accordion sb-sidenav-${theme} border-end`} id="sidenavAccordion">
-      {/* Sidebar Menu */}
       <div className="sb-sidenav-menu">
         <div className="nav">
           <div className="sb-sidenav-menu-heading fs-8 fs-md-7 text-uppercase tracking-wider">Menu</div>
@@ -39,7 +39,6 @@ export default function SideNav({ onNavItemSelect }) {
         </div>
       </div>
 
-      {/* Footer Element */}
       <div className="sb-sidenav-footer">
         <div
           className={`d-flex align-items-center w-100 text-reset text-decoration-none ${theme === "light" ? "help-footer-btn-light" : "help-footer-btn-dark"} fs-7 fs-md-6`}

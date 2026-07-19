@@ -1,6 +1,7 @@
 import { Modal, BtnSecondary, BtnPrimary, FormField } from "../ui/index.jsx";
 import { RequirementRow } from "./RequirementRow.jsx";
 
+// ResetPasswordModal — modal for resetting a user's password.
 export function ResetPasswordModal({
   target,
   form,

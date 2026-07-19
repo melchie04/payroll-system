@@ -1,5 +1,6 @@
 import { Modal, BtnSecondary, BtnPrimary, FormField } from "../ui/index.jsx";
 
+// EditUserModal — modal form for editing a system user.
 export function EditUserModal({ editForm, roleList, onChange, onSubmit }) {
   return (
     <Modal

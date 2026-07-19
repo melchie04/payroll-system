@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 import Footer from "../components/Footer.jsx";
 
+// AuthLayout — centered layout for the auth pages.
 export default function AuthLayout() {
   return (
     <div id="layoutAuthentication" className="bg-body auth-bg d-flex flex-column" style={{ minHeight: "100vh" }}>

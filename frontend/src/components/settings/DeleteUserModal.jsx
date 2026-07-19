@@ -1,5 +1,6 @@
 import { Modal, BtnSecondary } from "../ui/index.jsx";
 
+// DeleteUserModal — confirmation modal for deleting a user.
 export function DeleteUserModal({ target, onConfirm }) {
   return (
     <Modal

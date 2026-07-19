@@ -38,30 +38,21 @@ const emptyInvoice = {
   status: "Sent",
 };
 
+// Billing — invoice list with create-invoice and view-invoice modals.
 export default function Billing() {
-  // ============================================================
-  // INVOICES TABLE
-  // ============================================================
   const [invoices, setInvoices] = useState(initialInvoices);
-  const [hidden, setHidden] = useState([]); // invoice ids with masked amount
+  const [hidden, setHidden] = useState([]);
 
   function toggleHidden(id) {
     setHidden((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
   }
 
-  // ============================================================
-  // VIEW INVOICE — plain read-only detail + PDF download, simple
-  // data-bs-toggle trigger since nothing here is editable.
-  // ============================================================
   const [viewTarget, setViewTarget] = useState(null);
 
   function getClientInfo(clientName) {
     return clients.find((c) => c.name === clientName);
   }
 
-  // ============================================================
-  // CREATE INVOICE
-  // ============================================================
   const [form, setForm] = useState(emptyInvoice);
 
   function handleChange(e) {
@@ -87,9 +78,6 @@ export default function Billing() {
     document.getElementById("createInvoiceModalClose")?.click();
   }
 
-  // ============================================================
-  // EXPORT
-  // ============================================================
   function handleExportAll() {
     exportToCsv(
       "invoices",
@@ -100,9 +88,6 @@ export default function Billing() {
 
   return (
     <>
-      {/* ========================================================== */}
-      {/* DIVISION 1: HEADER                                         */}
-      {/* ========================================================== */}
       <section>
         <div className="mt-4">
           <PageHeader
@@ -120,12 +105,8 @@ export default function Billing() {
         </div>
       </section>
 
-      {/* LINE DIVIDER */}
       <hr className="my-3 opacity-25" />
 
-      {/* ========================================================== */}
-      {/* DIVISION 2: STATUS CARDS                                   */}
-      {/* ========================================================== */}
       <section>
         <div className="row g-3">
           {billingStats.map((s) => (
@@ -136,12 +117,8 @@ export default function Billing() {
         </div>
       </section>
 
-      {/* LINE DIVIDER */}
       <hr className="my-3 opacity-25" />
 
-      {/* ========================================================== */}
-      {/* DIVISION 3: CONTROLS                                       */}
-      {/* ========================================================== */}
       <section>
         <div className="row g-3 align-items-end">
           <div className="col-12 col-md-3">
@@ -181,12 +158,8 @@ export default function Billing() {
         </div>
       </section>
 
-      {/* LINE DIVIDER */}
       <hr className="my-3 opacity-25" />
 
-      {/* ========================================================== */}
-      {/* DIVISION 4: TABLES                                         */}
-      {/* ========================================================== */}
       <section className="mb-3 print-area">
         <DataCard>
           <Table headers={["Invoice #", "Client", "Invoice Date", "Due Date", "Amount (₱)", "Status", "Actions"]}>
@@ -230,9 +203,6 @@ export default function Billing() {
         </DataCard>
       </section>
 
-      {/* ========================================================== */}
-      {/* MODAL: CREATE INVOICE                                      */}
-      {/* ========================================================== */}
       <Modal
         id="createInvoiceModal"
         title="Create Invoice"
@@ -292,9 +262,6 @@ export default function Billing() {
         </form>
       </Modal>
 
-      {/* ========================================================== */}
-      {/* MODAL: VIEW INVOICE                                        */}
-      {/* ========================================================== */}
       <Modal
         id="viewInvoiceModal"
         title="Invoice"

@@ -1,3 +1,4 @@
+// RequirementRow — password requirement checklist row.
 export function RequirementRow({ met, label }) {
   return (
     <div className="d-flex align-items-center gap-2 mb-1">

@@ -1,5 +1,6 @@
 import { DataCard, BtnPrimary, FormField } from "../ui/index.jsx";
 
+// GeneralTab — general company/preferences settings tab.
 export function GeneralTab({ generalSaved, onSave }) {
   return (
     <section className="mb-3">

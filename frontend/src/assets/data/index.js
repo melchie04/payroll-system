@@ -1,3 +1,4 @@
+// Static mock data used across the app.
 export const dashboardStats = [
   {
     label: "Active Clients",
@@ -405,8 +406,6 @@ export const clients = [
   },
 ];
 
-// Keyed by clientId, same pattern as employeeDocuments — the Client
-// Profile page's Documents tab filters this by clientId.
 export const clientDocuments = [
   { id: 1, clientId: 1, name: "Master Service Agreement.pdf", type: "pdf", uploaded: "Feb 10, 2022" },
   { id: 2, clientId: 1, name: "NDA.pdf", type: "pdf", uploaded: "Feb 10, 2022" },

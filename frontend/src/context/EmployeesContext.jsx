@@ -2,13 +2,9 @@
 import { createContext, useContext, useState } from "react";
 import { employees as initialEmployees, employeeDocuments as initialDocuments } from "../assets/data/index.js";
 
-// Employees now live across three separate routes (list, profile, add/edit
-// form), so their state has to live above all three instead of inside the
-// list page's own useState — otherwise navigating away and back would lose
-// any adds/edits/deletes. Same reasoning for documents (Upload/Delete on
-// the profile page).
 const EmployeesContext = createContext(null);
 
+// EmployeesProvider — employees and employee documents state shared across the employee routes.
 export function EmployeesProvider({ children }) {
   const [employees, setEmployees] = useState(initialEmployees);
   const [documents, setDocuments] = useState(initialDocuments);

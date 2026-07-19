@@ -2,24 +2,18 @@ import { StatCard, DataCard, Table, Tr, Td, Badge, PageHeader } from "../compone
 import { Link } from "react-router-dom";
 import { dashboardStats, payrollStatusData, recentActivity, upcomingPayroll } from "../assets/data/index.js";
 
+// Dashboard — overview stats, payroll status chart, recent activity, and upcoming payroll.
 export default function Dashboard() {
   return (
     <>
-      {/* ========================================================== */}
-      {/* DIVISION 1: HEADER                                         */}
-      {/* ========================================================== */}
       <section>
         <div className="mt-4">
           <PageHeader title="Dashboard" description="Here's what's happening with your business today." />
         </div>
       </section>
 
-      {/* LINE DIVIDER */}
       <hr className="my-3 opacity-25" />
 
-      {/* ========================================================== */}
-      {/* DIVISION 2: STATUS CARDS                                   */}
-      {/* ========================================================== */}
       <section>
         <div className="row g-3">
           {dashboardStats.map((s) => (
@@ -30,23 +24,16 @@ export default function Dashboard() {
         </div>
       </section>
 
-      {/* LINE DIVIDER */}
       <hr className="my-3 opacity-25" />
 
-      {/* ========================================================== */}
-      {/* DIVISION 3: DATA CARDS                                     */}
-      {/* ========================================================== */}
       <section>
         <div className="row g-3">
           <div className="col-xl-5">
             <DataCard title="Payroll Status Overview">
               <div className="card-body d-flex justify-content-center align-items-center flex-wrap gap-4 mx-2">
-                {/* SVG Donut Chart Section */}
                 <div className="position-relative flex-shrink-0" style={{ width: 140, height: 140 }}>
                   <svg width="140" height="140" viewBox="0 0 42 42" style={{ transform: "rotate(-90deg)" }}>
-                    {/* Background Track */}
                     <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#f3f4f6" strokeWidth="4.2" />
-                    {/* Segment 1: On Track (50%) - Green */}
                     <circle
                       cx="21"
                       cy="21"
@@ -57,7 +44,6 @@ export default function Dashboard() {
                       strokeDasharray="50 50"
                       strokeDashoffset="0"
                     />
-                    {/* Segment 2: At Risk (29%) - Orange */}
                     <circle
                       cx="21"
                       cy="21"
@@ -68,7 +54,6 @@ export default function Dashboard() {
                       strokeDasharray="29 71"
                       strokeDashoffset="-50"
                     />
-                    {/* Segment 3: Delayed (13%) - Red */}
                     <circle
                       cx="21"
                       cy="21"
@@ -79,7 +64,6 @@ export default function Dashboard() {
                       strokeDasharray="13 87"
                       strokeDashoffset="-79"
                     />
-                    {/* Segment 4: Completed (8%) - Blue */}
                     <circle
                       cx="21"
                       cy="21"
@@ -91,7 +75,6 @@ export default function Dashboard() {
                       strokeDashoffset="-92"
                     />
                   </svg>
-                  {/* Center Content Indicator */}
                   <div className="position-absolute top-50 start-50 translate-middle text-center">
                     <div className="lh-1 fw-extrabold text-dark" style={{ fontSize: "1.6rem", letterSpacing: "-0.5px" }}>
                       24
@@ -182,12 +165,8 @@ export default function Dashboard() {
         </div>
       </section>
 
-      {/* LINE DIVIDER */}
       <hr className="my-3 opacity-25" />
 
-      {/* ========================================================== */}
-      {/* DIVISION 4: TABLES                                         */}
-      {/* ========================================================== */}
       <section className="mb-3">
         <DataCard title="Upcoming Payroll">
           <Table headers={["Employee", "Client", "Pay Period", "Status", "Gross Pay", "Net Pay"]}>

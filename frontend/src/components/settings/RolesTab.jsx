@@ -1,5 +1,6 @@
 import { DataCard, BtnPrimary, IconBtn } from "../ui/index.jsx";
 
+// RolesTab — roles & permissions table tab.
 export function RolesTab({ roleList, onEditRole, onDeleteRole }) {
   return (
     <section className="mb-3">

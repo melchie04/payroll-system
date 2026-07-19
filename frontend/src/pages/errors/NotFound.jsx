@@ -1,5 +1,6 @@
 import ErrorPage, { BackToDashboardLink } from "./ErrorPage.jsx";
 
+// NotFound — 404 page.
 export default function NotFound() {
   return (
     <ErrorPage

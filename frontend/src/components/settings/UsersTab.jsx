@@ -1,5 +1,6 @@
 import { DataCard, Table, Tr, Td, Badge, BtnPrimary, ActionsMenu } from "../ui/index.jsx";
 
+// UsersTab — system users table tab.
 export function UsersTab({ users, onEditUser, onResetPassword, onDeleteUser }) {
   return (
     <section className="mb-3">

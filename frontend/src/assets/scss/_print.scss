@@ -1,0 +1,21 @@
+// Print / "Save as PDF" — only .print-area content prints.
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .print-area,
+  .print-area * {
+    visibility: visible;
+  }
+  .print-area {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+  .print-area .btn,
+  .print-area .dropdown,
+  .print-area .form-check-input {
+    display: none !important;
+  }
+}

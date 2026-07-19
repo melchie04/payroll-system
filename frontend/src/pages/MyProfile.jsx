@@ -4,6 +4,7 @@ import { useCurrentUser } from "../context/CurrentUserContext.jsx";
 
 const AVATAR_COLORS = ["#1a1a1a", "#0d6efd", "#198754", "#dc3545", "#997404", "#6f42c1"];
 
+// Returns up to two uppercase initials from a full name.
 function initialsOf(name = "") {
   return name
     .split(" ")
@@ -13,6 +14,7 @@ function initialsOf(name = "") {
     .join("");
 }
 
+// MyProfile — edit the current user's profile details and avatar.
 export default function MyProfile() {
   const { user, updateUser } = useCurrentUser();
 
@@ -52,16 +54,12 @@ export default function MyProfile() {
 
   return (
     <>
-      {/* ========================================================== */}
-      {/* DIVISION 1: HEADER                                         */}
-      {/* ========================================================== */}
       <section>
         <div className="mt-4">
           <PageHeader title="My Profile" description="Manage your own account details." />
         </div>
       </section>
 
-      {/* LINE DIVIDER */}
       <hr className="my-3 opacity-25" />
 
       <form onSubmit={handleSave}>
@@ -74,9 +72,6 @@ export default function MyProfile() {
           </section>
         )}
 
-        {/* ========================================================== */}
-        {/* DIVISION 2: PROFILE PHOTO                                  */}
-        {/* ========================================================== */}
         <section className="mb-3">
           <DataCard title="Profile Photo">
             <div className="card-body d-flex align-items-center gap-4 flex-wrap">
@@ -158,9 +153,6 @@ export default function MyProfile() {
           </DataCard>
         </section>
 
-        {/* ========================================================== */}
-        {/* DIVISION 3: PERSONAL INFORMATION                           */}
-        {/* ========================================================== */}
         <section className="mb-3">
           <DataCard title="Personal Information">
             <div className="card-body row g-3">

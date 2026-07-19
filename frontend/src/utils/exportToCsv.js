@@ -1,11 +1,7 @@
-// Builds a CSV file from headers + row arrays and triggers a download.
-// Plain Blob + anchor click — no library needed, works in every modern
-// browser. Used by the "Export as CSV" option wherever ExportMenu appears.
+// Builds a CSV file from headers + rows and triggers a browser download.
 export function exportToCsv(filename, headers, rows) {
   function escapeCell(value) {
     const str = String(value ?? "");
-    // Quote any cell containing a comma, quote, or newline, and escape
-    // internal quotes by doubling them — standard CSV escaping.
     if (/[",\n]/.test(str)) {
       return `"${str.replace(/"/g, '""')}"`;
     }
@@ -13,8 +9,6 @@ export function exportToCsv(filename, headers, rows) {
   }
 
   const lines = [headers, ...rows].map((row) => row.map(escapeCell).join(","));
-  // Leading BOM so Excel opens the ₱ symbol (and other non-ASCII text)
-  // correctly instead of showing mojibake.
   const csvContent = "\uFEFF" + lines.join("\r\n");
 
   const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });

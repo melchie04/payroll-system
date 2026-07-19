@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 
+// ErrorPage — shared shell for the error pages.
 export default function ErrorPage({ code, icon, accent = "#1a1a1a", title, description, children }) {
   return (
     <>
@@ -38,6 +39,7 @@ export default function ErrorPage({ code, icon, accent = "#1a1a1a", title, descr
   );
 }
 
+// BackToDashboardLink — link back to the dashboard.
 export function BackToDashboardLink() {
   return (
     <Link to="/" className="btn btn-dark rounded-pill px-4 py-2 fw-medium shadow-sm">

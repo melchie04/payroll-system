@@ -1,5 +1,6 @@
 import { Modal, BtnSecondary, BtnPrimary, FormField } from "../ui/index.jsx";
 
+// EditRoleModal — modal form for editing a role's details and permissions.
 export function EditRoleModal({ modules, editRoleForm, nameError, onChange, onTogglePermission, onSubmit }) {
   return (
     <Modal

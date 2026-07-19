@@ -1,5 +1,6 @@
 import ErrorPage, { BackToDashboardLink } from "./ErrorPage.jsx";
 
+// ServerError — 500 page.
 export default function ServerError() {
   return (
     <ErrorPage

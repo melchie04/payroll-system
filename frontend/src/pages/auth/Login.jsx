@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCurrentUser } from "../../context/CurrentUserContext.jsx";
 
+// Login — sign-in form; redirects to Change Password when a password change is required.
 export default function Login() {
   const navigate = useNavigate();
   const { user } = useCurrentUser();
@@ -9,14 +10,11 @@ export default function Login() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    // A brand-new account or an admin-issued password always forces a
-    // change before reaching the dashboard.
     navigate(user.mustChangePassword ? "/change-password" : "/");
   }
 
   return (
     <div className="w-100" style={{ maxWidth: 360 }}>
-      {/* Minimalist Heading */}
       <h1
         className="text-center fw-normal text-secondary mb-4 tracking-wide text-uppercase"
         style={{
@@ -29,7 +27,6 @@ export default function Login() {
       </h1>
 
       <form onSubmit={handleSubmit} noValidate>
-        {/* Username/Email Input Group */}
         <div className="mb-3 position-relative">
           <div className="input-group">
             <span className="input-group-text bg-white border-end-0 rounded-start-pill text-muted px-3" style={{ borderColor: "#cccccc" }}>
@@ -56,7 +53,6 @@ export default function Login() {
           </div>
         </div>
 
-        {/* Password Input Group */}
         <div className="mb-4 position-relative">
           <div className="input-group">
             <span className="input-group-text bg-white border-end-0 rounded-start-pill text-muted px-3" style={{ borderColor: "#cccccc" }}>
@@ -101,7 +97,6 @@ export default function Login() {
           </div>
         </div>
 
-        {/* Dark Custom Submit Button */}
         <button
           type="submit"
           className="btn btn-dark rounded-pill w-100 text-white py-2 fw-normal shadow-sm"

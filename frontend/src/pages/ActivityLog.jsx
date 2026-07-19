@@ -12,6 +12,7 @@ const moduleVariant = {
   Auth: "danger",
 };
 
+// ActivityLog — filterable, exportable audit log table.
 export default function ActivityLog() {
   function handleExportAll() {
     exportToCsv(
@@ -23,9 +24,6 @@ export default function ActivityLog() {
 
   return (
     <>
-      {/* ========================================================== */}
-      {/* DIVISION 1: HEADER                                         */}
-      {/* ========================================================== */}
       <section>
         <div className="mt-4">
           <PageHeader
@@ -36,12 +34,8 @@ export default function ActivityLog() {
         </div>
       </section>
 
-      {/* LINE DIVIDER */}
       <hr className="my-3 opacity-25" />
 
-      {/* ========================================================== */}
-      {/* DIVISION 2: CONTROLS                                       */}
-      {/* ========================================================== */}
       <section>
         <div className="row g-3 align-items-end">
           <div className="col-12 col-md-4">
@@ -74,12 +68,8 @@ export default function ActivityLog() {
         </div>
       </section>
 
-      {/* LINE DIVIDER */}
       <hr className="my-3 opacity-25" />
 
-      {/* ========================================================== */}
-      {/* DIVISION 3: TABLE                                          */}
-      {/* ========================================================== */}
       <section className="mb-3 print-area">
         <DataCard>
           <Table headers={["User", "Action", "Details", "Module", "Timestamp"]}>

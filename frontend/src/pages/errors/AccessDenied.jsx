@@ -1,5 +1,6 @@
 import ErrorPage, { BackToDashboardLink } from "./ErrorPage.jsx";
 
+// AccessDenied — 403 page.
 export default function AccessDenied() {
   return (
     <ErrorPage

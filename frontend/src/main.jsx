@@ -14,6 +14,7 @@ import { ClientsProvider } from "./context/ClientsContext.jsx";
 import { CurrentUserProvider } from "./context/CurrentUserContext.jsx";
 import App from "./App.jsx";
 
+// App entry point — mounts the router, global providers, and styles.
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>

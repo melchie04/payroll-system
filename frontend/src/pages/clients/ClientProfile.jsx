@@ -41,6 +41,7 @@ function formatFileSize(bytes) {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
+// ClientProfile — client detail page with Overview, Billing History, Assigned Employees, and Documents tabs.
 export default function ClientProfile() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -56,10 +57,7 @@ export default function ClientProfile() {
   const assignedEmployees = allEmployees.filter((emp) => emp.client === client?.name);
   const documents = client ? getDocumentsByClient(client.id) : [];
 
-  // ============================================================
-  // UPLOAD DOCUMENT
-  // ============================================================
-  const [docFile, setDocFile] = useState(null); // the actual File object picked
+  const [docFile, setDocFile] = useState(null);
   const [docName, setDocName] = useState("");
   const [docType, setDocType] = useState("pdf");
   const [dragOver, setDragOver] = useState(false);
@@ -101,9 +99,6 @@ export default function ClientProfile() {
     document.getElementById("uploadDocumentModalClose")?.click();
   }
 
-  // ============================================================
-  // DELETE DOCUMENT
-  // ============================================================
   const [deleteDocTarget, setDeleteDocTarget] = useState(null);
 
   function confirmDeleteDocument() {
@@ -114,10 +109,6 @@ export default function ClientProfile() {
     document.getElementById("deleteDocumentModalClose")?.click();
   }
 
-  // location.key is "default" when there's no in-app history to go back to
-  // (direct URL load, refresh, bookmark) — fall back to the list page then,
-  // otherwise use actual browser history so we land on wherever the user
-  // really came from.
   const hasHistory = location.key !== "default";
   function handleBack() {
     if (hasHistory) navigate(-1);
@@ -137,9 +128,6 @@ export default function ClientProfile() {
 
   return (
     <>
-      {/* ========================================================== */}
-      {/* DIVISION 1: HEADER                                         */}
-      {/* ========================================================== */}
       <section>
         <div className="mt-4">
           <button
@@ -161,12 +149,8 @@ export default function ClientProfile() {
         </div>
       </section>
 
-      {/* LINE DIVIDER */}
       <hr className="my-3 opacity-25" />
 
-      {/* ========================================================== */}
-      {/* DIVISION 2: TABS                                           */}
-      {/* ========================================================== */}
       <section>
         <ul className="nav nav-tabs mb-2">
           {TABS.map((t) => (
@@ -180,9 +164,6 @@ export default function ClientProfile() {
         </ul>
       </section>
 
-      {/* ========================================================== */}
-      {/* DIVISION 3: OVERVIEW TAB                                   */}
-      {/* ========================================================== */}
       {tab === "overview" && (
         <section className="mb-3">
           <div className="row g-3">
@@ -243,9 +224,6 @@ export default function ClientProfile() {
         </section>
       )}
 
-      {/* ========================================================== */}
-      {/* DIVISION 4: BILLING HISTORY TAB                            */}
-      {/* ========================================================== */}
       {tab === "billing" && (
         <section className="mb-3">
           <DataCard>
@@ -273,9 +251,6 @@ export default function ClientProfile() {
         </section>
       )}
 
-      {/* ========================================================== */}
-      {/* DIVISION 5: ASSIGNED EMPLOYEES TAB                         */}
-      {/* ========================================================== */}
       {tab === "employees" && (
         <section className="mb-3">
           <DataCard>
@@ -307,9 +282,6 @@ export default function ClientProfile() {
         </section>
       )}
 
-      {/* ========================================================== */}
-      {/* DIVISION 6: DOCUMENTS TAB                                  */}
-      {/* ========================================================== */}
       {tab === "documents" && (
         <section className="mb-3">
           <DataCard
@@ -356,9 +328,6 @@ export default function ClientProfile() {
         </section>
       )}
 
-      {/* ========================================================== */}
-      {/* MODAL: UPLOAD DOCUMENT                                     */}
-      {/* ========================================================== */}
       <Modal
         id="uploadDocumentModal"
         title="Upload Document"
@@ -435,9 +404,6 @@ export default function ClientProfile() {
         </form>
       </Modal>
 
-      {/* ========================================================== */}
-      {/* MODAL: CONFIRM DELETE DOCUMENT                             */}
-      {/* ========================================================== */}
       <Modal
         id="deleteDocumentModal"
         title="Delete Document"

@@ -28,6 +28,7 @@ import NotFound from "./pages/errors/NotFound.jsx";
 import AccessDenied from "./pages/errors/AccessDenied.jsx";
 import ServerError from "./pages/errors/ServerError.jsx";
 
+// App — route table mapping auth, dashboard, and error pages to their layouts.
 export default function App() {
   return (
     <Routes>
@@ -58,7 +59,6 @@ export default function App() {
         <Route path="/activity-log" element={<ActivityLog />} />
       </Route>
 
-      {/* Error pages */}
       <Route element={<ErrorLayout />}>
         <Route path="/403" element={<AccessDenied />} />
         <Route path="/500" element={<ServerError />} />

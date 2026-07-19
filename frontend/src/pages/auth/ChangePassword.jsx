@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCurrentUser } from "../../context/CurrentUserContext.jsx";
 
+// RequirementRow — password requirement checklist row.
 function RequirementRow({ met, label }) {
   return (
     <div className="d-flex align-items-center gap-2 mb-1">
@@ -16,6 +17,7 @@ function RequirementRow({ met, label }) {
   );
 }
 
+// ChangePassword — forced password change form with live requirement checks.
 export default function ChangePassword() {
   const navigate = useNavigate();
   const { updateUser } = useCurrentUser();
@@ -77,7 +79,6 @@ export default function ChangePassword() {
 
   return (
     <div className="w-100" style={{ maxWidth: 360 }}>
-      {/* Minimalist Heading */}
       <h1
         className="text-center fw-normal text-secondary mb-2 tracking-wide text-uppercase"
         style={{
@@ -93,7 +94,6 @@ export default function ChangePassword() {
       </p>
 
       <form onSubmit={handleSubmit} noValidate>
-        {/* Temporary Password */}
         <div className="mb-3 position-relative">
           <div className="input-group">
             <span className="input-group-text bg-white border-end-0 rounded-start-pill text-muted px-3" style={{ borderColor: "#cccccc" }}>
@@ -131,7 +131,6 @@ export default function ChangePassword() {
           </div>
         </div>
 
-        {/* New Password */}
         <div className="mb-3 position-relative">
           <div className="input-group">
             <span className="input-group-text bg-white border-end-0 rounded-start-pill text-muted px-3" style={{ borderColor: "#cccccc" }}>
@@ -169,7 +168,6 @@ export default function ChangePassword() {
           </div>
         </div>
 
-        {/* Confirm New Password */}
         <div className="mb-3 position-relative">
           <div className="input-group">
             <span className="input-group-text bg-white border-end-0 rounded-start-pill text-muted px-3" style={{ borderColor: "#cccccc" }}>
@@ -207,7 +205,6 @@ export default function ChangePassword() {
           </div>
         </div>
 
-        {/* Live requirement checklist */}
         <div className="bg-light rounded-3 px-3 py-2 mb-4">
           <RequirementRow met={hasLength} label="At least 8 characters" />
           <RequirementRow met={hasCase} label="Contains uppercase and lowercase letters" />
@@ -222,7 +219,6 @@ export default function ChangePassword() {
           </div>
         )}
 
-        {/* Dark Custom Submit Button */}
         <button type="submit" className="btn btn-dark rounded-pill w-100 text-white py-2 fw-normal shadow-sm" style={{ fontSize: "0.95rem" }}>
           Set New Password
         </button>

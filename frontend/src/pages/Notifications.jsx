@@ -2,6 +2,7 @@ import { useState } from "react";
 import { DataCard, BtnSecondary, PageHeader } from "../components/ui/index.jsx";
 import { notifications as initialNotifications } from "../assets/data/index.js";
 
+// Notifications — notification list with all/unread filters and mark-as-read actions.
 export default function Notifications() {
   const [items, setItems] = useState(initialNotifications);
   const [filter, setFilter] = useState("All");
@@ -19,9 +20,6 @@ export default function Notifications() {
 
   return (
     <>
-      {/* ========================================================== */}
-      {/* DIVISION 1: HEADER                                         */}
-      {/* ========================================================== */}
       <section>
         <div className="mt-4">
           <div className="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3">
@@ -42,12 +40,8 @@ export default function Notifications() {
         </div>
       </section>
 
-      {/* LINE DIVIDER */}
       <hr className="my-3 opacity-25" />
 
-      {/* ========================================================== */}
-      {/* DIVISION 2: FILTER TABS                                    */}
-      {/* ========================================================== */}
       <section>
         <div className="overflow-x-auto pb-1" style={{ WebkitOverflowScrolling: "touch" }}>
           <ul className="nav nav-pills mb-4 gap-2 flex-nowrap">
@@ -67,9 +61,6 @@ export default function Notifications() {
         </div>
       </section>
 
-      {/* ========================================================== */}
-      {/* DIVISION 3: NOTIFICATION LIST                              */}
-      {/* ========================================================== */}
       <section className="mb-3">
         <DataCard>
           <div className="list-group list-group-flush">

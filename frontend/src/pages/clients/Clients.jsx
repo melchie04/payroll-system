@@ -28,13 +28,11 @@ function toCsvRows(list) {
   return list.map((c) => [c.name, c.contact, c.email, c.phone, c.industry, c.employees, c.billing, c.status]);
 }
 
+// Clients — client list with selection, bulk actions, filters, and export.
 export default function Clients() {
   const navigate = useNavigate();
   const { clients, deleteClient } = useClients();
 
-  // ============================================================
-  // TABLE / SELECTION
-  // ============================================================
   const [selected, setSelected] = useState([]);
 
   const toggleOne = (id) => setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
@@ -45,10 +43,7 @@ export default function Clients() {
     setSelected(allSelected ? [] : clients.map((c) => c.id));
   }
 
-  // ============================================================
-  // DELETE CLIENT (single row)
-  // ============================================================
-  const [target, setTarget] = useState(null); // client pending deletion
+  const [target, setTarget] = useState(null);
 
   function confirmDelete() {
     if (target) {
@@ -58,18 +53,12 @@ export default function Clients() {
     document.getElementById("clientDeleteModalClose")?.click();
   }
 
-  // ============================================================
-  // BULK DELETE (selected rows)
-  // ============================================================
   function confirmBulkDelete() {
     selected.forEach((id) => deleteClient(id));
     setSelected([]);
     document.getElementById("bulkDeleteModalClose")?.click();
   }
 
-  // ============================================================
-  // EXPORT
-  // ============================================================
   function handleExportAll() {
     exportToCsv("clients", CSV_HEADERS, toCsvRows(clients));
   }
@@ -81,9 +70,6 @@ export default function Clients() {
 
   return (
     <>
-      {/* ========================================================== */}
-      {/* DIVISION 1: HEADER                                         */}
-      {/* ========================================================== */}
       <section>
         <div className="mt-4">
           <PageHeader
@@ -101,12 +87,8 @@ export default function Clients() {
         </div>
       </section>
 
-      {/* LINE DIVIDER */}
       <hr className="my-3 opacity-25" />
 
-      {/* ========================================================== */}
-      {/* DIVISION 2: STATUS CARDS                                   */}
-      {/* ========================================================== */}
       <section>
         <div className="row g-3">
           {clientStats.map((s) => (
@@ -117,12 +99,8 @@ export default function Clients() {
         </div>
       </section>
 
-      {/* LINE DIVIDER */}
       <hr className="my-3 opacity-25" />
 
-      {/* ========================================================== */}
-      {/* DIVISION 3: CONTROLS                                       */}
-      {/* ========================================================== */}
       <section>
         <div className="row g-3 align-items-end">
           <div className="col-12 col-md-4">
@@ -160,15 +138,10 @@ export default function Clients() {
         </div>
       </section>
 
-      {/* LINE DIVIDER */}
       <hr className="my-3 opacity-25" />
 
-      {/* ========================================================== */}
-      {/* DIVISION 4: TABLES                                         */}
-      {/* ========================================================== */}
       <section className="mb-3 print-area">
         <DataCard>
-          {/* Bulk actions bar — only shows once at least one row is checked */}
           {selected.length > 0 && (
             <div className="d-flex align-items-center justify-content-between gap-2 px-3 py-2 bg-light border-bottom flex-wrap">
               <span className="small fw-semibold">
@@ -243,9 +216,6 @@ export default function Clients() {
         </DataCard>
       </section>
 
-      {/* ========================================================== */}
-      {/* MODAL: CONFIRM DELETE (single row)                         */}
-      {/* ========================================================== */}
       <Modal
         id="clientDeleteModal"
         title="Delete Client"
@@ -265,9 +235,6 @@ export default function Clients() {
         </p>
       </Modal>
 
-      {/* ========================================================== */}
-      {/* MODAL: CONFIRM BULK DELETE                                 */}
-      {/* ========================================================== */}
       <Modal
         id="bulkDeleteModal"
         title="Delete Selected Clients"

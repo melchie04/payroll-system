@@ -1,6 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useEffect, useState } from "react";
 
+// ThemeProvider — light/dark theme state, persisted to localStorage.
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(
     () => localStorage.getItem("theme") || "light",

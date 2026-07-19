@@ -1,8 +1,7 @@
 import { DataCard, BtnPrimary, FormField } from "../ui/index.jsx";
 import { RequirementRow } from "./RequirementRow.jsx";
 
-// `self` groups all the derived/validation state for this tab so the call
-// site in Settings.jsx doesn't have to pass ten separate props.
+// ChangePasswordTab — self-service change password form tab.
 export function ChangePasswordTab({ self, onChange, onSubmit, onToggleShowPassword }) {
   const { form, touched, success, showPassword, hasLength, hasCase, hasNumber, hasSpecial, matches, canSubmit } = self;
 

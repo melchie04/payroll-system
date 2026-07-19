@@ -1,5 +1,6 @@
 import { Modal, BtnSecondary, BtnPrimary, FormField } from "../ui/index.jsx";
 
+// CreateRoleModal — modal form for creating a role with module permissions.
 export function CreateRoleModal({ modules, roleForm, nameError, onChange, onTogglePermission, onSubmit, onCancel }) {
   return (
     <Modal

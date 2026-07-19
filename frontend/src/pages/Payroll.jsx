@@ -39,10 +39,7 @@ function formatFileSize(bytes) {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
-// Row rendering is split into its own component (rather than an inline
-// .map() callback) so the "Edit Hours" action — which opens a modal via a
-// ref in the parent — is called through a prop instead of closing over the
-// ref directly in the same render scope.
+// PayrollRow — single payroll table row with its status-aware actions menu.
 function PayrollRow({ row, checked, onToggle, onViewPayslip, onEditHours, onMarkPaid, onDelete }) {
   const items = [
     {
@@ -92,10 +89,8 @@ function PayrollRow({ row, checked, onToggle, onViewPayslip, onEditHours, onMark
   );
 }
 
+// Payroll — payroll run management with bulk actions, timesheet import, payslips, and edit-hours modals.
 export default function Payroll() {
-  // ============================================================
-  // TABLE / SELECTION
-  // ============================================================
   const [rows, setRows] = useState(payrollEmployees);
   const [selected, setSelected] = useState([]);
 
@@ -107,9 +102,6 @@ export default function Payroll() {
     setSelected(allSelected ? [] : rows.map((r) => r.id));
   }
 
-  // ============================================================
-  // SUCCESS BANNER — shared by Run Payroll and Import Timesheet
-  // ============================================================
   const [banner, setBanner] = useState(null);
 
   useEffect(() => {
@@ -118,10 +110,7 @@ export default function Payroll() {
     return () => clearTimeout(timer);
   }, [banner]);
 
-  // ============================================================
-  // DELETE ROW (remove from payroll run)
-  // ============================================================
-  const [target, setTarget] = useState(null); // row pending deletion
+  const [target, setTarget] = useState(null);
 
   function confirmDelete() {
     if (target) {
@@ -131,9 +120,6 @@ export default function Payroll() {
     document.getElementById("payrollDeleteModalClose")?.click();
   }
 
-  // ============================================================
-  // BULK ACTIONS (selected rows)
-  // ============================================================
   function bulkMarkReady() {
     setRows((prev) => prev.map((r) => (selected.includes(r.id) ? { ...r, status: "Ready" } : r)));
     setSelected([]);
@@ -145,9 +131,6 @@ export default function Payroll() {
     document.getElementById("bulkDeleteModalClose")?.click();
   }
 
-  // ============================================================
-  // EXPORT
-  // ============================================================
   function handleExportAll() {
     exportToCsv("payroll", CSV_HEADERS, toCsvRows(rows));
   }
@@ -157,9 +140,6 @@ export default function Payroll() {
     exportToCsv("payroll-selected", CSV_HEADERS, toCsvRows(selectedRows));
   }
 
-  // ============================================================
-  // RUN PAYROLL — pays out everyone currently marked "Ready"
-  // ============================================================
   const readyRows = rows.filter((r) => r.status === "Ready");
   const readyTotal = readyRows.reduce((sum, r) => sum + parseCurrency(r.gross), 0);
   const pendingCount = rows.filter((r) => r.status === "Pending").length;
@@ -171,10 +151,6 @@ export default function Payroll() {
     document.getElementById("runPayrollModalClose")?.click();
   }
 
-  // ============================================================
-  // IMPORT TIMESHEET — validates hours for everyone "Pending",
-  // moving them to "Ready" so they can then be paid.
-  // ============================================================
   const [importFile, setImportFile] = useState(null);
   const [importDragOver, setImportDragOver] = useState(false);
 
@@ -203,15 +179,8 @@ export default function Payroll() {
     document.getElementById("importTimesheetModalClose")?.click();
   }
 
-  // ============================================================
-  // VIEW PAYSLIP — plain read-only breakdown, simple data-bs-toggle trigger
-  // ============================================================
   const [payslipTarget, setPayslipTarget] = useState(null);
 
-  // ============================================================
-  // EDIT HOURS — controlled form, opened programmatically so the field is
-  // guaranteed pre-filled before the modal becomes visible.
-  // ============================================================
   const [editHoursTarget, setEditHoursTarget] = useState(null);
   const [editHoursValue, setEditHoursValue] = useState("");
   const editHoursModalInstance = useRef(null);
@@ -236,18 +205,12 @@ export default function Payroll() {
     editHoursModalInstance.current?.hide();
   }
 
-  // ============================================================
-  // MARK AS PAID (single row) — only valid once a row is Ready
-  // ============================================================
   function markRowPaid(row) {
     setRows((prev) => prev.map((r) => (r.id === row.id ? { ...r, status: "Paid" } : r)));
   }
 
   return (
     <>
-      {/* ========================================================== */}
-      {/* DIVISION 1: HEADER                                         */}
-      {/* ========================================================== */}
       <section>
         <div className="mt-4">
           <PageHeader
@@ -277,12 +240,8 @@ export default function Payroll() {
         </section>
       )}
 
-      {/* LINE DIVIDER */}
       <hr className="my-3 opacity-25" />
 
-      {/* ========================================================== */}
-      {/* DIVISION 2: STATUS CARDS                                   */}
-      {/* ========================================================== */}
       <section>
         <div className="row g-3">
           {payrollStats.map((s) => (
@@ -293,12 +252,8 @@ export default function Payroll() {
         </div>
       </section>
 
-      {/* LINE DIVIDER */}
       <hr className="my-3 opacity-25" />
 
-      {/* ========================================================== */}
-      {/* DIVISION 3: CONTROLS                                       */}
-      {/* ========================================================== */}
       <section>
         <div className="row g-3 align-items-end">
           <div className="col-12 col-md-3">
@@ -340,15 +295,10 @@ export default function Payroll() {
         </div>
       </section>
 
-      {/* LINE DIVIDER */}
       <hr className="my-3 opacity-25" />
 
-      {/* ========================================================== */}
-      {/* DIVISION 4: TABLES                                         */}
-      {/* ========================================================== */}
       <section className="mb-3 print-area">
         <DataCard>
-          {/* Bulk actions bar — only shows once at least one row is checked */}
           {selected.length > 0 && (
             <div className="d-flex align-items-center justify-content-between gap-2 px-3 py-2 bg-light border-bottom flex-wrap">
               <span className="small fw-semibold">
@@ -403,9 +353,6 @@ export default function Payroll() {
         </DataCard>
       </section>
 
-      {/* ========================================================== */}
-      {/* MODAL: RUN PAYROLL                                         */}
-      {/* ========================================================== */}
       <Modal
         id="runPayrollModal"
         title="Run Payroll"
@@ -445,9 +392,6 @@ export default function Payroll() {
         )}
       </Modal>
 
-      {/* ========================================================== */}
-      {/* MODAL: IMPORT TIMESHEET                                    */}
-      {/* ========================================================== */}
       <Modal
         id="importTimesheetModal"
         title="Import Timesheet"
@@ -509,9 +453,6 @@ export default function Payroll() {
         </form>
       </Modal>
 
-      {/* ========================================================== */}
-      {/* MODAL: VIEW PAYSLIP                                        */}
-      {/* ========================================================== */}
       <Modal
         id="viewPayslipModal"
         title="Payslip"
@@ -552,9 +493,6 @@ export default function Payroll() {
           })()}
       </Modal>
 
-      {/* ========================================================== */}
-      {/* MODAL: EDIT HOURS                                          */}
-      {/* ========================================================== */}
       <Modal
         id="editHoursModal"
         title="Edit Hours"
@@ -591,9 +529,6 @@ export default function Payroll() {
         )}
       </Modal>
 
-      {/* ========================================================== */}
-      {/* MODAL: CONFIRM DELETE                                      */}
-      {/* ========================================================== */}
       <Modal
         id="payrollDeleteModal"
         title="Remove from Payroll Run"
@@ -613,9 +548,6 @@ export default function Payroll() {
         </p>
       </Modal>
 
-      {/* ========================================================== */}
-      {/* MODAL: CONFIRM BULK DELETE                                 */}
-      {/* ========================================================== */}
       <Modal
         id="bulkDeleteModal"
         title="Remove Selected From Payroll Run"

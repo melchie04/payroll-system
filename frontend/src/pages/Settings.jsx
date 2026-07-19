@@ -19,20 +19,14 @@ import { CreateRoleModal } from "../components/settings/CreateRoleModal.jsx";
 const modules = ["Dashboard", "Payroll", "Billing", "Timesheet", "Employees", "Clients", "Settings"];
 const emptyResetForm = { password: "", confirmPassword: "" };
 
+// Settings — wires the General, Users, Roles & Permissions, and Change Password tabs together.
 export default function Settings() {
-  // ============================================================
-  // SHARED / TAB STATE
-  // ============================================================
   const [tab, setTab] = useState("users");
   const [users, setUsers] = useState(systemUsers);
   const [roleList, setRoleList] = useState(initialRoles);
 
-  // ============================================================
-  // GENERAL TAB
-  // ============================================================
   const [generalSaved, setGeneralSaved] = useState(false);
 
-  // Save banner auto-dismisses after a few seconds...
   useEffect(() => {
     if (!generalSaved) return;
     const timer = setTimeout(() => setGeneralSaved(false), 4000);
@@ -44,9 +38,6 @@ export default function Settings() {
     setGeneralSaved(true);
   }
 
-  // ============================================================
-  // USERS TAB
-  // ============================================================
   const [userForm, setUserForm] = useState({
     name: "",
     email: "",
@@ -54,15 +45,12 @@ export default function Settings() {
     status: "Active",
   });
 
-  // Edit User modal
   const [editTarget, setEditTarget] = useState(null);
   const [editForm, setEditForm] = useState(null);
   const editModalInstance = useRef(null);
 
-  // Delete User confirmation
   const [deleteUserTarget, setDeleteUserTarget] = useState(null);
 
-  // Reset Password modal
   const [resetTarget, setResetTarget] = useState(null);
   const [resetForm, setResetForm] = useState(emptyResetForm);
   const [resetTouched, setResetTouched] = useState(false);
@@ -145,9 +133,6 @@ export default function Settings() {
     resetModalInstance.current?.hide();
   }
 
-  // ============================================================
-  // ROLES & PERMISSIONS TAB
-  // ============================================================
   const [roleForm, setRoleForm] = useState({
     name: "",
     description: "",
@@ -155,13 +140,11 @@ export default function Settings() {
   });
   const [roleNameError, setRoleNameError] = useState("");
 
-  // Edit Role modal
   const [editRoleTarget, setEditRoleTarget] = useState(null);
   const [editRoleForm, setEditRoleForm] = useState(null);
   const [editRoleNameError, setEditRoleNameError] = useState("");
   const editRoleModalInstance = useRef(null);
 
-  // Delete Role confirmation
   const [deleteRoleTarget, setDeleteRoleTarget] = useState(null);
 
   function handleRoleChange(e) {
@@ -244,9 +227,6 @@ export default function Settings() {
     editRoleModalInstance.current?.hide();
   }
 
-  // ============================================================
-  // CHANGE PASSWORD TAB (self-service)
-  // ============================================================
   const [selfForm, setSelfForm] = useState({
     currentPassword: "",
     newPassword: "",
@@ -263,7 +243,6 @@ export default function Settings() {
   const selfMatches = selfForm.newPassword.length > 0 && selfForm.newPassword === selfForm.confirmPassword;
   const selfCanSubmit = selfForm.currentPassword.length > 0 && selfHasLength && selfHasCase && selfHasNumber && selfHasSpecial && selfMatches;
 
-  // Success banner auto-dismisses after a few seconds...
   useEffect(() => {
     if (!selfSuccess) return;
     const timer = setTimeout(() => setSelfSuccess(false), 4000);
@@ -284,22 +263,12 @@ export default function Settings() {
     setSelfSuccess(true);
   }
 
-  // ============================================================
-  // MODAL INSTANCES (Users tab: Edit User, Reset Password —
-  // Roles tab: Edit Role)
-  // ============================================================
   useEffect(() => {
     editModalInstance.current = new BsModal(document.getElementById("editUserModal"));
     editRoleModalInstance.current = new BsModal(document.getElementById("editRoleModal"));
     resetModalInstance.current = new BsModal(document.getElementById("resetPasswordModal"));
   }, []);
 
-  // ============================================================
-  // TAB NAVIGATION
-  // ============================================================
-  // ...or dismiss both banners immediately once the user switches to a
-  // different tab, so they don't reappear stale if the user comes back
-  // within the 4s window.
   function switchTab(nextTab) {
     setGeneralSaved(false);
     setSelfSuccess(false);
@@ -308,43 +277,24 @@ export default function Settings() {
 
   return (
     <>
-      {/* ========================================================== */}
-      {/* DIVISION 1: HEADER                                         */}
-      {/* ========================================================== */}
       <section>
         <div className="mt-4">
           <PageHeader title="Settings" description="Manage your company profile, users, and roles." />
         </div>
       </section>
 
-      {/* LINE DIVIDER */}
       <hr className="my-3 opacity-25" />
 
-      {/* ========================================================== */}
-      {/* DIVISION 2: TABS                                           */}
-      {/* ========================================================== */}
       <section>
         <SettingsTabsNav tab={tab} onSwitch={switchTab} />
       </section>
 
-      {/* ========================================================== */}
-      {/* DIVISION 3: GENERAL TAB                                    */}
-      {/* ========================================================== */}
       {tab === "general" && <GeneralTab generalSaved={generalSaved} onSave={handleSaveGeneral} />}
 
-      {/* ========================================================== */}
-      {/* DIVISION 4: USERS TAB                                      */}
-      {/* ========================================================== */}
       {tab === "users" && <UsersTab users={users} onEditUser={openEditUser} onResetPassword={openResetPassword} onDeleteUser={setDeleteUserTarget} />}
 
-      {/* ========================================================== */}
-      {/* DIVISION 5: ROLES TAB                                      */}
-      {/* ========================================================== */}
       {tab === "roles" && <RolesTab roleList={roleList} onEditRole={openEditRole} onDeleteRole={setDeleteRoleTarget} />}
 
-      {/* ========================================================== */}
-      {/* DIVISION 6: CHANGE PASSWORD TAB                            */}
-      {/* ========================================================== */}
       {tab === "password" && (
         <ChangePasswordTab
           self={{
@@ -365,9 +315,6 @@ export default function Settings() {
         />
       )}
 
-      {/* ========================================================== */}
-      {/* MODALS: USERS                                              */}
-      {/* ========================================================== */}
       <CreateUserModal userForm={userForm} roleList={roleList} onChange={handleUserChange} onSubmit={handleCreateUser} />
       <DeleteUserModal target={deleteUserTarget} onConfirm={confirmDeleteUser} />
       <EditUserModal editForm={editForm} roleList={roleList} onChange={handleEditChange} onSubmit={handleEditUser} />
@@ -387,9 +334,6 @@ export default function Settings() {
         onSubmit={handleResetPassword}
       />
 
-      {/* ========================================================== */}
-      {/* MODALS: ROLES                                              */}
-      {/* ========================================================== */}
       <DeleteRoleModal target={deleteRoleTarget} onConfirm={confirmDeleteRole} />
       <EditRoleModal
         modules={modules}

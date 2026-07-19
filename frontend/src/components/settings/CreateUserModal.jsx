@@ -1,5 +1,6 @@
 import { Modal, BtnSecondary, BtnPrimary, FormField } from "../ui/index.jsx";
 
+// CreateUserModal — modal form for creating a system user.
 export function CreateUserModal({ userForm, roleList, onChange, onSubmit }) {
   return (
     <Modal

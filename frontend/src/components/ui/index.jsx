@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+// Shared UI building blocks used across all pages.
 const statusVariant = {
   Ready: "success",
   Active: "success",
@@ -19,12 +20,14 @@ const statusVariant = {
   Completed: "secondary",
 };
 
+// Badge — status pill colored by status value.
 export function Badge({ status }) {
   const variant = statusVariant[status] || "secondary";
   const textClass = variant === "warning" ? "text-dark" : "";
   return <span className={`badge rounded-pill bg-${variant} ${textClass}`}>{status}</span>;
 }
 
+// BtnPrimary — dark primary action button.
 export function BtnPrimary({ children, onClick, type = "button", className = "", ...rest }) {
   return (
     <button type={type} className={`btn btn-dark btn-sm d-inline-flex align-items-center gap-2 ${className}`} onClick={onClick} {...rest}>
@@ -33,6 +36,7 @@ export function BtnPrimary({ children, onClick, type = "button", className = "",
   );
 }
 
+// BtnSecondary — outlined secondary action button.
 export function BtnSecondary({ children, onClick, type = "button", className = "", ...rest }) {
   return (
     <button
@@ -46,6 +50,7 @@ export function BtnSecondary({ children, onClick, type = "button", className = "
   );
 }
 
+// IconBtn — small icon-only button.
 export function IconBtn({ children, title, onClick, className = "", ...rest }) {
   return (
     <button type="button" className={`btn btn-sm btn-link text-muted p-1 ${className}`} title={title} onClick={onClick} {...rest}>
@@ -54,6 +59,7 @@ export function IconBtn({ children, title, onClick, className = "", ...rest }) {
   );
 }
 
+// StatCard — summary metric card.
 export function StatCard({ label, value, sub, valueColor, subColor }) {
   return (
     <div className="card h-100">
@@ -74,6 +80,7 @@ export function StatCard({ label, value, sub, valueColor, subColor }) {
   );
 }
 
+// DataCard — card with an optional header title and action.
 export function DataCard({ title, action, children }) {
   return (
     <div className="card h-100">
@@ -88,6 +95,7 @@ export function DataCard({ title, action, children }) {
   );
 }
 
+// Table — responsive table with a styled header row.
 export function Table({ headers, children }) {
   return (
     <div className="table-responsive">
@@ -111,14 +119,17 @@ export function Table({ headers, children }) {
   );
 }
 
+// Tr — table row.
 export function Tr({ children }) {
   return <tr className="small">{children}</tr>;
 }
 
+// Td — table cell.
 export function Td({ children, bold, className = "" }) {
   return <td className={`${bold ? "fw-semibold" : ""} small py-3 py-md-2 ${className}`}>{children}</td>;
 }
 
+// Pagination — table footer pager.
 export function Pagination({ current = 1, total = 1, label }) {
   const [page, setPage] = useState(current);
   const pages = Array.from({ length: Math.min(total, 5) }, (_, i) => i + 1);
@@ -151,6 +162,7 @@ export function Pagination({ current = 1, total = 1, label }) {
   );
 }
 
+// FilterSelect — labeled select dropdown for filters.
 export function FilterSelect({ label, children }) {
   return (
     <div>
@@ -164,6 +176,7 @@ export function FilterSelect({ label, children }) {
   );
 }
 
+// SearchInput — search box with a leading icon.
 export function SearchInput({ placeholder }) {
   return (
     <div className="input-group input-group-sm w-100">
@@ -175,6 +188,7 @@ export function SearchInput({ placeholder }) {
   );
 }
 
+// PageHeader — page title, description, and action buttons.
 export function PageHeader({ title, description, actions }) {
   return (
     <div className="d-flex flex-wrap justify-content-between align-items-start mb-4 gap-2">
@@ -187,6 +201,7 @@ export function PageHeader({ title, description, actions }) {
   );
 }
 
+// ActionsMenu — per-row "..." dropdown menu.
 export function ActionsMenu({ items }) {
   return (
     <div className="dropdown">
@@ -219,6 +234,7 @@ export function ActionsMenu({ items }) {
   );
 }
 
+// ExportMenu — CSV export / print dropdown.
 export function ExportMenu({ onExportCsv, label = "Export" }) {
   return (
     <div className="dropdown">
@@ -246,6 +262,7 @@ export function ExportMenu({ onExportCsv, label = "Export" }) {
   );
 }
 
+// FilterMenu — filter options dropdown panel with reset/apply.
 export function FilterMenu({ children, onReset }) {
   return (
     <div className="dropdown">
@@ -284,6 +301,7 @@ export function FilterMenu({ children, onReset }) {
   );
 }
 
+// FilterCheckGroup — labeled checkbox group inside FilterMenu.
 export function FilterCheckGroup({ label, options }) {
   return (
     <div>
@@ -302,6 +320,7 @@ export function FilterCheckGroup({ label, options }) {
   );
 }
 
+// Modal — Bootstrap modal wrapper with title, body, and footer.
 export function Modal({ id, title, children, footer, size = "" }) {
   return (
     <div className="modal fade" id={id} tabIndex="-1" aria-labelledby={`${id}Label`} aria-hidden="true">
@@ -321,6 +340,7 @@ export function Modal({ id, title, children, footer, size = "" }) {
   );
 }
 
+// FormField — labeled form field wrapper.
 export function FormField({ label, children }) {
   return (
     <div className="mb-3">
@@ -332,6 +352,7 @@ export function FormField({ label, children }) {
   );
 }
 
+// DetailList — bordered list of detail rows.
 export function DetailList({ children }) {
   return (
     <div className="border rounded-3 overflow-hidden">
@@ -340,6 +361,7 @@ export function DetailList({ children }) {
   );
 }
 
+// DetailRow — icon + label + value detail row.
 export function DetailRow({ icon, label, children }) {
   return (
     <div className="list-group-item d-flex flex-column flex-sm-row align-items-sm-center gap-1 gap-sm-3 py-2 px-3">
@@ -370,6 +392,7 @@ const statusDotColor = {
   Overdue: "#dc3545",
 };
 
+// ProfileHeader — avatar initials, name, and status dot header.
 export function ProfileHeader({ name, subtitle, subtitleIcon, status }) {
   const initials = name
     .split(" ")
@@ -409,6 +432,7 @@ export function ProfileHeader({ name, subtitle, subtitleIcon, status }) {
   );
 }
 
+// PayslipDetails — payslip breakdown with summary, deductions, and net pay.
 export function PayslipDetails({ employeeName, subtitle, status, period, summaryRows, deductionRows, netPay }) {
   return (
     <div>
