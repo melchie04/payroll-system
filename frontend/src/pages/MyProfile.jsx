@@ -22,6 +22,14 @@ export default function MyProfile() {
   const [avatarImage, setAvatarImage] = useState(user.avatarImage);
   const [avatarColor, setAvatarColor] = useState(user.avatarColor);
   const [saved, setSaved] = useState(false);
+  const [syncedUser, setSyncedUser] = useState(user);
+
+  if (syncedUser !== user) {
+    setSyncedUser(user);
+    setForm({ name: user.name, email: user.email });
+    setAvatarImage(user.avatarImage);
+    setAvatarColor(user.avatarColor);
+  }
 
   useEffect(() => {
     if (!saved) return;
@@ -77,12 +85,7 @@ export default function MyProfile() {
             <div className="card-body d-flex align-items-center gap-4 flex-wrap">
               <div className="position-relative flex-shrink-0">
                 {avatarImage ? (
-                  <img
-                    src={avatarImage}
-                    alt="Profile"
-                    className="rounded-circle"
-                    style={{ width: 72, height: 72, objectFit: "cover" }}
-                  />
+                  <img src={avatarImage} alt="Profile" className="rounded-circle" style={{ width: 72, height: 72, objectFit: "cover" }} />
                 ) : (
                   <div
                     className="d-flex align-items-center justify-content-center rounded-circle text-white fw-semibold"
@@ -94,13 +97,7 @@ export default function MyProfile() {
               </div>
 
               <div className="flex-grow-1">
-                <input
-                  type="file"
-                  id="avatar-file-input"
-                  className="d-none"
-                  accept=".jpg,.jpeg,.png"
-                  onChange={handlePhotoChange}
-                />
+                <input type="file" id="avatar-file-input" className="d-none" accept=".jpg,.jpeg,.png" onChange={handlePhotoChange} />
                 <div className="d-flex gap-2 mb-3">
                   <button
                     type="button"
@@ -110,11 +107,7 @@ export default function MyProfile() {
                     <i className="fas fa-upload"></i> Upload Photo
                   </button>
                   {avatarImage && (
-                    <button
-                      type="button"
-                      className="btn btn-outline-danger btn-sm"
-                      onClick={handleRemovePhoto}
-                    >
+                    <button type="button" className="btn btn-outline-danger btn-sm" onClick={handleRemovePhoto}>
                       Remove
                     </button>
                   )}
@@ -122,10 +115,7 @@ export default function MyProfile() {
 
                 {!avatarImage && (
                   <div>
-                    <div
-                      className="text-uppercase text-muted fw-semibold mb-2"
-                      style={{ fontSize: 11, letterSpacing: 0.5 }}
-                    >
+                    <div className="text-uppercase text-muted fw-semibold mb-2" style={{ fontSize: 11, letterSpacing: 0.5 }}>
                       Or pick a color for your initials
                     </div>
                     <div className="d-flex gap-2">
@@ -140,8 +130,7 @@ export default function MyProfile() {
                             width: 26,
                             height: 26,
                             background: color,
-                            border:
-                              avatarColor === color ? "2px solid var(--bs-body-color)" : "2px solid transparent",
+                            border: avatarColor === color ? "2px solid var(--bs-body-color)" : "2px solid transparent",
                           }}
                         ></button>
                       ))}
@@ -158,26 +147,12 @@ export default function MyProfile() {
             <div className="card-body row g-3">
               <div className="col-12 col-md-6">
                 <FormField label="Full Name">
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="name"
-                    value={form.name}
-                    onChange={handleChange}
-                    required
-                  />
+                  <input type="text" className="form-control" name="name" value={form.name} onChange={handleChange} required />
                 </FormField>
               </div>
               <div className="col-12 col-md-6">
                 <FormField label="Email">
-                  <input
-                    type="email"
-                    className="form-control"
-                    name="email"
-                    value={form.email}
-                    onChange={handleChange}
-                    required
-                  />
+                  <input type="email" className="form-control" name="email" value={form.email} onChange={handleChange} required />
                 </FormField>
               </div>
               <div className="col-12 col-md-6">
