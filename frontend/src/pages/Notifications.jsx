@@ -13,21 +13,17 @@ export default function Notifications() {
     <>
       <section>
         <div className="mt-4">
-          <div className="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3">
-            <div className="flex-grow-1 w-100">
-              <PageHeader
-                title="Notifications"
-                description={`You have ${unreadCount} unread notification${unreadCount === 1 ? "" : "s"}.`}
-                actions={
-                  <div className="mt-2 mt-sm-0">
-                    <BtnSecondary onClick={markAllRead} className="w-100 w-sm-auto">
-                      <i className="fas fa-check-double me-1"></i> Mark all as read
-                    </BtnSecondary>
-                  </div>
-                }
-              />
-            </div>
-          </div>
+          <PageHeader
+            title="Notifications"
+            description={`You have ${unreadCount} unread notification${unreadCount === 1 ? "" : "s"}.`}
+            actions={
+              <div className="mt-2 mt-sm-0">
+                <BtnSecondary onClick={markAllRead} className="w-100 w-sm-auto">
+                  <i className="fas fa-check-double me-1"></i> Mark all as read
+                </BtnSecondary>
+              </div>
+            }
+          />
         </div>
       </section>
 
