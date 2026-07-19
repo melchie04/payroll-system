@@ -37,7 +37,8 @@ export default function App() {
       </Route>
 
       <Route element={<DashboardLayout />}>
-        <Route path="/" element={<Dashboard />} />
+        <Route path="/" element={<></>} />
+        {/* <Route path="/" element={<Dashboard />} />
         <Route path="/payroll" element={<Payroll />} />
         <Route path="/billing" element={<Billing />} />
         <Route path="/timesheet" element={<Timesheet />} />
@@ -55,7 +56,7 @@ export default function App() {
         <Route path="/notifications" element={<Notifications />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/profile" element={<MyProfile />} />
-        <Route path="/activity-log" element={<ActivityLog />} />
+        <Route path="/activity-log" element={<ActivityLog />} /> */}
       </Route>
 
       {/* Error pages */}
