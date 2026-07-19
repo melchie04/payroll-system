@@ -1,4 +1,4 @@
-import { Children, cloneElement, createContext, isValidElement, useContext, useState } from "react";
+import { Children, cloneElement, createContext, isValidElement, useContext, useEffect, useState } from "react";
 
 // Shared UI building blocks used across all pages.
 const statusVariant = {
@@ -31,6 +31,15 @@ export function Badge({ status }) {
 export function BtnPrimary({ children, onClick, type = "button", className = "", ...rest }) {
   return (
     <button type={type} className={`btn btn-dark btn-sm d-inline-flex align-items-center gap-2 ${className}`} onClick={onClick} {...rest}>
+      {children}
+    </button>
+  );
+}
+
+// BtnDanger — destructive action button.
+export function BtnDanger({ children, onClick, type = "button", className = "", ...rest }) {
+  return (
+    <button type={type} className={`btn btn-danger btn-sm d-inline-flex align-items-center gap-2 ${className}`} onClick={onClick} {...rest}>
       {children}
     </button>
   );
@@ -95,20 +104,38 @@ export function DataCard({ title, action, children }) {
   );
 }
 
+// Tracks the breakpoint where tables switch to their stacked layout (see _table.scss).
+const STACKED_TABLE_QUERY = "(max-width: 767.98px)";
+
+function useStackedTable() {
+  const [stacked, setStacked] = useState(() => window.matchMedia(STACKED_TABLE_QUERY).matches);
+
+  useEffect(() => {
+    const query = window.matchMedia(STACKED_TABLE_QUERY);
+    const handleChange = (e) => setStacked(e.matches);
+    query.addEventListener("change", handleChange);
+    return () => query.removeEventListener("change", handleChange);
+  }, []);
+
+  return stacked;
+}
+
 // Column headers, shared with Tr so each cell can label itself on mobile.
 const TableHeadersContext = createContext([]);
 
 // Table — responsive table that stacks into cards on mobile and paginates itself.
-export function Table({ headers, children, pageSize = 5, itemLabel = "records" }) {
+export function Table({ headers, children, pageSize = 20, mobilePageSize = 5, itemLabel = "records" }) {
   const rows = Children.toArray(children);
+  const stacked = useStackedTable();
   const [page, setPage] = useState(1);
 
-  const totalPages = Math.max(1, Math.ceil(rows.length / pageSize));
+  const perPage = stacked ? mobilePageSize : pageSize;
+  const totalPages = Math.max(1, Math.ceil(rows.length / perPage));
   if (page > totalPages) setPage(totalPages);
 
-  const paginated = rows.length > pageSize;
-  const start = (page - 1) * pageSize;
-  const visible = paginated ? rows.slice(start, start + pageSize) : rows;
+  const paginated = rows.length > perPage;
+  const start = (page - 1) * perPage;
+  const visible = paginated ? rows.slice(start, start + perPage) : rows;
 
   return (
     <TableHeadersContext.Provider value={headers}>
@@ -135,7 +162,7 @@ export function Table({ headers, children, pageSize = 5, itemLabel = "records" }
           page={page}
           totalPages={totalPages}
           onChange={setPage}
-          label={`Showing ${start + 1} to ${Math.min(start + pageSize, rows.length)} of ${rows.length} ${itemLabel}`}
+          label={`Showing ${start + 1} to ${Math.min(start + perPage, rows.length)} of ${rows.length} ${itemLabel}`}
         />
       )}
     </TableHeadersContext.Provider>
@@ -378,6 +405,21 @@ export function FilterCheckGroup({ label, options }) {
           </label>
         </div>
       ))}
+    </div>
+  );
+}
+
+// RequirementRow — password requirement checklist row.
+export function RequirementRow({ met, label }) {
+  return (
+    <div className="d-flex align-items-center gap-2">
+      <i
+        className={`fas ${met ? "fa-circle-check text-success" : "fa-circle text-muted"}`}
+        style={{ fontSize: "0.7rem", opacity: met ? 1 : 0.4 }}
+      ></i>
+      <span className={met ? "text-dark" : "text-muted"} style={{ fontSize: "0.8rem" }}>
+        {label}
+      </span>
     </div>
   );
 }

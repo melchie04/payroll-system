@@ -5,47 +5,66 @@ export function GeneralTab({ generalSaved, onSave }) {
   return (
     <section className="mb-3">
       <DataCard title="Company Profile">
-        <form className="card-body row g-1" onSubmit={onSave}>
+        <form className="card-body" onSubmit={onSave}>
           {generalSaved && (
-            <div className="col-12 mb-3">
-              <div className="alert alert-success py-2 small d-flex align-items-center gap-2 mb-0">
-                <i className="fas fa-circle-check"></i>
-                Changes saved successfully.
-              </div>
+            <div className="alert alert-success py-2 small d-flex align-items-center gap-2 mb-3">
+              <i className="fas fa-circle-check"></i>
+              Changes saved successfully.
             </div>
           )}
-          <div className="col-12 col-md-6">
-            <FormField label="Company Name">
-              <input type="text" className="form-control" defaultValue="Payroll System Inc." />
-            </FormField>
+
+          <div className="mb-4">
+            <div className="text-uppercase text-muted fw-semibold mb-2" style={{ fontSize: 11, letterSpacing: 0.5 }}>
+              Company
+            </div>
+            <div className="row g-3">
+              <div className="col-12 col-md-6">
+                <FormField label="Company Name">
+                  <input type="text" className="form-control" defaultValue="Payroll System Inc." />
+                </FormField>
+              </div>
+              <div className="col-12 col-md-6">
+                <FormField label="Support Email">
+                  <input type="email" className="form-control" defaultValue="support@payrollsys.com" />
+                </FormField>
+                <div className="text-muted" style={{ fontSize: 11.5 }}>
+                  Shown to employees on payslips and system emails.
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="col-12 col-md-6">
-            <FormField label="Support Email">
-              <input type="email" className="form-control" defaultValue="support@payrollsys.com" />
-            </FormField>
+
+          <div className="mb-4">
+            <div className="text-uppercase text-muted fw-semibold mb-2" style={{ fontSize: 11, letterSpacing: 0.5 }}>
+              Payroll Defaults
+            </div>
+            <div className="row g-3">
+              <div className="col-12 col-md-6">
+                <FormField label="Default Currency">
+                  <select className="form-select" defaultValue="PHP">
+                    <option value="PHP">₱ Philippine Peso (PHP)</option>
+                    <option value="USD">$ US Dollar (USD)</option>
+                  </select>
+                </FormField>
+              </div>
+              <div className="col-12 col-md-6">
+                <FormField label="Pay Schedule">
+                  <select className="form-select" defaultValue="semi-monthly">
+                    <option value="semi-monthly">Semi-Monthly</option>
+                    <option value="monthly">Monthly</option>
+                    <option value="weekly">Weekly</option>
+                  </select>
+                </FormField>
+                <div className="text-muted" style={{ fontSize: 11.5 }}>
+                  Applied to new payroll runs. Existing runs keep their schedule.
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="col-12 col-md-6">
-            <FormField label="Default Currency">
-              <select className="form-select" defaultValue="PHP">
-                <option value="PHP">₱ Philippine Peso (PHP)</option>
-                <option value="USD">$ US Dollar (USD)</option>
-              </select>
-            </FormField>
-          </div>
-          <div className="col-12 col-md-6">
-            <FormField label="Pay Schedule">
-              <select className="form-select" defaultValue="semi-monthly">
-                <option value="semi-monthly">Semi-Monthly</option>
-                <option value="monthly">Monthly</option>
-                <option value="weekly">Weekly</option>
-              </select>
-            </FormField>
-          </div>
-          <div className="col-12">
-            <BtnPrimary type="submit">
-              <i className="fas fa-floppy-disk"></i> Save Changes
-            </BtnPrimary>
-          </div>
+
+          <BtnPrimary type="submit">
+            <i className="fas fa-floppy-disk"></i> Save Changes
+          </BtnPrimary>
         </form>
       </DataCard>
     </section>
