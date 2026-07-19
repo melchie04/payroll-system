@@ -325,7 +325,23 @@ $sidenav-expanded-width: 225px;
     display: none;
   }
 
-  /* Icon-only rail contents: center each icon, drop the labels/heading */
+  /* Icon-only rail contents: center each icon, fade the labels/heading
+     out in sync with the rail's own width transition (same 0.15s
+     ease-in-out) instead of an abrupt display:none.
+
+     This also fixes a much worse problem than a plain "instant jump"
+     would have been: the label span carries Bootstrap's .text-wrap
+     utility class, which forces white-space: normal !important —
+     i.e. it explicitly *allows* wrapping. With only a hard
+     display:none at the end state and no width/opacity transition
+     tying the label's own visibility to the rail's animation, the
+     label was visible while the rail narrowed underneath it and had
+     nowhere to go but wrap onto multiple jumbled lines before finally
+     disappearing. Animating opacity + max-width on the label itself,
+     synced to the same duration as the rail, means it shrinks and
+     fades away smoothly instead — and nowrap below means it
+     physically cannot wrap even for a single frame, regardless of
+     any timing mismatch. */
   .sb-sidenav-toggled .sb-sidenav-menu-heading {
     display: none;
   }
@@ -337,20 +353,47 @@ $sidenav-expanded-width: 225px;
     padding-left: 0;
     padding-right: 0;
   }
+  .sb-sidenav .nav .nav-link .sb-nav-link-icon {
+    flex-shrink: 0;
+    transition: margin-right 0.15s ease-in-out;
+  }
   .sb-sidenav-toggled .sb-sidenav .nav .nav-link .sb-nav-link-icon {
     margin-right: 0 !important;
   }
+  .sb-sidenav .nav .nav-link .text-wrap {
+    display: inline-block;
+    white-space: nowrap !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 160px;
+    opacity: 1;
+    transition: opacity 0.15s ease-in-out, max-width 0.15s ease-in-out;
+  }
   .sb-sidenav-toggled .sb-sidenav .nav .nav-link .text-wrap {
-    display: none;
+    opacity: 0;
+    max-width: 0;
   }
   .sb-sidenav-toggled .sb-sidenav-footer > div {
     justify-content: center;
   }
+  .sb-sidenav-footer .sb-nav-link-icon {
+    flex-shrink: 0;
+    transition: margin-right 0.15s ease-in-out;
+  }
   .sb-sidenav-toggled .sb-sidenav-footer .sb-nav-link-icon {
     margin-right: 0 !important;
   }
+  .sb-sidenav-footer > div > span {
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 100px;
+    opacity: 1;
+    transition: opacity 0.15s ease-in-out, max-width 0.15s ease-in-out;
+  }
   .sb-sidenav-toggled .sb-sidenav-footer > div > span {
-    display: none;
+    opacity: 0;
+    max-width: 0;
   }
 
   /* Keep the page content a fixed width instead of stretching to fill
