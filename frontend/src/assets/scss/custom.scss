@@ -86,54 +86,173 @@
 }
 
 /* ============================================================
-   TopNav buttons — sidebar toggle (bordered box), notifications
-   (soft circle), and the user trigger (plain hover), matching the
-   reference template while reusing this project's own theme
-   variables so light/dark mode both work automatically.
+   Fixed-navbar offset fix — this project's SB-Admin-based layout
+   (body.sb-nav-fixed) hardcodes the navbar at height: 56px and
+   offsets the page content by that same fixed 56px, assuming the
+   navbar is always exactly one row tall. The mobile quick-actions
+   row breaks that assumption: the navbar had no background past
+   56px, and the page content still started at the old fixed
+   offset, so the second row visually overlapped the page below it.
+
+   TopNav.jsx measures the navbar's real rendered height and
+   publishes it as --topnav-offset; these rules let the navbar grow
+   to fit its content and use that variable instead of the
+   hardcoded 56px (falls back to 56px before the value is measured
+   on first paint). Selectors match the originals exactly so
+   specificity ties resolve correctly.
    ============================================================ */
 
-.nav-box-btn {
-  width: 40px;
-  height: 40px;
-  border: 1px solid var(--bs-border-color);
-  border-radius: 0.5rem;
-  background-color: var(--bs-body-bg);
-  color: var(--bs-body-color);
-  font-size: 1.05rem;
-  transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+.sb-topnav {
+  height: auto !important;
+  min-height: 56px;
 }
-.nav-box-btn:hover {
-  background-color: rgba(0, 0, 0, 0.04);
+.sb-nav-fixed #layoutSidenav #layoutSidenav_content {
+  top: var(--topnav-offset, 56px) !important;
 }
-[data-bs-theme="dark"] .nav-box-btn:hover {
-  background-color: rgba(255, 255, 255, 0.06);
+.sb-nav-fixed #layoutSidenav #layoutSidenav_nav .sb-sidenav {
+  padding-top: var(--topnav-offset, 56px) !important;
 }
 
-.nav-circle-btn {
+.nav-icon-btn,
+.nav-user-btn,
+#sidebarToggle {
+  --topnav-icon-color: var(--bs-dark);
+  --topnav-icon-color-muted: var(--bs-gray-600);
+  --topnav-btn-hover-bg: rgba(0, 0, 0, 0.08);
+}
+[data-bs-theme="dark"] .nav-icon-btn,
+[data-bs-theme="dark"] .nav-user-btn,
+[data-bs-theme="dark"] #sidebarToggle {
+  --topnav-icon-color: var(--bs-white);
+  --topnav-icon-color-muted: var(--bs-gray-400);
+  --topnav-btn-hover-bg: rgba(255, 255, 255, 0.14);
+}
+
+/* ============================================================
+   One shared icon-button system for every icon-only topnav
+   control — sidebar toggle, theme, notifications, and the mobile
+   "..." toggle — so all of them are the same size/shape and behave
+   identically on hover, on both desktop and mobile.
+
+   .nav-icon-btn is used on both <button> and <a> elements. Without
+   this reset, a raw <button> keeps its native browser chrome
+   (border, background, padding) even with the same custom class as
+   an <a> — which is exactly why the theme button used to look
+   different from the notification bell despite nominally sharing a
+   class. Resetting appearance/border/background/padding here makes
+   both element types render identically.
+   ============================================================ */
+.nav-icon-btn,
+#sidebarToggle {
+  appearance: none;
+  -webkit-appearance: none;
+  border: none;
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+}
+.nav-icon-btn,
+#sidebarToggle {
   width: 40px;
   height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
   border-radius: 50%;
-  background-color: var(--bs-tertiary-bg);
-  color: var(--bs-body-color);
+  color: var(--topnav-icon-color);
   font-size: 1rem;
-  transition: background-color 0.15s ease-in-out;
+  line-height: 1;
+  text-decoration: none;
+  transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
 }
-.nav-circle-btn:hover {
-  background-color: rgba(0, 0, 0, 0.06);
+.nav-icon-btn:hover,
+.nav-icon-btn:focus-visible,
+#sidebarToggle:hover,
+#sidebarToggle:focus-visible {
+  background-color: var(--topnav-btn-hover-bg);
+  color: var(--topnav-icon-color);
 }
-[data-bs-theme="dark"] .nav-circle-btn:hover {
-  background-color: rgba(255, 255, 255, 0.08);
+
+/* Sidebar toggle used to be a plain Bootstrap .btn-link (default
+   color: --bs-link-color, i.e. blue) with no fixed size — it's now
+   on .nav-icon-btn like everything else, but this color override is
+   kept as a safety net in case any higher-specificity legacy rule
+   elsewhere in the bundle still targets #sidebarToggle directly. */
+#sidebarToggle {
+  color: var(--topnav-icon-color) !important;
 }
 
 .nav-user-btn {
   padding: 0.3rem 0.5rem;
   border-radius: 0.5rem;
-  color: var(--bs-body-color);
-  transition: background-color 0.15s ease-in-out;
+  color: var(--topnav-icon-color);
+  transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
 }
 .nav-user-btn:hover {
-  background-color: rgba(0, 0, 0, 0.04);
+  background-color: var(--topnav-btn-hover-bg);
 }
-[data-bs-theme="dark"] .nav-user-btn:hover {
-  background-color: rgba(255, 255, 255, 0.06);
+.nav-user-btn .fa-chevron-down {
+  color: var(--topnav-icon-color-muted);
+}
+[data-bs-theme="dark"] .nav-user-btn .text-body {
+  color: var(--topnav-icon-color) !important;
+}
+
+/* Divider above the revealed mobile row — Bootstrap's own
+   .border-top utility uses a static (non-dark-aware) border
+   color in this project's Bootstrap build, so it's redefined
+   here rather than relied on in TopNav.jsx. */
+.nav-mobile-controls {
+  border-top: 1px solid var(--bs-border-color);
+}
+[data-bs-theme="dark"] .nav-mobile-controls {
+  border-top-color: rgba(255, 255, 255, 0.12);
+}
+
+/* Mobile-only: center the brand between the sidebar toggle (left) and
+   the "..." button (right). Taking it out of the flex flow (absolute,
+   centered on the navbar itself, which is already position: fixed)
+   means the toggle and more-button naturally land at the true edges
+   regardless of their own widths — no order-juggling needed. Reverts
+   to the normal in-flow desktop position above the md breakpoint, so
+   desktop is completely untouched. */
+@media (max-width: 767.98px) {
+  .nav-brand-mobile {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    max-width: calc(100vw - 140px);
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .nav-brand-mobile .fs-6 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Notification/user dropdown menus, forced mobile-safe.
+     Bootstrap positions these at runtime via Popper.js — the
+     dropdown-menu-start/-end classes are only a hint, and depending
+     on exactly where the trigger sits, Popper can still place the
+     panel so it overflows the left or right edge of a narrow
+     screen. Rather than depend on that, pin both menus to the same
+     fixed, guaranteed-visible panel below the navbar on mobile:
+     margined in from both edges, ignoring Popper's calculated
+     position/transform entirely (the !important values below beat
+     the plain inline styles Popper sets). */
+  .topnav-dropdown-menu {
+    position: fixed !important;
+    inset: auto 16px auto 16px !important;
+    top: var(--topnav-offset, 56px) !important;
+    margin-top: 8px !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    max-height: calc(100vh - var(--topnav-offset, 56px) - 24px);
+    overflow-y: auto;
+    transform: none !important;
+  }
 }
