@@ -16,6 +16,7 @@
   --topnav-icon-color: var(--bs-dark);
   --topnav-icon-color-muted: var(--bs-gray-600);
   --topnav-btn-hover-bg: rgba(0, 0, 0, 0.08);
+  --topnav-btn-focus-ring: rgba(0, 0, 0, 0.14);
 }
 [data-bs-theme="dark"] .nav-icon-btn,
 [data-bs-theme="dark"] .nav-user-btn,
@@ -23,6 +24,7 @@
   --topnav-icon-color: var(--bs-white);
   --topnav-icon-color-muted: var(--bs-gray-400);
   --topnav-btn-hover-bg: rgba(255, 255, 255, 0.14);
+  --topnav-btn-focus-ring: rgba(255, 255, 255, 0.28);
 }
 
 .nav-icon-btn,
@@ -48,7 +50,7 @@
   font-size: 1rem;
   line-height: 1;
   text-decoration: none;
-  transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+  transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out, transform 0.15s ease-out;
 }
 .nav-icon-btn:hover,
 .nav-icon-btn:focus-visible,
@@ -66,7 +68,7 @@
   padding: 0.3rem 0.5rem;
   border-radius: 0.5rem;
   color: var(--topnav-icon-color);
-  transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+  transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out, transform 0.15s ease-out;
 }
 .nav-user-btn:hover {
   background-color: var(--topnav-btn-hover-bg);
@@ -111,5 +113,129 @@
     max-height: calc(100vh - var(--topnav-offset, 56px) - 24px);
     overflow-y: auto;
     transform: none !important;
+  }
+}
+
+// --- Motion & interaction polish -------------------------------------------
+// Static appearance is unchanged; these only affect entrance and interaction.
+
+// The bar eases in on first paint. Opacity only — a transform here would make
+// .sb-topnav a containing block and break the fixed mobile dropdowns below.
+@keyframes topnavSettleIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.sb-topnav {
+  animation: topnavSettleIn 0.3s ease-out;
+}
+
+// Press feedback.
+.nav-icon-btn:active,
+#sidebarToggle:active {
+  transform: scale(0.92);
+}
+.nav-user-btn:active {
+  transform: scale(0.98);
+}
+
+// Keyboard focus ring, matching each theme's hover tint.
+.nav-icon-btn:focus-visible,
+.nav-user-btn:focus-visible,
+#sidebarToggle:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 0.2rem var(--topnav-btn-focus-ring);
+}
+
+// The unread dot breathes so it reads as live state.
+@keyframes topnavDotPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 156, 85, 0.5);
+  }
+  70% {
+    box-shadow: 0 0 0 6px rgba(255, 156, 85, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 156, 85, 0);
+  }
+}
+.nav-badge-dot {
+  animation: topnavDotPulse 2.4s ease-out infinite;
+}
+
+// Dropdowns fade in instead of snapping. Opacity only — Popper owns transform.
+@keyframes topnavMenuIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.sb-topnav .dropdown-menu.show {
+  animation: topnavMenuIn 0.16s ease-out;
+}
+
+// --- Mobile ----------------------------------------------------------------
+
+@media (max-width: 767.98px) {
+  // The second control row settles in just after the brand row. Opacity only:
+  // this row is an ancestor of the fixed .topnav-dropdown-menu, so any
+  // transform here would reposition the menu against this row instead of the
+  // viewport.
+  .nav-mobile-controls {
+    animation: topnavSettleIn 0.3s ease-out 0.08s backwards;
+  }
+
+  // Full-width mobile menus drop in rather than fade alone. This uses the
+  // `translate` property, not `transform` — the mobile rule above pins
+  // `transform: none !important`, which an animation cannot override.
+  @keyframes topnavMenuInMobile {
+    from {
+      opacity: 0;
+      translate: 0 -8px;
+    }
+    to {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+  .sb-topnav .topnav-dropdown-menu.show {
+    animation: topnavMenuInMobile 0.2s ease-out;
+  }
+
+  // Menu items respond to taps, where there is no hover to rely on.
+  .topnav-dropdown-menu .dropdown-item {
+    transition: background-color 0.15s ease-in-out;
+  }
+  .topnav-dropdown-menu .dropdown-item:active {
+    background-color: var(--topnav-btn-hover-bg);
+  }
+}
+
+// Touch devices get no hover, so press feedback carries the interaction.
+@media (hover: none) {
+  .nav-icon-btn:active,
+  #sidebarToggle:active,
+  .nav-user-btn:active {
+    background-color: var(--topnav-btn-hover-bg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-mobile-controls,
+  .sb-topnav .topnav-dropdown-menu.show,
+  .sb-topnav,
+  .nav-badge-dot,
+  .sb-topnav .dropdown-menu.show {
+    animation: none;
+  }
+  .nav-icon-btn:active,
+  .nav-user-btn:active,
+  #sidebarToggle:active {
+    transform: none;
   }
 }

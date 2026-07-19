@@ -87,7 +87,7 @@ function NotificationsTrigger({ id }) {
         <i className="fas fa-bell"></i>
         {unreadCount > 0 && (
           <span
-            className="position-absolute top-0 start-100 translate-middle rounded-circle"
+            className="nav-badge-dot position-absolute top-0 start-100 translate-middle rounded-circle"
             style={{ width: 8, height: 8, background: "#ff9c55", border: "1.5px solid var(--bs-body-bg)" }}
           >
             <span className="visually-hidden">New notifications</span>

@@ -1,0 +1,17 @@
+// Dashboard shell surfaces.
+// Both navigation bars share one surface; the content area sits a step darker
+// so cards, tables and the tab tray read as raised above it.
+// These two rules are kept together because they only make sense as a pair.
+
+// Sidebar matches the topnav's bg-white instead of the stock #f8f9fa.
+.sb-sidenav-light {
+  background-color: #fff;
+}
+
+#layoutSidenav_content {
+  background-color: #eef0f3;
+}
+
+// In dark mode the sidebar already matches the topnav's bg-dark (#212529),
+// and the content area is already clearly distinct from both, so it keeps the
+// stock surface.
