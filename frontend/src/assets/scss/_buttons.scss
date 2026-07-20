@@ -1,0 +1,26 @@
+// Primary action button (BtnPrimary → .btn-dark) inside the dashboard.
+//
+// Bootstrap's #212529 is near-black. Against the soft light shell it reads as
+// a hard slab rather than part of the palette, so it sits a step lighter with
+// a little lift — the same softening the dark theme already gets from the
+// lighter fill and hairline border.
+//
+// Scoped to the dashboard so the auth and error pages keep the pill button
+// they already have.
+
+#layoutSidenav_content .btn-dark {
+  --bs-btn-bg: #2e343a;
+  --bs-btn-border-color: #2e343a;
+  --bs-btn-hover-bg: #3d444b;
+  --bs-btn-hover-border-color: #3d444b;
+  --bs-btn-active-bg: #22272c;
+  --bs-btn-active-border-color: #22272c;
+  --bs-btn-disabled-bg: #2e343a;
+  --bs-btn-disabled-border-color: #2e343a;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.1);
+}
+
+#layoutSidenav_content .btn-dark:active,
+#layoutSidenav_content .btn-dark:disabled {
+  box-shadow: none;
+}
