@@ -1,0 +1,76 @@
+// Status badge (Badge in components/ui).
+//
+// Solid fills only work in one theme at a time: on the light shell the
+// saturated chips shout, and on the dark shell they glare. Tinted chips carry
+// the same meaning in both, and match the tinted tag badges already used for
+// notification types and role permissions.
+//
+// Text tones follow Bootstrap 5.3's emphasis scale — the darker shade on
+// light, the lighter shade on dark — so contrast holds either way.
+
+.status-badge {
+  background-color: var(--status-badge-bg);
+  border: 1px solid var(--status-badge-border);
+  color: var(--status-badge-color);
+  font-weight: 600;
+}
+
+.status-badge-success {
+  --status-badge-bg: rgba(25, 135, 84, 0.12);
+  --status-badge-border: rgba(25, 135, 84, 0.3);
+  --status-badge-color: #146c43;
+}
+
+.status-badge-warning {
+  --status-badge-bg: rgba(255, 193, 7, 0.16);
+  --status-badge-border: rgba(255, 193, 7, 0.4);
+  --status-badge-color: #8a6d0b;
+}
+
+.status-badge-danger {
+  --status-badge-bg: rgba(220, 53, 69, 0.12);
+  --status-badge-border: rgba(220, 53, 69, 0.3);
+  --status-badge-color: #b02a37;
+}
+
+.status-badge-primary {
+  --status-badge-bg: rgba(13, 110, 253, 0.12);
+  --status-badge-border: rgba(13, 110, 253, 0.3);
+  --status-badge-color: #0a58ca;
+}
+
+.status-badge-secondary {
+  --status-badge-bg: rgba(108, 117, 125, 0.14);
+  --status-badge-border: rgba(108, 117, 125, 0.3);
+  --status-badge-color: #565e64;
+}
+
+[data-bs-theme="dark"] .status-badge-success {
+  --status-badge-bg: rgba(25, 135, 84, 0.22);
+  --status-badge-border: rgba(25, 135, 84, 0.45);
+  --status-badge-color: #75b798;
+}
+
+[data-bs-theme="dark"] .status-badge-warning {
+  --status-badge-bg: rgba(255, 193, 7, 0.2);
+  --status-badge-border: rgba(255, 193, 7, 0.45);
+  --status-badge-color: #ffda6a;
+}
+
+[data-bs-theme="dark"] .status-badge-danger {
+  --status-badge-bg: rgba(220, 53, 69, 0.22);
+  --status-badge-border: rgba(220, 53, 69, 0.45);
+  --status-badge-color: #ea868f;
+}
+
+[data-bs-theme="dark"] .status-badge-primary {
+  --status-badge-bg: rgba(13, 110, 253, 0.22);
+  --status-badge-border: rgba(13, 110, 253, 0.45);
+  --status-badge-color: #6ea8fe;
+}
+
+[data-bs-theme="dark"] .status-badge-secondary {
+  --status-badge-bg: rgba(173, 181, 189, 0.18);
+  --status-badge-border: rgba(173, 181, 189, 0.35);
+  --status-badge-color: #ced4da;
+}

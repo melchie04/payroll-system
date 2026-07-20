@@ -1,4 +1,4 @@
-import { DataCard, BtnPrimary, FormField, RequirementRow } from "../ui/index.jsx";
+import { DataCard, BtnPrimary, FormField, RequirementRow, SectionHeading } from "../ui/index.jsx";
 
 // ChangePasswordTab — self-service change password form tab.
 export function ChangePasswordTab({ self, onChange, onSubmit, onToggleShowPassword }) {
@@ -16,9 +16,7 @@ export function ChangePasswordTab({ self, onChange, onSubmit, onToggleShowPasswo
           )}
 
           <div className="mb-4">
-            <div className="text-uppercase text-muted fw-semibold mb-2" style={{ fontSize: 11, letterSpacing: 0.5 }}>
-              Current Password
-            </div>
+            <SectionHeading>Verify it's you</SectionHeading>
             <div className="row g-3">
               <div className="col-12 col-lg-6">
                 <FormField label="Current Password">
@@ -45,9 +43,7 @@ export function ChangePasswordTab({ self, onChange, onSubmit, onToggleShowPasswo
           </div>
 
           <div className="mb-4">
-            <div className="text-uppercase text-muted fw-semibold mb-2" style={{ fontSize: 11, letterSpacing: 0.5 }}>
-              New Password
-            </div>
+            <SectionHeading>Choose a new password</SectionHeading>
             <div className="row g-3">
               <div className="col-12 col-md-6">
                 <FormField label="New Password">

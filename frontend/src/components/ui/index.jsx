@@ -23,8 +23,7 @@ const statusVariant = {
 // Badge — status pill colored by status value.
 export function Badge({ status }) {
   const variant = statusVariant[status] || "secondary";
-  const textClass = variant === "warning" ? "text-dark" : "";
-  return <span className={`badge rounded-pill bg-${variant} ${textClass}`}>{status}</span>;
+  return <span className={`badge rounded-pill status-badge status-badge-${variant}`}>{status}</span>;
 }
 
 // BtnPrimary — dark primary action button.
@@ -440,6 +439,16 @@ export function Modal({ id, title, children, footer, size = "" }) {
           {footer && <div className="modal-footer">{footer}</div>}
         </div>
       </div>
+    </div>
+  );
+}
+
+// SectionHeading — groups a set of form fields. Deliberately outranks the
+// FormField label, which is uppercase, muted and 11px.
+export function SectionHeading({ children }) {
+  return (
+    <div className="fw-semibold text-body mb-3 pb-2 border-bottom" style={{ fontSize: "0.8125rem" }}>
+      {children}
     </div>
   );
 }

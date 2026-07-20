@@ -146,36 +146,37 @@ function RolesList({ roleList, onEditRole, onDeleteRole }) {
           {roleList.length === 0 && <div className="col-12 text-center text-muted py-5 small">No roles created yet.</div>}
           {roleList.map((r) => (
             <div className="col-12 col-md-6" key={r.id}>
-              <div className="border rounded-3 p-3 h-100 d-flex align-items-start gap-3">
-                <div
-                  className="d-flex align-items-center justify-content-center flex-shrink-0 border rounded-3 bg-light text-secondary"
-                  style={{ width: 40, height: 40, fontSize: 15 }}
-                >
-                  <i className="fas fa-shield-halved"></i>
-                </div>
+              <div className="border rounded-3 h-100 d-flex flex-column">
+                <div className="d-flex align-items-center gap-3 p-3">
+                  <div
+                    className="d-flex align-items-center justify-content-center flex-shrink-0 border rounded-3 bg-light text-secondary"
+                    style={{ width: 40, height: 40, fontSize: 15 }}
+                  >
+                    <i className="fas fa-shield-halved"></i>
+                  </div>
 
-                <div className="flex-grow-1" style={{ minWidth: 0 }}>
-                  <div className="d-flex justify-content-between align-items-start gap-2 mb-2">
-                    <div style={{ minWidth: 0 }}>
-                      <div className="fw-semibold" style={{ overflowWrap: "anywhere" }}>
-                        {r.name}
-                      </div>
-                      <div className="text-muted" style={{ fontSize: 12 }}>
-                        {r.users} user{r.users === 1 ? "" : "s"}
-                      </div>
+                  <div className="flex-grow-1" style={{ minWidth: 0 }}>
+                    <div className="fw-semibold" style={{ overflowWrap: "anywhere" }}>
+                      {r.name}
                     </div>
-                    <div className="d-flex gap-1 flex-shrink-0">
-                      <IconBtn title="Edit role" onClick={() => onEditRole(r)}>
-                        <i className="fas fa-pen text-muted opacity-75"></i>
-                      </IconBtn>
-                      <IconBtn title="Delete role" data-bs-toggle="modal" data-bs-target="#deleteRoleModal" onClick={() => onDeleteRole(r)}>
-                        <i className="fas fa-trash text-danger opacity-75"></i>
-                      </IconBtn>
+                    <div className="text-muted" style={{ fontSize: 12 }}>
+                      {r.users} user{r.users === 1 ? "" : "s"}
                     </div>
                   </div>
 
-                  <p className="text-muted small mb-3">{r.description}</p>
+                  <div className="d-flex gap-1 flex-shrink-0">
+                    <IconBtn title="Edit role" onClick={() => onEditRole(r)}>
+                      <i className="fas fa-pen text-muted opacity-75"></i>
+                    </IconBtn>
+                    <IconBtn title="Delete role" data-bs-toggle="modal" data-bs-target="#deleteRoleModal" onClick={() => onDeleteRole(r)}>
+                      <i className="fas fa-trash text-danger opacity-75"></i>
+                    </IconBtn>
+                  </div>
+                </div>
 
+                <p className="text-muted small px-3 mb-3">{r.description}</p>
+
+                <div className="mt-auto border-top px-3 py-3">
                   <div className="text-uppercase text-muted fw-semibold mb-2" style={{ fontSize: 11, letterSpacing: 0.5 }}>
                     Permissions
                   </div>

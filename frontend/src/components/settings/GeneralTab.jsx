@@ -1,4 +1,4 @@
-import { DataCard, BtnPrimary, FormField } from "../ui/index.jsx";
+import { DataCard, BtnPrimary, FormField, SectionHeading } from "../ui/index.jsx";
 
 // GeneralTab — general company/preferences settings tab.
 export function GeneralTab({ generalSaved, onSave }) {
@@ -14,9 +14,7 @@ export function GeneralTab({ generalSaved, onSave }) {
           )}
 
           <div className="mb-4">
-            <div className="text-uppercase text-muted fw-semibold mb-2" style={{ fontSize: 11, letterSpacing: 0.5 }}>
-              Company
-            </div>
+            <SectionHeading>Company</SectionHeading>
             <div className="row g-3">
               <div className="col-12 col-md-6">
                 <FormField label="Company Name">
@@ -35,9 +33,7 @@ export function GeneralTab({ generalSaved, onSave }) {
           </div>
 
           <div className="mb-4">
-            <div className="text-uppercase text-muted fw-semibold mb-2" style={{ fontSize: 11, letterSpacing: 0.5 }}>
-              Payroll Defaults
-            </div>
+            <SectionHeading>Payroll Defaults</SectionHeading>
             <div className="row g-3">
               <div className="col-12 col-md-6">
                 <FormField label="Default Currency">

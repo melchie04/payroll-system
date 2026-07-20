@@ -59,6 +59,7 @@
   --bs-dropdown-link-hover-color: var(--app-dark-text);
   --bs-dropdown-link-hover-bg: rgba(255, 255, 255, 0.08);
   --bs-dropdown-header-color: var(--app-dark-text-muted);
+  --bs-border-color: var(--app-dark-border);
 }
 
 // --- Tables ----------------------------------------------------------------
@@ -103,7 +104,10 @@
 
 [data-bs-theme="dark"] #layoutSidenav_content .text-dark,
 [data-bs-theme="dark"] #layoutSidenav_content .text-body,
-[data-bs-theme="dark"] .modal-content .text-dark {
+[data-bs-theme="dark"] .modal-content .text-dark,
+[data-bs-theme="dark"] .modal-content .text-body,
+[data-bs-theme="dark"] .dropdown-menu .text-dark,
+[data-bs-theme="dark"] .dropdown-menu .text-body {
   color: var(--app-dark-text) !important;
 }
 
@@ -264,6 +268,11 @@
 // --- Topnav details --------------------------------------------------------
 // The unread dot's ring is drawn with --bs-body-bg inline; point it at the
 // bar's own colour so the ring disappears into it rather than flashing white.
+
+[data-bs-theme="dark"] .sb-topnav,
+[data-bs-theme="dark"] .sb-sidenav {
+  --bs-border-color: var(--app-dark-border);
+}
 
 [data-bs-theme="dark"] .sb-topnav {
   --bs-body-bg: var(--app-dark-surface);
