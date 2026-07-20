@@ -1,0 +1,187 @@
+// App shell.
+// SB Admin's page scaffolding for the dashboard, auth and error layouts, then the app's own content and footer surfaces.
+
+html,
+body {
+  height: 100%;
+}
+
+#layoutAuthentication {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+#layoutAuthentication #layoutAuthentication_content {
+  min-width: 0;
+  flex-grow: 1;
+}
+
+#layoutAuthentication #layoutAuthentication_footer {
+  min-width: 0;
+}
+
+#layoutSidenav {
+  display: flex;
+}
+
+#layoutSidenav #layoutSidenav_nav {
+  flex-basis: 225px;
+  flex-shrink: 0;
+  transition: transform 0.15s ease-in-out;
+  z-index: 1038;
+  transform: translateX(-225px);
+}
+
+#layoutSidenav #layoutSidenav_content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+  flex-grow: 1;
+  min-height: calc(100vh - 56px);
+  margin-left: -225px;
+}
+
+.sb-sidenav-toggled #layoutSidenav #layoutSidenav_nav {
+  transform: translateX(0);
+}
+
+.sb-sidenav-toggled #layoutSidenav #layoutSidenav_content:before {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  z-index: 1037;
+  opacity: 0.5;
+  transition: opacity 0.3s ease-in-out;
+}
+
+@media (min-width: 992px) {
+  #layoutSidenav #layoutSidenav_nav {
+      transform: translateX(0);
+    }
+  #layoutSidenav #layoutSidenav_content {
+      margin-left: 0;
+      transition: margin 0.15s ease-in-out;
+    }
+  .sb-sidenav-toggled #layoutSidenav #layoutSidenav_nav {
+      transform: translateX(-225px);
+    }
+  .sb-sidenav-toggled #layoutSidenav #layoutSidenav_content {
+      margin-left: -225px;
+    }
+  .sb-sidenav-toggled #layoutSidenav #layoutSidenav_content:before {
+      display: none;
+    }
+}
+
+.sb-nav-fixed .sb-topnav {
+  z-index: 1039;
+}
+
+.sb-nav-fixed #layoutSidenav #layoutSidenav_nav {
+  width: 225px;
+  height: 100vh;
+  z-index: 1038;
+}
+
+.sb-nav-fixed #layoutSidenav #layoutSidenav_nav .sb-sidenav {
+  padding-top: 56px;
+}
+
+.sb-nav-fixed #layoutSidenav #layoutSidenav_nav .sb-sidenav .sb-sidenav-menu {
+  overflow-y: auto;
+}
+
+.sb-nav-fixed #layoutSidenav #layoutSidenav_content {
+  padding-left: 225px;
+  top: 56px;
+}
+
+#layoutError {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+#layoutError #layoutError_content {
+  min-width: 0;
+  flex-grow: 1;
+}
+
+#layoutError #layoutError_footer {
+  min-width: 0;
+}
+
+.img-error {
+  max-width: 20rem;
+}
+
+.nav .nav-link .sb-nav-link-icon,
+.sb-sidenav-menu .nav-link .sb-nav-link-icon {
+  margin-right: 0.5rem;
+}
+
+// --- App surfaces ----------------------------------------------------------
+// The navigation bars share one surface; the content plane sits a step darker
+// so cards, tables and the tab tray read as raised above it.
+
+#layoutSidenav_content {
+  background-color: #eef0f3;
+}
+
+// --- Footers ---------------------------------------------------------------
+// The sidebar footer and the page footer share one height so they line up
+// when long content is scrolled to the bottom, and both sit on the navigation
+// surface rather than a grey of their own.
+
+:root {
+  --app-footer-height: 44px;
+}
+
+// py-3 and bg-light carry !important, so these must too. The .bg-light
+// qualifier is what outranks the utility overrides in _dark.scss.
+#layoutSidenav_content > footer.bg-light {
+  padding-top: 0.25rem !important;
+  padding-bottom: 0.25rem !important;
+  background-color: #fff !important;
+}
+
+// The footer is a flex container now, so its row needs to claim the width.
+#layoutSidenav_content > footer > .container-fluid {
+  width: 100%;
+}
+
+// Footer text and links take the Help row's treatment: the sidebar's own text
+// colour at rest, brightening to blue on hover. Without this the copyright and
+// separator keep Bootstrap's muted grey and the links keep default link blue,
+// so the two footers read as different bars.
+#layoutSidenav_content > footer,
+#layoutSidenav_content > footer .text-muted,
+#layoutSidenav_content > footer a {
+  color: #212529 !important;
+  transition: color 0.15s ease-in-out;
+}
+
+#layoutSidenav_content > footer a:hover,
+#layoutSidenav_content > footer a:focus-visible {
+  color: #0d6efd !important;
+}
+
+// In dark mode the sidebar already matches the topnav's bg-dark (#212529).
+// Dark content and footer surfaces live in _dark.scss.
+
+// Shares its height with the sidebar footer so the two line up when long
+// content is scrolled to the bottom.
+#layoutSidenav_content > footer {
+  display: flex;
+  align-items: center;
+  min-height: var(--app-footer-height);
+  border-top: 1px solid var(--bs-border-color);
+}

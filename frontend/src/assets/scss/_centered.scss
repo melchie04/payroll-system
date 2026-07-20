@@ -1,6 +1,5 @@
-// Centered full-screen layouts (auth and error pages).
-// Soft background blobs plus an entrance, so a bare centered page still feels
-// composed. Shared by AuthLayout and ErrorLayout so the two stay uniform.
+// Centered layouts.
+// Background blobs and entrance shared by the auth and error pages.
 
 .centered-bg {
   position: relative;

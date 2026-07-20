@@ -1,3 +1,25 @@
+// Top navigation.
+// SB Admin's topnav, then the app's icon buttons, menus, motion and mobile row.
+
+.sb-topnav {
+  padding-left: 0;
+  height: 56px;
+  z-index: 1039;
+}
+
+.sb-topnav .navbar-brand {
+  width: 225px;
+  margin: 0;
+}
+
+.sb-topnav.navbar-dark #sidebarToggle {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.sb-topnav.navbar-light #sidebarToggle {
+  color: #212529;
+}
+
 // TopNav — dynamic navbar height, icon buttons, user button, and mobile layout.
 .sb-topnav {
   height: auto !important;

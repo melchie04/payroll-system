@@ -1,4 +1,6 @@
-// Print / "Save as PDF" — only .print-area content prints.
+// Print.
+// Only .print-area content reaches the page.
+
 @media print {
   body * {
     visibility: hidden;

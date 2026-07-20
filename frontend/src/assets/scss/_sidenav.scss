@@ -1,3 +1,144 @@
+// Side navigation.
+// SB Admin's sidenav and its light/dark themes, then the app's surfaces, collapse rail, motion and mobile drawer.
+
+.sb-sidenav {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  flex-wrap: nowrap;
+}
+
+.sb-sidenav .sb-sidenav-menu {
+  flex-grow: 1;
+}
+
+.sb-sidenav .sb-sidenav-menu .nav {
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+
+.sb-sidenav .sb-sidenav-menu .nav .sb-sidenav-menu-heading {
+  padding: 1.75rem 1rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.sb-sidenav .sb-sidenav-menu .nav .nav-link {
+  display: flex;
+  align-items: center;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  position: relative;
+}
+
+.sb-sidenav .sb-sidenav-menu .nav .nav-link .sb-nav-link-icon {
+  font-size: 0.9rem;
+}
+
+.sb-sidenav .sb-sidenav-footer {
+  padding: 0.75rem;
+  flex-shrink: 0;
+}
+
+.sb-sidenav-dark {
+  background-color: #212529;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.sb-sidenav-dark .sb-sidenav-menu .sb-sidenav-menu-heading {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.sb-sidenav-dark .sb-sidenav-menu .nav-link {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.sb-sidenav-dark .sb-sidenav-menu .nav-link .sb-nav-link-icon {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.sb-sidenav-dark .sb-sidenav-menu .nav-link:hover {
+  color: #fff;
+}
+
+.sb-sidenav-dark .sb-sidenav-menu .nav-link.active {
+  color: #fff;
+}
+
+.sb-sidenav-dark .sb-sidenav-menu .nav-link.active .sb-nav-link-icon {
+  color: #fff;
+}
+
+.sb-sidenav-dark .sb-sidenav-footer {
+  background-color: #343a40;
+}
+
+.sb-sidenav-light {
+  background-color: #f8f9fa;
+  color: #212529;
+}
+
+.sb-sidenav-light .sb-sidenav-menu .sb-sidenav-menu-heading {
+  color: #adb5bd;
+}
+
+.sb-sidenav-light .sb-sidenav-menu .nav-link {
+  color: #212529;
+}
+
+.sb-sidenav-light .sb-sidenav-menu .nav-link .sb-nav-link-icon {
+  color: #adb5bd;
+}
+
+.sb-sidenav-light .sb-sidenav-menu .nav-link:hover {
+  color: #0d6efd;
+}
+
+.sb-sidenav-light .sb-sidenav-menu .nav-link.active {
+  color: #0d6efd;
+}
+
+.sb-sidenav-light .sb-sidenav-menu .nav-link.active .sb-nav-link-icon {
+  color: #0d6efd;
+}
+
+.sb-sidenav-light .sb-sidenav-footer {
+  background-color: #e9ecef;
+}
+
+// --- App surfaces ----------------------------------------------------------
+
+// Sidebar matches the topnav's bg-white instead of the stock #f8f9fa.
+.sb-sidenav-light {
+  background-color: #fff;
+}
+
+.sb-sidenav-light .sb-sidenav-footer {
+  background-color: #fff;
+  border-top-color: #dee2e6;
+}
+
+// Matches the topnav's bg-dark instead of the stock #343a40.
+.sb-sidenav-dark .sb-sidenav-footer {
+  background-color: #212529;
+  border-top-color: #343a40;
+}
+
+// Was 0.75rem all round; the height now comes from --app-footer-height.
+.sb-sidenav .sb-sidenav-footer {
+  padding: 0.25rem 0.75rem;
+}
+
+// Shares its height with the page footer so the two line up when long
+// content is scrolled to the bottom.
+.sb-sidenav .sb-sidenav-footer {
+  display: flex;
+  align-items: center;
+  min-height: var(--app-footer-height);
+  border-top: 1px solid var(--bs-border-color);
+}
+
 // SideNav — nav link styling, Help footer, and desktop minimize/maximize rail.
 $sidenav-collapsed-width: 72px;
 $sidenav-expanded-width: 225px;

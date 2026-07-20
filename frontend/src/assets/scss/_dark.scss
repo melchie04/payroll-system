@@ -1,11 +1,5 @@
-// Dark mode for the dashboard layout.
-//
-// Bootstrap 5.2.3 predates `data-bs-theme` surface support, so every component
-// keeps its light colours in dark mode. Rather than editing markup, each
-// component's own CSS variables are retargeted here.
-//
-// Scoped to #layoutSidenav_content (plus the topnav's own menus) so the auth
-// and error layouts keep the look they already have.
+// Dark mode.
+// Loaded last so it can retarget any component above. Bootstrap 5.2.3 predates data-bs-theme surface support, so each component's own variables are repointed here rather than editing markup.
 
 [data-bs-theme="dark"] {
   --app-dark-bg: #16181b;

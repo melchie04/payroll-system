@@ -1,11 +1,9 @@
-// Custom app styles, organized by scope. General overrides live in styles.scss.
-@use "print";
-@use "centered";
-@use "layout";
+// App layer — the shell, its navigation, and the page-level treatments.
+// Loaded after styles.scss so these can override the framework above.
+
+@use "shell";
 @use "topnav";
 @use "sidenav";
-@use "tabs";
-@use "table";
-@use "badge";
-@use "buttons";
+@use "centered";
+@use "print";
 @use "dark";
