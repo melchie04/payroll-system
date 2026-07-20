@@ -1,0 +1,125 @@
+// Timesheet review.
+// The grid on the review screen mirrors the paper form, so its cells are inputs
+// rather than text. Flagged cells are the ones OCR read with low confidence.
+
+.ts-cell {
+  width: 100%;
+  min-width: 68px;
+  padding: 0.25rem 0.4rem;
+  border: 1px solid var(--bs-border-color);
+  border-radius: 0.25rem;
+  background-color: transparent;
+  color: inherit;
+  font-size: 0.8125rem;
+  text-align: center;
+  transition: border-color 0.15s ease-in-out, background-color 0.15s ease-in-out;
+}
+
+.ts-cell:focus {
+  outline: none;
+  border-color: #86b7fe;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+}
+
+.ts-cell:disabled {
+  background-color: rgba(0, 0, 0, 0.03);
+  color: #6c757d;
+  cursor: not-allowed;
+}
+
+// Low-confidence reads. Amber rather than red: the value may well be right,
+// it just has not been checked by a person yet.
+.ts-cell-flagged {
+  border-color: rgba(255, 193, 7, 0.7);
+  background-color: rgba(255, 193, 7, 0.12);
+}
+
+// The tab strip shares a row with the filter selects, so its standing bottom
+// margin would lift it out of line with them.
+.ts-toolbar .tabs-nav {
+  margin-bottom: 0;
+}
+
+// Dropzone. Sits on the card surface rather than the page plane, so it reads as
+// a target rather than a hole in the layout.
+.ts-dropzone {
+  min-height: 240px;
+  border: 2px dashed var(--bs-border-color);
+  border-radius: 0.5rem;
+  background-color: #fff;
+  cursor: pointer;
+  transition: border-color 0.15s ease-in-out, background-color 0.15s ease-in-out;
+}
+
+.ts-dropzone:hover {
+  border-color: #adb5bd;
+}
+
+.ts-dropzone.is-dragging {
+  border-color: #6c757d;
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.ts-dropzone-icon {
+  width: 48px;
+  height: 48px;
+  background-color: rgba(0, 0, 0, 0.04);
+  color: #6c757d;
+  font-size: 19px;
+}
+
+.ts-dropzone-meta {
+  border-top: 1px solid var(--bs-border-color);
+}
+
+.ts-doc {
+  min-height: 320px;
+  border: 1px dashed var(--bs-border-color);
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+[data-bs-theme="dark"] .ts-cell:disabled {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #9aa4ae;
+}
+
+[data-bs-theme="dark"] .ts-cell-flagged {
+  border-color: rgba(255, 193, 7, 0.6);
+  background-color: rgba(255, 193, 7, 0.16);
+}
+
+[data-bs-theme="dark"] .ts-doc {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+[data-bs-theme="dark"] .ts-dropzone {
+  background-color: var(--app-dark-surface);
+}
+
+[data-bs-theme="dark"] .ts-dropzone:hover {
+  border-color: #6c757d;
+}
+
+[data-bs-theme="dark"] .ts-dropzone.is-dragging {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-bs-theme="dark"] .ts-dropzone-icon {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: #adb5bd;
+}
+
+// Stacked rows on mobile give each cell a full-width line already, so the
+// minimum cell width would only force horizontal overflow.
+@media (max-width: 767.98px) {
+  // Stacked cards below this width, so the tall target is wasted height.
+  .ts-dropzone {
+    min-height: 0;
+  }
+
+  .ts-cell {
+    min-width: 0;
+    max-width: 140px;
+    text-align: right;
+  }
+}

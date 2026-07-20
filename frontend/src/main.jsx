@@ -11,6 +11,7 @@ import "./assets/scss/custom.scss";
 import { ThemeProvider } from "./context/ThemeContext.jsx";
 import { EmployeesProvider } from "./context/EmployeesContext.jsx";
 import { ClientsProvider } from "./context/ClientsContext.jsx";
+import { TimesheetProvider } from "./context/TimesheetContext.jsx";
 import { CurrentUserProvider } from "./context/CurrentUserContext.jsx";
 import { NotificationsProvider } from "./context/NotificationsContext.jsx";
 import App from "./App.jsx";
@@ -24,7 +25,9 @@ createRoot(document.getElementById("root")).render(
           <NotificationsProvider>
             <ClientsProvider>
               <EmployeesProvider>
-                <App />
+                <TimesheetProvider>
+                  <App />
+                </TimesheetProvider>
               </EmployeesProvider>
             </ClientsProvider>
           </NotificationsProvider>

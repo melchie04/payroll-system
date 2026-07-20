@@ -7,7 +7,11 @@ const statusVariant = {
   Paid: "success",
   "On Track": "success",
   Extracted: "success",
+  Approved: "success",
+  Covered: "success",
   Pending: "warning",
+  "Needs Review": "warning",
+  "Not Covered": "danger",
   "At Risk": "warning",
   "Partially Paid": "warning",
   "On Leave": "warning",
@@ -227,7 +231,7 @@ function Pagination({ page, totalPages, onChange, label }) {
 }
 
 // FilterSelect — labeled select dropdown for filters.
-export function FilterSelect({ label, children }) {
+export function FilterSelect({ label, children, ...rest }) {
   return (
     <div>
       {label && (
@@ -235,7 +239,9 @@ export function FilterSelect({ label, children }) {
           {label}
         </label>
       )}
-      <select className="form-select form-select-sm">{children}</select>
+      <select className="form-select form-select-sm" {...rest}>
+        {children}
+      </select>
     </div>
   );
 }
@@ -303,7 +309,7 @@ export function ActionsMenu({ items }) {
       <IconBtn title="More" data-bs-toggle="dropdown" aria-expanded="false">
         <i className="fas fa-ellipsis-vertical"></i>
       </IconBtn>
-      <ul className="dropdown-menu dropdown-menu-end shadow-sm" style={{ fontSize: "0.85rem" }}>
+      <ul className="dropdown-menu dropdown-menu-end shadow-sm py-2" style={{ fontSize: "0.85rem", minWidth: 190 }}>
         {items.map((item, i) =>
           item.divider ? (
             <li key={`divider-${i}`}>
@@ -313,13 +319,13 @@ export function ActionsMenu({ items }) {
             <li key={item.label}>
               <button
                 type="button"
-                className={`dropdown-item d-flex align-items-center gap-2 ${item.danger ? "text-danger" : ""}`}
+                className={`dropdown-item d-flex align-items-center gap-2 py-2 ${item.danger ? "text-danger" : ""}`}
                 onClick={item.onClick}
                 data-bs-toggle={item.modalTarget ? "modal" : undefined}
                 data-bs-target={item.modalTarget ? `#${item.modalTarget}` : undefined}
               >
                 {item.icon && <i className={`fas ${item.icon} fa-fw opacity-75`}></i>}
-                {item.label}
+                <span className="text-nowrap">{item.label}</span>
               </button>
             </li>
           ),

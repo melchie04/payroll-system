@@ -227,43 +227,119 @@ export const invoices = [
   },
 ];
 
-export const uploadedFiles = [
+// Timesheet intake. One sheet covers one employee and one half-month, so a pay
+// period that straddles the 15th is fed by more than one sheet.
+function sheetRows(half, month, year, pattern) {
+  const start = half === "1-15" ? 1 : 16;
+  const count = half === "1-15" ? 15 : 16;
+  return Array.from({ length: count }, (_, i) => {
+    const day = start + i;
+    const shift = pattern[i % pattern.length];
+    return {
+      day,
+      date: `${month} ${day}, ${year}`,
+      amIn: shift ? "07:30" : "",
+      amOut: shift ? "12:00" : "",
+      pmIn: shift ? "13:00" : "",
+      pmOut: shift ? "17:00" : "",
+      otIn: shift && day % 7 === 0 ? "17:00" : "",
+      otOut: shift && day % 7 === 0 ? "19:00" : "",
+      late: shift && day % 5 === 0 ? 15 : 0,
+      lowConfidence: shift && (day % 4 === 0 ? ["amIn"] : day % 6 === 0 ? ["pmOut"] : []),
+    };
+  });
+}
+
+const weekdays = [1, 1, 1, 1, 1, 0, 0];
+
+export const timesheetFiles = [
   {
     id: 1,
-    name: "Timesheet_Acme_JohnDoe_May12-25.pdf",
+    name: "Timesheet_Acme_JuanDelaCruz_Jun1-15.pdf",
     type: "pdf",
-    uploaded: "May 25, 2024 10:30 AM",
-    status: "Processing",
+    source: "Scan",
+    uploaded: "Jun 16, 2026 09:12 AM",
+    status: "Needs Review",
+    client: "Acme Corp",
+    formCode: "SSI.17-014",
+    employee: { name: "Juan Dela Cruz", employeeId: 1, matched: true, confidence: 0.71 },
+    half: "1-15",
+    halfConfidence: 0.99,
+    period: { label: "Jun 1 – Jun 15, 2026", from: "Jun 1, 2026", to: "Jun 15, 2026", confidence: 0.64, confirmed: false },
+    signatures: { employee: true, supervisor: true, client: false },
+    handwritten: { totalDays: 11, regOt: 4, nightDiff: 0, totalLate: 45 },
+    rows: sheetRows("1-15", "Jun", 2026, weekdays),
   },
   {
     id: 2,
-    name: "Timesheet_Acme_JohnDoe_May12-25.jpg",
-    type: "img",
-    uploaded: "May 25, 2024 10:28 AM",
-    status: "Extracted",
+    name: "Timesheet_Acme_MariaSantos_Jun16-30.pdf",
+    type: "pdf",
+    source: "Scan",
+    uploaded: "Jun 16, 2026 09:05 AM",
+    status: "Approved",
+    client: "Acme Corp",
+    formCode: "SSI.17-015",
+    employee: { name: "Maria Santos", employeeId: 2, matched: true, confidence: 0.96 },
+    half: "16-31",
+    halfConfidence: 0.99,
+    period: { label: "Jun 16 – Jun 30, 2026", from: "Jun 16, 2026", to: "Jun 30, 2026", confidence: 0.93, confirmed: true },
+    signatures: { employee: true, supervisor: true, client: true },
+    handwritten: { totalDays: 11, regOt: 2, nightDiff: 0, totalLate: 30 },
+    rows: sheetRows("16-31", "Jun", 2026, weekdays),
   },
   {
     id: 3,
-    name: "Timesheet_Acme_JohnDoe_May12-25.png",
+    name: "IMG_20260616_094412.jpg",
     type: "img",
-    uploaded: "May 25, 2024 10:26 AM",
-    status: "Extracted",
+    source: "Photo",
+    uploaded: "Jun 16, 2026 09:44 AM",
+    status: "Processing",
+    client: "Acme Corp",
+    formCode: null,
+    employee: { name: null, employeeId: null, matched: false, confidence: 0 },
+    half: null,
+    halfConfidence: 0,
+    period: { label: null, from: null, to: null, confidence: 0, confirmed: false },
+    signatures: { employee: false, supervisor: false, client: false },
+    handwritten: null,
+    rows: [],
   },
   {
     id: 4,
-    name: "Timesheet_Acme_JohnDoe_May12-25_v2.pdf",
-    type: "pdf",
-    uploaded: "May 25, 2024 10:20 AM",
+    name: "IMG_20260616_100233.jpg",
+    type: "img",
+    source: "Photo",
+    uploaded: "Jun 16, 2026 10:02 AM",
     status: "Failed",
+    client: "Acme Corp",
+    formCode: null,
+    failureReason: "The sheet could not be located in the photo. It looks skewed and part of the grid is outside the frame.",
+    employee: { name: null, employeeId: null, matched: false, confidence: 0 },
+    half: null,
+    halfConfidence: 0,
+    period: { label: null, from: null, to: null, confidence: 0, confirmed: false },
+    signatures: { employee: false, supervisor: false, client: false },
+    handwritten: null,
+    rows: [],
   },
 ];
 
-export const extractionSummary = [
-  { label: "Files Uploaded", value: 28, color: "var(--text)" },
-  { label: "Successfully Extracted", value: 24, color: "#16a34a" },
-  { label: "Failed", value: 4, color: "#dc2626" },
-  { label: "Pending", value: 3, color: "#d97706" },
+// Coverage for the selected pay period. Payroll collects approved days, so a
+// gap here means hours are missing rather than the person did not work.
+export const timesheetCoverage = [
+  { id: 1, employee: "Juan Dela Cruz", client: "Acme Corp", sheets: 1, covered: "Jun 12 – Jun 15", gap: "Jun 16 – Jun 25" },
+  { id: 2, employee: "Maria Santos", client: "Acme Corp", sheets: 2, covered: "Jun 12 – Jun 25", gap: null },
+  { id: 3, employee: "Pedro Reyes", client: "Acme Corp", sheets: 0, covered: null, gap: "Jun 12 – Jun 25" },
+  { id: 4, employee: "Ana Lim", client: "Acme Corp", sheets: 2, covered: "Jun 12 – Jun 25", gap: null },
 ];
+
+export const extractionSummary = [
+  { label: "Files Uploaded", value: 28, color: null },
+  { label: "Approved", value: 21, color: "#16a34a" },
+  { label: "Needs Review", value: 3, color: "#d97706" },
+  { label: "Failed", value: 4, color: "#dc2626" },
+];
+
 
 export const clientStats = [
   {

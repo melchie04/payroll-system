@@ -465,6 +465,15 @@
   .tabs-nav-item {
     flex: 0 0 calc(50% - 0.125rem);
     max-width: calc(50% - 0.125rem);
+    padding-left: 0.6rem;
+    padding-right: 0.6rem;
+  }
+
+  // With an odd number of tabs the last one would sit alone in a half-empty
+  // row. Let it take the full width instead so the tray stays square.
+  .tabs-nav-item:last-child:nth-child(odd) {
+    flex-basis: 100%;
+    max-width: 100%;
   }
 }
 

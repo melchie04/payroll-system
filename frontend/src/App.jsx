@@ -10,7 +10,8 @@ import ChangePassword from "./pages/auth/ChangePassword.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import Payroll from "./pages/Payroll.jsx";
 import Billing from "./pages/Billing.jsx";
-import Timesheet from "./pages/Timesheet.jsx";
+import Timesheet from "./pages/timesheet/Timesheet.jsx";
+import TimesheetReview from "./pages/timesheet/TimesheetReview.jsx";
 import Notifications from "./pages/topnav/Notifications.jsx";
 import Settings from "./pages/topnav/Settings.jsx";
 import MyProfile from "./pages/topnav/MyProfile.jsx";
@@ -42,6 +43,7 @@ export default function App() {
         <Route path="/payroll" element={<Payroll />} />
         <Route path="/billing" element={<Billing />} />
         <Route path="/timesheet" element={<Timesheet />} />
+        <Route path="/timesheet/:id" element={<TimesheetReview />} />
 
         <Route path="/employees" element={<Employees />} />
         <Route path="/employees/new" element={<EmployeeForm />} />
