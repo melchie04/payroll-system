@@ -241,13 +241,20 @@ export function FilterSelect({ label, children }) {
 }
 
 // SearchInput — search box with a leading icon.
-export function SearchInput({ placeholder }) {
+export function SearchInput({ label, placeholder }) {
   return (
-    <div className="input-group input-group-sm w-100">
-      <span className="input-group-text bg-white">
-        <i className="fas fa-search text-muted"></i>
-      </span>
-      <input type="text" className="form-control" placeholder={placeholder} />
+    <div className="w-100">
+      {label && (
+        <label className="form-label text-uppercase text-muted fw-semibold mb-1 d-block" style={{ fontSize: 11, letterSpacing: 0.5 }}>
+          {label}
+        </label>
+      )}
+      <div className="input-group input-group-sm w-100">
+        <span className="input-group-text bg-white">
+          <i className="fas fa-search text-muted"></i>
+        </span>
+        <input type="text" className="form-control" placeholder={placeholder} />
+      </div>
     </div>
   );
 }

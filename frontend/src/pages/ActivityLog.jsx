@@ -2,16 +2,6 @@ import { DataCard, Table, Tr, Td, FilterSelect, SearchInput, ExportMenu, PageHea
 import { activityLog } from "../assets/data/index.js";
 import { exportToCsv } from "../utils/exportToCsv.js";
 
-const moduleVariant = {
-  Payroll: "primary",
-  Billing: "success",
-  Timesheet: "warning",
-  Employees: "secondary",
-  Clients: "secondary",
-  Settings: "dark",
-  Auth: "danger",
-};
-
 // ActivityLog — filterable, exportable audit log table.
 export default function ActivityLog() {
   function handleExportAll() {
@@ -26,11 +16,7 @@ export default function ActivityLog() {
     <>
       <section>
         <div className="mt-4">
-          <PageHeader
-            title="Activity Log"
-            description="Track every action taken across your payroll system."
-            actions={<ExportMenu onExportCsv={handleExportAll} />}
-          />
+          <PageHeader title="Activity Log" description="Track every action taken across your payroll system." />
         </div>
       </section>
 
@@ -60,10 +46,7 @@ export default function ActivityLog() {
             </FilterSelect>
           </div>
           <div className="col-12 col-md-4">
-            <label className="form-label text-uppercase text-muted fw-semibold mb-1 d-block" style={{ fontSize: 11, letterSpacing: 0.5 }}>
-              Search Log
-            </label>
-            <SearchInput placeholder="Search activity" />
+            <SearchInput label="Search Log" placeholder="Search activity" />
           </div>
         </div>
       </section>
@@ -71,7 +54,7 @@ export default function ActivityLog() {
       <hr className="my-3 opacity-25" />
 
       <section className="mb-3 print-area">
-        <DataCard>
+        <DataCard title="Activity" action={<ExportMenu onExportCsv={handleExportAll} />}>
           <Table headers={["User", "Action", "Details", "Module", "Timestamp"]} itemLabel="activities">
             {activityLog.map((log) => (
               <Tr key={log.id}>
@@ -79,11 +62,7 @@ export default function ActivityLog() {
                 <Td>{log.action}</Td>
                 <Td className="text-muted">{log.detail}</Td>
                 <Td>
-                  <span
-                    className={`badge rounded-pill bg-${moduleVariant[log.module] || "secondary"} ${moduleVariant[log.module] === "warning" ? "text-dark" : ""}`}
-                  >
-                    {log.module}
-                  </span>
+                  <span className="badge rounded-pill bg-secondary bg-opacity-10 text-secondary fw-normal py-1">{log.module}</span>
                 </Td>
                 <Td className="text-nowrap">{log.timestamp}</Td>
               </Tr>
