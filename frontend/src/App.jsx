@@ -11,10 +11,10 @@ import Dashboard from "./pages/Dashboard.jsx";
 import Payroll from "./pages/Payroll.jsx";
 import Billing from "./pages/Billing.jsx";
 import Timesheet from "./pages/Timesheet.jsx";
-import Notifications from "./pages/Notifications.jsx";
-import Settings from "./pages/Settings.jsx";
-import MyProfile from "./pages/MyProfile.jsx";
-import ActivityLog from "./pages/ActivityLog.jsx";
+import Notifications from "./pages/topnav/Notifications.jsx";
+import Settings from "./pages/topnav/Settings.jsx";
+import MyProfile from "./pages/topnav/MyProfile.jsx";
+import ActivityLog from "./pages/topnav/ActivityLog.jsx";
 
 import Employees from "./pages/employees/Employees.jsx";
 import EmployeeProfile from "./pages/employees/EmployeeProfile.jsx";

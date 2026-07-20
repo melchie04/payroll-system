@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { DataCard, BtnPrimary, FormField, PageHeader } from "../components/ui/index.jsx";
-import { useCurrentUser } from "../context/CurrentUserContext.jsx";
+import { DataCard, BtnPrimary, FormField, PageHeader } from "../../components/ui/index.jsx";
+import { useCurrentUser } from "../../context/CurrentUserContext.jsx";
 
 const AVATAR_COLORS = ["#1a1a1a", "#0d6efd", "#198754", "#dc3545", "#997404", "#6f42c1"];
 

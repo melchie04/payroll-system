@@ -1,6 +1,6 @@
-import { DataCard, Table, Tr, Td, FilterSelect, SearchInput, ExportMenu, PageHeader } from "../components/ui/index.jsx";
-import { activityLog } from "../assets/data/index.js";
-import { exportToCsv } from "../utils/exportToCsv.js";
+import { DataCard, Table, Tr, Td, FilterSelect, SearchInput, ExportMenu, PageHeader } from "../../components/ui/index.jsx";
+import { activityLog } from "../../assets/data/index.js";
+import { exportToCsv } from "../../utils/exportToCsv.js";
 
 // ActivityLog — filterable, exportable audit log table.
 export default function ActivityLog() {
@@ -22,7 +22,7 @@ export default function ActivityLog() {
 
       <hr className="my-3 opacity-25" />
 
-      <section>
+      <section className="mb-4">
         <div className="row g-3 align-items-end">
           <div className="col-12 col-md-4">
             <FilterSelect label="Module">
@@ -50,8 +50,6 @@ export default function ActivityLog() {
           </div>
         </div>
       </section>
-
-      <hr className="my-3 opacity-25" />
 
       <section className="mb-3 print-area">
         <DataCard title="Activity" action={<ExportMenu onExportCsv={handleExportAll} />}>

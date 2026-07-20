@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { PageHeader, TabsNav } from "../components/ui/index.jsx";
-import { systemUsers, roles as initialRoles } from "../assets/data/index.js";
+import { PageHeader, TabsNav } from "../../components/ui/index.jsx";
+import { systemUsers, roles as initialRoles } from "../../assets/data/index.js";
 
-import { GeneralTab } from "../components/settings/GeneralTab.jsx";
-import { UsersTab } from "../components/settings/UsersTab.jsx";
-import { RolesTab } from "../components/settings/RolesTab.jsx";
-import { ChangePasswordTab } from "../components/settings/ChangePasswordTab.jsx";
+import { GeneralTab } from "../../components/settings/GeneralTab.jsx";
+import { UsersTab } from "../../components/settings/UsersTab.jsx";
+import { RolesTab } from "../../components/settings/RolesTab.jsx";
+import { ChangePasswordTab } from "../../components/settings/ChangePasswordTab.jsx";
 
 const TABS = [
   { key: "general", label: "General", icon: "fa-building" },

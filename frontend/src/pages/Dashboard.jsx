@@ -14,7 +14,7 @@ export default function Dashboard() {
 
       <hr className="my-3 opacity-25" />
 
-      <section>
+      <section className="mb-4">
         <div className="row g-3">
           {dashboardStats.map((s) => (
             <div className="col-xl-3 col-md-6" key={s.label}>
@@ -24,9 +24,7 @@ export default function Dashboard() {
         </div>
       </section>
 
-      <hr className="my-3 opacity-25" />
-
-      <section>
+      <section className="mb-4">
         <div className="row g-3">
           <div className="col-xl-5">
             <DataCard title="Payroll Status Overview">
@@ -164,8 +162,6 @@ export default function Dashboard() {
           </div>
         </div>
       </section>
-
-      <hr className="my-3 opacity-25" />
 
       <section className="mb-3">
         <DataCard title="Upcoming Payroll">

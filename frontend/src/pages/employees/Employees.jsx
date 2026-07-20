@@ -86,7 +86,7 @@ export default function Employees() {
 
       <hr className="my-3 opacity-25" />
 
-      <section>
+      <section className="mb-4">
         <div className="row g-3 align-items-end">
           <div className="col-12 col-md-4">
             <FilterSelect>
@@ -116,8 +116,6 @@ export default function Employees() {
           </div>
         </div>
       </section>
-
-      <hr className="my-3 opacity-25" />
 
       <section className="mb-3 print-area">
         <DataCard>

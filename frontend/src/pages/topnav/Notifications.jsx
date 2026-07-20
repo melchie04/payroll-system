@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { DataCard, BtnSecondary, PageHeader, TabsNav } from "../components/ui/index.jsx";
-import { useNotifications } from "../context/NotificationsContext.jsx";
+import { DataCard, BtnSecondary, PageHeader, TabsNav } from "../../components/ui/index.jsx";
+import { useNotifications } from "../../context/NotificationsContext.jsx";
 
 // Notifications — notification list with all/unread filters and mark-as-read actions.
 export default function Notifications() {

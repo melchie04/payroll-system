@@ -106,7 +106,7 @@ export default function Billing() {
 
       <hr className="my-3 opacity-25" />
 
-      <section>
+      <section className="mb-4">
         <div className="row g-3">
           {billingStats.map((s) => (
             <div className="col-xl-3 col-md-6" key={s.label}>
@@ -116,9 +116,7 @@ export default function Billing() {
         </div>
       </section>
 
-      <hr className="my-3 opacity-25" />
-
-      <section>
+      <section className="mb-4">
         <div className="row g-3 align-items-end">
           <div className="col-12 col-md-3">
             <FilterSelect label="Client">
@@ -156,8 +154,6 @@ export default function Billing() {
           </div>
         </div>
       </section>
-
-      <hr className="my-3 opacity-25" />
 
       <section className="mb-3 print-area">
         <DataCard>
