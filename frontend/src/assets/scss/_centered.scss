@@ -1,0 +1,57 @@
+// Centered full-screen layouts (auth and error pages).
+// Soft background blobs plus an entrance, so a bare centered page still feels
+// composed. Shared by AuthLayout and ErrorLayout so the two stay uniform.
+
+.centered-bg {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.centered-bg::before,
+.centered-bg::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.centered-bg::before {
+  width: 420px;
+  height: 420px;
+  top: -140px;
+  left: -120px;
+  background: #4f8cff;
+}
+
+.centered-bg::after {
+  width: 380px;
+  height: 380px;
+  bottom: -150px;
+  right: -110px;
+  background: #ff8a65;
+}
+
+@keyframes centeredFadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.centered-animate {
+  animation: centeredFadeInUp 0.5s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .centered-animate {
+    animation: none;
+  }
+}
