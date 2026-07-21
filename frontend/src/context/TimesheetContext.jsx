@@ -122,6 +122,32 @@ export function TimesheetProvider({ children }) {
     setFiles((prev) => prev.map((f) => (String(f.id) === String(id) ? { ...applyDraft(f, draft), status: "Approved" } : f)));
   }
 
+  // addSheets — files accepted by the upload queue enter the list as unread sheets,
+  // exactly as a sheet arriving from the scanner would. Nothing is known about them
+  // yet beyond the client they were uploaded under.
+  function addSheets(accepted) {
+    const created = accepted.map((item, i) => ({
+      id: `u${Date.now()}-${i}`,
+      name: item.name,
+      type: item.type,
+      source: item.source,
+      uploaded: new Date().toLocaleString([], { month: "short", day: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }),
+      status: "Processing",
+      client: item.client,
+      formCode: null,
+      previewUrl: item.previewUrl || null,
+      employee: { name: null, employeeId: null, matched: false, confidence: 0 },
+      half: null,
+      halfConfidence: 0,
+      period: { label: null, from: null, to: null, confidence: 0, confirmed: false },
+      signatures: { employee: false, supervisor: false, client: false },
+      handwritten: null,
+      rows: [],
+    }));
+    setFiles((prev) => [...created, ...prev]);
+    return created;
+  }
+
   function retryFile(id) {
     updateFile(id, { status: "Processing" });
   }
@@ -130,7 +156,7 @@ export function TimesheetProvider({ children }) {
     setFiles((prev) => prev.filter((f) => String(f.id) !== String(id)));
   }
 
-  const value = { files, getFileById, updateFile, saveFile, approveFile, retryFile, discardFile };
+  const value = { files, getFileById, updateFile, saveFile, approveFile, addSheets, retryFile, discardFile };
 
   return <TimesheetContext.Provider value={value}>{children}</TimesheetContext.Provider>;
 }

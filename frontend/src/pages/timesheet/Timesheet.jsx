@@ -94,7 +94,14 @@ export default function Timesheet() {
         </div>
       </section>
 
-      {tab === "upload" && <TimesheetUpload summary={extractionSummary} />}
+      {tab === "upload" && (
+        <TimesheetUpload
+          summary={extractionSummary}
+          client={client}
+          canUpload={client !== ALL_CLIENTS}
+          onOpenSheets={() => setTab("sheets")}
+        />
+      )}
 
       {tab === "sheets" && <TimesheetFiles files={visibleFiles} />}
 

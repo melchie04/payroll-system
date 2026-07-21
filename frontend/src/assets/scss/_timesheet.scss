@@ -99,6 +99,35 @@
   border-top: 1px solid var(--bs-border-color);
 }
 
+// Upload queue. The bar is a plain two-div meter rather than a component, since
+// the framework layer is purged down to what the app actually uses.
+.ts-progress {
+  height: 4px;
+  overflow: hidden;
+  border-radius: 2px;
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+.ts-progress-bar {
+  height: 100%;
+  background-color: #6c757d;
+  transition: width 0.15s linear;
+}
+
+.ts-progress-bar.is-error {
+  background-color: var(--bs-danger, #dc3545);
+}
+
+// Uploading is off until a client is chosen, so the target stops inviting a drop.
+.ts-dropzone.is-disabled {
+  cursor: not-allowed;
+  opacity: 0.75;
+}
+
+.ts-dropzone.is-disabled:hover {
+  border-color: var(--bs-border-color);
+}
+
 // Sheet Details fields. Label, control and note are one block with a fixed rhythm,
 // so a two-line note in one column cannot push its neighbour out of alignment.
 .ts-field {
@@ -191,6 +220,14 @@
 
 [data-bs-theme="dark"] .ts-dropzone.is-dragging {
   background-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-bs-theme="dark"] .ts-progress {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+[data-bs-theme="dark"] .ts-progress-bar {
+  background-color: #adb5bd;
 }
 
 [data-bs-theme="dark"] .ts-dropzone-icon {
