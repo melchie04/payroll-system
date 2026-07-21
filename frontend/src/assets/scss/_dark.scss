@@ -229,6 +229,20 @@
   --bs-alert-border-color: rgba(25, 135, 84, 0.35);
 }
 
+[data-bs-theme="dark"] #layoutSidenav_content .alert-warning,
+[data-bs-theme="dark"] .modal-content .alert-warning {
+  --bs-alert-bg: rgba(255, 193, 7, 0.16);
+  --bs-alert-color: #ffda6a;
+  --bs-alert-border-color: rgba(255, 193, 7, 0.35);
+}
+
+[data-bs-theme="dark"] #layoutSidenav_content .alert-secondary,
+[data-bs-theme="dark"] .modal-content .alert-secondary {
+  --bs-alert-bg: rgba(255, 255, 255, 0.06);
+  --bs-alert-color: var(--app-dark-text-muted);
+  --bs-alert-border-color: var(--app-dark-border);
+}
+
 [data-bs-theme="dark"] #layoutSidenav_content .alert-danger,
 [data-bs-theme="dark"] .modal-content .alert-danger {
   --bs-alert-bg: rgba(220, 53, 69, 0.16);

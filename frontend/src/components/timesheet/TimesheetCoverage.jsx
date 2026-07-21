@@ -1,9 +1,9 @@
-import { DataCard, Table, Tr, Td, Badge } from "../ui/index.jsx";
+import { DataCard, Table, Tr, Td, Badge, BtnSecondary } from "../ui/index.jsx";
 
 // TimesheetCoverage — which employees have approved days for the selected period.
 // A gap means paperwork is missing, not that the person did not work.
 // Rows arrive already scoped to the client and pay period chosen on the page.
-export function TimesheetCoverage({ rows = [], period }) {
+export function TimesheetCoverage({ rows = [], period, onUploadFor }) {
   const covered = rows.filter((r) => !r.gap).length;
   const gaps = rows.length - covered;
   const complete = covered === rows.length;
@@ -58,7 +58,7 @@ export function TimesheetCoverage({ rows = [], period }) {
         {rows.length === 0 ? (
           <div className="text-center text-muted py-5 small">No employees to show for this client and pay period.</div>
         ) : (
-          <Table headers={["Employee", "Client", "Sheets", "Days Covered", "Status"]} itemLabel="employees" pageSize={10} mobilePageSize={4}>
+          <Table headers={["Employee", "Client", "Sheets", "Days Covered", "Status", "Actions"]} itemLabel="employees" pageSize={10} mobilePageSize={4}>
             {rows.map((r) => (
               <Tr key={r.id}>
                 <Td bold>{r.employee}</Td>
@@ -74,6 +74,15 @@ export function TimesheetCoverage({ rows = [], period }) {
                 </Td>
                 <Td>
                   <Badge status={r.gap ? "Not Covered" : "Covered"} />
+                </Td>
+                <Td>
+                  {r.gap ? (
+                    <BtnSecondary title={`Upload the missing sheet for ${r.employee}`} onClick={() => onUploadFor?.(r)}>
+                      <i className="fas fa-cloud-arrow-up"></i> Upload
+                    </BtnSecondary>
+                  ) : (
+                    <span className="text-muted">&mdash;</span>
+                  )}
                 </Td>
               </Tr>
             ))}

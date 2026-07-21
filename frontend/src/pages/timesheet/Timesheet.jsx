@@ -15,6 +15,15 @@ function toTime(value) {
   return Number.isNaN(parsed) ? null : parsed;
 }
 
+// Whole days between today and a date, negative once it has passed.
+function daysUntil(dateText) {
+  const target = toTime(dateText);
+  if (target === null) return null;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return Math.round((target - today.getTime()) / 86400000);
+}
+
 // A sheet belongs to a pay period when the days it covers overlap that period.
 // A sheet whose period has not been read yet stays visible, because hiding it
 // would bury work that still has to be reviewed.
@@ -51,6 +60,26 @@ export default function Timesheet() {
 
   const needsReview = visibleFiles.filter((f) => f.status === "Needs Review").length;
   const gaps = visibleCoverage.filter((r) => r.gap).length;
+
+  // The cut-off only matters while something could still miss the run, so the
+  // notice appears when sheets are unapproved or an employee has a gap.
+  const unapproved = visibleFiles.filter((f) => f.status !== "Approved").length;
+  const daysToCutOff = daysUntil(activePeriod.cutOff);
+  const showCutOff = daysToCutOff !== null && (unapproved > 0 || gaps > 0);
+  const cutOffTone = daysToCutOff < 0 ? "danger" : daysToCutOff <= 3 ? "warning" : "secondary";
+  const cutOffHeadline =
+    daysToCutOff < 0
+      ? `Cut-off passed ${Math.abs(daysToCutOff)} day${Math.abs(daysToCutOff) === 1 ? "" : "s"} ago, on ${activePeriod.cutOff}`
+      : daysToCutOff === 0
+        ? `Cut-off is today, ${activePeriod.cutOff}`
+        : `Cut-off in ${daysToCutOff} day${daysToCutOff === 1 ? "" : "s"}, on ${activePeriod.cutOff}`;
+
+  // Uploading for a named employee starts on their client, so the sheet is filed
+  // against the right one without the operator changing the filter first.
+  function uploadFor(row) {
+    if (row?.client) setClient(row.client);
+    setTab("upload");
+  }
 
   const TABS = [
     { key: "upload", label: "Upload", icon: "fa-cloud-arrow-up" },
@@ -94,6 +123,21 @@ export default function Timesheet() {
         </div>
       </section>
 
+      {showCutOff && (
+        <div className={`alert alert-${cutOffTone} d-flex align-items-start gap-3 py-2 px-3 mb-4`}>
+          <i className="fas fa-clock flex-shrink-0 mt-1"></i>
+          <div style={{ fontSize: "0.8125rem" }}>
+            <strong>{cutOffHeadline}</strong>
+            <div style={{ fontSize: 11.5 }}>
+              {unapproved > 0 && `${unapproved} sheet${unapproved === 1 ? "" : "s"} not yet approved`}
+              {unapproved > 0 && gaps > 0 && " · "}
+              {gaps > 0 && `${gaps} employee${gaps === 1 ? "" : "s"} with missing days`}
+              {" — payroll collects approved days only."}
+            </div>
+          </div>
+        </div>
+      )}
+
       {tab === "upload" && (
         <TimesheetUpload
           summary={extractionSummary}
@@ -105,7 +149,7 @@ export default function Timesheet() {
 
       {tab === "sheets" && <TimesheetFiles files={visibleFiles} />}
 
-      {tab === "coverage" && <TimesheetCoverage rows={visibleCoverage} period={period} />}
+      {tab === "coverage" && <TimesheetCoverage rows={visibleCoverage} period={period} onUploadFor={uploadFor} />}
     </>
   );
 }

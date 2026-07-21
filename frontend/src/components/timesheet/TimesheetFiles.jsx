@@ -39,6 +39,18 @@ export function TimesheetFiles({ files = [] }) {
   // would show an empty Needs Attention card, so the reviewer is offered the batch.
   const clean = useMemo(() => visible.filter((f) => isSheetClean(f, allFiles)), [visible, allFiles]);
 
+  // The stored preview is the uploaded file itself, so the download is the original
+  // document rather than anything regenerated from it.
+  function downloadOriginal(f) {
+    if (!f.previewUrl) return;
+    const link = document.createElement("a");
+    link.href = f.previewUrl;
+    link.download = f.name;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  }
+
   function handleBulkApprove() {
     approveMany(clean.map((f) => f.id));
     setBulkConfirmed(false);
@@ -229,7 +241,13 @@ export function TimesheetFiles({ files = [] }) {
                             modalTarget: "timesheetRetryModal",
                             onClick: () => setRetryTarget(f),
                           },
-                          { label: "Download original", icon: "fa-download" },
+                          {
+                            label: "Download original",
+                            icon: "fa-download",
+                            disabled: !f.previewUrl,
+                            title: f.previewUrl ? `Save ${f.name}` : "The original file is not stored for this sheet",
+                            onClick: () => downloadOriginal(f),
+                          },
                           { divider: true },
                           {
                             label: "Discard sheet",

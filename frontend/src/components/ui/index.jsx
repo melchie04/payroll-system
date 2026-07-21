@@ -321,10 +321,12 @@ export function ActionsMenu({ items }) {
             <li key={item.label}>
               <button
                 type="button"
-                className={`dropdown-item d-flex align-items-center gap-2 py-2 ${item.danger ? "text-danger" : ""}`}
+                className={`dropdown-item d-flex align-items-center gap-2 py-2 ${item.danger ? "text-danger" : ""} ${item.disabled ? "disabled" : ""}`}
                 onClick={item.onClick}
-                data-bs-toggle={item.modalTarget ? "modal" : undefined}
-                data-bs-target={item.modalTarget ? `#${item.modalTarget}` : undefined}
+                disabled={item.disabled}
+                title={item.title}
+                data-bs-toggle={item.modalTarget && !item.disabled ? "modal" : undefined}
+                data-bs-target={item.modalTarget && !item.disabled ? `#${item.modalTarget}` : undefined}
               >
                 {item.icon && <i className={`fas ${item.icon} fa-fw opacity-75`}></i>}
                 <span className="text-nowrap">{item.label}</span>

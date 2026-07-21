@@ -254,9 +254,11 @@ function sheetRows(half, month, year, pattern, clean = false) {
 
 const weekdays = [1, 1, 1, 1, 1, 0, 0];
 
+// cutOff is the last day a sheet can be approved and still reach the run. Sheets
+// approved after it are simply missing from that payroll.
 export const payPeriods = [
-  { label: "Jun 12 – Jun 25, 2026", from: "Jun 12, 2026", to: "Jun 25, 2026" },
-  { label: "May 26 – Jun 11, 2026", from: "May 26, 2026", to: "Jun 11, 2026" },
+  { label: "Jun 12 – Jun 25, 2026", from: "Jun 12, 2026", to: "Jun 25, 2026", cutOff: "Jun 27, 2026" },
+  { label: "May 26 – Jun 11, 2026", from: "May 26, 2026", to: "Jun 11, 2026", cutOff: "Jun 13, 2026" },
 ];
 
 // Period Covered as it is written on a sheet. A sheet always covers one half of a
