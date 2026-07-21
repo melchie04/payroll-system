@@ -84,6 +84,90 @@ export function findDuplicateSheets(files, target, draft) {
   });
 }
 
+// Minutes between two "HH:MM" strings, or 0 when either is blank.
+function span(from, to) {
+  if (!from || !to) return 0;
+  const [fh, fm] = from.split(":").map(Number);
+  const [th, tm] = to.split(":").map(Number);
+  const mins = th * 60 + tm - (fh * 60 + fm);
+  return mins > 0 ? mins : 0;
+}
+
+function hours(mins) {
+  return Math.round((mins / 60) * 100) / 100;
+}
+
+// Recomputes a row from its times rather than reading the handwritten totals.
+export function rowTotals(row) {
+  const regular = span(row.amIn, row.amOut) + span(row.pmIn, row.pmOut);
+  const overtime = span(row.otIn, row.otOut);
+  return { regular: hours(regular), overtime: hours(overtime), worked: regular > 0 };
+}
+
+// sheetTotals — the sheet re-added from its daily times. One implementation, so a
+// sheet approved from the list and one approved from the review screen are judged
+// by exactly the same arithmetic.
+export function sheetTotals(rows = []) {
+  return rows.reduce(
+    (acc, r) => {
+      const t = rowTotals(r);
+      return {
+        days: acc.days + (t.worked ? 1 : 0),
+        regular: acc.regular + t.regular,
+        overtime: acc.overtime + t.overtime,
+        late: acc.late + (r.late || 0),
+      };
+    },
+    { days: 0, regular: 0, overtime: 0, late: 0 },
+  );
+}
+
+// Where the recomputed totals disagree with what was written on the form.
+export function sheetMismatches(rows = [], handwritten) {
+  const computed = sheetTotals(rows);
+  const hw = handwritten || {};
+  return [
+    computed.days !== hw.totalDays && { label: "Total Days", computed: computed.days, written: hw.totalDays },
+    Math.round(computed.overtime) !== hw.regOt && { label: "Reg. OT", computed: Math.round(computed.overtime), written: hw.regOt },
+    computed.late !== hw.totalLate && { label: "Total Late", computed: `${computed.late} mins`, written: `${hw.totalLate} mins` },
+  ].filter(Boolean);
+}
+
+// sheetFindings — everything the review screen would raise about a sheet, without
+// opening it. The one thing left out is the Period Covered tick, because that is a
+// person's confirmation rather than something read off the page; approving in bulk
+// asks for it once, over the whole batch.
+export function sheetFindings(file, allFiles = []) {
+  if (!file) return ["Sheet not found"];
+  const findings = [];
+
+  if (file.status !== "Needs Review") findings.push("Not awaiting review");
+  if (!file.employee?.name) findings.push("Employee not identified");
+  else if ((file.employee.confidence || 0) < 0.85) findings.push("Employee name read with low confidence");
+
+  const periodCheck = checkPeriodHalf(file.period?.label, file.half);
+  if (periodCheck.status !== "ok") findings.push("Period Covered and Sheet Half do not agree");
+
+  const signatures = file.signatures || {};
+  if (!signatures.employee) findings.push("Employee signature not detected");
+  if (!signatures.supervisor) findings.push("Supervisor signature not detected");
+  if (!signatures.client) findings.push("Client signature not detected");
+
+  if (findDuplicateSheets(allFiles, file, null).length > 0) findings.push("Days already covered by another sheet");
+  if (sheetMismatches(file.rows, file.handwritten).length > 0) findings.push("Totals disagree with the handwritten figures");
+
+  const lowConfidence = (file.rows || []).reduce((n, r) => n + (r.lowConfidence ? r.lowConfidence.length : 0), 0);
+  if (lowConfidence > 0) findings.push(`${lowConfidence} cells read with low confidence`);
+  if ((file.rows || []).length === 0) findings.push("Nothing was read from the sheet");
+
+  return findings;
+}
+
+// A clean sheet is one with nothing flagged at all, not merely nothing blocking.
+export function isSheetClean(file, allFiles = []) {
+  return sheetFindings(file, allFiles).length === 0;
+}
+
 // Folds what the review screen holds in its fields back onto the stored sheet.
 // The screen works with flat values; a sheet keeps the employee and the period
 // as objects, so the confidence the OCR reported survives an operator's edit.
@@ -115,6 +199,20 @@ export function TimesheetProvider({ children }) {
   // saveFile — keeps a reviewer's corrections without approving the sheet.
   function saveFile(id, draft) {
     setFiles((prev) => prev.map((f) => (String(f.id) === String(id) ? applyDraft(f, draft) : f)));
+  }
+
+  // approveMany — files a batch of sheets that had nothing flagged. Period Covered
+  // is marked confirmed because the operator confirmed the batch on screen.
+  function approveMany(ids) {
+    const wanted = new Set(ids.map(String));
+    const at = new Date().toISOString();
+    setFiles((prev) =>
+      prev.map((f) =>
+        wanted.has(String(f.id))
+          ? { ...f, status: "Approved", period: { ...f.period, confirmed: true }, savedAt: at }
+          : f,
+      ),
+    );
   }
 
   // approveFile — saves the same corrections, then files the sheet.
@@ -176,7 +274,7 @@ export function TimesheetProvider({ children }) {
     });
   }
 
-  const value = { files, getFileById, updateFile, saveFile, approveFile, addSheets, rejectFile, retryFile, discardFile };
+  const value = { files, getFileById, updateFile, saveFile, approveFile, approveMany, addSheets, rejectFile, retryFile, discardFile };
 
   return <TimesheetContext.Provider value={value}>{children}</TimesheetContext.Provider>;
 }

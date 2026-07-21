@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { DataCard, Table, Tr, Td, Badge, BtnPrimary, BtnSecondary, BtnDanger, Modal, PageHeader, TabsNav } from "../../components/ui/index.jsx";
-import { useTimesheets, checkPeriodHalf, findDuplicateSheets } from "../../context/TimesheetContext.jsx";
+import { useTimesheets, checkPeriodHalf, findDuplicateSheets, rowTotals, sheetTotals, sheetMismatches } from "../../context/TimesheetContext.jsx";
 import { clientNames, employeeNames, sheetPeriods } from "../../assets/data/index.js";
 
 // Suggestions for the sheet fields, taken from the same lists the rest of the app
@@ -28,25 +28,6 @@ const REJECT_REASONS = [
   "Handwriting cannot be read reliably",
 ];
 
-// Minutes between two "HH:MM" strings, or 0 when either is blank.
-function span(from, to) {
-  if (!from || !to) return 0;
-  const [fh, fm] = from.split(":").map(Number);
-  const [th, tm] = to.split(":").map(Number);
-  const mins = th * 60 + tm - (fh * 60 + fm);
-  return mins > 0 ? mins : 0;
-}
-
-function hours(mins) {
-  return Math.round((mins / 60) * 100) / 100;
-}
-
-// Recomputes a row from its times rather than reading the handwritten totals.
-function rowTotals(row) {
-  const regular = span(row.amIn, row.amOut) + span(row.pmIn, row.pmOut);
-  const overtime = span(row.otIn, row.otOut);
-  return { regular: hours(regular), overtime: hours(overtime), worked: regular > 0 };
-}
 
 // TimesheetReview — confirms what was read off one sheet before it is approved.
 export default function TimesheetReview() {
@@ -194,25 +175,9 @@ function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, onReject 
     document.getElementById("timesheetUnsavedTrigger")?.click();
   }
 
-  const computed = rows.reduce(
-    (acc, r) => {
-      const t = rowTotals(r);
-      return {
-        days: acc.days + (t.worked ? 1 : 0),
-        regular: acc.regular + t.regular,
-        overtime: acc.overtime + t.overtime,
-        late: acc.late + (r.late || 0),
-      };
-    },
-    { days: 0, regular: 0, overtime: 0, late: 0 },
-  );
-
+  const computed = sheetTotals(rows);
   const hw = file.handwritten || {};
-  const mismatches = [
-    computed.days !== hw.totalDays && { label: "Total Days", computed: computed.days, written: hw.totalDays },
-    Math.round(computed.overtime) !== hw.regOt && { label: "Reg. OT", computed: Math.round(computed.overtime), written: hw.regOt },
-    computed.late !== hw.totalLate && { label: "Total Late", computed: `${computed.late} mins`, written: `${hw.totalLate} mins` },
-  ].filter(Boolean);
+  const mismatches = sheetMismatches(rows, file.handwritten);
 
   const lowConfidenceCells = rows.reduce((n, r) => n + (r.lowConfidence ? r.lowConfidence.length : 0), 0);
 

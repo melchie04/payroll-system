@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { DataCard, Table, Tr, Td, Badge, BtnSecondary, BtnDanger, Modal, ActionsMenu, FilterSelect, SearchInput } from "../ui/index.jsx";
-import { useTimesheets, findDuplicateSheets } from "../../context/TimesheetContext.jsx";
+import { useTimesheets, findDuplicateSheets, isSheetClean, sheetTotals } from "../../context/TimesheetContext.jsx";
 
 const ALL_STATUSES = "All Statuses";
 const ALL_SOURCES = "All Sources";
@@ -13,7 +13,7 @@ const SOURCE_OPTIONS = ["Scan", "Photo"];
 // and is narrowed further by the three filters below.
 export function TimesheetFiles({ files = [] }) {
   const navigate = useNavigate();
-  const { files: allFiles, retryFile, discardFile } = useTimesheets();
+  const { files: allFiles, retryFile, discardFile, approveMany } = useTimesheets();
 
   const [status, setStatus] = useState(ALL_STATUSES);
   const [source, setSource] = useState(ALL_SOURCES);
@@ -21,6 +21,7 @@ export function TimesheetFiles({ files = [] }) {
 
   const [retryTarget, setRetryTarget] = useState(null);
   const [discardTarget, setDiscardTarget] = useState(null);
+  const [bulkConfirmed, setBulkConfirmed] = useState(false);
 
   const visible = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -33,6 +34,16 @@ export function TimesheetFiles({ files = [] }) {
   }, [files, status, source, search]);
 
   const filtered = visible.length !== files.length;
+
+  // Sheets awaiting review with nothing flagged on them at all. Opening each one
+  // would show an empty Needs Attention card, so the reviewer is offered the batch.
+  const clean = useMemo(() => visible.filter((f) => isSheetClean(f, allFiles)), [visible, allFiles]);
+
+  function handleBulkApprove() {
+    approveMany(clean.map((f) => f.id));
+    setBulkConfirmed(false);
+    document.getElementById("timesheetBulkClose")?.click();
+  }
 
   // Sheets that carry days already covered elsewhere for the same person. Checked
   // against every sheet on file, not just the ones the filters are showing, so
@@ -119,100 +130,183 @@ export function TimesheetFiles({ files = [] }) {
               </BtnSecondary>
             </div>
           ) : (
-            <Table headers={["Sheet", "Uploaded", "Employee", "Sheet Period", "Status", "Actions"]} itemLabel="sheets" pageSize={10} mobilePageSize={4}>
-              {visible.map((f) => (
-                <Tr key={f.id}>
-                  <Td>
-                    <div className="fw-semibold text-truncate" style={{ maxWidth: 440 }} title={f.name}>
-                      {f.name}
+            <>
+              {clean.length > 0 && (
+                <div className="alert alert-success d-flex flex-column flex-sm-row align-items-sm-center gap-2 gap-sm-3 mx-3 mt-3 mb-0 py-2 px-3">
+                  <i className="fas fa-circle-check flex-shrink-0"></i>
+                  <div className="flex-grow-1" style={{ fontSize: "0.8125rem" }}>
+                    <strong>
+                      {clean.length} sheet{clean.length === 1 ? "" : "s"} with nothing flagged
+                    </strong>
+                    <div style={{ fontSize: 11.5 }}>
+                      Names matched, signatures present, totals agree with the handwritten figures.
                     </div>
-                    {f.rejection && (
-                      <div
-                        className="text-danger d-flex align-items-center gap-1 text-truncate"
-                        style={{ fontSize: 11.5, maxWidth: 440 }}
-                        title={[f.rejection.reasons.join(" · "), f.rejection.note].filter(Boolean).join(" — ")}
-                      >
-                        <i className="fas fa-rotate-left flex-shrink-0"></i>
-                        <span className="text-truncate">
-                          {f.rejection.reasons[0] || f.rejection.note || "Sent back to be re-scanned"}
-                          {f.rejection.reasons.length > 1 && ` +${f.rejection.reasons.length - 1} more`}
-                        </span>
+                  </div>
+                  <BtnSecondary
+                    className="flex-shrink-0"
+                    data-bs-toggle="modal"
+                    data-bs-target="#timesheetBulkModal"
+                    onClick={() => setBulkConfirmed(false)}
+                  >
+                    <i className="fas fa-circle-check"></i> Review and Approve
+                  </BtnSecondary>
+                </div>
+              )}
+
+              <Table headers={["Sheet", "Uploaded", "Employee", "Sheet Period", "Status", "Actions"]} itemLabel="sheets" pageSize={10} mobilePageSize={4}>
+                {visible.map((f) => (
+                  <Tr key={f.id}>
+                    <Td>
+                      <div className="fw-semibold text-truncate" style={{ maxWidth: 440 }} title={f.name}>
+                        {f.name}
                       </div>
-                    )}
-                    {duplicates.has(f.id) && (
-                      <div
-                        className="text-warning d-flex align-items-center gap-1"
-                        style={{ fontSize: 11.5 }}
-                        title={`Same days as ${duplicates
-                          .get(f.id)
-                          .map((d) => d.name)
-                          .join(", ")}`}
-                      >
-                        <i className="fas fa-clone"></i>
-                        Duplicate days
-                      </div>
-                    )}
-                  </Td>
+                      {f.rejection && (
+                        <div
+                          className="text-danger d-flex align-items-center gap-1 text-truncate"
+                          style={{ fontSize: 11.5, maxWidth: 440 }}
+                          title={[f.rejection.reasons.join(" · "), f.rejection.note].filter(Boolean).join(" — ")}
+                        >
+                          <i className="fas fa-rotate-left flex-shrink-0"></i>
+                          <span className="text-truncate">
+                            {f.rejection.reasons[0] || f.rejection.note || "Sent back to be re-scanned"}
+                            {f.rejection.reasons.length > 1 && ` +${f.rejection.reasons.length - 1} more`}
+                          </span>
+                        </div>
+                      )}
+                      {duplicates.has(f.id) && (
+                        <div
+                          className="text-warning d-flex align-items-center gap-1"
+                          style={{ fontSize: 11.5 }}
+                          title={`Same days as ${duplicates
+                            .get(f.id)
+                            .map((d) => d.name)
+                            .join(", ")}`}
+                        >
+                          <i className="fas fa-clone"></i>
+                          Duplicate days
+                        </div>
+                      )}
+                    </Td>
 
-                  <Td>{f.uploaded}</Td>
+                    <Td>{f.uploaded}</Td>
 
-                  <Td>
-                    {f.employee.name ? (
-                      <div className="fw-semibold">{f.employee.name}</div>
-                    ) : (
-                      <span className="text-muted">Not identified yet</span>
-                    )}
-                  </Td>
+                    <Td>
+                      {f.employee.name ? (
+                        <div className="fw-semibold">{f.employee.name}</div>
+                      ) : (
+                        <span className="text-muted">Not identified yet</span>
+                      )}
+                    </Td>
 
-                  <Td>{f.period.label || <span className="text-muted">&mdash;</span>}</Td>
+                    <Td>{f.period.label || <span className="text-muted">&mdash;</span>}</Td>
 
-                  <Td>
-                    <Badge status={f.status} />
-                  </Td>
+                    <Td>
+                      <Badge status={f.status} />
+                    </Td>
 
-                  <Td>
-                    <ActionsMenu
-                      items={[
-                        f.status === "Needs Review" && {
-                          label: "Review sheet",
-                          icon: "fa-list-check",
-                          onClick: () => navigate(`/timesheet/${f.id}`),
-                        },
-                        (f.status === "Approved" || f.status === "Rejected") && {
-                          label: "View sheet",
-                          icon: "fa-eye",
-                          onClick: () => navigate(`/timesheet/${f.id}`),
-                        },
-                        f.status === "Rejected" && {
-                          label: "Read again",
-                          icon: "fa-rotate-left",
-                          modalTarget: "timesheetRetryModal",
-                          onClick: () => setRetryTarget(f),
-                        },
-                        f.status === "Failed" && {
-                          label: "Retry extraction",
-                          icon: "fa-rotate-left",
-                          modalTarget: "timesheetRetryModal",
-                          onClick: () => setRetryTarget(f),
-                        },
-                        { label: "Download original", icon: "fa-download" },
-                        { divider: true },
-                        {
-                          label: "Discard sheet",
-                          icon: "fa-trash",
-                          danger: true,
-                          modalTarget: "timesheetDiscardModal",
-                          onClick: () => setDiscardTarget(f),
-                        },
-                      ].filter(Boolean)}
-                    />
-                  </Td>
-                </Tr>
-              ))}
-            </Table>
+                    <Td>
+                      <ActionsMenu
+                        items={[
+                          f.status === "Needs Review" && {
+                            label: "Review sheet",
+                            icon: "fa-list-check",
+                            onClick: () => navigate(`/timesheet/${f.id}`),
+                          },
+                          (f.status === "Approved" || f.status === "Rejected") && {
+                            label: "View sheet",
+                            icon: "fa-eye",
+                            onClick: () => navigate(`/timesheet/${f.id}`),
+                          },
+                          f.status === "Rejected" && {
+                            label: "Read again",
+                            icon: "fa-rotate-left",
+                            modalTarget: "timesheetRetryModal",
+                            onClick: () => setRetryTarget(f),
+                          },
+                          f.status === "Failed" && {
+                            label: "Retry extraction",
+                            icon: "fa-rotate-left",
+                            modalTarget: "timesheetRetryModal",
+                            onClick: () => setRetryTarget(f),
+                          },
+                          { label: "Download original", icon: "fa-download" },
+                          { divider: true },
+                          {
+                            label: "Discard sheet",
+                            icon: "fa-trash",
+                            danger: true,
+                            modalTarget: "timesheetDiscardModal",
+                            onClick: () => setDiscardTarget(f),
+                          },
+                        ].filter(Boolean)}
+                      />
+                    </Td>
+                  </Tr>
+                ))}
+              </Table>
+            </>
           )}
         </DataCard>
       </section>
+
+      <Modal
+        id="timesheetBulkModal"
+        title={`Approve ${clean.length} Sheet${clean.length === 1 ? "" : "s"}`}
+        footer={
+          <>
+            <BtnSecondary id="timesheetBulkClose" data-bs-dismiss="modal">
+              Cancel
+            </BtnSecondary>
+            <button
+              type="button"
+              className="btn btn-dark btn-sm d-inline-flex align-items-center gap-2"
+              disabled={!bulkConfirmed || clean.length === 0}
+              onClick={handleBulkApprove}
+            >
+              <i className="fas fa-circle-check"></i> Approve {clean.length} Sheet{clean.length === 1 ? "" : "s"}
+            </button>
+          </>
+        }
+      >
+        <p className="text-muted small mb-3">
+          Nothing was flagged on these sheets. Check the period on each one against the paper before approving — it is the only line that says
+          which month the days belong to.
+        </p>
+
+        <div className="border rounded-3 overflow-hidden mb-3">
+          <div className="list-group list-group-flush">
+            {clean.map((f) => {
+              const totals = sheetTotals(f.rows);
+              return (
+                <div className="list-group-item px-3 py-2" key={f.id}>
+                  <div className="d-flex flex-wrap align-items-baseline gap-2">
+                    <span className="fw-semibold" style={{ fontSize: "0.8125rem" }}>
+                      {f.employee.name}
+                    </span>
+                    <span className="text-muted" style={{ fontSize: 11.5 }}>
+                      {f.client}
+                    </span>
+                  </div>
+                  <div className="text-muted" style={{ fontSize: 11.5 }}>
+                    {f.period.label} · {totals.days} days · {totals.regular} hrs
+                    {totals.late > 0 && ` · ${totals.late} mins late`}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        <label className="d-flex align-items-center gap-2 mb-0" style={{ cursor: "pointer" }}>
+          <input
+            className="form-check-input flex-shrink-0 mt-0"
+            type="checkbox"
+            checked={bulkConfirmed}
+            onChange={(e) => setBulkConfirmed(e.target.checked)}
+          />
+          <span style={{ fontSize: "0.8125rem" }}>I have checked the Period Covered on each sheet above</span>
+        </label>
+      </Modal>
 
       <Modal
         id="timesheetRetryModal"

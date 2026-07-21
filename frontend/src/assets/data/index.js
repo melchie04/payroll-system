@@ -229,7 +229,9 @@ export const invoices = [
 
 // Timesheet intake. One sheet covers one employee and one half-month, so a pay
 // period that straddles the 15th is fed by more than one sheet.
-function sheetRows(half, month, year, pattern) {
+// clean produces a sheet the OCR read without hesitation, used for the sheets that
+// come through with nothing flagged at all.
+function sheetRows(half, month, year, pattern, clean = false) {
   const start = half === "1-15" ? 1 : 16;
   const count = half === "1-15" ? 15 : 16;
   return Array.from({ length: count }, (_, i) => {
@@ -245,7 +247,7 @@ function sheetRows(half, month, year, pattern) {
       otIn: shift && day % 7 === 0 ? "17:00" : "",
       otOut: shift && day % 7 === 0 ? "19:00" : "",
       late: shift && day % 5 === 0 ? 15 : 0,
-      lowConfidence: shift && (day % 4 === 0 ? ["amIn"] : day % 6 === 0 ? ["pmOut"] : []),
+      lowConfidence: clean ? [] : shift && (day % 4 === 0 ? ["amIn"] : day % 6 === 0 ? ["pmOut"] : []),
     };
   });
 }
@@ -432,6 +434,57 @@ export const timesheetFiles = [
     signatures: { employee: true, supervisor: true, client: false },
     handwritten: { totalDays: 11, regOt: 2, nightDiff: 0, totalLate: 30 },
     rows: sheetRows("16-31", "Jun", 2026, weekdays),
+  },
+  {
+    id: 13,
+    name: "Timesheet_Acme_JohnDoe_Jun16-30.pdf",
+    type: "pdf",
+    source: "Scan",
+    uploaded: "Jun 16, 2026 09:18 AM",
+    status: "Needs Review",
+    client: "Acme Corp",
+    formCode: "SSI.17-015",
+    employee: { name: "John Doe", employeeId: 1, matched: true, confidence: 0.98 },
+    half: "16-31",
+    halfConfidence: 0.99,
+    period: { label: "Jun 16 – Jun 30, 2026", from: "Jun 16, 2026", to: "Jun 30, 2026", confidence: 0.97, confirmed: false },
+    signatures: { employee: true, supervisor: true, client: true },
+    handwritten: { totalDays: 12, regOt: 0, nightDiff: 0, totalLate: 45 },
+    rows: sheetRows("16-31", "Jun", 2026, weekdays, true),
+  },
+  {
+    id: 14,
+    name: "Timesheet_Initech_MichaelBrown_Jun16-30.pdf",
+    type: "pdf",
+    source: "Scan",
+    uploaded: "Jun 16, 2026 10:55 AM",
+    status: "Needs Review",
+    client: "Initech",
+    formCode: "SSI.17-015",
+    employee: { name: "Michael Brown", employeeId: 3, matched: true, confidence: 0.97 },
+    half: "16-31",
+    halfConfidence: 0.99,
+    period: { label: "Jun 16 – Jun 30, 2026", from: "Jun 16, 2026", to: "Jun 30, 2026", confidence: 0.96, confirmed: false },
+    signatures: { employee: true, supervisor: true, client: true },
+    handwritten: { totalDays: 12, regOt: 0, nightDiff: 0, totalLate: 45 },
+    rows: sheetRows("16-31", "Jun", 2026, weekdays, true),
+  },
+  {
+    id: 15,
+    name: "Timesheet_Initech_DanielLee_Jun1-15.pdf",
+    type: "pdf",
+    source: "Scan",
+    uploaded: "Jun 16, 2026 10:58 AM",
+    status: "Needs Review",
+    client: "Initech",
+    formCode: "SSI.17-014",
+    employee: { name: "Daniel Lee", employeeId: 7, matched: true, confidence: 0.95 },
+    half: "1-15",
+    halfConfidence: 0.99,
+    period: { label: "Jun 1 – Jun 15, 2026", from: "Jun 1, 2026", to: "Jun 15, 2026", confidence: 0.94, confirmed: false },
+    signatures: { employee: true, supervisor: true, client: true },
+    handwritten: { totalDays: 11, regOt: 0, nightDiff: 0, totalLate: 45 },
+    rows: sheetRows("1-15", "Jun", 2026, weekdays, true),
   },
   {
     id: 11,
