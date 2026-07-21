@@ -34,8 +34,8 @@ export default function Timesheet() {
       <section>
         <div className="mt-4">
           <PageHeader
-            title="Timesheet Upload / OCR Scan"
-            description="Upload scanned timesheets, confirm what was read, and file the hours against each employee."
+            title="Timesheet Upload"
+            description="OCR-scan uploaded sheets, confirm what was read, and file the hours per employee."
           />
         </div>
       </section>

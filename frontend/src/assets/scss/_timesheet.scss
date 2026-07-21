@@ -151,7 +151,9 @@
 }
 
 .ts-doc {
-  min-height: 320px;
+  // Same base height as the upload dropzone, so the Sheet Details tab sits at
+  // the same footprint as the Upload tab; it still grows with the right column.
+  min-height: 240px;
   border: 1px dashed var(--bs-border-color);
   background-color: rgba(0, 0, 0, 0.02);
 }
