@@ -93,11 +93,10 @@ function TimesheetReviewForm({ file, onBack, onApprove }) {
     !file.signatures.client && "The client signature box appears to be empty.",
   ].filter(Boolean);
 
-  // With the attention card alongside them, the row carries three columns instead of two.
+  // The scanned sheet holds the left column; the attention card and the details
+  // stack in the right one, so their widths no longer depend on each other.
   const hasAttention = blockers.length > 0 || mismatches.length > 0 || lowConfidenceCells > 0;
   const attentionCount = blockers.length + mismatches.length + (lowConfidenceCells > 0 ? 1 : 0);
-  const docCol = hasAttention ? "col-12 col-lg-3" : "col-12 col-lg-5";
-  const detailCol = hasAttention ? "col-12 col-lg-5" : "col-12 col-lg-7";
 
   function updateCell(day, field, value) {
     setRows((prev) => prev.map((r) => (r.day === day ? { ...r, [field]: value } : r)));
@@ -119,8 +118,12 @@ function TimesheetReviewForm({ file, onBack, onApprove }) {
             <i className="fas fa-arrow-left"></i> Back
           </button>
           <PageHeader
-            title={<span style={{ overflowWrap: "anywhere" }}>{file.name}</span>}
-            description={`Form ${file.formCode} · ${client}`}
+            title="Timesheet Review"
+            description={
+              <span style={{ overflowWrap: "anywhere" }}>
+                {file.name} · Form {file.formCode} · {client}
+              </span>
+            }
             actions={<Badge status={file.status} />}
           />
         </div>
@@ -130,7 +133,7 @@ function TimesheetReviewForm({ file, onBack, onApprove }) {
 
       <section className="mb-4">
         <div className="row g-3">
-          <div className={docCol}>
+          <div className="col-12 col-lg-5">
             <DataCard
               title="Scanned Sheet"
               action={
@@ -139,8 +142,8 @@ function TimesheetReviewForm({ file, onBack, onApprove }) {
                 </span>
               }
             >
-              <div className="card-body">
-                <div className="ts-doc d-flex flex-column align-items-center justify-content-center text-muted rounded-3">
+              <div className="card-body d-flex flex-column">
+                <div className="ts-doc flex-grow-1 d-flex flex-column align-items-center justify-content-center text-muted rounded-3">
                   <i className="fas fa-file-lines mb-2" style={{ fontSize: 32 }}></i>
                   <div className="small">Document preview</div>
                   <div style={{ fontSize: 11.5 }}>Selecting a field highlights it here</div>
@@ -157,144 +160,151 @@ function TimesheetReviewForm({ file, onBack, onApprove }) {
             </DataCard>
           </div>
 
-          <div className={detailCol}>
-            <DataCard title="Sheet Details">
-              <div className="card-body">
-                <SectionHeading>Who and when</SectionHeading>
+          <div className="col-12 col-lg-7 d-flex flex-column gap-3">
+            {hasAttention && (
+              <div>
+                <DataCard
+                  title="Needs Attention"
+                  action={<span className="badge rounded-pill status-badge status-badge-warning">{attentionCount}</span>}
+                >
+                  <div className="card-body">
+                    {lowConfidenceCells > 0 && (
+                      <div
+                        className={`alert alert-warning py-2 small d-flex align-items-start gap-2 ${
+                          mismatches.length > 0 || blockers.length > 0 ? "mb-3" : "mb-0"
+                        }`}
+                      >
+                        <i className="fas fa-triangle-exclamation mt-1"></i>
+                        <span>
+                          <strong>{lowConfidenceCells} cells</strong> were read with low confidence. They are highlighted in the grid below.
+                        </span>
+                      </div>
+                    )}
 
-                <div className="row g-3">
-                  <div className="col-12 col-md-6">
-                    <SuggestField
-                      label="Employee"
-                      value={employee}
-                      onChange={setEmployee}
-                      options={EMPLOYEE_OPTIONS}
-                      disabled={readOnly}
-                      hint={`Read with ${Math.round(file.employee.confidence * 100)}% confidence`}
-                    />
-                  </div>
-
-                  <div className="col-12 col-md-6">
-                    <SuggestField
-                      label="Client"
-                      value={client}
-                      onChange={setClient}
-                      options={CLIENT_OPTIONS}
-                      disabled={readOnly}
-                      hint="From the upload batch"
-                    />
-                  </div>
-
-                  <div className="col-12 col-md-6">
-                    <SuggestField
-                      label="Period Covered"
-                      value={period}
-                      onChange={setPeriod}
-                      options={PERIOD_OPTIONS}
-                      disabled={readOnly}
-                      flagged={!periodConfirmed}
-                      hint={readOnly ? "Confirmed against the sheet" : undefined}
-                    >
-                      {!readOnly && (
-                        <div className="form-check mt-2">
-                          <input
-                            className="form-check-input"
-                            type="checkbox"
-                            id="confirm-period"
-                            checked={periodConfirmed}
-                            onChange={(e) => setPeriodConfirmed(e.target.checked)}
-                          />
-                          <label className="form-check-label ts-field-hint" htmlFor="confirm-period">
-                            Checked against the sheet
-                          </label>
+                    <div className="row g-3">
+                      {mismatches.length > 0 && (
+                        <div className={blockers.length > 0 ? "col-12 col-md-5" : "col-12"}>
+                          <SectionHeading>Totals do not match the sheet</SectionHeading>
+                          <div className={mismatches.length > 1 && blockers.length === 0 ? "row g-2" : "d-flex flex-column gap-2"}>
+                            {mismatches.map((m) => (
+                              <div className={mismatches.length > 1 && blockers.length === 0 ? "col-12 col-sm-6 col-xl-4" : ""} key={m.label}>
+                                <div className="border rounded-3 bg-light py-1 px-3 h-100 d-flex align-items-center justify-content-between gap-3">
+                                  <div style={{ minWidth: 0 }}>
+                                    <div className="fw-semibold" style={{ fontSize: "0.8125rem" }}>
+                                      {m.label}
+                                    </div>
+                                    <div className="text-muted" style={{ fontSize: 11 }}>
+                                      Sheet says {m.written}
+                                    </div>
+                                  </div>
+                                  <div className="fs-6 fw-bold flex-shrink-0" style={{ color: "#d97706" }}>
+                                    {m.computed}
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
                         </div>
                       )}
-                    </SuggestField>
-                  </div>
 
-                  <div className="col-12 col-md-6">
-                    <SuggestField
-                      label="Sheet Half"
-                      value={half}
-                      onChange={setHalf}
-                      options={HALF_OPTIONS}
-                      disabled={readOnly}
-                      hint="Detected from the date column"
-                    />
-                  </div>
-                </div>
-
-                <div className="mt-4">
-                  <SectionHeading>Signatures</SectionHeading>
-                  <div className="row g-2">
-                    <SignatureItem signed={file.signatures.employee} label="Employee" />
-                    <SignatureItem signed={file.signatures.supervisor} label="Supervisor" />
-                    <SignatureItem signed={file.signatures.client} label="Client" />
-                  </div>
-                </div>
-              </div>
-            </DataCard>
-          </div>
-
-          {hasAttention && (
-            <div className="col-12 col-lg-4">
-              <DataCard
-                title="Needs Attention"
-                action={<span className="badge rounded-pill status-badge status-badge-warning">{attentionCount}</span>}
-              >
-                <div className="card-body">
-                  {lowConfidenceCells > 0 && (
-                    <div className="alert alert-warning py-2 small d-flex align-items-start gap-2 mb-3">
-                      <i className="fas fa-triangle-exclamation mt-1"></i>
-                      <span>
-                        <strong>{lowConfidenceCells} cells</strong> were read with low confidence. They are highlighted in the grid below.
-                      </span>
+                      {blockers.length > 0 && (
+                        <div className={mismatches.length > 0 ? "col-12 col-md-7" : "col-12"}>
+                          <SectionHeading>Before this can be approved</SectionHeading>
+                          <div className="d-flex flex-column gap-2">
+                            {blockers.map((b) => (
+                              <div className="d-flex align-items-start gap-2 small text-muted" key={b}>
+                                <i className="fas fa-circle-exclamation text-warning mt-1" style={{ fontSize: 11 }}></i>
+                                <span style={{ minWidth: 0 }}>{b}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  )}
+                  </div>
+                </DataCard>
+              </div>
+            )}
 
-                  {mismatches.length > 0 && (
-                    <>
-                      <SectionHeading>Totals do not match the sheet</SectionHeading>
-                      <div className="d-flex flex-column gap-2 mb-3">
-                        {mismatches.map((m) => (
-                          <div
-                            className="border rounded-3 bg-light p-2 px-3 d-flex align-items-center justify-content-between gap-3"
-                            key={m.label}
-                          >
-                            <div style={{ minWidth: 0 }}>
-                              <div className="fw-semibold" style={{ fontSize: "0.8125rem" }}>
-                                {m.label}
-                              </div>
-                              <div className="text-muted" style={{ fontSize: 11 }}>
-                                Sheet says {m.written}
-                              </div>
-                            </div>
-                            <div className="fs-5 fw-bold flex-shrink-0" style={{ color: "#d97706" }}>
-                              {m.computed}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </>
-                  )}
+            <div className="flex-grow-1">
+              <DataCard title="Sheet Details">
+                <div className="card-body">
+                  <SectionHeading>Who and when</SectionHeading>
 
-                  {blockers.length > 0 && (
-                    <>
-                      <SectionHeading>Before this can be approved</SectionHeading>
-                      <div className="d-flex flex-column gap-2">
-                        {blockers.map((b) => (
-                          <div className="d-flex align-items-start gap-2 small text-muted" key={b}>
-                            <i className="fas fa-circle-exclamation text-warning mt-1" style={{ fontSize: 11 }}></i>
-                            <span style={{ minWidth: 0 }}>{b}</span>
+                  <div className="row g-3">
+                    <div className="col-12 col-md-6 col-xl-3">
+                      <SuggestField
+                        label="Employee"
+                        value={employee}
+                        onChange={setEmployee}
+                        options={EMPLOYEE_OPTIONS}
+                        disabled={readOnly}
+                        hint={`Read with ${Math.round(file.employee.confidence * 100)}% confidence`}
+                      />
+                    </div>
+
+                    <div className="col-12 col-md-6 col-xl-3">
+                      <SuggestField
+                        label="Client"
+                        value={client}
+                        onChange={setClient}
+                        options={CLIENT_OPTIONS}
+                        disabled={readOnly}
+                        hint="From the upload batch"
+                      />
+                    </div>
+
+                    <div className="col-12 col-md-6 col-xl-3">
+                      <SuggestField
+                        label="Period Covered"
+                        value={period}
+                        onChange={setPeriod}
+                        options={PERIOD_OPTIONS}
+                        disabled={readOnly}
+                        flagged={!periodConfirmed}
+                        hint={readOnly ? "Confirmed against the sheet" : undefined}
+                      >
+                        {!readOnly && (
+                          <div className="form-check mt-2">
+                            <input
+                              className="form-check-input"
+                              type="checkbox"
+                              id="confirm-period"
+                              checked={periodConfirmed}
+                              onChange={(e) => setPeriodConfirmed(e.target.checked)}
+                            />
+                            <label className="form-check-label ts-field-hint" htmlFor="confirm-period">
+                              Checked against the sheet
+                            </label>
                           </div>
-                        ))}
-                      </div>
-                    </>
-                  )}
+                        )}
+                      </SuggestField>
+                    </div>
+
+                    <div className="col-12 col-md-6 col-xl-3">
+                      <SuggestField
+                        label="Sheet Half"
+                        value={half}
+                        onChange={setHalf}
+                        options={HALF_OPTIONS}
+                        disabled={readOnly}
+                        hint="Detected from the date column"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="mt-3">
+                    <SectionHeading>Signatures</SectionHeading>
+                    <div className="row g-2">
+                      <SignatureItem signed={file.signatures.employee} label="Employee" />
+                      <SignatureItem signed={file.signatures.supervisor} label="Supervisor" />
+                      <SignatureItem signed={file.signatures.client} label="Client" />
+                    </div>
+                  </div>
                 </div>
               </DataCard>
             </div>
-          )}
+          </div>
         </div>
       </section>
 
@@ -312,7 +322,7 @@ function TimesheetReviewForm({ file, onBack, onApprove }) {
           }
         >
           <Table
-            headers={["Date", "AM In", "AM Out", "PM In", "PM Out", "OT In", "OT Out", "Late (mins)", "Hours"]}
+            headers={["Date", "Morning", "Afternoon", "Overtime", "Late (mins)", "Hours"]}
             itemLabel="days"
             pageSize={40}
             mobilePageSize={40}
@@ -327,25 +337,43 @@ function TimesheetReviewForm({ file, onBack, onApprove }) {
                       {row.date}
                     </div>
                   </Td>
-                  {["amIn", "amOut", "pmIn", "pmOut", "otIn", "otOut"].map((field) => (
-                    <Td key={field}>
-                      <input
-                        type="text"
-                        className={cellClass(row, field)}
-                        value={row[field]}
-                        placeholder="--:--"
-                        disabled={readOnly}
-                        onChange={(e) => updateCell(row.day, field, e.target.value)}
-                      />
+                  {[
+                    ["Morning", "amIn", "amOut"],
+                    ["Afternoon", "pmIn", "pmOut"],
+                    ["Overtime", "otIn", "otOut"],
+                  ].map(([session, inField, outField]) => (
+                    <Td key={session}>
+                      <div className="ts-pair">
+                        <input
+                          type="text"
+                          className={cellClass(row, inField)}
+                          value={row[inField]}
+                          placeholder="--:--"
+                          disabled={readOnly}
+                          aria-label={`${row.date}, ${session} in`}
+                          onChange={(e) => updateCell(row.day, inField, e.target.value)}
+                        />
+                        <span className="ts-pair-sep text-muted">&ndash;</span>
+                        <input
+                          type="text"
+                          className={cellClass(row, outField)}
+                          value={row[outField]}
+                          placeholder="--:--"
+                          disabled={readOnly}
+                          aria-label={`${row.date}, ${session} out`}
+                          onChange={(e) => updateCell(row.day, outField, e.target.value)}
+                        />
+                      </div>
                     </Td>
                   ))}
                   <Td>
                     <input
                       type="text"
-                      className="ts-cell"
+                      className="ts-cell ts-cell-late"
                       value={row.late || ""}
                       placeholder="0"
                       disabled={readOnly}
+                      aria-label={`${row.date}, minutes late`}
                       onChange={(e) => updateCell(row.day, "late", Number(e.target.value) || 0)}
                     />
                   </Td>
@@ -379,12 +407,12 @@ function TimesheetReviewForm({ file, onBack, onApprove }) {
 
       {!readOnly && (
         <section className="mb-3">
-          <div className="d-flex flex-column flex-sm-row gap-2">
+          <div className="d-flex flex-wrap gap-2">
             <BtnPrimary disabled={blockers.length > 0} onClick={() => onApprove(file.id, rows)}>
               <i className="fas fa-circle-check"></i> Approve Sheet
             </BtnPrimary>
             <BtnSecondary onClick={onBack}>Save and close</BtnSecondary>
-            <BtnDanger className="ms-sm-auto">
+            <BtnDanger>
               <i className="fas fa-rotate-left"></i> Reject and re-scan
             </BtnDanger>
           </div>

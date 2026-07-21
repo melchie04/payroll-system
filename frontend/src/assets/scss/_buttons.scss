@@ -426,6 +426,10 @@ fieldset:disabled .btn {
   --bs-btn-active-border-color: #22272c;
   --bs-btn-disabled-bg: #2e343a;
   --bs-btn-disabled-border-color: #2e343a;
+  // A locked primary action keeps its black fill rather than fading to gray,
+  // but its label dims and the shadow drops, so it still reads as inactive.
+  --bs-btn-disabled-opacity: 1;
+  --bs-btn-disabled-color: rgba(255, 255, 255, 0.55);
   box-shadow: 0 1px 2px rgba(16, 24, 40, 0.1);
 }
 

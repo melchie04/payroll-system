@@ -34,6 +34,31 @@
   background-color: rgba(255, 193, 7, 0.12);
 }
 
+// Daily Entries pairs each session's in and out box in one cell, mirroring the
+// in–out columns on the paper form.
+.ts-pair {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.ts-pair .ts-cell {
+  min-width: 0;
+  width: 64px;
+}
+
+.ts-pair-sep {
+  flex-shrink: 0;
+  font-size: 11px;
+  line-height: 1;
+}
+
+// The lone number box in the Late column reads better sized like a time box
+// than stretched across its column.
+.ts-cell-late {
+  max-width: 84px;
+}
+
 // The tab strip shares a row with the filter selects, so its standing bottom
 // margin would lift it out of line with them.
 .ts-toolbar .tabs-nav {
@@ -183,5 +208,12 @@
     min-width: 0;
     max-width: 140px;
     text-align: right;
+  }
+
+  // Paired boxes already split the line between them, so the single-cell cap
+  // and right alignment would misplace their text.
+  .ts-pair .ts-cell {
+    max-width: none;
+    text-align: center;
   }
 }
