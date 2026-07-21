@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { DataCard } from "../ui/index.jsx";
+import { DataCard, BtnPrimary } from "../ui/index.jsx";
 
 const REQUIREMENTS = [
   {
@@ -82,9 +82,14 @@ export function TimesheetUpload({ summary }) {
             <div className="fw-semibold mb-1">Drop timesheet files here</div>
             <p className="text-muted small mb-3">One sheet per employee. You can drop several at once.</p>
 
-            <button type="button" className="btn btn-dark btn-sm d-inline-flex align-items-center gap-2" onClick={(e) => e.stopPropagation()}>
+            <BtnPrimary
+              onClick={(e) => {
+                e.stopPropagation();
+                openPicker();
+              }}
+            >
               <i className="fas fa-folder-open"></i> Choose Files
-            </button>
+            </BtnPrimary>
 
             <div className="ts-dropzone-meta mt-3 pt-3 w-100">
               <div className="d-flex flex-wrap justify-content-center gap-3 text-muted" style={{ fontSize: 11.5 }}>

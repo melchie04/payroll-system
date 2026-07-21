@@ -41,14 +41,16 @@
 }
 
 // Dropzone. Sits on the card surface rather than the page plane, so it reads as
-// a target rather than a hole in the layout.
+// a target rather than a hole in the layout. Only border-color is transitioned:
+// background-color is the property the theme swap changes, and animating it made
+// the box fade behind the instant light/dark switch everywhere else.
 .ts-dropzone {
   min-height: 240px;
   border: 2px dashed var(--bs-border-color);
   border-radius: 0.5rem;
   background-color: #fff;
   cursor: pointer;
-  transition: border-color 0.15s ease-in-out, background-color 0.15s ease-in-out;
+  transition: border-color 0.15s ease-in-out;
 }
 
 .ts-dropzone:hover {
@@ -72,6 +74,57 @@
   border-top: 1px solid var(--bs-border-color);
 }
 
+// Sheet Details fields. Label, control and note are one block with a fixed rhythm,
+// so a two-line note in one column cannot push its neighbour out of alignment.
+.ts-field {
+  height: 100%;
+}
+
+.ts-field-hint {
+  margin-top: 0.35rem;
+  font-size: 11.5px;
+  line-height: 1.4;
+}
+
+// Suggest field. The caret sits inside the box so the control reads as one field
+// rather than an input with a button bolted to it, matching .form-select.
+.ts-suggest .form-control {
+  padding-right: 2.25rem;
+}
+
+.ts-suggest-toggle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 0.7rem;
+  border: 0;
+  border-radius: 0 0.375rem 0.375rem 0;
+  background-color: transparent;
+  color: #6c757d;
+  font-size: 11px;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.15s ease-in-out;
+}
+
+.ts-suggest-toggle:hover:not(:disabled),
+.ts-suggest-toggle:focus-visible {
+  color: #212529;
+}
+
+.ts-suggest-toggle:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.ts-suggest .dropdown-menu {
+  width: 100%;
+  min-width: 0;
+}
+
 .ts-doc {
   min-height: 320px;
   border: 1px dashed var(--bs-border-color);
@@ -86,6 +139,15 @@
 [data-bs-theme="dark"] .ts-cell-flagged {
   border-color: rgba(255, 193, 7, 0.6);
   background-color: rgba(255, 193, 7, 0.16);
+}
+
+[data-bs-theme="dark"] .ts-suggest-toggle {
+  color: var(--app-dark-text-muted);
+}
+
+[data-bs-theme="dark"] .ts-suggest-toggle:hover:not(:disabled),
+[data-bs-theme="dark"] .ts-suggest-toggle:focus-visible {
+  color: var(--app-dark-text);
 }
 
 [data-bs-theme="dark"] .ts-doc {

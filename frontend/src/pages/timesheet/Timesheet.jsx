@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import { PageHeader, TabsNav, FilterSelect } from "../../components/ui/index.jsx";
 import { timesheetCoverage, extractionSummary } from "../../assets/data/index.js";
 import { useTimesheets } from "../../context/TimesheetContext.jsx";
@@ -12,8 +13,10 @@ const PERIODS = ["Jun 12 – Jun 25, 2026", "May 26 – Jun 11, 2026"];
 // Timesheet — intake for scanned timesheets. Payroll collects approved days from here.
 export default function Timesheet() {
   const { files } = useTimesheets();
+  const location = useLocation();
 
-  const [tab, setTab] = useState("upload");
+  // Upload is the default; returning from a sheet review reopens the tab it came from.
+  const [tab, setTab] = useState(location.state?.tab || "upload");
   const [client, setClient] = useState("Acme Corp");
   const [period, setPeriod] = useState(PERIODS[0]);
 

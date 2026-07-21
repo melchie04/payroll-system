@@ -58,26 +58,20 @@ export function TimesheetFiles() {
           {files.length === 0 ? (
             <div className="text-center text-muted py-5 small">No sheets uploaded for this client and pay period yet.</div>
           ) : (
-            <Table headers={["Sheet", "Employee", "Sheet Period", "Status", "Actions"]} itemLabel="sheets" pageSize={10} mobilePageSize={4}>
+            <Table headers={["Sheet", "Uploaded", "Employee", "Sheet Period", "Status", "Actions"]} itemLabel="sheets" pageSize={10} mobilePageSize={4}>
               {files.map((f) => (
                 <Tr key={f.id}>
                   <Td>
                     <div className="fw-semibold text-truncate" style={{ maxWidth: 440 }} title={f.name}>
                       {f.name}
                     </div>
-                    <div className="text-muted" style={{ fontSize: 11.5 }}>
-                      {f.source} &middot; {f.uploaded}
-                    </div>
                   </Td>
+
+                  <Td>{f.uploaded}</Td>
 
                   <Td>
                     {f.employee.name ? (
-                      <>
-                        <div className="fw-semibold">{f.employee.name}</div>
-                        <div className={f.employee.confidence < 0.85 ? "text-warning" : "text-muted"} style={{ fontSize: 11.5 }}>
-                          {f.employee.confidence < 0.85 ? "Needs confirming" : "Matched"}
-                        </div>
-                      </>
+                      <div className="fw-semibold">{f.employee.name}</div>
                     ) : (
                       <span className="text-muted">Not identified yet</span>
                     )}
