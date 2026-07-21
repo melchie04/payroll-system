@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { DataCard, Table, Tr, Td, Badge, BtnPrimary, BtnSecondary, BtnDanger, Modal, PageHeader, TabsNav } from "../../components/ui/index.jsx";
-import { useTimesheets } from "../../context/TimesheetContext.jsx";
+import { useTimesheets, checkPeriodHalf, findDuplicateSheets } from "../../context/TimesheetContext.jsx";
 import { clientNames, employeeNames, sheetPeriods } from "../../assets/data/index.js";
 
 // Suggestions for the sheet fields, taken from the same lists the rest of the app
@@ -36,7 +36,7 @@ function rowTotals(row) {
 export default function TimesheetReview() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { getFileById, approveFile, saveFile } = useTimesheets();
+  const { files, getFileById, approveFile, saveFile } = useTimesheets();
 
   const file = getFileById(id);
 
@@ -55,11 +55,11 @@ export default function TimesheetReview() {
   const backToSheets = () => navigate("/timesheet", { state: { tab: "sheets" } });
 
   // key resets the form when the reviewer moves straight from one sheet to another.
-  return <TimesheetReviewForm key={file.id} file={file} onBack={backToSheets} onApprove={approveFile} onSave={saveFile} />;
+  return <TimesheetReviewForm key={file.id} file={file} files={files} onBack={backToSheets} onApprove={approveFile} onSave={saveFile} />;
 }
 
 // TimesheetReviewForm — the sheet itself, once we know it exists.
-function TimesheetReviewForm({ file, onBack, onApprove, onSave }) {
+function TimesheetReviewForm({ file, files, onBack, onApprove, onSave }) {
   const [rows, setRows] = useState(file.rows);
   const [employee, setEmployee] = useState(file.employee.name || "");
   const [period, setPeriod] = useState(file.period.label || "");
@@ -159,8 +159,33 @@ function TimesheetReviewForm({ file, onBack, onApprove, onSave }) {
   ].filter(Boolean);
 
   const lowConfidenceCells = rows.reduce((n, r) => n + (r.lowConfidence ? r.lowConfidence.length : 0), 0);
+
+  // Period Covered and Sheet Half describe the same thing twice. When they disagree,
+  // the days would be filed against the wrong half of the month.
+  const periodCheck = checkPeriodHalf(period, half);
+  const periodConflict = periodCheck.status === "mismatch" || periodCheck.status === "not-a-half";
+
+  // Days already carried by another sheet for the same person would be paid twice.
+  // A clash with an approved sheet blocks; a clash with one still under review is a
+  // warning, because the reviewer is the one who decides which of the two to keep.
+  const duplicates = findDuplicateSheets(files || [], file, draft);
+  const approvedDuplicates = duplicates.filter((d) => d.status === "Approved");
+  const pendingDuplicates = duplicates.filter((d) => d.status !== "Approved");
+
   const blockers = [
     !periodConfirmed && { title: "Period Covered is not confirmed", sub: "Tick the confirmation box below once it matches the sheet." },
+    periodCheck.status === "mismatch" && {
+      title: "Period Covered and Sheet Half do not agree",
+      sub: `${period} is the ${periodCheck.expected} half of the month, but Sheet Half reads ${half}.`,
+    },
+    periodCheck.status === "not-a-half" && {
+      title: "Period Covered is not a half-month range",
+      sub: "A sheet covers days 1–15 or 16–31. Check the dates written on the form.",
+    },
+    approvedDuplicates.length > 0 && {
+      title: "These days are already approved on another sheet",
+      sub: `${approvedDuplicates.map((d) => d.name).join(", ")} — approving this would pay the same days twice.`,
+    },
     file.employee.confidence < 0.85 && { title: "Employee name read with low confidence", sub: "Check the name against the sheet before approving." },
     !file.signatures.client && { title: "Client signature not detected", sub: "The client signature box appears to be empty." },
   ].filter(Boolean);
@@ -188,6 +213,28 @@ function TimesheetReviewForm({ file, onBack, onApprove, onSave }) {
             tone: "text-warning",
             title: `${lowConfidenceCells} cells were read with low confidence`,
             sub: "They are highlighted in the Daily Entries tab.",
+            level: "Check",
+          },
+        ]
+      : []),
+    ...(periodCheck.status === "unreadable"
+      ? [
+          {
+            icon: "fa-calendar-xmark",
+            tone: "text-warning",
+            title: "Period Covered could not be read as a date range",
+            sub: "Write it in full with the month and year, for example Jun 1 – Jun 15, 2026.",
+            level: "Check",
+          },
+        ]
+      : []),
+    ...(pendingDuplicates.length > 0
+      ? [
+          {
+            icon: "fa-clone",
+            tone: "text-warning",
+            title: `The same days appear on ${pendingDuplicates.length} other sheet${pendingDuplicates.length === 1 ? "" : "s"} awaiting review`,
+            sub: `${pendingDuplicates.map((d) => d.name).join(", ")} — only one of them should be approved.`,
             level: "Check",
           },
         ]
@@ -365,7 +412,7 @@ function TimesheetReviewForm({ file, onBack, onApprove, onSave }) {
                           onChange={setPeriod}
                           options={PERIOD_OPTIONS}
                           disabled={readOnly}
-                          flagged={!periodConfirmed}
+                          flagged={!periodConfirmed || periodConflict}
                           hint={readOnly ? "Confirmed against the sheet" : undefined}
                         >
                           {!readOnly && (
@@ -392,7 +439,8 @@ function TimesheetReviewForm({ file, onBack, onApprove, onSave }) {
                           onChange={setHalf}
                           options={HALF_OPTIONS}
                           disabled={readOnly}
-                          hint="Detected from the date column"
+                          flagged={periodConflict}
+                          hint={periodCheck.status === "mismatch" ? `Period Covered reads as ${periodCheck.expected}` : "Detected from the date column"}
                         />
                       </div>
                     </div>

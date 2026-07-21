@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { DataCard, Table, Tr, Td, Badge, BtnSecondary, BtnDanger, Modal, ActionsMenu, FilterSelect, SearchInput } from "../ui/index.jsx";
-import { useTimesheets } from "../../context/TimesheetContext.jsx";
+import { useTimesheets, findDuplicateSheets } from "../../context/TimesheetContext.jsx";
 
 const ALL_STATUSES = "All Statuses";
 const ALL_SOURCES = "All Sources";
@@ -13,7 +13,7 @@ const SOURCE_OPTIONS = ["Scan", "Photo"];
 // and is narrowed further by the three filters below.
 export function TimesheetFiles({ files = [] }) {
   const navigate = useNavigate();
-  const { retryFile, discardFile } = useTimesheets();
+  const { files: allFiles, retryFile, discardFile } = useTimesheets();
 
   const [status, setStatus] = useState(ALL_STATUSES);
   const [source, setSource] = useState(ALL_SOURCES);
@@ -33,6 +33,18 @@ export function TimesheetFiles({ files = [] }) {
   }, [files, status, source, search]);
 
   const filtered = visible.length !== files.length;
+
+  // Sheets that carry days already covered elsewhere for the same person. Checked
+  // against every sheet on file, not just the ones the filters are showing, so
+  // narrowing the list cannot hide a clash.
+  const duplicates = useMemo(() => {
+    const map = new Map();
+    for (const f of files) {
+      const clashes = findDuplicateSheets(allFiles, f, null);
+      if (clashes.length > 0) map.set(f.id, clashes);
+    }
+    return map;
+  }, [files, allFiles]);
 
   function handleRetry() {
     if (retryTarget) {
@@ -114,6 +126,19 @@ export function TimesheetFiles({ files = [] }) {
                     <div className="fw-semibold text-truncate" style={{ maxWidth: 440 }} title={f.name}>
                       {f.name}
                     </div>
+                    {duplicates.has(f.id) && (
+                      <div
+                        className="text-warning d-flex align-items-center gap-1"
+                        style={{ fontSize: 11.5 }}
+                        title={`Same days as ${duplicates
+                          .get(f.id)
+                          .map((d) => d.name)
+                          .join(", ")}`}
+                      >
+                        <i className="fas fa-clone"></i>
+                        Duplicate days
+                      </div>
+                    )}
                   </Td>
 
                   <Td>{f.uploaded}</Td>

@@ -4,6 +4,86 @@ import { timesheetFiles as initialFiles } from "../assets/data/index.js";
 
 const TimesheetContext = createContext(null);
 
+const MONTH_INDEX = { jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5, jul: 6, aug: 7, sep: 8, oct: 9, nov: 10, dec: 11 };
+
+// Reads a written Period Covered such as "Jun 1 - Jun 15, 2026" into real dates.
+// The reviewer can type this field, so the days are read back from the text rather
+// than from whatever the OCR first stored alongside it.
+export function parsePeriodLabel(label) {
+  if (!label) return null;
+  const [left, right] = String(label).split(/\s*[–—-]\s*/);
+  if (!left || !right) return null;
+
+  const year = (right.match(/\b(\d{4})\b/) || left.match(/\b(\d{4})\b/) || [])[1];
+  if (!year) return null;
+
+  // Either side may leave the month out, as in "Jun 1 - 15, 2026", so each side
+  // falls back to the month written on the other.
+  const monthOf = (part) => {
+    const name = part.match(/([A-Za-z]{3,})/);
+    const index = name ? MONTH_INDEX[name[1].slice(0, 3).toLowerCase()] : undefined;
+    return index == null ? null : index;
+  };
+  const dayOf = (part) => {
+    const day = part.match(/\b(\d{1,2})\b/);
+    return day ? Number(day[1]) : null;
+  };
+
+  const leftMonth = monthOf(left);
+  const rightMonth = monthOf(right);
+  const fromMonth = leftMonth ?? rightMonth;
+  const toMonth = rightMonth ?? leftMonth;
+  const fromDay = dayOf(left);
+  const toDay = dayOf(right);
+  if (fromMonth == null || toMonth == null || fromDay == null || toDay == null) return null;
+
+  const from = new Date(Number(year), fromMonth, fromDay);
+  const to = new Date(Number(year), toMonth, toDay);
+  if (from > to) return null;
+  return { from, to };
+}
+
+// A sheet covers one half of a month. Anything else means the wrong form was used,
+// or the dates were written on the wrong version of it.
+export function halfFromPeriod(label) {
+  const range = parsePeriodLabel(label);
+  if (!range) return null;
+  const first = range.from.getDate();
+  const last = range.to.getDate();
+  if (first === 1 && last <= 15) return "1-15";
+  if (first === 16) return "16-31";
+  return null;
+}
+
+// checkPeriodHalf — does Period Covered agree with Sheet Half?
+export function checkPeriodHalf(label, half) {
+  if (!label || !half) return { status: "unknown" };
+  const range = parsePeriodLabel(label);
+  if (!range) return { status: "unreadable" };
+  const derived = halfFromPeriod(label);
+  if (!derived) return { status: "not-a-half", range };
+  if (derived !== half) return { status: "mismatch", expected: derived, range };
+  return { status: "ok", range };
+}
+
+// findDuplicateSheets — other sheets that already carry some of the same days for
+// the same person. Those days would otherwise be paid twice. Sheets that have not
+// been read yet cannot conflict, because nothing is known about their dates.
+export function findDuplicateSheets(files, target, draft) {
+  const name = ((draft ? draft.employee : target?.employee?.name) || "").trim().toLowerCase();
+  const range = parsePeriodLabel(draft ? draft.period : target?.period?.label);
+  if (!name || !range) return [];
+
+  return files.filter((other) => {
+    if (String(other.id) === String(target?.id)) return false;
+    if (other.status === "Failed" || other.status === "Processing") return false;
+    if ((other.employee?.name || "").trim().toLowerCase() !== name) return false;
+    const otherRange = parsePeriodLabel(other.period?.label);
+    if (!otherRange) return false;
+    return range.from <= otherRange.to && range.to >= otherRange.from;
+  });
+}
+
 // Folds what the review screen holds in its fields back onto the stored sheet.
 // The screen works with flat values; a sheet keeps the employee and the period
 // as objects, so the confidence the OCR reported survives an operator's edit.
