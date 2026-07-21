@@ -12,6 +12,10 @@ const CLIENT_OPTIONS = clientNames;
 const PERIOD_OPTIONS = sheetPeriods;
 const HALF_OPTIONS = ["1-15", "16-31"];
 
+// Zoom cycles rather than stepping in and out, so the viewer keeps the two buttons
+// the toolbar already had instead of growing a control strip.
+const ZOOM_STEPS = [1, 1.5, 2, 3];
+
 // The rejection list from the upload requirements, in the words the sender needs
 // to act on. Whatever is ticked here is what goes back to them.
 const REJECT_REASONS = [
@@ -90,6 +94,17 @@ function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, onReject 
   const [half, setHalf] = useState(file.half || "");
 
   const readOnly = file.status === "Approved" || file.status === "Rejected";
+
+  // Document viewer. Rotate and zoom act on the image the browser is holding; a PDF
+  // is handed to the browser's own viewer, which brings its own controls.
+  const [rotation, setRotation] = useState(0);
+  const [zoomStep, setZoomStep] = useState(0);
+  const [docError, setDocError] = useState(false);
+  const hasDocument = Boolean(file.previewUrl) && !docError;
+  const isImage = file.type !== "pdf";
+  const canTransform = hasDocument && isImage;
+  const zoom = ZOOM_STEPS[zoomStep];
+  const transformHint = !hasDocument ? "There is no document to show" : "A PDF opens in the browser's own viewer, which brings its own controls";
 
   const [rejectReasons, setRejectReasons] = useState([]);
   const [rejectNote, setRejectNote] = useState("");
@@ -379,17 +394,46 @@ function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, onReject 
                 }
               >
                 <div className="card-body d-flex flex-column">
-                  <div className="ts-doc flex-grow-1 d-flex flex-column align-items-center justify-content-center text-muted rounded-3">
-                    <i className="fas fa-file-lines mb-2" style={{ fontSize: 32 }}></i>
-                    <div className="small">Document preview</div>
-                    <div style={{ fontSize: 11.5 }}>Selecting a field highlights it here</div>
+                  <div className={`ts-doc flex-grow-1 d-flex rounded-3 ${hasDocument ? "has-document" : "flex-column align-items-center justify-content-center text-muted"}`}>
+                    {!hasDocument ? (
+                      <>
+                        <i className={`fas ${docError ? "fa-file-circle-xmark" : "fa-file-lines"} mb-2`} style={{ fontSize: 32 }}></i>
+                        <div className="small">{docError ? "Document could not be displayed" : "Document not available"}</div>
+                        <div className="text-center px-3" style={{ fontSize: 11.5 }}>
+                          {docError
+                            ? "The file may have been moved or is no longer readable."
+                            : "The original file is not stored for this sheet."}
+                        </div>
+                      </>
+                    ) : isImage ? (
+                      <div className="ts-doc-viewport">
+                        <img
+                          src={file.previewUrl}
+                          alt={file.name}
+                          className="ts-doc-media"
+                          style={{ transform: `rotate(${rotation}deg) scale(${zoom})` }}
+                          onError={() => setDocError(true)}
+                        />
+                      </div>
+                    ) : (
+                      <iframe src={file.previewUrl} title={file.name} className="ts-doc-frame" onError={() => setDocError(true)} />
+                    )}
                   </div>
+
                   <div className="d-flex justify-content-center gap-2 mt-3">
-                    <BtnSecondary>
+                    <BtnSecondary
+                      disabled={!canTransform}
+                      title={canTransform ? "Turn the page a quarter turn" : transformHint}
+                      onClick={() => setRotation((r) => (r + 90) % 360)}
+                    >
                       <i className="fas fa-rotate-left"></i> Rotate
                     </BtnSecondary>
-                    <BtnSecondary>
-                      <i className="fas fa-magnifying-glass-plus"></i> Zoom
+                    <BtnSecondary
+                      disabled={!canTransform}
+                      title={canTransform ? "Cycle through the zoom levels" : transformHint}
+                      onClick={() => setZoomStep((z) => (z + 1) % ZOOM_STEPS.length)}
+                    >
+                      <i className="fas fa-magnifying-glass-plus"></i> Zoom {Math.round(zoom * 100)}%
                     </BtnSecondary>
                   </div>
                 </div>

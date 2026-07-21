@@ -166,8 +166,14 @@ export function TimesheetProvider({ children }) {
     updateFile(id, { status: "Processing", rejection: null });
   }
 
+  // The preview is a handle on a file the browser is holding in memory, so it has
+  // to be released explicitly when the sheet goes.
   function discardFile(id) {
-    setFiles((prev) => prev.filter((f) => String(f.id) !== String(id)));
+    setFiles((prev) => {
+      const going = prev.find((f) => String(f.id) === String(id));
+      if (going?.previewUrl) URL.revokeObjectURL(going.previewUrl);
+      return prev.filter((f) => String(f.id) !== String(id));
+    });
   }
 
   const value = { files, getFileById, updateFile, saveFile, approveFile, addSheets, rejectFile, retryFile, discardFile };

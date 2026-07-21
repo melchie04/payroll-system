@@ -187,6 +187,45 @@
   background-color: rgba(0, 0, 0, 0.02);
 }
 
+// Holding a real document, the dashed edge would still read as an empty slot.
+.ts-doc.has-document {
+  overflow: hidden;
+  border-style: solid;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+// The page is scrolled rather than shrunk: a zoomed sheet is being read, and
+// fitting it back into the panel would undo the zoom.
+.ts-doc-viewport {
+  display: flex;
+  flex-grow: 1;
+  width: 100%;
+  min-height: 320px;
+  overflow: auto;
+  padding: 0.5rem;
+}
+
+// Centred with auto margins rather than justify-content: a flex line centred by
+// the parent clips its start edge when it overflows, so the top and left of a
+// zoomed sheet would be unreachable. Auto margins stay scrollable both ways.
+.ts-doc-media {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  margin: auto;
+  object-fit: contain;
+  transform-origin: center center;
+  transition: transform 0.15s ease-in-out;
+}
+
+// The browser's PDF viewer brings its own toolbar, so the frame is left plain.
+.ts-doc-frame {
+  flex-grow: 1;
+  width: 100%;
+  min-height: 320px;
+  border: 0;
+}
+
 [data-bs-theme="dark"] .ts-cell:disabled {
   background-color: rgba(255, 255, 255, 0.05);
   color: #9aa4ae;
@@ -208,6 +247,10 @@
 
 [data-bs-theme="dark"] .ts-doc {
   background-color: rgba(255, 255, 255, 0.03);
+}
+
+[data-bs-theme="dark"] .ts-doc.has-document {
+  background-color: rgba(255, 255, 255, 0.06);
 }
 
 [data-bs-theme="dark"] .ts-dropzone {
@@ -241,6 +284,13 @@
   // Stacked cards below this width, so the tall target is wasted height.
   .ts-dropzone {
     min-height: 0;
+  }
+
+  // A phone-width panel cannot show a full sheet usefully at any zoom, so the
+  // viewer keeps a readable window instead of stretching the card.
+  .ts-doc-viewport,
+  .ts-doc-frame {
+    min-height: 260px;
   }
 
   .ts-cell {
