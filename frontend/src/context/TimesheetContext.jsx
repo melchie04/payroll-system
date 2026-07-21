@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useState } from "react";
-import { timesheetFiles as initialFiles } from "../assets/data/index.js";
+import { timesheetFiles as initialFiles, employees } from "../assets/data/index.js";
 
 const TimesheetContext = createContext(null);
 
@@ -104,10 +104,33 @@ export function rowTotals(row) {
   return { regular: hours(regular), overtime: hours(overtime), worked: regular > 0 };
 }
 
+// scheduleFor — the standard start and end time on an employee's record. Resolved
+// from the name currently in the field, so correcting a misread name immediately
+// changes which schedule the sheet is measured against.
+export function scheduleFor(employeeName) {
+  const name = (employeeName || "").trim().toLowerCase();
+  if (!name) return null;
+  return employees.find((e) => e.name.trim().toLowerCase() === name)?.schedule || null;
+}
+
+// Minutes late, worked out from the written IN time against the expected start.
+// Arriving early is not negative late: it is simply on time.
+export function lateMinutes(row, schedule) {
+  if (!schedule?.in || !row?.amIn) return null;
+  return span(schedule.in, row.amIn);
+}
+
+// The Late figure to use for a row: calculated where a schedule is known, and the
+// figure written in the Late column where it is not.
+export function rowLate(row, schedule) {
+  const derived = lateMinutes(row, schedule);
+  return derived === null ? row.late || 0 : derived;
+}
+
 // sheetTotals — the sheet re-added from its daily times. One implementation, so a
 // sheet approved from the list and one approved from the review screen are judged
 // by exactly the same arithmetic.
-export function sheetTotals(rows = []) {
+export function sheetTotals(rows = [], schedule = null) {
   return rows.reduce(
     (acc, r) => {
       const t = rowTotals(r);
@@ -115,7 +138,7 @@ export function sheetTotals(rows = []) {
         days: acc.days + (t.worked ? 1 : 0),
         regular: acc.regular + t.regular,
         overtime: acc.overtime + t.overtime,
-        late: acc.late + (r.late || 0),
+        late: acc.late + rowLate(r, schedule),
       };
     },
     { days: 0, regular: 0, overtime: 0, late: 0 },
@@ -123,8 +146,8 @@ export function sheetTotals(rows = []) {
 }
 
 // Where the recomputed totals disagree with what was written on the form.
-export function sheetMismatches(rows = [], handwritten) {
-  const computed = sheetTotals(rows);
+export function sheetMismatches(rows = [], handwritten, schedule = null) {
+  const computed = sheetTotals(rows, schedule);
   const hw = handwritten || {};
   return [
     computed.days !== hw.totalDays && { label: "Total Days", computed: computed.days, written: hw.totalDays },
@@ -154,7 +177,8 @@ export function sheetFindings(file, allFiles = []) {
   if (!signatures.client) findings.push("Client signature not detected");
 
   if (findDuplicateSheets(allFiles, file, null).length > 0) findings.push("Days already covered by another sheet");
-  if (sheetMismatches(file.rows, file.handwritten).length > 0) findings.push("Totals disagree with the handwritten figures");
+  const schedule = scheduleFor(file.employee?.name);
+  if (sheetMismatches(file.rows, file.handwritten, schedule).length > 0) findings.push("Totals disagree with the handwritten figures");
 
   const lowConfidence = (file.rows || []).reduce((n, r) => n + (r.lowConfidence ? r.lowConfidence.length : 0), 0);
   if (lowConfidence > 0) findings.push(`${lowConfidence} cells read with low confidence`);

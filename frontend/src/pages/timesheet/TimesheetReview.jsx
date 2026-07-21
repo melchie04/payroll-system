@@ -1,7 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { DataCard, Table, Tr, Td, Badge, BtnPrimary, BtnSecondary, BtnDanger, Modal, PageHeader, TabsNav } from "../../components/ui/index.jsx";
-import { useTimesheets, checkPeriodHalf, findDuplicateSheets, rowTotals, sheetTotals, sheetMismatches } from "../../context/TimesheetContext.jsx";
+import {
+  useTimesheets,
+  checkPeriodHalf,
+  findDuplicateSheets,
+  rowTotals,
+  rowLate,
+  scheduleFor,
+  sheetTotals,
+  sheetMismatches,
+} from "../../context/TimesheetContext.jsx";
 import { clientNames, employeeNames, sheetPeriods } from "../../assets/data/index.js";
 
 // Suggestions for the sheet fields, taken from the same lists the rest of the app
@@ -175,9 +184,13 @@ function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, onReject 
     document.getElementById("timesheetUnsavedTrigger")?.click();
   }
 
-  const computed = sheetTotals(rows);
+  // Late follows the employee currently named in the field, not the one the OCR
+  // first guessed, so correcting a misread name recalculates the column at once.
+  const schedule = scheduleFor(employee);
+
+  const computed = sheetTotals(rows, schedule);
   const hw = file.handwritten || {};
-  const mismatches = sheetMismatches(rows, file.handwritten);
+  const mismatches = sheetMismatches(rows, file.handwritten, schedule);
 
   const lowConfidenceCells = rows.reduce((n, r) => n + (r.lowConfidence ? r.lowConfidence.length : 0), 0);
 
@@ -531,13 +544,20 @@ function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, onReject 
             <DataCard
               title="Daily Entries"
               action={
-                lowConfidenceCells > 0 ? (
-                  <span className="badge rounded-pill status-badge status-badge-warning">{lowConfidenceCells} flagged</span>
-                ) : (
-                  <span className="text-muted" style={{ fontSize: 11.5 }}>
-                    {rows.length} days
-                  </span>
-                )
+                <div className="d-flex align-items-center gap-2">
+                  {schedule && (
+                    <span className="text-muted text-nowrap" style={{ fontSize: 11.5 }}>
+                      Late from a {schedule.in} start
+                    </span>
+                  )}
+                  {lowConfidenceCells > 0 ? (
+                    <span className="badge rounded-pill status-badge status-badge-warning">{lowConfidenceCells} flagged</span>
+                  ) : (
+                    <span className="text-muted text-nowrap" style={{ fontSize: 11.5 }}>
+                      {rows.length} days
+                    </span>
+                  )}
+                </div>
               }
             >
               <Table
@@ -586,15 +606,24 @@ function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, onReject 
                         </Td>
                       ))}
                       <Td>
-                        <input
-                          type="text"
-                          className="ts-cell ts-cell-late"
-                          value={row.late || ""}
-                          placeholder="0"
-                          disabled={readOnly}
-                          aria-label={`${row.date}, minutes late`}
-                          onChange={(e) => updateCell(row.day, "late", Number(e.target.value) || 0)}
-                        />
+                        {schedule ? (
+                          <span
+                            className={rowLate(row, schedule) > 0 ? "fw-semibold text-warning" : "text-muted"}
+                            title={`In at ${row.amIn || "—"} against a ${schedule.in} start`}
+                          >
+                            {rowLate(row, schedule) || (row.amIn ? 0 : "—")}
+                          </span>
+                        ) : (
+                          <input
+                            type="text"
+                            className="ts-cell ts-cell-late"
+                            value={row.late || ""}
+                            placeholder="0"
+                            disabled={readOnly}
+                            aria-label={`${row.date}, minutes late`}
+                            onChange={(e) => updateCell(row.day, "late", Number(e.target.value) || 0)}
+                          />
+                        )}
                       </Td>
                       <Td bold>
                         {t.regular > 0 || t.overtime > 0 ? (

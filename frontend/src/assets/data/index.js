@@ -237,16 +237,17 @@ function sheetRows(half, month, year, pattern, clean = false) {
   return Array.from({ length: count }, (_, i) => {
     const day = start + i;
     const shift = pattern[i % pattern.length];
+    const lateDay = Boolean(shift) && day % 5 === 0;
     return {
       day,
       date: `${month} ${day}, ${year}`,
-      amIn: shift ? "07:30" : "",
+      amIn: shift ? (lateDay ? "07:45" : "07:30") : "",
       amOut: shift ? "12:00" : "",
       pmIn: shift ? "13:00" : "",
       pmOut: shift ? "17:00" : "",
       otIn: shift && day % 7 === 0 ? "17:00" : "",
       otOut: shift && day % 7 === 0 ? "19:00" : "",
-      late: shift && day % 5 === 0 ? 15 : 0,
+      late: lateDay ? 15 : 0,
       lowConfidence: clean ? [] : shift && (day % 4 === 0 ? ["amIn"] : day % 6 === 0 ? ["pmOut"] : []),
     };
   });
@@ -912,6 +913,7 @@ export const employees = [
     rate: "₱812.50",
     status: "Active",
     dateHired: "Jan 15, 2023",
+    schedule: { in: "07:30", out: "17:00" },
     address: "123 Mabini St, Makati City, Metro Manila",
     emergencyContact: {
       name: "Maria Doe",
@@ -929,6 +931,7 @@ export const employees = [
     rate: "₱728.48",
     status: "Active",
     dateHired: "Mar 3, 2023",
+    schedule: { in: "07:30", out: "17:00" },
     address: "45 Rizal Ave, Quezon City, Metro Manila",
     emergencyContact: {
       name: "Robert Smith",
@@ -946,6 +949,7 @@ export const employees = [
     rate: "₱750.00",
     status: "Active",
     dateHired: "Jun 20, 2023",
+    schedule: { in: "07:30", out: "17:00" },
     address: "78 Katipunan Ave, Quezon City, Metro Manila",
     emergencyContact: {
       name: "Linda Brown",
@@ -963,6 +967,7 @@ export const employees = [
     rate: "₱875.00",
     status: "On Leave",
     dateHired: "Sep 11, 2022",
+    schedule: { in: "07:30", out: "17:00" },
     address: "12 Bonifacio St, Taguig City, Metro Manila",
     emergencyContact: {
       name: "Mark Davis",
@@ -980,6 +985,7 @@ export const employees = [
     rate: "₱812.50",
     status: "Active",
     dateHired: "Feb 1, 2024",
+    schedule: { in: "07:30", out: "17:00" },
     address: "90 Aguinaldo Hwy, Imus, Cavite",
     emergencyContact: {
       name: "Susan Wilson",
@@ -997,6 +1003,7 @@ export const employees = [
     rate: "₱735.29",
     status: "Active",
     dateHired: "Nov 8, 2023",
+    schedule: { in: "07:30", out: "17:00" },
     address: "33 Marcos Hwy, Antipolo, Rizal",
     emergencyContact: {
       name: "Carlos Martinez",
@@ -1014,6 +1021,7 @@ export const employees = [
     rate: "₱812.50",
     status: "Active",
     dateHired: "Apr 17, 2024",
+    schedule: { in: "07:30", out: "17:00" },
     address: "56 EDSA, Mandaluyong City, Metro Manila",
     emergencyContact: {
       name: "Grace Lee",
