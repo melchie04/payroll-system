@@ -65,6 +65,62 @@
   margin-bottom: 0;
 }
 
+// Cut-off notice. A filled panel this wide turns the whole page red, so the tone
+// is carried by the border, the icon and the headline instead, and the fill stays
+// on the same surface the cards use. Weight comes from the border and the bold
+// first line rather than from the area of colour.
+.ts-notice {
+  border: 1px solid var(--bs-border-color);
+  border-radius: 0.5rem;
+  background-color: #fff;
+  color: var(--bs-body-color);
+}
+
+// The icon is the one place the tone runs at full strength: it is small enough to
+// stay a marker rather than a wash.
+.ts-notice-icon {
+  font-size: 0.8125rem;
+}
+
+// Inside a card the white fill would match the card exactly and leave the border
+// floating, so a notice nested in one takes the faintest tint of its own hue.
+.card .ts-notice {
+  background-color: rgba(0, 0, 0, 0.015);
+}
+
+// The supporting line is the same hue held back, so the two lines read as one
+// notice rather than a heading with unrelated grey text beneath it.
+.ts-notice-sub {
+  opacity: 0.75;
+}
+
+.ts-notice-danger {
+  border-color: rgba(220, 53, 69, 0.45);
+  color: #b02a37;
+}
+
+.ts-notice-warning {
+  border-color: rgba(217, 119, 6, 0.45);
+  color: #b45309;
+}
+
+.ts-notice-secondary {
+  border-color: var(--bs-border-color);
+  color: #495057;
+}
+
+.ts-notice-success {
+  border-color: rgba(25, 135, 84, 0.45);
+  color: #146c43;
+}
+
+// Amber body text. Bootstrap's warning is a fill colour, and at the 11.5px these
+// notes are set in it drops well under the contrast floor on a white row. Text
+// carrying a warning takes the darker amber instead; the fill keeps the bright one.
+.ts-warn {
+  color: #b45309;
+}
+
 // Dropzone. Sits on the card surface rather than the page plane, so it reads as
 // a target rather than a hole in the layout. Only border-color is transitioned:
 // background-color is the property the theme swap changes, and animating it made
@@ -276,6 +332,44 @@
 [data-bs-theme="dark"] .ts-dropzone-icon {
   background-color: rgba(255, 255, 255, 0.08);
   color: #adb5bd;
+}
+
+// On the dark surface the same hues would sit too close to the background, so
+// each tone steps up to the lighter member of its pair.
+[data-bs-theme="dark"] .ts-notice {
+  background-color: var(--app-dark-surface);
+  border-color: var(--app-dark-border);
+  color: var(--app-dark-text);
+}
+
+[data-bs-theme="dark"] .card .ts-notice {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+[data-bs-theme="dark"] .ts-notice-danger {
+  border-color: rgba(220, 53, 69, 0.4);
+  color: #ea868f;
+}
+
+[data-bs-theme="dark"] .ts-notice-warning {
+  border-color: rgba(255, 193, 7, 0.35);
+  color: #ffda6a;
+}
+
+[data-bs-theme="dark"] .ts-notice-secondary {
+  border-color: var(--app-dark-border);
+  color: var(--app-dark-text-muted);
+}
+
+[data-bs-theme="dark"] .ts-notice-success {
+  border-color: rgba(25, 135, 84, 0.35);
+  color: #75b798;
+}
+
+// The problem inverts on the dark surface: the darker amber disappears into it,
+// so the tone lifts rather than deepens.
+[data-bs-theme="dark"] .ts-warn {
+  color: #ffda6a;
 }
 
 // Stacked rows on mobile give each cell a full-width line already, so the

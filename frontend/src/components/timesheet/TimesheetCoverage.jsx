@@ -67,7 +67,7 @@ export function TimesheetCoverage({ rows = [], period, onUploadFor }) {
                 <Td>
                   {r.covered || <span className="text-muted">&mdash;</span>}
                   {r.gap && (
-                    <div className="text-warning" style={{ fontSize: 11.5 }}>
+                    <div className="ts-warn" style={{ fontSize: 11.5 }}>
                       Missing {r.gap}
                     </div>
                   )}

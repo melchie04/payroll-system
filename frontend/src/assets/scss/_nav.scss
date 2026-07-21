@@ -460,13 +460,17 @@
   text-overflow: ellipsis;
 }
 
-// Mobile: two per row, filling the tray.
+// Mobile: two per row, filling the tray. Half a tray is narrower than a label
+// like "Uploaded Sheets" or "Roles & Permissions" at the desktop size, so the
+// metrics tighten a step here to buy those labels the room to sit on one line.
 @media (max-width: 575.98px) {
   .tabs-nav-item {
     flex: 0 0 calc(50% - 0.125rem);
     max-width: calc(50% - 0.125rem);
-    padding-left: 0.6rem;
-    padding-right: 0.6rem;
+    gap: 0.375rem;
+    padding: 0.45rem 0.5rem;
+    font-size: 0.8125rem;
+    white-space: normal;
   }
 
   // With an odd number of tabs the last one would sit alone in a half-empty
@@ -474,6 +478,20 @@
   .tabs-nav-item:last-child:nth-child(odd) {
     flex-basis: 100%;
     max-width: 100%;
+  }
+
+  // Wrapping rather than clipping. A label that still cannot fit breaks to a
+  // second line, instead of trailing an ellipsis into the count beside it.
+  .tabs-nav-item > span {
+    overflow: visible;
+    text-overflow: clip;
+  }
+
+  // The icon and the count are fixed marks either side of the label, so the
+  // label is the only part that gives way when the row runs short.
+  .tabs-nav-item > i,
+  .tabs-nav-item > .badge {
+    flex-shrink: 0;
   }
 }
 

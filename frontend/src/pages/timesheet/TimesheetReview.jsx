@@ -608,7 +608,7 @@ function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, onReject 
                       <Td>
                         {schedule ? (
                           <span
-                            className={rowLate(row, schedule) > 0 ? "fw-semibold text-warning" : "text-muted"}
+                            className={rowLate(row, schedule) > 0 ? "fw-semibold ts-warn" : "text-muted"}
                             title={`In at ${row.amIn || "—"} against a ${schedule.in} start`}
                           >
                             {rowLate(row, schedule) || (row.amIn ? 0 : "—")}
@@ -820,7 +820,7 @@ function TotalItem({ label, value, written }) {
           {value}
         </div>
         {written != null && (
-          <div className={mismatch ? "text-warning" : "text-muted"} style={{ fontSize: 11 }}>
+          <div className={mismatch ? "ts-warn" : "text-muted"} style={{ fontSize: 11 }}>
             {mismatch && <i className="fas fa-triangle-exclamation me-1"></i>}
             Sheet says {written}
           </div>

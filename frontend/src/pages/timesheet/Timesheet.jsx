@@ -124,11 +124,11 @@ export default function Timesheet() {
       </section>
 
       {showCutOff && (
-        <div className={`alert alert-${cutOffTone} d-flex align-items-start gap-3 py-2 px-3 mb-4`}>
-          <i className="fas fa-clock flex-shrink-0 mt-1"></i>
+        <div className={`ts-notice ts-notice-${cutOffTone} d-flex align-items-start gap-3 py-2 px-3 mb-4`}>
+          <i className="fas fa-clock ts-notice-icon flex-shrink-0 mt-1"></i>
           <div style={{ fontSize: "0.8125rem" }}>
             <strong>{cutOffHeadline}</strong>
-            <div style={{ fontSize: 11.5 }}>
+            <div className="ts-notice-sub" style={{ fontSize: 11.5 }}>
               {unapproved > 0 && `${unapproved} sheet${unapproved === 1 ? "" : "s"} not yet approved`}
               {unapproved > 0 && gaps > 0 && " · "}
               {gaps > 0 && `${gaps} employee${gaps === 1 ? "" : "s"} with missing days`}

@@ -144,13 +144,13 @@ export function TimesheetFiles({ files = [] }) {
           ) : (
             <>
               {clean.length > 0 && (
-                <div className="alert alert-success d-flex flex-column flex-sm-row align-items-sm-center gap-2 gap-sm-3 mx-3 mt-3 mb-0 py-2 px-3">
-                  <i className="fas fa-circle-check flex-shrink-0"></i>
+                <div className="ts-notice ts-notice-success d-flex flex-column flex-sm-row align-items-sm-center gap-2 gap-sm-3 mx-3 mt-3 mb-3 py-2 px-3">
+                  <i className="fas fa-circle-check ts-notice-icon flex-shrink-0"></i>
                   <div className="flex-grow-1" style={{ fontSize: "0.8125rem" }}>
                     <strong>
                       {clean.length} sheet{clean.length === 1 ? "" : "s"} with nothing flagged
                     </strong>
-                    <div style={{ fontSize: 11.5 }}>
+                    <div className="ts-notice-sub" style={{ fontSize: 11.5 }}>
                       Names matched, signatures present, totals agree with the handwritten figures.
                     </div>
                   </div>
@@ -187,7 +187,7 @@ export function TimesheetFiles({ files = [] }) {
                       )}
                       {duplicates.has(f.id) && (
                         <div
-                          className="text-warning d-flex align-items-center gap-1"
+                          className="ts-warn d-flex align-items-center gap-1"
                           style={{ fontSize: 11.5 }}
                           title={`Same days as ${duplicates
                             .get(f.id)
