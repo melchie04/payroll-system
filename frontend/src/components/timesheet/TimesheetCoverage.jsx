@@ -2,7 +2,8 @@ import { DataCard, Table, Tr, Td, Badge } from "../ui/index.jsx";
 
 // TimesheetCoverage — which employees have approved days for the selected period.
 // A gap means paperwork is missing, not that the person did not work.
-export function TimesheetCoverage({ rows, period }) {
+// Rows arrive already scoped to the client and pay period chosen on the page.
+export function TimesheetCoverage({ rows = [], period }) {
   const covered = rows.filter((r) => !r.gap).length;
   const gaps = rows.length - covered;
   const complete = covered === rows.length;
@@ -55,7 +56,7 @@ export function TimesheetCoverage({ rows, period }) {
         </div>
 
         {rows.length === 0 ? (
-          <div className="text-center text-muted py-5 small">No employees assigned to this client yet.</div>
+          <div className="text-center text-muted py-5 small">No employees to show for this client and pay period.</div>
         ) : (
           <Table headers={["Employee", "Client", "Sheets", "Days Covered", "Status"]} itemLabel="employees" pageSize={10} mobilePageSize={4}>
             {rows.map((r) => (

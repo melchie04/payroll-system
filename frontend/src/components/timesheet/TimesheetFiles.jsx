@@ -1,15 +1,38 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { DataCard, Table, Tr, Td, Badge, BtnSecondary, BtnDanger, Modal, ActionsMenu, FilterSelect, SearchInput } from "../ui/index.jsx";
 import { useTimesheets } from "../../context/TimesheetContext.jsx";
 
+const ALL_STATUSES = "All Statuses";
+const ALL_SOURCES = "All Sources";
+const STATUS_OPTIONS = ["Needs Review", "Approved", "Processing", "Failed"];
+const SOURCE_OPTIONS = ["Scan", "Photo"];
+
 // TimesheetFiles — uploaded sheets tab; owns its table and its own modals.
-export function TimesheetFiles() {
+// The list arrives already scoped to the client and pay period chosen on the page,
+// and is narrowed further by the three filters below.
+export function TimesheetFiles({ files = [] }) {
   const navigate = useNavigate();
-  const { files, retryFile, discardFile } = useTimesheets();
+  const { retryFile, discardFile } = useTimesheets();
+
+  const [status, setStatus] = useState(ALL_STATUSES);
+  const [source, setSource] = useState(ALL_SOURCES);
+  const [search, setSearch] = useState("");
 
   const [retryTarget, setRetryTarget] = useState(null);
   const [discardTarget, setDiscardTarget] = useState(null);
+
+  const visible = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    return files.filter((f) => {
+      if (status !== ALL_STATUSES && f.status !== status) return false;
+      if (source !== ALL_SOURCES && f.source !== source) return false;
+      if (!query) return true;
+      return `${f.name} ${f.employee?.name || ""}`.toLowerCase().includes(query);
+    });
+  }, [files, status, source, search]);
+
+  const filtered = visible.length !== files.length;
 
   function handleRetry() {
     if (retryTarget) {
@@ -32,34 +55,60 @@ export function TimesheetFiles() {
       <section className="mb-4">
         <div className="row g-3 align-items-end">
           <div className="col-12 col-md-4">
-            <FilterSelect label="Status">
-              <option>All Statuses</option>
-              <option>Needs Review</option>
-              <option>Approved</option>
-              <option>Processing</option>
-              <option>Failed</option>
+            <FilterSelect label="Status" value={status} onChange={(e) => setStatus(e.target.value)}>
+              <option>{ALL_STATUSES}</option>
+              {STATUS_OPTIONS.map((s) => (
+                <option key={s}>{s}</option>
+              ))}
             </FilterSelect>
           </div>
           <div className="col-12 col-md-4">
-            <FilterSelect label="Source">
-              <option>All Sources</option>
-              <option>Scan</option>
-              <option>Photo</option>
+            <FilterSelect label="Source" value={source} onChange={(e) => setSource(e.target.value)}>
+              <option>{ALL_SOURCES}</option>
+              {SOURCE_OPTIONS.map((s) => (
+                <option key={s}>{s}</option>
+              ))}
             </FilterSelect>
           </div>
           <div className="col-12 col-md-4">
-            <SearchInput label="Search Sheets" placeholder="Search file or employee" />
+            <SearchInput
+              label="Search Sheets"
+              placeholder="Search file or employee"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
           </div>
         </div>
       </section>
 
       <section className="mb-3">
-        <DataCard title="Uploaded Sheets">
+        <DataCard
+          title="Uploaded Sheets"
+          action={
+            <span className="text-muted" style={{ fontSize: 11.5 }}>
+              {filtered ? `${visible.length} of ${files.length} sheets` : `${files.length} sheet${files.length === 1 ? "" : "s"}`}
+            </span>
+          }
+        >
           {files.length === 0 ? (
             <div className="text-center text-muted py-5 small">No sheets uploaded for this client and pay period yet.</div>
+          ) : visible.length === 0 ? (
+            <div className="text-center text-muted py-5 small">
+              <div>No sheets match the filters above.</div>
+              <BtnSecondary
+                className="mt-3"
+                onClick={() => {
+                  setStatus(ALL_STATUSES);
+                  setSource(ALL_SOURCES);
+                  setSearch("");
+                }}
+              >
+                <i className="fas fa-rotate-left"></i> Clear Filters
+              </BtnSecondary>
+            </div>
           ) : (
             <Table headers={["Sheet", "Uploaded", "Employee", "Sheet Period", "Status", "Actions"]} itemLabel="sheets" pageSize={10} mobilePageSize={4}>
-              {files.map((f) => (
+              {visible.map((f) => (
                 <Tr key={f.id}>
                   <Td>
                     <div className="fw-semibold text-truncate" style={{ maxWidth: 440 }} title={f.name}>

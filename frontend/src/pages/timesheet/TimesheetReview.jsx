@@ -2,12 +2,14 @@ import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { DataCard, Table, Tr, Td, Badge, BtnPrimary, BtnSecondary, BtnDanger, PageHeader, TabsNav } from "../../components/ui/index.jsx";
 import { useTimesheets } from "../../context/TimesheetContext.jsx";
+import { clientNames, employeeNames, sheetPeriods } from "../../assets/data/index.js";
 
-// Suggestions for the sheet fields. Each field stays typeable: OCR can read a name
-// or a period that is not on the list yet, and the operator should be able to keep it.
-const EMPLOYEE_OPTIONS = ["Juan Dela Cruz", "Maria Santos", "Pedro Reyes", "Ana Lim"];
-const CLIENT_OPTIONS = ["Acme Corp", "Globex Inc", "Wayne Construction"];
-const PERIOD_OPTIONS = ["Jun 12 – Jun 25, 2026", "May 26 – Jun 11, 2026"];
+// Suggestions for the sheet fields, taken from the same lists the rest of the app
+// filters against. Each field stays typeable: OCR can read a name or a period that
+// is not on the list yet, and the operator should be able to keep it.
+const EMPLOYEE_OPTIONS = employeeNames;
+const CLIENT_OPTIONS = clientNames;
+const PERIOD_OPTIONS = sheetPeriods;
 const HALF_OPTIONS = ["1-15", "16-31"];
 
 // Minutes between two "HH:MM" strings, or 0 when either is blank.

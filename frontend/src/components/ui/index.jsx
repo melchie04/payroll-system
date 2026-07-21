@@ -246,8 +246,9 @@ export function FilterSelect({ label, children, ...rest }) {
   );
 }
 
-// SearchInput — search box with a leading icon.
-export function SearchInput({ label, placeholder }) {
+// SearchInput — search box with a leading icon. Pass value and onChange to filter
+// with it; left out, it behaves exactly as before.
+export function SearchInput({ label, placeholder, value, onChange, ...rest }) {
   return (
     <div className="w-100">
       {label && (
@@ -259,7 +260,7 @@ export function SearchInput({ label, placeholder }) {
         <span className="input-group-text bg-white">
           <i className="fas fa-search text-muted"></i>
         </span>
-        <input type="text" className="form-control" placeholder={placeholder} />
+        <input type="text" className="form-control" placeholder={placeholder} value={value} onChange={onChange} {...rest} />
       </div>
     </div>
   );
