@@ -148,15 +148,29 @@ export function TimesheetProvider({ children }) {
     return created;
   }
 
+  // rejectFile — sends the sheet back with the reasons the sender has to act on.
+  // Nothing is deleted: the document stays on file so the reason can be read later.
+  function rejectFile(id, rejection) {
+    updateFile(id, {
+      status: "Rejected",
+      rejection: {
+        reasons: rejection?.reasons || [],
+        note: (rejection?.note || "").trim(),
+        at: new Date().toISOString(),
+      },
+    });
+  }
+
+  // Reading the sheet again supersedes whatever it was rejected for.
   function retryFile(id) {
-    updateFile(id, { status: "Processing" });
+    updateFile(id, { status: "Processing", rejection: null });
   }
 
   function discardFile(id) {
     setFiles((prev) => prev.filter((f) => String(f.id) !== String(id)));
   }
 
-  const value = { files, getFileById, updateFile, saveFile, approveFile, addSheets, retryFile, discardFile };
+  const value = { files, getFileById, updateFile, saveFile, approveFile, addSheets, rejectFile, retryFile, discardFile };
 
   return <TimesheetContext.Provider value={value}>{children}</TimesheetContext.Provider>;
 }

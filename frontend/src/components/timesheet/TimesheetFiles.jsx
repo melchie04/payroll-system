@@ -5,7 +5,7 @@ import { useTimesheets, findDuplicateSheets } from "../../context/TimesheetConte
 
 const ALL_STATUSES = "All Statuses";
 const ALL_SOURCES = "All Sources";
-const STATUS_OPTIONS = ["Needs Review", "Approved", "Processing", "Failed"];
+const STATUS_OPTIONS = ["Needs Review", "Approved", "Processing", "Rejected", "Failed"];
 const SOURCE_OPTIONS = ["Scan", "Photo"];
 
 // TimesheetFiles — uploaded sheets tab; owns its table and its own modals.
@@ -126,6 +126,19 @@ export function TimesheetFiles({ files = [] }) {
                     <div className="fw-semibold text-truncate" style={{ maxWidth: 440 }} title={f.name}>
                       {f.name}
                     </div>
+                    {f.rejection && (
+                      <div
+                        className="text-danger d-flex align-items-center gap-1 text-truncate"
+                        style={{ fontSize: 11.5, maxWidth: 440 }}
+                        title={[f.rejection.reasons.join(" · "), f.rejection.note].filter(Boolean).join(" — ")}
+                      >
+                        <i className="fas fa-rotate-left flex-shrink-0"></i>
+                        <span className="text-truncate">
+                          {f.rejection.reasons[0] || f.rejection.note || "Sent back to be re-scanned"}
+                          {f.rejection.reasons.length > 1 && ` +${f.rejection.reasons.length - 1} more`}
+                        </span>
+                      </div>
+                    )}
                     {duplicates.has(f.id) && (
                       <div
                         className="text-warning d-flex align-items-center gap-1"
@@ -165,7 +178,17 @@ export function TimesheetFiles({ files = [] }) {
                           icon: "fa-list-check",
                           onClick: () => navigate(`/timesheet/${f.id}`),
                         },
-                        f.status === "Approved" && { label: "View sheet", icon: "fa-eye", onClick: () => navigate(`/timesheet/${f.id}`) },
+                        (f.status === "Approved" || f.status === "Rejected") && {
+                          label: "View sheet",
+                          icon: "fa-eye",
+                          onClick: () => navigate(`/timesheet/${f.id}`),
+                        },
+                        f.status === "Rejected" && {
+                          label: "Read again",
+                          icon: "fa-rotate-left",
+                          modalTarget: "timesheetRetryModal",
+                          onClick: () => setRetryTarget(f),
+                        },
                         f.status === "Failed" && {
                           label: "Retry extraction",
                           icon: "fa-rotate-left",
@@ -216,7 +239,11 @@ export function TimesheetFiles({ files = [] }) {
             <p className="mb-1" style={{ overflowWrap: "anywhere" }}>
               Read <strong>{retryTarget?.name}</strong> again?
             </p>
-            <p className="text-muted small mb-0">{retryTarget?.failureReason}</p>
+            <p className="text-muted small mb-0">
+              {retryTarget?.failureReason ||
+                [retryTarget?.rejection?.reasons.join(" · "), retryTarget?.rejection?.note].filter(Boolean).join(" — ") ||
+                "The sheet will be read again from the uploaded document."}
+            </p>
           </div>
         </div>
       </Modal>

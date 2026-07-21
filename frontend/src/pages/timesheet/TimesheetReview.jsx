@@ -12,6 +12,18 @@ const CLIENT_OPTIONS = clientNames;
 const PERIOD_OPTIONS = sheetPeriods;
 const HALF_OPTIONS = ["1-15", "16-31"];
 
+// The rejection list from the upload requirements, in the words the sender needs
+// to act on. Whatever is ticked here is what goes back to them.
+const REJECT_REASONS = [
+  "Not the standard STRON'L form",
+  "Part of the sheet is outside the frame",
+  "Blurred, skewed, or glare on the page",
+  "Period Covered is blank or unreadable",
+  "More than one document in the image",
+  "Wrong form half for the dates written",
+  "Handwriting cannot be read reliably",
+];
+
 // Minutes between two "HH:MM" strings, or 0 when either is blank.
 function span(from, to) {
   if (!from || !to) return 0;
@@ -36,7 +48,7 @@ function rowTotals(row) {
 export default function TimesheetReview() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { files, getFileById, approveFile, saveFile } = useTimesheets();
+  const { files, getFileById, approveFile, saveFile, rejectFile } = useTimesheets();
 
   const file = getFileById(id);
 
@@ -55,11 +67,21 @@ export default function TimesheetReview() {
   const backToSheets = () => navigate("/timesheet", { state: { tab: "sheets" } });
 
   // key resets the form when the reviewer moves straight from one sheet to another.
-  return <TimesheetReviewForm key={file.id} file={file} files={files} onBack={backToSheets} onApprove={approveFile} onSave={saveFile} />;
+  return (
+    <TimesheetReviewForm
+      key={file.id}
+      file={file}
+      files={files}
+      onBack={backToSheets}
+      onApprove={approveFile}
+      onSave={saveFile}
+      onReject={rejectFile}
+    />
+  );
 }
 
 // TimesheetReviewForm — the sheet itself, once we know it exists.
-function TimesheetReviewForm({ file, files, onBack, onApprove, onSave }) {
+function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, onReject }) {
   const [rows, setRows] = useState(file.rows);
   const [employee, setEmployee] = useState(file.employee.name || "");
   const [period, setPeriod] = useState(file.period.label || "");
@@ -67,7 +89,15 @@ function TimesheetReviewForm({ file, files, onBack, onApprove, onSave }) {
   const [client, setClient] = useState(file.client || "");
   const [half, setHalf] = useState(file.half || "");
 
-  const readOnly = file.status === "Approved";
+  const readOnly = file.status === "Approved" || file.status === "Rejected";
+
+  const [rejectReasons, setRejectReasons] = useState([]);
+  const [rejectNote, setRejectNote] = useState("");
+  const canReject = rejectReasons.length > 0 || rejectNote.trim().length > 0;
+
+  function toggleReason(reason) {
+    setRejectReasons((prev) => (prev.includes(reason) ? prev.filter((r) => r !== reason) : [...prev, reason]));
+  }
 
   // What is on screen versus what was last written to the sheet. Comparing the two
   // is what tells the reviewer whether anything would be lost by leaving.
@@ -110,14 +140,25 @@ function TimesheetReviewForm({ file, files, onBack, onApprove, onSave }) {
 
   // Leaves the sheet. When the prompt is open it is dismissed first and the page
   // waits for Bootstrap to finish hiding it, so navigating never strands a backdrop.
-  function leave() {
-    const modal = document.getElementById("timesheetUnsavedModal");
+  function leaveVia(modalId, closeId) {
+    const modal = document.getElementById(modalId);
     if (modal?.classList.contains("show")) {
       modal.addEventListener("hidden.bs.modal", onBack, { once: true });
-      document.getElementById("timesheetUnsavedClose")?.click();
+      document.getElementById(closeId)?.click();
       return;
     }
     onBack();
+  }
+
+  function leave() {
+    leaveVia("timesheetUnsavedModal", "timesheetUnsavedClose");
+  }
+
+  // Rejecting supersedes any unsaved corrections, so it does not go through the
+  // unsaved prompt: the sheet is going back either way.
+  function handleReject() {
+    onReject(file.id, { reasons: rejectReasons, note: rejectNote });
+    leaveVia("timesheetRejectModal", "timesheetRejectClose");
   }
 
   function handleSaveAndClose() {
@@ -192,12 +233,24 @@ function TimesheetReviewForm({ file, files, onBack, onApprove, onSave }) {
 
   // The scanned sheet holds the left column; the attention card and the details
   // stack in the right one, so their widths no longer depend on each other.
-  const hasAttention = blockers.length > 0 || mismatches.length > 0 || lowConfidenceCells > 0;
-  const attentionCount = blockers.length + mismatches.length + (lowConfidenceCells > 0 ? 1 : 0);
+  const hasAttention = Boolean(file.rejection) || blockers.length > 0 || mismatches.length > 0 || lowConfidenceCells > 0;
+  const attentionCount = (file.rejection ? 1 : 0) + blockers.length + mismatches.length + (lowConfidenceCells > 0 ? 1 : 0);
 
   // Mirrors File Requirements on the Upload tab: every finding is one list row
   // with an icon, what it is, and a pill saying what kind of finding it is.
+  const rejection = file.rejection;
   const attentionItems = [
+    ...(rejection
+      ? [
+          {
+            icon: "fa-rotate-left",
+            tone: "text-danger",
+            title: "Sent back to be re-scanned",
+            sub: [rejection.reasons.join(" · "), rejection.note].filter(Boolean).join(" — ") || "No reason recorded.",
+            level: "Rejected",
+          },
+        ]
+      : []),
     ...mismatches.map((m) => ({
       icon: "fa-scale-unbalanced",
       tone: "text-warning",
@@ -303,7 +356,7 @@ function TimesheetReviewForm({ file, files, onBack, onApprove, onSave }) {
                 <BtnSecondary className="justify-content-center" onClick={handleSaveAndClose}>
                   <i className="fas fa-floppy-disk"></i> Save and close
                 </BtnSecondary>
-                <BtnDanger className="justify-content-center">
+                <BtnDanger className="justify-content-center" data-bs-toggle="modal" data-bs-target="#timesheetRejectModal">
                   <i className="fas fa-rotate-left"></i> Reject and re-scan
                 </BtnDanger>
               </div>
@@ -563,6 +616,52 @@ function TimesheetReviewForm({ file, files, onBack, onApprove, onSave }) {
           </section>
         </>
       )}
+
+      <Modal
+        id="timesheetRejectModal"
+        title="Reject and Re-scan"
+        footer={
+          <>
+            <BtnSecondary id="timesheetRejectClose" data-bs-dismiss="modal">
+              Cancel
+            </BtnSecondary>
+            <BtnDanger disabled={!canReject} onClick={handleReject}>
+              <i className="fas fa-rotate-left"></i> Reject Sheet
+            </BtnDanger>
+          </>
+        }
+      >
+        <p className="text-muted small mb-3">
+          Tick everything that has to be fixed. This is what goes back to whoever sent the sheet, so the same scan is not simply uploaded again.
+        </p>
+
+        <div className="border rounded-3 overflow-hidden mb-3">
+          <div className="list-group list-group-flush">
+            {REJECT_REASONS.map((reason) => (
+              <label className="list-group-item d-flex align-items-center gap-2 px-3 py-2 mb-0" key={reason} style={{ cursor: "pointer" }}>
+                <input
+                  className="form-check-input flex-shrink-0 mt-0"
+                  type="checkbox"
+                  checked={rejectReasons.includes(reason)}
+                  onChange={() => toggleReason(reason)}
+                />
+                <span style={{ fontSize: "0.8125rem" }}>{reason}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        <label className="form-label text-uppercase text-muted fw-semibold mb-1 d-block" style={{ fontSize: 11, letterSpacing: 0.5 }}>
+          Note (optional)
+        </label>
+        <textarea
+          className="form-control"
+          rows={2}
+          value={rejectNote}
+          onChange={(e) => setRejectNote(e.target.value)}
+          placeholder="e.g. days 8 to 14 are covered by a shadow"
+        />
+      </Modal>
 
       <button type="button" id="timesheetUnsavedTrigger" className="d-none" data-bs-toggle="modal" data-bs-target="#timesheetUnsavedModal" />
 

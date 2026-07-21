@@ -18,6 +18,7 @@ const statusVariant = {
   Overdue: "danger",
   Delayed: "danger",
   Failed: "danger",
+  Rejected: "danger",
   Inactive: "danger",
   Sent: "primary",
   Processing: "primary",
