@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { DataCard, Table, Tr, Td, Badge, BtnPrimary, BtnSecondary, BtnDanger, PageHeader, TabsNav } from "../../components/ui/index.jsx";
+import { DataCard, Table, Tr, Td, Badge, BtnPrimary, BtnSecondary, BtnDanger, Modal, PageHeader, TabsNav } from "../../components/ui/index.jsx";
 import { useTimesheets } from "../../context/TimesheetContext.jsx";
 import { clientNames, employeeNames, sheetPeriods } from "../../assets/data/index.js";
 
@@ -36,7 +36,7 @@ function rowTotals(row) {
 export default function TimesheetReview() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { getFileById, approveFile } = useTimesheets();
+  const { getFileById, approveFile, saveFile } = useTimesheets();
 
   const file = getFileById(id);
 
@@ -54,11 +54,12 @@ export default function TimesheetReview() {
   // Sheets are opened from the Uploaded Sheets tab, so that is where leaving returns to.
   const backToSheets = () => navigate("/timesheet", { state: { tab: "sheets" } });
 
-  return <TimesheetReviewForm file={file} onBack={backToSheets} onApprove={approveFile} />;
+  // key resets the form when the reviewer moves straight from one sheet to another.
+  return <TimesheetReviewForm key={file.id} file={file} onBack={backToSheets} onApprove={approveFile} onSave={saveFile} />;
 }
 
 // TimesheetReviewForm — the sheet itself, once we know it exists.
-function TimesheetReviewForm({ file, onBack, onApprove }) {
+function TimesheetReviewForm({ file, onBack, onApprove, onSave }) {
   const [rows, setRows] = useState(file.rows);
   const [employee, setEmployee] = useState(file.employee.name || "");
   const [period, setPeriod] = useState(file.period.label || "");
@@ -67,6 +68,75 @@ function TimesheetReviewForm({ file, onBack, onApprove }) {
   const [half, setHalf] = useState(file.half || "");
 
   const readOnly = file.status === "Approved";
+
+  // What is on screen versus what was last written to the sheet. Comparing the two
+  // is what tells the reviewer whether anything would be lost by leaving.
+  const draft = { rows, employee, client, period, half, periodConfirmed };
+  const savedState = useMemo(
+    () => ({
+      rows: file.rows,
+      employee: file.employee.name || "",
+      client: file.client || "",
+      period: file.period.label || "",
+      half: file.half || "",
+      periodConfirmed: file.period.confirmed,
+    }),
+    [file],
+  );
+
+  const changed = [
+    employee !== savedState.employee && "Employee",
+    client !== savedState.client && "Client",
+    period !== savedState.period && "Period Covered",
+    half !== savedState.half && "Sheet Half",
+    periodConfirmed !== savedState.periodConfirmed && "Period confirmation",
+    JSON.stringify(rows) !== JSON.stringify(savedState.rows) && "Daily entries",
+  ].filter(Boolean);
+
+  const isDirty = !readOnly && changed.length > 0;
+  const savedAt = file.savedAt ? new Date(file.savedAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : null;
+
+  // The browser's own prompt is the only thing that can cover a refresh or a
+  // closed tab, so it is armed only while there is unsaved work.
+  useEffect(() => {
+    if (!isDirty) return undefined;
+    const warn = (e) => {
+      e.preventDefault();
+      e.returnValue = "";
+    };
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [isDirty]);
+
+  // Leaves the sheet. When the prompt is open it is dismissed first and the page
+  // waits for Bootstrap to finish hiding it, so navigating never strands a backdrop.
+  function leave() {
+    const modal = document.getElementById("timesheetUnsavedModal");
+    if (modal?.classList.contains("show")) {
+      modal.addEventListener("hidden.bs.modal", onBack, { once: true });
+      document.getElementById("timesheetUnsavedClose")?.click();
+      return;
+    }
+    onBack();
+  }
+
+  function handleSaveAndClose() {
+    onSave(file.id, draft);
+    leave();
+  }
+
+  function handleDiscardAndClose() {
+    leave();
+  }
+
+  // Leaving is only interrupted when there is something to lose.
+  function handleBack() {
+    if (!isDirty) {
+      onBack();
+      return;
+    }
+    document.getElementById("timesheetUnsavedTrigger")?.click();
+  }
 
   const computed = rows.reduce(
     (acc, r) => {
@@ -144,14 +214,27 @@ function TimesheetReviewForm({ file, onBack, onApprove }) {
     <>
       <section>
         <div className="mt-4 d-flex align-items-start gap-2">
-          <button type="button" onClick={onBack} className="nav-icon-btn flex-shrink-0" style={{ marginTop: -6 }} aria-label="Back">
+          <button type="button" onClick={handleBack} className="nav-icon-btn flex-shrink-0" style={{ marginTop: -6 }} aria-label="Back">
             <i className="fas fa-arrow-left"></i>
           </button>
           <div className="flex-grow-1">
             <PageHeader
               title="Timesheet Review"
               description={`${client} · ${period} · Form ${file.formCode}`}
-              actions={<Badge status={file.status} />}
+              actions={
+                <div className="d-flex align-items-center gap-2">
+                  {isDirty ? (
+                    <span className="badge rounded-pill status-badge status-badge-warning text-nowrap">Unsaved changes</span>
+                  ) : (
+                    savedAt && (
+                      <span className="text-muted text-nowrap" style={{ fontSize: 11.5 }}>
+                        Saved {savedAt}
+                      </span>
+                    )
+                  )}
+                  <Badge status={file.status} />
+                </div>
+              }
             />
           </div>
         </div>
@@ -167,15 +250,11 @@ function TimesheetReviewForm({ file, onBack, onApprove }) {
           {!readOnly && (
             <div className="col-12 col-xl-6">
               <div className="d-flex flex-column flex-sm-row flex-wrap gap-2 justify-content-xl-end">
-                <BtnPrimary
-                  className="justify-content-center"
-                  disabled={blockers.length > 0}
-                  onClick={() => onApprove(file.id, rows)}
-                >
+                <BtnPrimary className="justify-content-center" disabled={blockers.length > 0} onClick={() => onApprove(file.id, draft)}>
                   <i className="fas fa-circle-check"></i> Approve Sheet
                 </BtnPrimary>
-                <BtnSecondary className="justify-content-center" onClick={onBack}>
-                  Save and close
+                <BtnSecondary className="justify-content-center" onClick={handleSaveAndClose}>
+                  <i className="fas fa-floppy-disk"></i> Save and close
                 </BtnSecondary>
                 <BtnDanger className="justify-content-center">
                   <i className="fas fa-rotate-left"></i> Reject and re-scan
@@ -436,6 +515,44 @@ function TimesheetReviewForm({ file, onBack, onApprove }) {
           </section>
         </>
       )}
+
+      <button type="button" id="timesheetUnsavedTrigger" className="d-none" data-bs-toggle="modal" data-bs-target="#timesheetUnsavedModal" />
+
+      <Modal
+        id="timesheetUnsavedModal"
+        title="Unsaved Changes"
+        footer={
+          <>
+            <BtnSecondary id="timesheetUnsavedClose" data-bs-dismiss="modal">
+              Keep Editing
+            </BtnSecondary>
+            <BtnDanger onClick={handleDiscardAndClose}>
+              <i className="fas fa-trash"></i> Discard Changes
+            </BtnDanger>
+            <BtnPrimary onClick={handleSaveAndClose}>
+              <i className="fas fa-floppy-disk"></i> Save and Close
+            </BtnPrimary>
+          </>
+        }
+      >
+        <div className="d-flex align-items-start gap-3">
+          <div
+            className="d-flex align-items-center justify-content-center flex-shrink-0 rounded-3 bg-warning bg-opacity-10 text-warning"
+            style={{ width: 40, height: 40, fontSize: 15 }}
+          >
+            <i className="fas fa-triangle-exclamation"></i>
+          </div>
+          <div style={{ minWidth: 0 }}>
+            <p className="mb-1" style={{ overflowWrap: "anywhere" }}>
+              Leave <strong>{file.name}</strong> without saving?
+            </p>
+            <p className="text-muted small mb-0">
+              {changed.length === 1 ? "One section has" : `${changed.length} sections have`} been edited since this sheet was last saved:{" "}
+              {changed.join(", ")}.
+            </p>
+          </div>
+        </div>
+      </Modal>
     </>
   );
 }
