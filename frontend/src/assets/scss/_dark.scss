@@ -1,5 +1,5 @@
 // Dark mode.
-// Loaded last so it can retarget any component above. Bootstrap 5.2.3 predates data-bs-theme surface support, so each component's own variables are repointed here rather than editing markup.
+// Loaded last so it can retarget any component above. Layers the app's dark palette over Bootstrap 5.3.8's data-bs-theme dark mode by repointing each component's own CSS variables here rather than editing markup.
 
 [data-bs-theme="dark"] {
   --app-dark-bg: #16181b;
