@@ -6,6 +6,7 @@ import { clientNames } from "../../assets/data/index.js";
 
 const emptyForm = {
   name: "",
+  code: "",
   client: "Acme Corp",
   position: "",
   email: "",
@@ -32,6 +33,7 @@ export default function EmployeeForm() {
     if (!existing) return emptyForm;
     return {
       name: existing.name,
+      code: existing.code || "",
       client: existing.client,
       position: existing.position,
       email: existing.email,
@@ -129,6 +131,18 @@ export default function EmployeeForm() {
                   onChange={handleChange}
                   placeholder="e.g. Juan Dela Cruz"
                   required
+                />
+              </FormField>
+            </div>
+            <div className="col-12 col-md-6">
+              <FormField label="Employee Code">
+                <input
+                  type="text"
+                  className="form-control"
+                  name="code"
+                  value={form.code}
+                  onChange={handleChange}
+                  placeholder="e.g. EMP-001"
                 />
               </FormField>
             </div>

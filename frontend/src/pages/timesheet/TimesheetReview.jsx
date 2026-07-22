@@ -209,7 +209,7 @@ function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, onReject 
   // Days already carried by another sheet for the same person would be paid twice.
   // A clash with an approved sheet blocks; a clash with one still under review is a
   // warning, because the reviewer is the one who decides which of the two to keep.
-  const duplicates = findDuplicateSheets(files || [], file, draft);
+  const duplicates = findDuplicateSheets(files || [], file, draft, employees);
   const approvedDuplicates = duplicates.filter((d) => d.status === "Approved");
   const pendingDuplicates = duplicates.filter((d) => d.status !== "Approved");
 

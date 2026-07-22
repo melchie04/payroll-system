@@ -69,15 +69,21 @@ export function checkPeriodHalf(label, half) {
 // findDuplicateSheets — other sheets that already carry some of the same days for
 // the same person. Those days would otherwise be paid twice. Sheets that have not
 // been read yet cannot conflict, because nothing is known about their dates.
-export function findDuplicateSheets(files, target, draft) {
-  const name = ((draft ? draft.employee : target?.employee?.name) || "").trim().toLowerCase();
+export function findDuplicateSheets(files, target, draft, roster = []) {
+  // Identity key prefers the resolved roster id so two sheets for the same person still
+  // clash when the scanned names differ; a live edit (draft) resolves by its typed name.
+  const self = draft ? { name: draft.employee } : target?.employee;
+  const selfResolved = resolveEmployee(self, roster);
+  const key = selfResolved ? `id:${selfResolved.id}` : (self?.name || "").trim().toLowerCase();
   const range = parsePeriodLabel(draft ? draft.period : target?.period?.label);
-  if (!name || !range) return [];
+  if (!key || !range) return [];
 
   return files.filter((other) => {
     if (String(other.id) === String(target?.id)) return false;
     if (other.status === "Failed" || other.status === "Processing") return false;
-    if ((other.employee?.name || "").trim().toLowerCase() !== name) return false;
+    const otherResolved = resolveEmployee(other.employee, roster);
+    const otherKey = otherResolved ? `id:${otherResolved.id}` : (other.employee?.name || "").trim().toLowerCase();
+    if (otherKey !== key) return false;
     const otherRange = parsePeriodLabel(other.period?.label);
     if (!otherRange) return false;
     return range.from <= otherRange.to && range.to >= otherRange.from;
@@ -102,6 +108,18 @@ export function rowTotals(row) {
   const regular = span(row.amIn, row.amOut) + span(row.pmIn, row.pmOut);
   const overtime = span(row.otIn, row.otOut);
   return { regular: hours(regular), overtime: hours(overtime), worked: regular > 0 };
+}
+
+// resolveEmployee — the roster record a sheet points at. Prefers the stable id link the
+// scan resolved, falling back to the name so a hand-typed correction still lands.
+export function resolveEmployee(employee, roster = []) {
+  if (!employee) return null;
+  if (employee.employeeId != null) {
+    const byId = roster.find((e) => e.id === employee.employeeId);
+    if (byId) return byId;
+  }
+  const name = (employee.name || "").trim().toLowerCase();
+  return name ? roster.find((e) => e.name.trim().toLowerCase() === name) || null : null;
 }
 
 // scheduleFor — the standard start and end time on an employee's record. Resolved
@@ -177,7 +195,7 @@ export function sheetFindings(file, allFiles = [], roster = []) {
   if (!signatures.client) findings.push("Client signature not detected");
 
   if (findDuplicateSheets(allFiles, file, null).length > 0) findings.push("Days already covered by another sheet");
-  const schedule = scheduleFor(file.employee?.name, roster);
+  const schedule = resolveEmployee(file.employee, roster)?.schedule || null;
   if (sheetMismatches(file.rows, file.handwritten, schedule).length > 0) findings.push("Totals disagree with the handwritten figures");
 
   const lowConfidence = (file.rows || []).reduce((n, r) => n + (r.lowConfidence ? r.lowConfidence.length : 0), 0);
@@ -202,7 +220,12 @@ function applyDraft(file, draft) {
     rows: draft.rows ?? file.rows,
     client: draft.client ?? file.client,
     half: draft.half ?? file.half,
-    employee: { ...file.employee, name: draft.employee || null },
+    employee: {
+      ...file.employee,
+      name: draft.employee || null,
+      // a name correction drops the scan's id link so resolution follows the typed name
+      employeeId: draft.employee && draft.employee === file.employee?.name ? file.employee?.employeeId : null,
+    },
     period: { ...file.period, label: draft.period || null, confirmed: Boolean(draft.periodConfirmed) },
     savedAt: new Date().toISOString(),
   };

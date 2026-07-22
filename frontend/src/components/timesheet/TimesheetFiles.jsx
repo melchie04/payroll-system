@@ -65,7 +65,7 @@ export function TimesheetFiles({ files = [] }) {
   const duplicates = useMemo(() => {
     const map = new Map();
     for (const f of files) {
-      const clashes = findDuplicateSheets(allFiles, f, null);
+      const clashes = findDuplicateSheets(allFiles, f, null, employees);
       if (clashes.length > 0) map.set(f.id, clashes);
     }
     return map;

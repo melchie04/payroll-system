@@ -171,6 +171,9 @@ export default function EmployeeProfile() {
                     status={employee.status}
                   />
                   <DetailList>
+                    <DetailRow icon="fa-hashtag" label="Employee Code">
+                      {employee.code || "—"}
+                    </DetailRow>
                     <DetailRow icon="fa-building" label="Client">
                       {employee.client}
                     </DetailRow>

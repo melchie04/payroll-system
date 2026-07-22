@@ -20,10 +20,10 @@ import { useEmployees } from "../../context/EmployeesContext.jsx";
 import { clientNames } from "../../assets/data/index.js";
 import { exportToCsv } from "../../utils/exportToCsv.js";
 
-const CSV_HEADERS = ["Name", "Client", "Position", "Email", "Rate", "Status"];
+const CSV_HEADERS = ["Code", "Name", "Client", "Position", "Email", "Rate", "Status"];
 
 function toCsvRows(list) {
-  return list.map((e) => [e.name, e.client, e.position, e.email, e.rate, e.status]);
+  return list.map((e) => [e.code || "", e.name, e.client, e.position, e.email, e.rate, e.status]);
 }
 
 // Employees — employee list with selection, bulk actions, filters, and export.
@@ -48,7 +48,7 @@ export default function Employees() {
       if (position !== "All Positions" && e.position !== position) return false;
       if (status.length > 0 && !status.includes(e.status)) return false;
       if (!query) return true;
-      return `${e.name} ${e.email}`.toLowerCase().includes(query);
+      return `${e.name} ${e.email} ${e.code || ""}`.toLowerCase().includes(query);
     });
   }, [employees, client, position, search, status]);
 
@@ -209,6 +209,7 @@ export default function Employees() {
                   <Link to={`/employees/${emp.id}`} className="text-decoration-none">
                     {emp.name}
                   </Link>
+                  <div className="text-muted small">{emp.code}</div>
                 </Td>
                 <Td>{emp.client}</Td>
                 <Td>{emp.position}</Td>
