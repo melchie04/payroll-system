@@ -35,6 +35,8 @@ export default function Employees() {
   const [client, setClient] = useState("All Clients");
   const [position, setPosition] = useState("All Positions");
   const [search, setSearch] = useState("");
+  const [statusDraft, setStatusDraft] = useState([]);
+  const [status, setStatus] = useState([]);
 
   // Position options track the roster, so a new position shows up in the filter on its own.
   const positions = useMemo(() => [...new Set(employees.map((e) => e.position))], [employees]);
@@ -44,10 +46,11 @@ export default function Employees() {
     return employees.filter((e) => {
       if (client !== "All Clients" && e.client !== client) return false;
       if (position !== "All Positions" && e.position !== position) return false;
+      if (status.length > 0 && !status.includes(e.status)) return false;
       if (!query) return true;
       return `${e.name} ${e.email}`.toLowerCase().includes(query);
     });
-  }, [employees, client, position, search]);
+  }, [employees, client, position, search, status]);
 
   const toggleOne = (id) => setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
 
@@ -59,6 +62,9 @@ export default function Employees() {
   function toggleAll() {
     setSelected(allSelected ? selected.filter((id) => !visibleIds.includes(id)) : [...new Set([...selected, ...visibleIds])]);
   }
+
+  const toggleStatusDraft = (opt) =>
+    setStatusDraft((prev) => (prev.includes(opt) ? prev.filter((s) => s !== opt) : [...prev, opt]));
 
   const [target, setTarget] = useState(null);
 
@@ -127,10 +133,14 @@ export default function Employees() {
           <div className="col-12 col-md-4">
             <div className="d-flex gap-2 align-items-center w-100">
               <SearchInput placeholder="Search employee" value={search} onChange={(e) => setSearch(e.target.value)} />
-              <FilterMenu>
-                <FilterCheckGroup label="Status" options={["Active", "On Leave"]} />
-                <FilterCheckGroup label="Client" options={["Acme Corp", "Globex Inc", "Initech", "Soylent Corp"]} />
-                <FilterCheckGroup label="Position" options={["Developer", "UI/UX Designer", "QA Engineer", "Business Analyst", "Project Manager"]} />
+              <FilterMenu
+                onApply={() => setStatus(statusDraft)}
+                onReset={() => {
+                  setStatusDraft([]);
+                  setStatus([]);
+                }}
+              >
+                <FilterCheckGroup label="Status" options={["Active", "On Leave"]} selected={statusDraft} onToggle={toggleStatusDraft} />
               </FilterMenu>
             </div>
           </div>
@@ -167,6 +177,8 @@ export default function Employees() {
                   setClient("All Clients");
                   setPosition("All Positions");
                   setSearch("");
+                  setStatusDraft([]);
+                  setStatus([]);
                 }}
               >
                 <i className="fas fa-rotate-left"></i> Clear Filters

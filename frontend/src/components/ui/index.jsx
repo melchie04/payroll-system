@@ -368,7 +368,7 @@ export function ExportMenu({ onExportCsv, label = "Export" }) {
 }
 
 // FilterMenu — filter options dropdown panel with reset/apply.
-export function FilterMenu({ children, onReset }) {
+export function FilterMenu({ children, onReset, onApply }) {
   return (
     <div className="dropdown">
       <button
@@ -397,7 +397,7 @@ export function FilterMenu({ children, onReset }) {
           <button type="button" className="btn btn-sm btn-outline-secondary w-50" onClick={onReset}>
             Reset
           </button>
-          <button type="button" className="btn btn-sm btn-dark w-50">
+          <button type="button" className="btn btn-sm btn-dark w-50" onClick={onApply}>
             Apply
           </button>
         </div>
@@ -406,8 +406,10 @@ export function FilterMenu({ children, onReset }) {
   );
 }
 
-// FilterCheckGroup — labeled checkbox group inside FilterMenu.
-export function FilterCheckGroup({ label, options }) {
+// FilterCheckGroup — labeled checkbox group inside FilterMenu. Pass selected + onToggle
+// to make it filter; left out, it stays uncontrolled and renders exactly as before.
+export function FilterCheckGroup({ label, options, selected, onToggle }) {
+  const controlled = typeof onToggle === "function";
   return (
     <div>
       <div className="text-uppercase text-muted fw-semibold mb-1" style={{ fontSize: 10.5, letterSpacing: 0.5 }}>
@@ -415,7 +417,12 @@ export function FilterCheckGroup({ label, options }) {
       </div>
       {options.map((opt) => (
         <div className="form-check" key={opt}>
-          <input className="form-check-input" type="checkbox" id={`chk-${label}-${opt}`.replace(/\s+/g, "-")} />
+          <input
+            className="form-check-input"
+            type="checkbox"
+            id={`chk-${label}-${opt}`.replace(/\s+/g, "-")}
+            {...(controlled ? { checked: (selected || []).includes(opt), onChange: () => onToggle(opt) } : {})}
+          />
           <label className="form-check-label small" htmlFor={`chk-${label}-${opt}`.replace(/\s+/g, "-")}>
             {opt}
           </label>
