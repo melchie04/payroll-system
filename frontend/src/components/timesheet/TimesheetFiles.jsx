@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { DataCard, Table, Tr, Td, Badge, BtnSecondary, BtnDanger, Modal, ActionsMenu, FilterSelect, SearchInput } from "../ui/index.jsx";
 import { useTimesheets, findDuplicateSheets, isSheetClean, sheetTotals } from "../../context/TimesheetContext.jsx";
+import { useEmployees } from "../../context/EmployeesContext.jsx";
 
 const ALL_STATUSES = "All Statuses";
 const ALL_SOURCES = "All Sources";
@@ -14,6 +15,7 @@ const SOURCE_OPTIONS = ["Scan", "Photo"];
 export function TimesheetFiles({ files = [] }) {
   const navigate = useNavigate();
   const { files: allFiles, retryFile, discardFile, approveMany } = useTimesheets();
+  const { employees } = useEmployees();
 
   const [status, setStatus] = useState(ALL_STATUSES);
   const [source, setSource] = useState(ALL_SOURCES);
@@ -37,7 +39,7 @@ export function TimesheetFiles({ files = [] }) {
 
   // Sheets awaiting review with nothing flagged on them at all. Opening each one
   // would show an empty Needs Attention card, so the reviewer is offered the batch.
-  const clean = useMemo(() => visible.filter((f) => isSheetClean(f, allFiles)), [visible, allFiles]);
+  const clean = useMemo(() => visible.filter((f) => isSheetClean(f, allFiles, employees)), [visible, allFiles, employees]);
 
   // The stored preview is the uploaded file itself, so the download is the original
   // document rather than anything regenerated from it.

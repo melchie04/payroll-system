@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useState } from "react";
-import { timesheetFiles as initialFiles, employees } from "../assets/data/index.js";
+import { timesheetFiles as initialFiles } from "../assets/data/index.js";
 
 const TimesheetContext = createContext(null);
 
@@ -105,12 +105,12 @@ export function rowTotals(row) {
 }
 
 // scheduleFor — the standard start and end time on an employee's record. Resolved
-// from the name currently in the field, so correcting a misread name immediately
-// changes which schedule the sheet is measured against.
-export function scheduleFor(employeeName) {
+// against the live roster passed in, so an edit on the Employees page immediately
+// changes which schedule a sheet is measured against rather than reading stale seed data.
+export function scheduleFor(employeeName, roster = []) {
   const name = (employeeName || "").trim().toLowerCase();
   if (!name) return null;
-  return employees.find((e) => e.name.trim().toLowerCase() === name)?.schedule || null;
+  return roster.find((e) => e.name.trim().toLowerCase() === name)?.schedule || null;
 }
 
 // Minutes late, worked out from the written IN time against the expected start.
@@ -160,7 +160,7 @@ export function sheetMismatches(rows = [], handwritten, schedule = null) {
 // opening it. The one thing left out is the Period Covered tick, because that is a
 // person's confirmation rather than something read off the page; approving in bulk
 // asks for it once, over the whole batch.
-export function sheetFindings(file, allFiles = []) {
+export function sheetFindings(file, allFiles = [], roster = []) {
   if (!file) return ["Sheet not found"];
   const findings = [];
 
@@ -177,7 +177,7 @@ export function sheetFindings(file, allFiles = []) {
   if (!signatures.client) findings.push("Client signature not detected");
 
   if (findDuplicateSheets(allFiles, file, null).length > 0) findings.push("Days already covered by another sheet");
-  const schedule = scheduleFor(file.employee?.name);
+  const schedule = scheduleFor(file.employee?.name, roster);
   if (sheetMismatches(file.rows, file.handwritten, schedule).length > 0) findings.push("Totals disagree with the handwritten figures");
 
   const lowConfidence = (file.rows || []).reduce((n, r) => n + (r.lowConfidence ? r.lowConfidence.length : 0), 0);
@@ -188,8 +188,8 @@ export function sheetFindings(file, allFiles = []) {
 }
 
 // A clean sheet is one with nothing flagged at all, not merely nothing blocking.
-export function isSheetClean(file, allFiles = []) {
-  return sheetFindings(file, allFiles).length === 0;
+export function isSheetClean(file, allFiles = [], roster = []) {
+  return sheetFindings(file, allFiles, roster).length === 0;
 }
 
 // Folds what the review screen holds in its fields back onto the stored sheet.

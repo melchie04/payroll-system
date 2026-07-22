@@ -11,12 +11,14 @@ import {
   sheetTotals,
   sheetMismatches,
 } from "../../context/TimesheetContext.jsx";
-import { clientNames, employeeNames, sheetPeriods } from "../../assets/data/index.js";
+import { clientNames, sheetPeriods } from "../../assets/data/index.js";
+import { useEmployees } from "../../context/EmployeesContext.jsx";
 
 // Suggestions for the sheet fields, taken from the same lists the rest of the app
 // filters against. Each field stays typeable: OCR can read a name or a period that
-// is not on the list yet, and the operator should be able to keep it.
-const EMPLOYEE_OPTIONS = employeeNames;
+// is not on the list yet, and the operator should be able to keep it. Employee names
+// come from the live roster (resolved in the form below), so a newly added or renamed
+// employee shows up here without a refresh.
 const CLIENT_OPTIONS = clientNames;
 const PERIOD_OPTIONS = sheetPeriods;
 const HALF_OPTIONS = ["1-15", "16-31"];
@@ -76,6 +78,11 @@ export default function TimesheetReview() {
 
 // TimesheetReviewForm — the sheet itself, once we know it exists.
 function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, onReject }) {
+  // Employee suggestions and the schedule that drives Late both read the live roster,
+  // so an edit on the Employees page reaches this screen without a reload.
+  const { employees } = useEmployees();
+  const employeeOptions = employees.map((e) => e.name);
+
   const [rows, setRows] = useState(file.rows);
   const [employee, setEmployee] = useState(file.employee.name || "");
   const [period, setPeriod] = useState(file.period.label || "");
@@ -186,7 +193,7 @@ function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, onReject 
 
   // Late follows the employee currently named in the field, not the one the OCR
   // first guessed, so correcting a misread name recalculates the column at once.
-  const schedule = scheduleFor(employee);
+  const schedule = scheduleFor(employee, employees);
 
   const computed = sheetTotals(rows, schedule);
   const hw = file.handwritten || {};
@@ -463,7 +470,7 @@ function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, onReject 
                           label="Employee"
                           value={employee}
                           onChange={setEmployee}
-                          options={EMPLOYEE_OPTIONS}
+                          options={employeeOptions}
                           disabled={readOnly}
                           hint={`Read with ${Math.round(file.employee.confidence * 100)}% confidence`}
                         />
