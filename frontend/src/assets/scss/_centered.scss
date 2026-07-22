@@ -24,7 +24,7 @@
   height: 420px;
   top: -140px;
   left: -120px;
-  background: #4f8cff;
+  background: var(--app-blob-cool);
 }
 
 .centered-bg::after {
@@ -32,7 +32,7 @@
   height: 380px;
   bottom: -150px;
   right: -110px;
-  background: #ff8a65;
+  background: var(--app-blob-warm);
 }
 
 .centered-animate {

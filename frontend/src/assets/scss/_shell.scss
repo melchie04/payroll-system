@@ -62,7 +62,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: #000;
+  background: var(--bs-black);
   z-index: 1037;
   opacity: 0.5;
   transition: opacity 0.3s ease-in-out;
@@ -121,7 +121,7 @@ body {
 // so cards, tables and the tab tray read as raised above it.
 
 #layoutSidenav_content {
-  background-color: #eef0f3;
+  background-color: var(--app-content-bg);
 }
 
 // py-3 and bg-light carry !important, so these must too. The .bg-light
@@ -129,7 +129,7 @@ body {
 #layoutSidenav_content > footer.bg-light {
   padding-top: 0.25rem !important;
   padding-bottom: 0.25rem !important;
-  background-color: #fff !important;
+  background-color: var(--bs-white) !important;
 }
 
 // The footer is a flex container now, so its row needs to claim the width.
@@ -144,13 +144,13 @@ body {
 #layoutSidenav_content > footer,
 #layoutSidenav_content > footer .text-muted,
 #layoutSidenav_content > footer a {
-  color: #212529 !important;
+  color: var(--bs-dark) !important;
   transition: color 0.15s ease-in-out;
 }
 
 #layoutSidenav_content > footer a:hover,
 #layoutSidenav_content > footer a:focus-visible {
-  color: #0d6efd !important;
+  color: var(--bs-primary) !important;
 }
 
 // In dark mode the sidebar already matches the topnav's bg-dark (#212529).

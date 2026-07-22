@@ -60,7 +60,7 @@ $sidenav-expanded-width: 225px;
 }
 
 .sb-sidenav-dark {
-  background-color: #212529;
+  background-color: var(--bs-dark);
   color: rgba(255, 255, 255, 0.5);
 }
 
@@ -80,60 +80,60 @@ $sidenav-expanded-width: 225px;
 }
 
 .sb-sidenav-dark .sb-sidenav-menu .nav-link.active {
-  color: #fff;
+  color: var(--bs-white);
   background-color: rgba(255, 255, 255, 0.2);
 }
 
 .sb-sidenav-dark .sb-sidenav-menu .nav-link.active .sb-nav-link-icon {
-  color: #fff;
+  color: var(--bs-white);
 }
 
 // Footer matches the topnav's bg-dark, not SB Admin's #343a40.
 .sb-sidenav-dark .sb-sidenav-footer {
-  background-color: #212529;
-  border-top-color: #343a40;
+  background-color: var(--bs-dark);
+  border-top-color: var(--bs-gray-800);
 }
 
 // Sidebar matches the topnav's white surface, not SB Admin's #f8f9fa.
 .sb-sidenav-light {
-  background-color: #fff;
-  color: #212529;
+  background-color: var(--bs-white);
+  color: var(--bs-dark);
 }
 
 // Heading tone for the light rail.
 .sb-sidenav-light .sb-sidenav-menu .sb-sidenav-menu-heading {
-  color: #8a929a;
+  color: var(--app-heading-muted);
 }
 
 .sb-sidenav-light .sb-sidenav-menu .nav-link {
-  color: #212529;
+  color: var(--bs-dark);
 }
 
 .sb-sidenav-light .sb-sidenav-menu .nav-link .sb-nav-link-icon {
-  color: #adb5bd;
+  color: var(--bs-gray-500);
 }
 
 .sb-sidenav-light .sb-sidenav-menu .nav-link.active {
-  color: #212529;
+  color: var(--bs-dark);
   background-color: rgba(0, 0, 0, 0.12);
 }
 
 .sb-sidenav-light .sb-sidenav-menu .nav-link.active .sb-nav-link-icon {
-  color: #212529;
+  color: var(--bs-dark);
 }
 
 // Footer sits on the same white surface as the sidebar.
 .sb-sidenav-light .sb-sidenav-footer {
-  background-color: #fff;
-  border-top-color: #dee2e6;
+  background-color: var(--bs-white);
+  border-top-color: var(--bs-gray-300);
 }
 
 .help-footer-btn-light:hover {
-  color: #0d6efd !important;
+  color: var(--bs-primary) !important;
 }
 
 .help-footer-btn-dark:hover {
-  color: #fff !important;
+  color: var(--bs-white) !important;
 }
 
 .sb-sidenav-dark .sb-sidenav-menu .nav-link:hover,
@@ -144,7 +144,7 @@ $sidenav-expanded-width: 225px;
 
 .sb-sidenav-light .sb-sidenav-menu .nav-link:hover,
 .sb-sidenav-light .sb-sidenav-menu .nav-link:focus-visible {
-  color: #212529;
+  color: var(--bs-dark);
   background-color: rgba(0, 0, 0, 0.08);
 }
 
@@ -361,7 +361,7 @@ $sidenav-expanded-width: 225px;
     left: 0;
     width: 100%;
     height: 100%;
-    background: #000;
+    background: var(--bs-black);
     z-index: 1037;
     opacity: 0;
     visibility: hidden;

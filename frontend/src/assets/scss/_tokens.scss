@@ -1,0 +1,13 @@
+// App palette.
+// The colours the app owns, in one place. Framework colours (status, accent,
+// neutrals) are read straight from Bootstrap's own --bs-* tokens at each use
+// site; these are only the values Bootstrap has no token for. Dark values are
+// produced by _dark.scss, which retargets components under [data-bs-theme].
+
+:root {
+  --app-content-bg: #eef0f3;      // Plane behind cards, a step under the surfaces
+  --app-heading-muted: #8a929a;   // Light sidebar section headings
+  --app-blob-cool: #4f8cff;       // Auth/error background wash
+  --app-blob-warm: #ff8a65;
+  --app-dot-rgb: 255, 156, 85;    // Notification pulse (used as rgba)
+}

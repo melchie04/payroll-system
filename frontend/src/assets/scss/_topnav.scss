@@ -40,7 +40,7 @@
 }
 
 .sb-topnav.navbar-light #sidebarToggle {
-  color: #212529;
+  color: var(--bs-dark);
 }
 
 // Icon buttons: unstyled reset, then a round 40px hit area.
@@ -171,13 +171,13 @@
 // The unread dot breathes so it reads as live state.
 @keyframes topnavDotPulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(255, 156, 85, 0.5);
+    box-shadow: 0 0 0 0 rgba(var(--app-dot-rgb), 0.5);
   }
   70% {
-    box-shadow: 0 0 0 6px rgba(255, 156, 85, 0);
+    box-shadow: 0 0 0 6px rgba(var(--app-dot-rgb), 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(255, 156, 85, 0);
+    box-shadow: 0 0 0 0 rgba(var(--app-dot-rgb), 0);
   }
 }
 
