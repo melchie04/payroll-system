@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   DataCard,
   Table,
@@ -17,6 +17,7 @@ import {
   PageHeader,
 } from "../../components/ui/index.jsx";
 import { useEmployees } from "../../context/EmployeesContext.jsx";
+import { clientNames } from "../../assets/data/index.js";
 import { exportToCsv } from "../../utils/exportToCsv.js";
 
 const CSV_HEADERS = ["Name", "Client", "Position", "Email", "Rate", "Status"];
@@ -31,13 +32,32 @@ export default function Employees() {
   const { employees, deleteEmployee } = useEmployees();
 
   const [selected, setSelected] = useState([]);
+  const [client, setClient] = useState("All Clients");
+  const [position, setPosition] = useState("All Positions");
+  const [search, setSearch] = useState("");
+
+  // Position options track the roster, so a new position shows up in the filter on its own.
+  const positions = useMemo(() => [...new Set(employees.map((e) => e.position))], [employees]);
+
+  const visibleEmployees = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    return employees.filter((e) => {
+      if (client !== "All Clients" && e.client !== client) return false;
+      if (position !== "All Positions" && e.position !== position) return false;
+      if (!query) return true;
+      return `${e.name} ${e.email}`.toLowerCase().includes(query);
+    });
+  }, [employees, client, position, search]);
 
   const toggleOne = (id) => setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
 
-  const allSelected = employees.length > 0 && selected.length === employees.length;
+  // Select-all acts on the rows currently shown, so filtering then ticking the header
+  // never selects people the operator cannot see.
+  const visibleIds = visibleEmployees.map((e) => e.id);
+  const allSelected = visibleEmployees.length > 0 && visibleIds.every((id) => selected.includes(id));
 
   function toggleAll() {
-    setSelected(allSelected ? [] : employees.map((e) => e.id));
+    setSelected(allSelected ? selected.filter((id) => !visibleIds.includes(id)) : [...new Set([...selected, ...visibleIds])]);
   }
 
   const [target, setTarget] = useState(null);
@@ -89,24 +109,24 @@ export default function Employees() {
       <section className="mb-4">
         <div className="row g-3 align-items-end">
           <div className="col-12 col-md-4">
-            <FilterSelect>
+            <FilterSelect value={client} onChange={(e) => setClient(e.target.value)}>
               <option>All Clients</option>
-              <option>Acme Corp</option>
-              <option>Globex Inc</option>
-              <option>Initech</option>
+              {clientNames.map((c) => (
+                <option key={c}>{c}</option>
+              ))}
             </FilterSelect>
           </div>
           <div className="col-12 col-md-4">
-            <FilterSelect>
+            <FilterSelect value={position} onChange={(e) => setPosition(e.target.value)}>
               <option>All Positions</option>
-              <option>Developer</option>
-              <option>UI/UX Designer</option>
-              <option>QA Engineer</option>
+              {positions.map((p) => (
+                <option key={p}>{p}</option>
+              ))}
             </FilterSelect>
           </div>
           <div className="col-12 col-md-4">
             <div className="d-flex gap-2 align-items-center w-100">
-              <SearchInput placeholder="Search employee" />
+              <SearchInput placeholder="Search employee" value={search} onChange={(e) => setSearch(e.target.value)} />
               <FilterMenu>
                 <FilterCheckGroup label="Status" options={["Active", "On Leave"]} />
                 <FilterCheckGroup label="Client" options={["Acme Corp", "Globex Inc", "Initech", "Soylent Corp"]} />
@@ -138,6 +158,21 @@ export default function Employees() {
             </div>
           )}
 
+          {visibleEmployees.length === 0 ? (
+            <div className="text-center text-muted py-5 small">
+              <div>No employees match the filters.</div>
+              <BtnSecondary
+                className="mt-3"
+                onClick={() => {
+                  setClient("All Clients");
+                  setPosition("All Positions");
+                  setSearch("");
+                }}
+              >
+                <i className="fas fa-rotate-left"></i> Clear Filters
+              </BtnSecondary>
+            </div>
+          ) : (
           <Table
             headers={[
               <span key="select-all">
@@ -153,7 +188,7 @@ export default function Employees() {
             ]}
             itemLabel="employees"
           >
-            {employees.map((emp) => (
+            {visibleEmployees.map((emp) => (
               <Tr key={emp.id}>
                 <Td>
                   <input className="form-check-input" type="checkbox" checked={selected.includes(emp.id)} onChange={() => toggleOne(emp.id)} />
@@ -186,6 +221,7 @@ export default function Employees() {
               </Tr>
             ))}
           </Table>
+          )}
         </DataCard>
       </section>
 
