@@ -1,6 +1,7 @@
 // Centered layouts.
 // Background blobs and entrance shared by the auth and error pages.
 
+// --- (c) Components ------------------------------------------------------
 .centered-bg {
   position: relative;
   overflow: hidden;
@@ -34,6 +35,11 @@
   background: #ff8a65;
 }
 
+.centered-animate {
+  animation: centeredFadeInUp 0.5s ease-out both;
+}
+
+// --- (d) Utilities & helpers ---------------------------------------------
 @keyframes centeredFadeInUp {
   from {
     opacity: 0;
@@ -43,10 +49,6 @@
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-.centered-animate {
-  animation: centeredFadeInUp 0.5s ease-out both;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,6 +1,12 @@
 // Side navigation.
 // SB Admin's sidenav and its light/dark themes, then the app's surfaces, collapse rail, motion and mobile drawer.
 
+// --- (a) Tokens & variables ----------------------------------------------
+$sidenav-collapsed-width: 72px;
+
+$sidenav-expanded-width: 225px;
+
+// --- (c) Components ------------------------------------------------------
 .sb-sidenav {
   display: flex;
   flex-direction: column;
@@ -24,21 +30,33 @@
   text-transform: uppercase;
 }
 
+// Nav links: base layout, then the pill shape and hover transition.
 .sb-sidenav .sb-sidenav-menu .nav .nav-link {
   display: flex;
   align-items: center;
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
   position: relative;
+  transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out, transform 0.15s ease-out;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+  margin-bottom: 0.25rem;
+  width: calc(100% - 1rem);
+  border-radius: 0.375rem;
 }
 
 .sb-sidenav .sb-sidenav-menu .nav .nav-link .sb-nav-link-icon {
   font-size: 0.9rem;
 }
 
+// Shares the page footer's height (--app-footer-height) so the two line up.
 .sb-sidenav .sb-sidenav-footer {
-  padding: 0.75rem;
+  padding: 0.25rem 0.75rem;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  min-height: var(--app-footer-height);
+  border-top: 1px solid var(--bs-border-color);
 }
 
 .sb-sidenav-dark {
@@ -46,41 +64,45 @@
   color: rgba(255, 255, 255, 0.5);
 }
 
+// Heading lifted for contrast on the dark rail.
 .sb-sidenav-dark .sb-sidenav-menu .sb-sidenav-menu-heading {
-  color: rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.4);
 }
 
+// Rest colour lifted for legibility.
 .sb-sidenav-dark .sb-sidenav-menu .nav-link {
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.85);
 }
 
+// Icon lifted to match its link.
 .sb-sidenav-dark .sb-sidenav-menu .nav-link .sb-nav-link-icon {
-  color: rgba(255, 255, 255, 0.25);
-}
-
-.sb-sidenav-dark .sb-sidenav-menu .nav-link:hover {
-  color: #fff;
+  color: rgba(255, 255, 255, 0.55);
 }
 
 .sb-sidenav-dark .sb-sidenav-menu .nav-link.active {
   color: #fff;
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 .sb-sidenav-dark .sb-sidenav-menu .nav-link.active .sb-nav-link-icon {
   color: #fff;
 }
 
+// Footer matches the topnav's bg-dark, not SB Admin's #343a40.
 .sb-sidenav-dark .sb-sidenav-footer {
-  background-color: #343a40;
+  background-color: #212529;
+  border-top-color: #343a40;
 }
 
+// Sidebar matches the topnav's white surface, not SB Admin's #f8f9fa.
 .sb-sidenav-light {
-  background-color: #f8f9fa;
+  background-color: #fff;
   color: #212529;
 }
 
+// Heading tone for the light rail.
 .sb-sidenav-light .sb-sidenav-menu .sb-sidenav-menu-heading {
-  color: #adb5bd;
+  color: #8a929a;
 }
 
 .sb-sidenav-light .sb-sidenav-menu .nav-link {
@@ -91,112 +113,61 @@
   color: #adb5bd;
 }
 
-.sb-sidenav-light .sb-sidenav-menu .nav-link:hover {
-  color: #0d6efd;
-}
-
 .sb-sidenav-light .sb-sidenav-menu .nav-link.active {
-  color: #0d6efd;
+  color: #212529;
+  background-color: rgba(0, 0, 0, 0.12);
 }
 
 .sb-sidenav-light .sb-sidenav-menu .nav-link.active .sb-nav-link-icon {
-  color: #0d6efd;
+  color: #212529;
 }
 
-.sb-sidenav-light .sb-sidenav-footer {
-  background-color: #e9ecef;
-}
-
-// --- App surfaces ----------------------------------------------------------
-
-// Sidebar matches the topnav's bg-white instead of the stock #f8f9fa.
-.sb-sidenav-light {
-  background-color: #fff;
-}
-
+// Footer sits on the same white surface as the sidebar.
 .sb-sidenav-light .sb-sidenav-footer {
   background-color: #fff;
   border-top-color: #dee2e6;
 }
 
-// Matches the topnav's bg-dark instead of the stock #343a40.
-.sb-sidenav-dark .sb-sidenav-footer {
-  background-color: #212529;
-  border-top-color: #343a40;
-}
-
-// Was 0.75rem all round; the height now comes from --app-footer-height.
-.sb-sidenav .sb-sidenav-footer {
-  padding: 0.25rem 0.75rem;
-}
-
-// Shares its height with the page footer so the two line up when long
-// content is scrolled to the bottom.
-.sb-sidenav .sb-sidenav-footer {
-  display: flex;
-  align-items: center;
-  min-height: var(--app-footer-height);
-  border-top: 1px solid var(--bs-border-color);
-}
-
-// SideNav — nav link styling, Help footer, and desktop minimize/maximize rail.
-$sidenav-collapsed-width: 72px;
-$sidenav-expanded-width: 225px;
-
 .help-footer-btn-light:hover {
   color: #0d6efd !important;
 }
+
 .help-footer-btn-dark:hover {
   color: #fff !important;
 }
 
-.sb-sidenav .sb-sidenav-menu .nav .nav-link {
-  transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out, transform 0.15s ease-out;
-  margin-left: 0.5rem;
-  margin-right: 0.5rem;
-  margin-bottom: 0.25rem;
-  width: calc(100% - 1rem);
-  border-radius: 0.375rem;
-}
-
-.sb-sidenav-dark .sb-sidenav-menu .sb-sidenav-menu-heading {
-  color: rgba(255, 255, 255, 0.4);
-}
-.sb-sidenav-dark .sb-sidenav-menu .nav-link {
-  color: rgba(255, 255, 255, 0.85);
-}
-.sb-sidenav-dark .sb-sidenav-menu .nav-link .sb-nav-link-icon {
-  color: rgba(255, 255, 255, 0.55);
-}
 .sb-sidenav-dark .sb-sidenav-menu .nav-link:hover,
 .sb-sidenav-dark .sb-sidenav-menu .nav-link:focus-visible {
   color: rgba(255, 255, 255, 0.85);
   background-color: rgba(255, 255, 255, 0.14);
 }
-.sb-sidenav-dark .sb-sidenav-menu .nav-link.active {
-  color: #fff;
-  background-color: rgba(255, 255, 255, 0.2);
-}
-.sb-sidenav-dark .sb-sidenav-menu .nav-link.active .sb-nav-link-icon {
-  color: #fff;
-}
 
-.sb-sidenav-light .sb-sidenav-menu .sb-sidenav-menu-heading {
-  color: #8a929a;
-}
 .sb-sidenav-light .sb-sidenav-menu .nav-link:hover,
 .sb-sidenav-light .sb-sidenav-menu .nav-link:focus-visible {
   color: #212529;
   background-color: rgba(0, 0, 0, 0.08);
 }
-.sb-sidenav-light .sb-sidenav-menu .nav-link.active {
-  color: #212529;
-  background-color: rgba(0, 0, 0, 0.12);
-}
-.sb-sidenav-light .sb-sidenav-menu .nav-link.active .sb-nav-link-icon {
-  color: #212529;
+
+// Keyboard focus ring, matching each theme's hover tint.
+.sb-sidenav-light .sb-sidenav-menu .nav-link:focus-visible,
+.sb-sidenav-light .sb-sidenav-footer > div:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.14);
 }
 
+.sb-sidenav-dark .sb-sidenav-menu .nav-link:focus-visible,
+.sb-sidenav-dark .sb-sidenav-footer > div:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.28);
+}
+
+// The Help row picks up the same hover motion as the links.
+.help-footer-btn-light,
+.help-footer-btn-dark {
+  transition: color 0.15s ease-in-out, transform 0.15s ease-out;
+}
+
+// --- (d) Utilities & helpers ---------------------------------------------
 @media (min-width: 992px) {
   #layoutSidenav #layoutSidenav_nav {
     transition: transform 0.15s ease-in-out, width 0.15s ease-in-out;
@@ -347,23 +318,6 @@ $sidenav-expanded-width: 225px;
   }
 }
 
-// Keyboard focus ring, matching each theme's hover tint.
-.sb-sidenav-light .sb-sidenav-menu .nav-link:focus-visible,
-.sb-sidenav-light .sb-sidenav-footer > div:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.14);
-}
-.sb-sidenav-dark .sb-sidenav-menu .nav-link:focus-visible,
-.sb-sidenav-dark .sb-sidenav-footer > div:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.28);
-}
-
-// The Help row picks up the same hover motion as the links.
-.help-footer-btn-light,
-.help-footer-btn-dark {
-  transition: color 0.15s ease-in-out, transform 0.15s ease-out;
-}
 @media (hover: hover) {
   .help-footer-btn-light:hover,
   .help-footer-btn-dark:hover {

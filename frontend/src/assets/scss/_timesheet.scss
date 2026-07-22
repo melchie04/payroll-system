@@ -2,6 +2,7 @@
 // The grid on the review screen mirrors the paper form, so its cells are inputs
 // rather than text. Flagged cells are the ones OCR read with low confidence.
 
+// --- (c) Components ------------------------------------------------------
 .ts-cell {
   width: 100%;
   min-width: 68px;
@@ -282,6 +283,37 @@
   border: 0;
 }
 
+// --- (d) Utilities & helpers ---------------------------------------------
+// Stacked rows on mobile give each cell a full-width line already, so the
+// minimum cell width would only force horizontal overflow.
+@media (max-width: 767.98px) {
+  // Stacked cards below this width, so the tall target is wasted height.
+  .ts-dropzone {
+    min-height: 0;
+  }
+
+  // A phone-width panel cannot show a full sheet usefully at any zoom, so the
+  // viewer keeps a readable window instead of stretching the card.
+  .ts-doc-viewport,
+  .ts-doc-frame {
+    min-height: 260px;
+  }
+
+  .ts-cell {
+    min-width: 0;
+    max-width: 140px;
+    text-align: right;
+  }
+
+  // Paired boxes already split the line between them, so the single-cell cap
+  // and right alignment would misplace their text.
+  .ts-pair .ts-cell {
+    max-width: none;
+    text-align: center;
+  }
+}
+
+// --- (e) Theme overrides -------------------------------------------------
 [data-bs-theme="dark"] .ts-cell:disabled {
   background-color: rgba(255, 255, 255, 0.05);
   color: #9aa4ae;
@@ -370,33 +402,4 @@
 // so the tone lifts rather than deepens.
 [data-bs-theme="dark"] .ts-warn {
   color: #ffda6a;
-}
-
-// Stacked rows on mobile give each cell a full-width line already, so the
-// minimum cell width would only force horizontal overflow.
-@media (max-width: 767.98px) {
-  // Stacked cards below this width, so the tall target is wasted height.
-  .ts-dropzone {
-    min-height: 0;
-  }
-
-  // A phone-width panel cannot show a full sheet usefully at any zoom, so the
-  // viewer keeps a readable window instead of stretching the card.
-  .ts-doc-viewport,
-  .ts-doc-frame {
-    min-height: 260px;
-  }
-
-  .ts-cell {
-    min-width: 0;
-    max-width: 140px;
-    text-align: right;
-  }
-
-  // Paired boxes already split the line between them, so the single-cell cap
-  // and right alignment would misplace their text.
-  .ts-pair .ts-cell {
-    max-width: none;
-    text-align: center;
-  }
 }

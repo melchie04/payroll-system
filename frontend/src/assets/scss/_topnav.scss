@@ -1,10 +1,33 @@
 // Top navigation.
 // SB Admin's topnav, then the app's icon buttons, menus, motion and mobile row.
 
+// --- (a) Tokens & variables ----------------------------------------------
+.nav-icon-btn,
+.nav-user-btn,
+#sidebarToggle {
+  --topnav-icon-color: var(--bs-dark);
+  --topnav-icon-color-muted: var(--bs-gray-600);
+  --topnav-btn-hover-bg: rgba(0, 0, 0, 0.08);
+  --topnav-btn-focus-ring: rgba(0, 0, 0, 0.14);
+}
+
+// --- (b) Layout ----------------------------------------------------------
+.sb-nav-fixed #layoutSidenav #layoutSidenav_content {
+  top: var(--topnav-offset, 56px) !important;
+}
+
+.sb-nav-fixed #layoutSidenav #layoutSidenav_nav .sb-sidenav {
+  padding-top: var(--topnav-offset, 56px) !important;
+}
+
+// --- (c) Components ------------------------------------------------------
+// Bar height is dynamic (auto, min 56px); settles in on first paint.
 .sb-topnav {
   padding-left: 0;
-  height: 56px;
+  height: auto !important;
   z-index: 1039;
+  min-height: 56px;
+  animation: topnavSettleIn 0.3s ease-out;
 }
 
 .sb-topnav .navbar-brand {
@@ -20,35 +43,7 @@
   color: #212529;
 }
 
-// TopNav — dynamic navbar height, icon buttons, user button, and mobile layout.
-.sb-topnav {
-  height: auto !important;
-  min-height: 56px;
-}
-.sb-nav-fixed #layoutSidenav #layoutSidenav_content {
-  top: var(--topnav-offset, 56px) !important;
-}
-.sb-nav-fixed #layoutSidenav #layoutSidenav_nav .sb-sidenav {
-  padding-top: var(--topnav-offset, 56px) !important;
-}
-
-.nav-icon-btn,
-.nav-user-btn,
-#sidebarToggle {
-  --topnav-icon-color: var(--bs-dark);
-  --topnav-icon-color-muted: var(--bs-gray-600);
-  --topnav-btn-hover-bg: rgba(0, 0, 0, 0.08);
-  --topnav-btn-focus-ring: rgba(0, 0, 0, 0.14);
-}
-[data-bs-theme="dark"] .nav-icon-btn,
-[data-bs-theme="dark"] .nav-user-btn,
-[data-bs-theme="dark"] #sidebarToggle {
-  --topnav-icon-color: var(--bs-white);
-  --topnav-icon-color-muted: var(--bs-gray-400);
-  --topnav-btn-hover-bg: rgba(255, 255, 255, 0.14);
-  --topnav-btn-focus-ring: rgba(255, 255, 255, 0.28);
-}
-
+// Icon buttons: unstyled reset, then a round 40px hit area.
 .nav-icon-btn,
 #sidebarToggle {
   appearance: none;
@@ -58,9 +53,6 @@
   padding: 0;
   margin: 0;
   cursor: pointer;
-}
-.nav-icon-btn,
-#sidebarToggle {
   width: 40px;
   height: 40px;
   display: inline-flex;
@@ -74,6 +66,7 @@
   text-decoration: none;
   transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out, transform 0.15s ease-out;
 }
+
 .nav-icon-btn:hover,
 .nav-icon-btn:focus-visible,
 #sidebarToggle:hover,
@@ -92,23 +85,46 @@
   color: var(--topnav-icon-color);
   transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out, transform 0.15s ease-out;
 }
+
 .nav-user-btn:hover {
   background-color: var(--topnav-btn-hover-bg);
 }
+
 .nav-user-btn .fa-chevron-down {
   color: var(--topnav-icon-color-muted);
-}
-[data-bs-theme="dark"] .nav-user-btn .text-body {
-  color: var(--topnav-icon-color) !important;
 }
 
 .nav-mobile-controls {
   border-top: 1px solid var(--bs-border-color);
 }
-[data-bs-theme="dark"] .nav-mobile-controls {
-  border-top-color: rgba(255, 255, 255, 0.12);
+
+// Press feedback.
+.nav-icon-btn:active,
+#sidebarToggle:active {
+  transform: scale(0.92);
 }
 
+.nav-user-btn:active {
+  transform: scale(0.98);
+}
+
+// Keyboard focus ring, matching each theme's hover tint.
+.nav-icon-btn:focus-visible,
+.nav-user-btn:focus-visible,
+#sidebarToggle:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 0.2rem var(--topnav-btn-focus-ring);
+}
+
+.nav-badge-dot {
+  animation: topnavDotPulse 2.4s ease-out infinite;
+}
+
+.sb-topnav .dropdown-menu.show {
+  animation: topnavMenuIn 0.16s ease-out;
+}
+
+// --- (d) Utilities & helpers ---------------------------------------------
 @media (max-width: 767.98px) {
   .nav-brand-mobile {
     position: absolute;
@@ -151,26 +167,6 @@
     opacity: 1;
   }
 }
-.sb-topnav {
-  animation: topnavSettleIn 0.3s ease-out;
-}
-
-// Press feedback.
-.nav-icon-btn:active,
-#sidebarToggle:active {
-  transform: scale(0.92);
-}
-.nav-user-btn:active {
-  transform: scale(0.98);
-}
-
-// Keyboard focus ring, matching each theme's hover tint.
-.nav-icon-btn:focus-visible,
-.nav-user-btn:focus-visible,
-#sidebarToggle:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 0.2rem var(--topnav-btn-focus-ring);
-}
 
 // The unread dot breathes so it reads as live state.
 @keyframes topnavDotPulse {
@@ -184,9 +180,6 @@
     box-shadow: 0 0 0 0 rgba(255, 156, 85, 0);
   }
 }
-.nav-badge-dot {
-  animation: topnavDotPulse 2.4s ease-out infinite;
-}
 
 // Dropdowns fade in instead of snapping. Opacity only — Popper owns transform.
 @keyframes topnavMenuIn {
@@ -196,9 +189,6 @@
   to {
     opacity: 1;
   }
-}
-.sb-topnav .dropdown-menu.show {
-  animation: topnavMenuIn 0.16s ease-out;
 }
 
 // --- Mobile ----------------------------------------------------------------
@@ -260,4 +250,22 @@
   #sidebarToggle:active {
     transform: none;
   }
+}
+
+// --- (e) Theme overrides -------------------------------------------------
+[data-bs-theme="dark"] .nav-icon-btn,
+[data-bs-theme="dark"] .nav-user-btn,
+[data-bs-theme="dark"] #sidebarToggle {
+  --topnav-icon-color: var(--bs-white);
+  --topnav-icon-color-muted: var(--bs-gray-400);
+  --topnav-btn-hover-bg: rgba(255, 255, 255, 0.14);
+  --topnav-btn-focus-ring: rgba(255, 255, 255, 0.28);
+}
+
+[data-bs-theme="dark"] .nav-user-btn .text-body {
+  color: var(--topnav-icon-color) !important;
+}
+
+[data-bs-theme="dark"] .nav-mobile-controls {
+  border-top-color: rgba(255, 255, 255, 0.12);
 }

@@ -6,7 +6,7 @@ import "bootstrap";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 import "./assets/scss/styles.scss";
-import "./assets/scss/custom.scss";
+import "./assets/scss/app.scss";
 
 import { ThemeProvider } from "./context/ThemeContext.jsx";
 import { EmployeesProvider } from "./context/EmployeesContext.jsx";

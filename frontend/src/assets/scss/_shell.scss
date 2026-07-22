@@ -1,6 +1,12 @@
 // App shell.
 // SB Admin's page scaffolding for the dashboard, auth and error layouts, then the app's own content and footer surfaces.
 
+// --- (a) Tokens & variables ----------------------------------------------
+:root {
+  --app-footer-height: 44px;
+}
+
+// --- (b) Layout ----------------------------------------------------------
 html,
 body {
   height: 100%;
@@ -62,25 +68,6 @@ body {
   transition: opacity 0.3s ease-in-out;
 }
 
-@media (min-width: 992px) {
-  #layoutSidenav #layoutSidenav_nav {
-      transform: translateX(0);
-    }
-  #layoutSidenav #layoutSidenav_content {
-      margin-left: 0;
-      transition: margin 0.15s ease-in-out;
-    }
-  .sb-sidenav-toggled #layoutSidenav #layoutSidenav_nav {
-      transform: translateX(-225px);
-    }
-  .sb-sidenav-toggled #layoutSidenav #layoutSidenav_content {
-      margin-left: -225px;
-    }
-  .sb-sidenav-toggled #layoutSidenav #layoutSidenav_content:before {
-      display: none;
-    }
-}
-
 .sb-nav-fixed .sb-topnav {
   z-index: 1039;
 }
@@ -119,6 +106,7 @@ body {
   min-width: 0;
 }
 
+// --- (c) Components ------------------------------------------------------
 .img-error {
   max-width: 20rem;
 }
@@ -134,15 +122,6 @@ body {
 
 #layoutSidenav_content {
   background-color: #eef0f3;
-}
-
-// --- Footers ---------------------------------------------------------------
-// The sidebar footer and the page footer share one height so they line up
-// when long content is scrolled to the bottom, and both sit on the navigation
-// surface rather than a grey of their own.
-
-:root {
-  --app-footer-height: 44px;
 }
 
 // py-3 and bg-light carry !important, so these must too. The .bg-light
@@ -184,4 +163,24 @@ body {
   align-items: center;
   min-height: var(--app-footer-height);
   border-top: 1px solid var(--bs-border-color);
+}
+
+// --- (d) Utilities & helpers ---------------------------------------------
+@media (min-width: 992px) {
+  #layoutSidenav #layoutSidenav_nav {
+      transform: translateX(0);
+    }
+  #layoutSidenav #layoutSidenav_content {
+      margin-left: 0;
+      transition: margin 0.15s ease-in-out;
+    }
+  .sb-sidenav-toggled #layoutSidenav #layoutSidenav_nav {
+      transform: translateX(-225px);
+    }
+  .sb-sidenav-toggled #layoutSidenav #layoutSidenav_content {
+      margin-left: -225px;
+    }
+  .sb-sidenav-toggled #layoutSidenav #layoutSidenav_content:before {
+      display: none;
+    }
 }
