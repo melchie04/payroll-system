@@ -1,8 +1,8 @@
 // App theme.
-// The colours the app owns (framework colours are read straight from Bootstrap's
-// --bs-* tokens at each use site), plus the transition that smooths the light/dark
-// swap. Dark values are produced by _dark.scss, which retargets components under
-// [data-bs-theme].
+// The app's design tokens in one place: the colours it owns (framework colours
+// are read straight from Bootstrap's --bs-* tokens at each use site), the type
+// scale, and the transition that smooths the light/dark swap. Dark values are
+// produced by _dark.scss, which retargets components under [data-bs-theme].
 
 :root {
   --app-content-bg: #eef0f3;      // Plane behind cards, a step under the surfaces
@@ -10,6 +10,17 @@
   --app-blob-cool: #4f8cff;       // Auth/error background wash
   --app-blob-warm: #ff8a65;
   --app-dot-rgb: 255, 156, 85;    // Notification pulse (used as rgba)
+
+  // Type scale — the app's own font sizes, smallest to largest. Steps 2 and 5
+  // (11.5px, 14.4px) are odd values carried over from existing pages; kept as-is
+  // so nothing shifts. See notes if you want them normalised.
+  --app-fs-1: 0.6875rem;          // 11px   — separators, small toggles
+  --app-fs-2: 0.71875rem;         // 11.5px — field hints
+  --app-fs-3: 0.75rem;            // 12px   — uppercase section labels
+  --app-fs-4: 0.8125rem;          // 13px   — dense table / cell text
+  --app-fs-5: 0.9rem;             // 14.4px — sidebar nav icons
+  --app-fs-6: 1rem;               // 16px   — base / topnav icon glyphs
+  --app-fs-7: 1.1875rem;          // 19px   — feature icons
 }
 
 // Smooth the colour swap when the theme flips. ThemeContext adds .theme-transition

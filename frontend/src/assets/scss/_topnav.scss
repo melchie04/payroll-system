@@ -61,7 +61,7 @@
   flex-shrink: 0;
   border-radius: 50%;
   color: var(--topnav-icon-color);
-  font-size: 1rem;
+  font-size: var(--app-fs-6);
   line-height: 1;
   text-decoration: none;
   transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out, transform 0.15s ease-out;

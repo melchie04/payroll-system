@@ -25,7 +25,7 @@ $sidenav-expanded-width: 225px;
 
 .sb-sidenav .sb-sidenav-menu .nav .sb-sidenav-menu-heading {
   padding: 1.75rem 1rem 0.75rem;
-  font-size: 0.75rem;
+  font-size: var(--app-fs-3);
   font-weight: bold;
   text-transform: uppercase;
 }
@@ -46,7 +46,7 @@ $sidenav-expanded-width: 225px;
 }
 
 .sb-sidenav .sb-sidenav-menu .nav .nav-link .sb-nav-link-icon {
-  font-size: 0.9rem;
+  font-size: var(--app-fs-5);
 }
 
 // Shares the page footer's height (--app-footer-height) so the two line up.

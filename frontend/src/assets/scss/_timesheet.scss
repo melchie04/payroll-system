@@ -11,7 +11,7 @@
   border-radius: 0.25rem;
   background-color: transparent;
   color: inherit;
-  font-size: 0.8125rem;
+  font-size: var(--app-fs-4);
   text-align: center;
   transition: border-color 0.15s ease-in-out, background-color 0.15s ease-in-out;
 }
@@ -50,7 +50,7 @@
 
 .ts-pair-sep {
   flex-shrink: 0;
-  font-size: 11px;
+  font-size: var(--app-fs-1);
   line-height: 1;
 }
 
@@ -80,7 +80,7 @@
 // The icon is the one place the tone runs at full strength: it is small enough to
 // stay a marker rather than a wash.
 .ts-notice-icon {
-  font-size: 0.8125rem;
+  font-size: var(--app-fs-4);
 }
 
 // Inside a card the white fill would match the card exactly and leave the border
@@ -149,7 +149,7 @@
   height: 48px;
   background-color: rgba(0, 0, 0, 0.04);
   color: var(--bs-secondary);
-  font-size: 19px;
+  font-size: var(--app-fs-7);
 }
 
 .ts-dropzone-meta {
@@ -193,7 +193,7 @@
 
 .ts-field-hint {
   margin-top: 0.35rem;
-  font-size: 11.5px;
+  font-size: var(--app-fs-2);
   line-height: 1.4;
 }
 
@@ -215,7 +215,7 @@
   border-radius: 0 0.375rem 0.375rem 0;
   background-color: transparent;
   color: var(--bs-secondary);
-  font-size: 11px;
+  font-size: var(--app-fs-1);
   line-height: 1;
   cursor: pointer;
   transition: color 0.15s ease-in-out;
