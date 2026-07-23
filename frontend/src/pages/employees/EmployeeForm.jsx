@@ -25,7 +25,7 @@ export default function EmployeeForm() {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const { getEmployeeById, addEmployee, updateEmployee } = useEmployees();
+  const { employees, getEmployeeById, addEmployee, updateEmployee } = useEmployees();
 
   const isEdit = Boolean(id);
   const existing = isEdit ? getEmployeeById(id) : null;
@@ -54,6 +54,8 @@ export default function EmployeeForm() {
     };
   });
 
+  const [errors, setErrors] = useState({});
+
   if (isEdit && !existing) {
     return (
       <section className="mt-4">
@@ -66,7 +68,9 @@ export default function EmployeeForm() {
   }
 
   function handleChange(e) {
-    setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    setForm((f) => ({ ...f, [name]: value }));
+    setErrors((prev) => (prev[name] ? { ...prev, [name]: "" } : prev));
   }
 
   function handleEmergencyChange(e) {
@@ -77,18 +81,41 @@ export default function EmployeeForm() {
   }
 
   function handleScheduleChange(e) {
-    setForm((f) => ({
-      ...f,
-      schedule: { ...f.schedule, [e.target.name]: e.target.value },
-    }));
+    const { name, value } = e.target;
+    setForm((f) => ({ ...f, schedule: { ...f.schedule, [name]: value } }));
+    const key = name === "in" ? "scheduleIn" : "scheduleOut";
+    setErrors((prev) => (prev[key] ? { ...prev, [key]: "" } : prev));
+  }
+
+  // code and schedule are validated because the timesheet resolves sheets by code and
+  // measures Late against the schedule; a blank or reused one breaks that link silently.
+  function validate(f) {
+    const found = {};
+    if (!f.name.trim()) found.name = "Full name is required.";
+    const code = f.code.trim();
+    if (!code) found.code = "Employee code is required.";
+    else if (employees.some((e) => String(e.id) !== String(existing?.id) && (e.code || "").trim().toLowerCase() === code.toLowerCase()))
+      found.code = "Another employee already uses this code.";
+    if (!f.position.trim()) found.position = "Position is required.";
+    if (!f.email.trim()) found.email = "Email is required.";
+    if (!String(f.rate).trim()) found.rate = "Rate is required.";
+    if (!f.schedule.in) found.scheduleIn = "Schedule in is required.";
+    if (!f.schedule.out) found.scheduleOut = "Schedule out is required.";
+    return found;
   }
 
   function handleSubmit(e) {
     e.preventDefault();
-    if (!form.name || !form.email) return;
+    const found = validate(form);
+    setErrors(found);
+    if (Object.keys(found).length > 0) return;
 
     const payload = {
       ...form,
+      name: form.name.trim(),
+      code: form.code.trim(),
+      position: form.position.trim(),
+      email: form.email.trim(),
       rate: form.rate.startsWith("₱") ? form.rate : `₱${form.rate}`,
       aliases: form.aliases.split(",").map((a) => a.trim()).filter(Boolean),
     };
@@ -137,25 +164,28 @@ export default function EmployeeForm() {
               <FormField label="Full Name">
                 <input
                   type="text"
-                  className="form-control"
+                  className={`form-control ${errors.name ? "is-invalid" : ""}`}
                   name="name"
                   value={form.name}
                   onChange={handleChange}
                   placeholder="e.g. Juan Dela Cruz"
                   required
                 />
+                {errors.name && <div className="invalid-feedback d-block">{errors.name}</div>}
               </FormField>
             </div>
             <div className="col-12 col-md-6">
               <FormField label="Employee Code">
                 <input
                   type="text"
-                  className="form-control"
+                  className={`form-control ${errors.code ? "is-invalid" : ""}`}
                   name="code"
                   value={form.code}
                   onChange={handleChange}
                   placeholder="e.g. EMP-001"
+                  required
                 />
+                {errors.code && <div className="invalid-feedback d-block">{errors.code}</div>}
               </FormField>
             </div>
             <div className="col-12 col-md-6">
@@ -172,13 +202,14 @@ export default function EmployeeForm() {
               <FormField label="Position">
                 <input
                   type="text"
-                  className="form-control"
+                  className={`form-control ${errors.position ? "is-invalid" : ""}`}
                   name="position"
                   value={form.position}
                   onChange={handleChange}
                   placeholder="e.g. Developer"
                   required
                 />
+                {errors.position && <div className="invalid-feedback d-block">{errors.position}</div>}
               </FormField>
             </div>
             <div className="col-12 col-md-6">
@@ -194,13 +225,14 @@ export default function EmployeeForm() {
               <FormField label="Email">
                 <input
                   type="email"
-                  className="form-control"
+                  className={`form-control ${errors.email ? "is-invalid" : ""}`}
                   name="email"
                   value={form.email}
                   onChange={handleChange}
                   placeholder="name@company.com"
                   required
                 />
+                {errors.email && <div className="invalid-feedback d-block">{errors.email}</div>}
               </FormField>
             </div>
             <div className="col-12 col-md-6">
@@ -215,13 +247,14 @@ export default function EmployeeForm() {
                   type="number"
                   min="0"
                   step="0.01"
-                  className="form-control"
+                  className={`form-control ${errors.rate ? "is-invalid" : ""}`}
                   name="rate"
                   value={form.rate}
                   onChange={handleChange}
                   placeholder="0.00"
                   required
                 />
+                {errors.rate && <div className="invalid-feedback d-block">{errors.rate}</div>}
               </FormField>
             </div>
             <div className="col-12 col-md-6">
@@ -238,12 +271,28 @@ export default function EmployeeForm() {
             </div>
             <div className="col-12 col-md-6">
               <FormField label="Schedule In">
-                <input type="time" className="form-control" name="in" value={form.schedule.in} onChange={handleScheduleChange} />
+                <input
+                  type="time"
+                  className={`form-control ${errors.scheduleIn ? "is-invalid" : ""}`}
+                  name="in"
+                  value={form.schedule.in}
+                  onChange={handleScheduleChange}
+                  required
+                />
+                {errors.scheduleIn && <div className="invalid-feedback d-block">{errors.scheduleIn}</div>}
               </FormField>
             </div>
             <div className="col-12 col-md-6">
               <FormField label="Schedule Out">
-                <input type="time" className="form-control" name="out" value={form.schedule.out} onChange={handleScheduleChange} />
+                <input
+                  type="time"
+                  className={`form-control ${errors.scheduleOut ? "is-invalid" : ""}`}
+                  name="out"
+                  value={form.schedule.out}
+                  onChange={handleScheduleChange}
+                  required
+                />
+                {errors.scheduleOut && <div className="invalid-feedback d-block">{errors.scheduleOut}</div>}
               </FormField>
             </div>
 
