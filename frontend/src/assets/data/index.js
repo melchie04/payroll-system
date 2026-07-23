@@ -1068,13 +1068,6 @@ export const payslipHistory = [
   { id: "PS-2405-01", employeeId: 3, period: "May 12–25, 2024", grossPay: "₱60,000.00", netPay: "₱51,000.00", status: "Pending" },
 ];
 
-export const timesheetHistory = [
-  { id: 1, employeeId: 1, period: "May 12–25, 2024", hoursLogged: 80, status: "Extracted", submitted: "May 26, 2024" },
-  { id: 2, employeeId: 1, period: "Apr 28–May 11, 2024", hoursLogged: 78.5, status: "Extracted", submitted: "May 12, 2024" },
-  { id: 3, employeeId: 2, period: "May 12–25, 2024", hoursLogged: 80, status: "Extracted", submitted: "May 26, 2024" },
-  { id: 4, employeeId: 3, period: "May 12–25, 2024", hoursLogged: 76, status: "Processing", submitted: "May 26, 2024" },
-];
-
 export const employeeDocuments = [
   { id: 1, employeeId: 1, name: "Employment Contract.pdf", type: "pdf", uploaded: "Jan 15, 2023" },
   { id: 2, employeeId: 1, name: "Government ID.jpg", type: "img", uploaded: "Jan 15, 2023" },

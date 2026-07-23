@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   DataCard,
@@ -18,8 +18,9 @@ import {
   PageHeader,
   TabsNav,
 } from "../../components/ui/index.jsx";
-import { payslipHistory, timesheetHistory } from "../../assets/data/index.js";
+import { payslipHistory } from "../../assets/data/index.js";
 import { useEmployees } from "../../context/EmployeesContext.jsx";
+import { useTimesheets, resolveEmployee, sheetTotals, parsePeriodLabel } from "../../context/TimesheetContext.jsx";
 import { formatCurrency } from "../../utils/currency.js";
 import { computeDeductions } from "../../utils/payslip.js";
 
@@ -50,12 +51,30 @@ export default function EmployeeProfile() {
   const location = useLocation();
   const [tab, setTab] = useState("overview");
 
-  const { getEmployeeById, getDocumentsByEmployee, addDocument, deleteDocument } = useEmployees();
+  const { employees, getEmployeeById, getDocumentsByEmployee, addDocument, deleteDocument } = useEmployees();
+  const { files } = useTimesheets();
 
   const employee = getEmployeeById(id);
 
   const payslips = payslipHistory.filter((p) => p.employeeId === employee?.id);
-  const timesheets = timesheetHistory.filter((t) => t.employeeId === employee?.id);
+  // Reads the same live sheets as the Timesheet page, matched on the stable roster link,
+  // so an upload appears here without keeping a second copy of the history.
+  const timesheets = useMemo(() => {
+    if (!employee) return [];
+    return files
+      .filter((f) => resolveEmployee(f.employee, employees)?.id === employee.id)
+      .map((f) => {
+        const totals = sheetTotals(f.rows);
+        return {
+          id: f.id,
+          period: f.period?.label || "—",
+          hoursLogged: Math.round((totals.regular + totals.overtime) * 10) / 10,
+          status: f.status,
+          submitted: f.uploaded || "—",
+        };
+      })
+      .sort((a, b) => (parsePeriodLabel(b.period)?.from || 0) - (parsePeriodLabel(a.period)?.from || 0));
+  }, [files, employees, employee]);
   const documents = employee ? getDocumentsByEmployee(employee.id) : [];
 
   const [docFile, setDocFile] = useState(null);
@@ -275,7 +294,11 @@ export default function EmployeeProfile() {
                 <Table headers={["Pay Period", "Hours Logged", "Status", "Submitted"]} itemLabel="timesheets">
                   {timesheets.map((t) => (
                     <Tr key={t.id}>
-                      <Td bold>{t.period}</Td>
+                      <Td bold>
+                        <Link to={`/timesheet/${t.id}`} className="text-decoration-none">
+                          {t.period}
+                        </Link>
+                      </Td>
                       <Td>{t.hoursLogged}</Td>
                       <Td>
                         <Badge status={t.status} />
