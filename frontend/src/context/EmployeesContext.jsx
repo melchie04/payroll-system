@@ -23,6 +23,16 @@ export function EmployeesProvider({ children }) {
     setEmployees((prev) => prev.filter((e) => String(e.id) !== String(id)));
   }
 
+  // Archiving keeps the record so sheets that reference this person still resolve to
+  // someone; hard delete is reserved for employees with no timesheet history.
+  function archiveEmployee(id) {
+    updateEmployee(id, { status: "Inactive" });
+  }
+
+  function restoreEmployee(id) {
+    updateEmployee(id, { status: "Active" });
+  }
+
   function getEmployeeById(id) {
     return employees.find((e) => String(e.id) === String(id));
   }
@@ -44,6 +54,8 @@ export function EmployeesProvider({ children }) {
     addEmployee,
     updateEmployee,
     deleteEmployee,
+    archiveEmployee,
+    restoreEmployee,
     getEmployeeById,
     documents,
     getDocumentsByEmployee,

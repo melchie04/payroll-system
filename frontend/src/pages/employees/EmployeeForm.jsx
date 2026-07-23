@@ -223,6 +223,7 @@ export default function EmployeeForm() {
                 <select className="form-select" name="status" value={form.status} onChange={handleChange}>
                   <option>Active</option>
                   <option>On Leave</option>
+                  <option>Inactive</option>
                 </select>
               </FormField>
             </div>

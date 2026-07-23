@@ -18,6 +18,7 @@ import {
 } from "../../components/ui/index.jsx";
 import { useEmployees } from "../../context/EmployeesContext.jsx";
 import { clientNames } from "../../assets/data/index.js";
+import { useTimesheets, resolveEmployee } from "../../context/TimesheetContext.jsx";
 import { exportToCsv } from "../../utils/exportToCsv.js";
 
 const CSV_HEADERS = ["Code", "Name", "Client", "Position", "Email", "Rate", "Status"];
@@ -29,7 +30,8 @@ function toCsvRows(list) {
 // Employees — employee list with selection, bulk actions, filters, and export.
 export default function Employees() {
   const navigate = useNavigate();
-  const { employees, deleteEmployee } = useEmployees();
+  const { employees, deleteEmployee, archiveEmployee, restoreEmployee } = useEmployees();
+  const { files } = useTimesheets();
 
   const [selected, setSelected] = useState([]);
   const [client, setClient] = useState("All Clients");
@@ -68,6 +70,18 @@ export default function Employees() {
 
   const [target, setTarget] = useState(null);
 
+  // Anyone a sheet resolves to is kept rather than deleted, so no sheet is left
+  // pointing at a person who no longer exists.
+  const sheetOwnerIds = useMemo(
+    () => new Set(files.map((f) => resolveEmployee(f.employee, employees)?.id).filter((id) => id != null)),
+    [files, employees],
+  );
+  const hasHistory = (emp) => sheetOwnerIds.has(emp.id);
+
+  const selectedEmployees = employees.filter((e) => selected.includes(e.id));
+  const toArchive = selectedEmployees.filter((e) => hasHistory(e) && e.status !== "Inactive");
+  const toDelete = selectedEmployees.filter((e) => !hasHistory(e));
+
   function confirmDelete() {
     if (target) {
       deleteEmployee(target.id);
@@ -76,8 +90,17 @@ export default function Employees() {
     document.getElementById("employeeDeleteModalClose")?.click();
   }
 
+  function confirmArchive() {
+    if (target) {
+      archiveEmployee(target.id);
+      setTarget(null);
+    }
+    document.getElementById("employeeArchiveModalClose")?.click();
+  }
+
   function confirmBulkDelete() {
-    selected.forEach((id) => deleteEmployee(id));
+    toArchive.forEach((e) => archiveEmployee(e.id));
+    toDelete.forEach((e) => deleteEmployee(e.id));
     setSelected([]);
     document.getElementById("bulkDeleteModalClose")?.click();
   }
@@ -140,7 +163,7 @@ export default function Employees() {
                   setStatus([]);
                 }}
               >
-                <FilterCheckGroup label="Status" options={["Active", "On Leave"]} selected={statusDraft} onToggle={toggleStatusDraft} />
+                <FilterCheckGroup label="Status" options={["Active", "On Leave", "Inactive"]} selected={statusDraft} onToggle={toggleStatusDraft} />
               </FilterMenu>
             </div>
           </div>
@@ -162,7 +185,7 @@ export default function Employees() {
                   <i className="fas fa-download"></i> Export Selected
                 </button>
                 <button type="button" className="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#bulkDeleteModal">
-                  <i className="fas fa-trash"></i> Delete Selected
+                  <i className="fas fa-trash"></i> Remove Selected
                 </button>
               </div>
             </div>
@@ -226,9 +249,19 @@ export default function Employees() {
                     <IconBtn title="Edit" onClick={() => navigate(`/employees/${emp.id}/edit`)}>
                       <i className="fas fa-pen"></i>
                     </IconBtn>
-                    <IconBtn title="Delete" data-bs-toggle="modal" data-bs-target="#employeeDeleteModal" onClick={() => setTarget(emp)}>
-                      <i className="fas fa-trash text-danger"></i>
-                    </IconBtn>
+                    {emp.status === "Inactive" ? (
+                      <IconBtn title="Restore" onClick={() => restoreEmployee(emp.id)}>
+                        <i className="fas fa-rotate-left"></i>
+                      </IconBtn>
+                    ) : hasHistory(emp) ? (
+                      <IconBtn title="Archive" data-bs-toggle="modal" data-bs-target="#employeeArchiveModal" onClick={() => setTarget(emp)}>
+                        <i className="fas fa-box-archive text-warning"></i>
+                      </IconBtn>
+                    ) : (
+                      <IconBtn title="Delete" data-bs-toggle="modal" data-bs-target="#employeeDeleteModal" onClick={() => setTarget(emp)}>
+                        <i className="fas fa-trash text-danger"></i>
+                      </IconBtn>
+                    )}
                   </div>
                 </Td>
               </Tr>
@@ -258,6 +291,27 @@ export default function Employees() {
       </Modal>
 
       <Modal
+        id="employeeArchiveModal"
+        title="Archive Employee"
+        footer={
+          <>
+            <BtnSecondary id="employeeArchiveModalClose" data-bs-dismiss="modal">
+              Cancel
+            </BtnSecondary>
+            <button type="button" className="btn btn-warning btn-sm" onClick={confirmArchive}>
+              <i className="fas fa-box-archive"></i> Archive
+            </button>
+          </>
+        }
+      >
+        <p className="mb-0">
+          <strong>{target?.name}</strong> has timesheets on record, so the profile is kept and marked Inactive
+          instead of deleted. Those sheets keep resolving, and Coverage stops expecting paperwork. You can restore
+          them from the roster at any time.
+        </p>
+      </Modal>
+
+      <Modal
         id="bulkDeleteModal"
         title="Delete Selected Employees"
         footer={
@@ -272,11 +326,24 @@ export default function Employees() {
         }
       >
         <p className="mb-0">
-          Are you sure you want to delete{" "}
-          <strong>
-            {selected.length} employee{selected.length === 1 ? "" : "s"}
-          </strong>{" "}
-          from your roster? This action cannot be undone.
+          {toDelete.length > 0 && (
+            <>
+              <strong>
+                {toDelete.length} employee{toDelete.length === 1 ? "" : "s"}
+              </strong>{" "}
+              will be deleted permanently.
+            </>
+          )}
+          {toArchive.length > 0 && (
+            <>
+              {toDelete.length > 0 && " "}
+              <strong>
+                {toArchive.length} employee{toArchive.length === 1 ? "" : "s"}
+              </strong>{" "}
+              have timesheets on record and will be archived instead, keeping those sheets intact.
+            </>
+          )}
+          {toDelete.length === 0 && toArchive.length === 0 && "Nothing to remove — the selected employees are already archived."}
         </p>
       </Modal>
     </>
