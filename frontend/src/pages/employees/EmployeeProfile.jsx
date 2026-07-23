@@ -195,6 +195,11 @@ export default function EmployeeProfile() {
                     <DetailRow icon="fa-calendar-day" label="Date Hired">
                       {employee.dateHired}
                     </DetailRow>
+                    <DetailRow icon="fa-user-clock" label="Assignment">
+                      {employee.assignmentStart
+                        ? `${employee.assignmentStart} → ${employee.assignmentEnd || "open-ended"}`
+                        : "—"}
+                    </DetailRow>
                     <DetailRow icon="fa-clock" label="Schedule">
                       {employee.schedule?.in && employee.schedule?.out
                         ? `${employee.schedule.in} – ${employee.schedule.out}`

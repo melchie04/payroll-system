@@ -15,6 +15,8 @@ const emptyForm = {
   rate: "",
   status: "Active",
   dateHired: "",
+  assignmentStart: "",
+  assignmentEnd: "",
   address: "",
   schedule: { in: "", out: "" },
   emergencyContact: { name: "", relationship: "", phone: "" },
@@ -44,6 +46,8 @@ export default function EmployeeForm() {
       rate: String(existing.rate || "").replace(/^₱/, ""),
       status: existing.status,
       dateHired: existing.dateHired || "",
+      assignmentStart: existing.assignmentStart || "",
+      assignmentEnd: existing.assignmentEnd || "",
       address: existing.address || "",
       schedule: { in: existing.schedule?.in || "", out: existing.schedule?.out || "" },
       emergencyContact: {
@@ -112,6 +116,8 @@ export default function EmployeeForm() {
 
     const payload = {
       ...form,
+      // an open-ended assignment is stored as null rather than an empty string
+      assignmentEnd: form.assignmentEnd || null,
       name: form.name.trim(),
       code: form.code.trim(),
       position: form.position.trim(),
@@ -296,6 +302,17 @@ export default function EmployeeForm() {
               </FormField>
             </div>
 
+            <div className="col-12 col-md-6">
+              <FormField label="Assignment Start">
+                <input type="date" className="form-control" name="assignmentStart" value={form.assignmentStart} onChange={handleChange} />
+              </FormField>
+            </div>
+            <div className="col-12 col-md-6">
+              <FormField label="Assignment End">
+                <input type="date" className="form-control" name="assignmentEnd" value={form.assignmentEnd} onChange={handleChange} />
+                <div className="form-text">Leave blank while the assignment is open-ended.</div>
+              </FormField>
+            </div>
             <div className="col-12">
               <FormField label="Address">
                 <input

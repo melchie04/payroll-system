@@ -10,6 +10,9 @@ import {
   scheduleFor,
   sheetTotals,
   sheetMismatches,
+  resolveEmployee,
+  deploymentState,
+  parsePeriodLabel,
 } from "../../context/TimesheetContext.jsx";
 import { clientNames, sheetPeriods } from "../../assets/data/index.js";
 import { useEmployees } from "../../context/EmployeesContext.jsx";
@@ -213,6 +216,9 @@ function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, onReject 
   const approvedDuplicates = duplicates.filter((d) => d.status === "Approved");
   const pendingDuplicates = duplicates.filter((d) => d.status !== "Approved");
 
+  // Checked against the edited name and period, so correcting either re-runs the test.
+  const deployment = deploymentState(resolveEmployee({ name: employee }, employees), parsePeriodLabel(period));
+
   const blockers = [
     !periodConfirmed && { title: "Period Covered is not confirmed", sub: "Tick the confirmation box below once it matches the sheet." },
     periodCheck.status === "mismatch" && {
@@ -226,6 +232,10 @@ function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, onReject 
     approvedDuplicates.length > 0 && {
       title: "These days are already approved on another sheet",
       sub: `${approvedDuplicates.map((d) => d.name).join(", ")} — approving this would pay the same days twice.`,
+    },
+    !deployment.expected && {
+      title: `Employee not deployed for this period (${deployment.reason})`,
+      sub: "The roster shows this person was not on assignment for these dates. Check the employee record before approving.",
     },
     file.employee.confidence < 0.85 && { title: "Employee name read with low confidence", sub: "Check the name against the sheet before approving." },
     !file.signatures.client && { title: "Client signature not detected", sub: "The client signature box appears to be empty." },

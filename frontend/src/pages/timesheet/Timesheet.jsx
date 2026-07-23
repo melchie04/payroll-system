@@ -2,7 +2,8 @@ import { useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { PageHeader, TabsNav, FilterSelect } from "../../components/ui/index.jsx";
 import { timesheetCoverage, extractionSummary, payPeriods, clientNames } from "../../assets/data/index.js";
-import { useTimesheets } from "../../context/TimesheetContext.jsx";
+import { useTimesheets, resolveEmployee, deploymentState, parsePeriodLabel } from "../../context/TimesheetContext.jsx";
+import { useEmployees } from "../../context/EmployeesContext.jsx";
 import { TimesheetUpload } from "../../components/timesheet/TimesheetUpload.jsx";
 import { TimesheetFiles } from "../../components/timesheet/TimesheetFiles.jsx";
 import { TimesheetCoverage } from "../../components/timesheet/TimesheetCoverage.jsx";
@@ -37,6 +38,7 @@ function inPeriod(file, period) {
 // Timesheet — intake for scanned timesheets. Payroll collects approved days from here.
 export default function Timesheet() {
   const { files } = useTimesheets();
+  const { employees } = useEmployees();
   const location = useLocation();
 
   // Upload is the default; returning from a sheet review reopens the tab it came from.
@@ -53,13 +55,21 @@ export default function Timesheet() {
     [files, client, activePeriod],
   );
 
+  // Coverage rows carry whether the roster still expects paperwork from that person,
+  // so someone inactive or off-assignment stops counting as a permanent gap.
   const visibleCoverage = useMemo(
-    () => timesheetCoverage.filter((r) => r.period === activePeriod.label && (client === ALL_CLIENTS || r.client === client)),
-    [client, activePeriod],
+    () =>
+      timesheetCoverage
+        .filter((r) => r.period === activePeriod.label && (client === ALL_CLIENTS || r.client === client))
+        .map((r) => {
+          const state = deploymentState(resolveEmployee({ name: r.employee }, employees), parsePeriodLabel(r.period));
+          return { ...r, expected: state.expected, notExpectedReason: state.reason };
+        }),
+    [client, activePeriod, employees],
   );
 
   const needsReview = visibleFiles.filter((f) => f.status === "Needs Review").length;
-  const gaps = visibleCoverage.filter((r) => r.gap).length;
+  const gaps = visibleCoverage.filter((r) => r.gap && r.expected !== false).length;
 
   // The cut-off only matters while something could still miss the run, so the
   // notice appears when sheets are unapproved or an employee has a gap.

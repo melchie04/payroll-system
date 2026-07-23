@@ -4,9 +4,12 @@ import { DataCard, Table, Tr, Td, Badge, BtnSecondary } from "../ui/index.jsx";
 // A gap means paperwork is missing, not that the person did not work.
 // Rows arrive already scoped to the client and pay period chosen on the page.
 export function TimesheetCoverage({ rows = [], period, onUploadFor }) {
-  const covered = rows.filter((r) => !r.gap).length;
-  const gaps = rows.length - covered;
-  const complete = covered === rows.length;
+  // Someone not deployed for this period owes no paperwork, so they stay listed but
+  // sit outside the covered and gap tallies.
+  const expected = rows.filter((r) => r.expected !== false);
+  const covered = expected.filter((r) => !r.gap).length;
+  const gaps = expected.length - covered;
+  const complete = gaps === 0;
   const sheets = rows.reduce((sum, r) => sum + r.sheets, 0);
 
   const stats = [
@@ -21,7 +24,7 @@ export function TimesheetCoverage({ rows = [], period, onUploadFor }) {
         title="Period Coverage"
         action={
           <span className={`badge rounded-pill status-badge ${complete ? "status-badge-success" : "status-badge-warning"}`}>
-            {covered} of {rows.length} covered
+            {covered} of {expected.length} covered
           </span>
         }
       >
@@ -66,17 +69,22 @@ export function TimesheetCoverage({ rows = [], period, onUploadFor }) {
                 <Td>{r.sheets}</Td>
                 <Td>
                   {r.covered || <span className="text-muted">&mdash;</span>}
-                  {r.gap && (
+                  {r.gap && r.expected !== false && (
                     <div className="ts-warn" style={{ fontSize: 11.5 }}>
                       Missing {r.gap}
                     </div>
                   )}
+                  {r.expected === false && (
+                    <div className="text-muted" style={{ fontSize: 11.5 }}>
+                      {r.notExpectedReason}
+                    </div>
+                  )}
                 </Td>
                 <Td>
-                  <Badge status={r.gap ? "Not Covered" : "Covered"} />
+                  <Badge status={r.expected === false ? "Not Expected" : r.gap ? "Not Covered" : "Covered"} />
                 </Td>
                 <Td>
-                  {r.gap ? (
+                  {r.gap && r.expected !== false ? (
                     <BtnSecondary title={`Upload the missing sheet for ${r.employee}`} onClick={() => onUploadFor?.(r)}>
                       <i className="fas fa-cloud-arrow-up"></i> Upload
                     </BtnSecondary>

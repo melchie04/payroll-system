@@ -915,6 +915,8 @@ export const employees = [
     rate: "₱812.50",
     status: "Active",
     dateHired: "Jan 15, 2023",
+    assignmentStart: "2023-01-15",
+    assignmentEnd: null,
     schedule: { in: "07:30", out: "17:00" },
     address: "123 Mabini St, Makati City, Metro Manila",
     emergencyContact: {
@@ -935,6 +937,8 @@ export const employees = [
     rate: "₱728.48",
     status: "Active",
     dateHired: "Mar 3, 2023",
+    assignmentStart: "2023-03-03",
+    assignmentEnd: null,
     schedule: { in: "07:30", out: "17:00" },
     address: "45 Rizal Ave, Quezon City, Metro Manila",
     emergencyContact: {
@@ -955,6 +959,8 @@ export const employees = [
     rate: "₱750.00",
     status: "Active",
     dateHired: "Jun 20, 2023",
+    assignmentStart: "2023-06-20",
+    assignmentEnd: null,
     schedule: { in: "07:30", out: "17:00" },
     address: "78 Katipunan Ave, Quezon City, Metro Manila",
     emergencyContact: {
@@ -975,6 +981,8 @@ export const employees = [
     rate: "₱875.00",
     status: "On Leave",
     dateHired: "Sep 11, 2022",
+    assignmentStart: "2022-09-11",
+    assignmentEnd: null,
     schedule: { in: "07:30", out: "17:00" },
     address: "12 Bonifacio St, Taguig City, Metro Manila",
     emergencyContact: {
@@ -995,6 +1003,8 @@ export const employees = [
     rate: "₱812.50",
     status: "Active",
     dateHired: "Feb 1, 2024",
+    assignmentStart: "2024-02-01",
+    assignmentEnd: null,
     schedule: { in: "07:30", out: "17:00" },
     address: "90 Aguinaldo Hwy, Imus, Cavite",
     emergencyContact: {
@@ -1015,6 +1025,8 @@ export const employees = [
     rate: "₱735.29",
     status: "Active",
     dateHired: "Nov 8, 2023",
+    assignmentStart: "2023-11-08",
+    assignmentEnd: null,
     schedule: { in: "07:30", out: "17:00" },
     address: "33 Marcos Hwy, Antipolo, Rizal",
     emergencyContact: {
@@ -1035,6 +1047,8 @@ export const employees = [
     rate: "₱812.50",
     status: "Active",
     dateHired: "Apr 17, 2024",
+    assignmentStart: "2024-04-17",
+    assignmentEnd: null,
     schedule: { in: "07:30", out: "17:00" },
     address: "56 EDSA, Mandaluyong City, Metro Manila",
     emergencyContact: {

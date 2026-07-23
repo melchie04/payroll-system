@@ -128,6 +128,27 @@ export function resolveEmployee(employee, roster = []) {
   );
 }
 
+// parseIsoDate — "YYYY-MM-DD" as a local date, so an assignment window compares
+// cleanly against the local dates parsePeriodLabel returns.
+function parseIsoDate(value) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value || "").trim());
+  return m ? new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3])) : null;
+}
+
+// deploymentState — whether an employee owes paperwork for a date range. Answers only
+// on positive evidence (a non-active status, or a window that excludes the range), so a
+// record with no window set still counts as expected rather than silently disappearing.
+export function deploymentState(employee, range) {
+  if (!employee) return { expected: true, reason: null };
+  if (employee.status && employee.status !== "Active") return { expected: false, reason: employee.status };
+  if (!range) return { expected: true, reason: null };
+  const start = parseIsoDate(employee.assignmentStart);
+  if (start && start > range.to) return { expected: false, reason: "Not yet deployed" };
+  const end = parseIsoDate(employee.assignmentEnd);
+  if (end && end < range.from) return { expected: false, reason: "Assignment ended" };
+  return { expected: true, reason: null };
+}
+
 // scheduleFor — the standard start and end time on an employee's record. Resolved
 // against the live roster passed in, so an edit on the Employees page immediately
 // changes which schedule a sheet is measured against rather than reading stale seed data.
@@ -199,8 +220,11 @@ export function sheetFindings(file, allFiles = [], roster = []) {
   if (!signatures.supervisor) findings.push("Supervisor signature not detected");
   if (!signatures.client) findings.push("Client signature not detected");
 
-  if (findDuplicateSheets(allFiles, file, null).length > 0) findings.push("Days already covered by another sheet");
-  const schedule = resolveEmployee(file.employee, roster)?.schedule || null;
+  if (findDuplicateSheets(allFiles, file, null, roster).length > 0) findings.push("Days already covered by another sheet");
+  const matched = resolveEmployee(file.employee, roster);
+  const deployment = deploymentState(matched, parsePeriodLabel(file.period?.label));
+  if (!deployment.expected) findings.push(`Employee not deployed for this period (${deployment.reason})`);
+  const schedule = matched?.schedule || null;
   if (sheetMismatches(file.rows, file.handwritten, schedule).length > 0) findings.push("Totals disagree with the handwritten figures");
 
   const lowConfidence = (file.rows || []).reduce((n, r) => n + (r.lowConfidence ? r.lowConfidence.length : 0), 0);
