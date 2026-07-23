@@ -7,6 +7,7 @@ import { clientNames } from "../../assets/data/index.js";
 const emptyForm = {
   name: "",
   code: "",
+  aliases: "",
   client: "Acme Corp",
   position: "",
   email: "",
@@ -35,6 +36,7 @@ export default function EmployeeForm() {
     return {
       name: existing.name,
       code: existing.code || "",
+      aliases: (existing.aliases || []).join(", "),
       client: existing.client,
       position: existing.position,
       email: existing.email,
@@ -88,6 +90,7 @@ export default function EmployeeForm() {
     const payload = {
       ...form,
       rate: form.rate.startsWith("₱") ? form.rate : `₱${form.rate}`,
+      aliases: form.aliases.split(",").map((a) => a.trim()).filter(Boolean),
     };
 
     if (isEdit) {
@@ -253,6 +256,18 @@ export default function EmployeeForm() {
                   value={form.address}
                   onChange={handleChange}
                   placeholder="Street, City, Province"
+                />
+              </FormField>
+            </div>
+            <div className="col-12">
+              <FormField label="Known Aliases">
+                <input
+                  type="text"
+                  className="form-control"
+                  name="aliases"
+                  value={form.aliases}
+                  onChange={handleChange}
+                  placeholder="Other names on scanned sheets, comma-separated — e.g. J. Doe, Doe John"
                 />
               </FormField>
             </div>

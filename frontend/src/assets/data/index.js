@@ -906,6 +906,7 @@ export const employees = [
   {
     id: 1,
     code: "EMP-001",
+    aliases: ["J. Doe", "Doe, John"],
     name: "John Doe",
     client: "Acme Corp",
     position: "Developer",
@@ -925,6 +926,7 @@ export const employees = [
   {
     id: 2,
     code: "EMP-002",
+    aliases: ["J. Smith"],
     name: "Jane Smith",
     client: "Globex Inc",
     position: "QA Engineer",
@@ -944,6 +946,7 @@ export const employees = [
   {
     id: 3,
     code: "EMP-003",
+    aliases: [],
     name: "Michael Brown",
     client: "Initech",
     position: "Business Analyst",
@@ -963,6 +966,7 @@ export const employees = [
   {
     id: 4,
     code: "EMP-004",
+    aliases: [],
     name: "Emily Davis",
     client: "Soylent Corp",
     position: "Project Manager",
@@ -982,6 +986,7 @@ export const employees = [
   {
     id: 5,
     code: "EMP-005",
+    aliases: ["C. Wilson"],
     name: "Chris Wilson",
     client: "Acme Corp",
     position: "Developer",
@@ -1001,6 +1006,7 @@ export const employees = [
   {
     id: 6,
     code: "EMP-006",
+    aliases: [],
     name: "Sophia Martinez",
     client: "Globex Inc",
     position: "UI/UX Designer",
@@ -1020,6 +1026,7 @@ export const employees = [
   {
     id: 7,
     code: "EMP-007",
+    aliases: [],
     name: "Daniel Lee",
     client: "Initech",
     position: "Developer",

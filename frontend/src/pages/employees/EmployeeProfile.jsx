@@ -174,6 +174,9 @@ export default function EmployeeProfile() {
                     <DetailRow icon="fa-hashtag" label="Employee Code">
                       {employee.code || "—"}
                     </DetailRow>
+                    <DetailRow icon="fa-tags" label="Also Known As">
+                      {(employee.aliases || []).length ? employee.aliases.join(", ") : "—"}
+                    </DetailRow>
                     <DetailRow icon="fa-building" label="Client">
                       {employee.client}
                     </DetailRow>

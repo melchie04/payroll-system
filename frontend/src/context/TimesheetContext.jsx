@@ -119,16 +119,21 @@ export function resolveEmployee(employee, roster = []) {
     if (byId) return byId;
   }
   const name = (employee.name || "").trim().toLowerCase();
-  return name ? roster.find((e) => e.name.trim().toLowerCase() === name) || null : null;
+  if (!name) return null;
+  // fall back to name, then to any known alias the scan may have read instead
+  return (
+    roster.find((e) => e.name.trim().toLowerCase() === name) ||
+    roster.find((e) => (e.aliases || []).some((a) => a.trim().toLowerCase() === name)) ||
+    null
+  );
 }
 
 // scheduleFor — the standard start and end time on an employee's record. Resolved
 // against the live roster passed in, so an edit on the Employees page immediately
 // changes which schedule a sheet is measured against rather than reading stale seed data.
 export function scheduleFor(employeeName, roster = []) {
-  const name = (employeeName || "").trim().toLowerCase();
-  if (!name) return null;
-  return roster.find((e) => e.name.trim().toLowerCase() === name)?.schedule || null;
+  // delegate so name + alias resolution lives in one place (see resolveEmployee)
+  return resolveEmployee({ name: employeeName }, roster)?.schedule || null;
 }
 
 // Minutes late, worked out from the written IN time against the expected start.
