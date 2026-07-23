@@ -15,6 +15,7 @@ const emptyForm = {
   status: "Active",
   dateHired: "",
   address: "",
+  schedule: { in: "", out: "" },
   emergencyContact: { name: "", relationship: "", phone: "" },
 };
 
@@ -42,6 +43,7 @@ export default function EmployeeForm() {
       status: existing.status,
       dateHired: existing.dateHired || "",
       address: existing.address || "",
+      schedule: { in: existing.schedule?.in || "", out: existing.schedule?.out || "" },
       emergencyContact: {
         name: existing.emergencyContact?.name || "",
         relationship: existing.emergencyContact?.relationship || "",
@@ -69,6 +71,13 @@ export default function EmployeeForm() {
     setForm((f) => ({
       ...f,
       emergencyContact: { ...f.emergencyContact, [e.target.name]: e.target.value },
+    }));
+  }
+
+  function handleScheduleChange(e) {
+    setForm((f) => ({
+      ...f,
+      schedule: { ...f.schedule, [e.target.name]: e.target.value },
     }));
   }
 
@@ -222,6 +231,16 @@ export default function EmployeeForm() {
                   onChange={handleChange}
                   placeholder="e.g. Jan 15, 2023"
                 />
+              </FormField>
+            </div>
+            <div className="col-12 col-md-6">
+              <FormField label="Schedule In">
+                <input type="time" className="form-control" name="in" value={form.schedule.in} onChange={handleScheduleChange} />
+              </FormField>
+            </div>
+            <div className="col-12 col-md-6">
+              <FormField label="Schedule Out">
+                <input type="time" className="form-control" name="out" value={form.schedule.out} onChange={handleScheduleChange} />
               </FormField>
             </div>
 
