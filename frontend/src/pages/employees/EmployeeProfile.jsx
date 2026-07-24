@@ -9,6 +9,7 @@ import {
   BtnPrimary,
   BtnSecondary,
   IconBtn,
+  ActionsMenu,
   Modal,
   FormField,
   DetailList,
@@ -151,23 +152,21 @@ export default function EmployeeProfile() {
   return (
     <>
       <section>
-        <div className="mt-4">
-          <button
-            type="button"
-            onClick={handleBack}
-            className="btn btn-link text-muted small text-decoration-none d-inline-flex align-items-center gap-1 mb-2 p-0"
-          >
-            <i className="fas fa-arrow-left"></i> Back
+        <div className="mt-4 d-flex align-items-start gap-2">
+          <button type="button" onClick={handleBack} className="nav-icon-btn flex-shrink-0" style={{ marginTop: -6 }} aria-label="Back" title="Back">
+            <i className="fas fa-arrow-left"></i>
           </button>
-          <PageHeader
-            title={employee.name}
-            description={`${employee.position} · ${employee.client}`}
-            actions={
-              <Link to={`/employees/${employee.id}/edit`} className="btn btn-dark btn-sm d-inline-flex align-items-center gap-2">
-                <i className="fas fa-pen"></i> Edit
-              </Link>
-            }
-          />
+          <div className="flex-grow-1">
+            <PageHeader
+              title={employee.name}
+              description={`${employee.position} · ${employee.client}`}
+              actions={
+                <Link to={`/employees/${employee.id}/edit`} className="btn btn-dark btn-sm d-inline-flex align-items-center gap-2">
+                  <i className="fas fa-pen"></i> Edit
+                </Link>
+              }
+            />
+          </div>
         </div>
       </section>
 
@@ -202,12 +201,6 @@ export default function EmployeeProfile() {
                     <DetailRow icon="fa-toggle-on" label="Status">
                       <Badge status={employee.status} />
                     </DetailRow>
-                    <DetailRow icon="fa-envelope" label="Email">
-                      {employee.email}
-                    </DetailRow>
-                    <DetailRow icon="fa-phone" label="Phone">
-                      {employee.phone}
-                    </DetailRow>
                     <DetailRow icon="fa-sack-dollar" label="Rate">
                       {employee.rate} / hr
                     </DetailRow>
@@ -224,30 +217,48 @@ export default function EmployeeProfile() {
                         ? `${employee.schedule.in} – ${employee.schedule.out}`
                         : "—"}
                     </DetailRow>
-                    <DetailRow icon="fa-location-dot" label="Address">
-                      {employee.address}
-                    </DetailRow>
                   </DetailList>
                 </div>
               </DataCard>
             </div>
 
-            <div className="col-12 col-lg-5">
-              <DataCard title="Emergency Contact">
-                <div className="card-body">
-                  <DetailList>
-                    <DetailRow icon="fa-user" label="Name">
-                      {employee.emergencyContact.name}
-                    </DetailRow>
-                    <DetailRow icon="fa-people-arrows" label="Relationship">
-                      {employee.emergencyContact.relationship}
-                    </DetailRow>
-                    <DetailRow icon="fa-phone" label="Phone">
-                      {employee.emergencyContact.phone}
-                    </DetailRow>
-                  </DetailList>
-                </div>
-              </DataCard>
+            <div className="col-12 col-lg-5 d-flex flex-column gap-3">
+              <div>
+                <DataCard title="Contact Details">
+                  <div className="card-body">
+                    <DetailList>
+                      <DetailRow icon="fa-envelope" label="Email">
+                        {employee.email}
+                      </DetailRow>
+                      <DetailRow icon="fa-phone" label="Phone">
+                        {employee.phone}
+                      </DetailRow>
+                      <DetailRow icon="fa-location-dot" label="Address">
+                        {employee.address}
+                      </DetailRow>
+                    </DetailList>
+                  </div>
+                </DataCard>
+              </div>
+
+              {/* stretches so the right column bottoms out level with the taller left card */}
+              <div className="flex-grow-1">
+                <DataCard title="Emergency Contact">
+                  <div className="card-body">
+                    <DetailList>
+                      <DetailRow icon="fa-user" label="Name">
+                        {employee.emergencyContact.name}
+                      </DetailRow>
+                      <DetailRow icon="fa-people-arrows" label="Relationship">
+                        {employee.emergencyContact.relationship}
+                      </DetailRow>
+                      <DetailRow icon="fa-phone" label="Phone">
+                        {employee.emergencyContact.phone}
+                      </DetailRow>
+                    </DetailList>
+                  </div>
+                </DataCard>
+              </div>
             </div>
           </div>
         </section>
@@ -271,9 +282,16 @@ export default function EmployeeProfile() {
                         <Badge status={p.status} />
                       </Td>
                       <Td>
-                        <IconBtn title="View Payslip" data-bs-toggle="modal" data-bs-target="#viewPayslipModal" onClick={() => setPayslipTarget(p)}>
-                          <i className="fas fa-eye"></i>
-                        </IconBtn>
+                        <ActionsMenu
+                          items={[
+                            {
+                              label: "View payslip",
+                              icon: "fa-eye",
+                              modalTarget: "viewPayslipModal",
+                              onClick: () => setPayslipTarget(p),
+                            },
+                          ]}
+                        />
                       </Td>
                     </Tr>
                   ))}

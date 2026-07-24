@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { DataCard, Table, Tr, Td, Badge, BtnPrimary, BtnSecondary, BtnDanger, Modal, PageHeader, TabsNav } from "../../components/ui/index.jsx";
 import {
   useTimesheets,
@@ -47,6 +47,7 @@ const REJECT_REASONS = [
 export default function TimesheetReview() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const { files, getFileById, approveFile, saveFile, rejectFile } = useTimesheets();
 
   const file = getFileById(id);
@@ -62,8 +63,10 @@ export default function TimesheetReview() {
     );
   }
 
-  // Sheets are opened from the Uploaded Sheets tab, so that is where leaving returns to.
-  const backToSheets = () => navigate("/timesheet", { state: { tab: "sheets" } });
+  // Return to wherever the sheet was opened from (e.g. an employee profile), falling
+  // back to the Uploaded Sheets tab when the review was loaded directly.
+  const backToSheets = () =>
+    location.key !== "default" ? navigate(-1) : navigate("/timesheet", { state: { tab: "sheets" } });
 
   // key resets the form when the reviewer moves straight from one sheet to another.
   return (

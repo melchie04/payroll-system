@@ -6,7 +6,7 @@ import {
   Tr,
   Td,
   Badge,
-  IconBtn,
+  ActionsMenu,
   BtnSecondary,
   ExportMenu,
   FilterSelect,
@@ -242,27 +242,34 @@ export default function Employees() {
                   <Badge status={emp.status} />
                 </Td>
                 <Td>
-                  <div className="d-flex align-items-center gap-1">
-                    <IconBtn title="View Profile" onClick={() => navigate(`/employees/${emp.id}`)}>
-                      <i className="fas fa-eye"></i>
-                    </IconBtn>
-                    <IconBtn title="Edit" onClick={() => navigate(`/employees/${emp.id}/edit`)}>
-                      <i className="fas fa-pen"></i>
-                    </IconBtn>
-                    {emp.status === "Inactive" ? (
-                      <IconBtn title="Restore" onClick={() => restoreEmployee(emp.id)}>
-                        <i className="fas fa-rotate-left"></i>
-                      </IconBtn>
-                    ) : hasHistory(emp) ? (
-                      <IconBtn title="Archive" data-bs-toggle="modal" data-bs-target="#employeeArchiveModal" onClick={() => setTarget(emp)}>
-                        <i className="fas fa-box-archive text-warning"></i>
-                      </IconBtn>
-                    ) : (
-                      <IconBtn title="Delete" data-bs-toggle="modal" data-bs-target="#employeeDeleteModal" onClick={() => setTarget(emp)}>
-                        <i className="fas fa-trash text-danger"></i>
-                      </IconBtn>
-                    )}
-                  </div>
+                  <ActionsMenu
+                    items={[
+                      { label: "View profile", icon: "fa-eye", onClick: () => navigate(`/employees/${emp.id}`) },
+                      { label: "Edit employee", icon: "fa-pen", onClick: () => navigate(`/employees/${emp.id}/edit`) },
+                      { divider: true },
+                      emp.status === "Inactive" && {
+                        label: "Restore employee",
+                        icon: "fa-rotate-left",
+                        onClick: () => restoreEmployee(emp.id),
+                      },
+                      emp.status !== "Inactive" &&
+                        hasHistory(emp) && {
+                          label: "Archive employee",
+                          icon: "fa-box-archive",
+                          title: "Keeps the record so their timesheets still resolve",
+                          modalTarget: "employeeArchiveModal",
+                          onClick: () => setTarget(emp),
+                        },
+                      emp.status !== "Inactive" &&
+                        !hasHistory(emp) && {
+                          label: "Delete employee",
+                          icon: "fa-trash",
+                          danger: true,
+                          modalTarget: "employeeDeleteModal",
+                          onClick: () => setTarget(emp),
+                        },
+                    ].filter(Boolean)}
+                  />
                 </Td>
               </Tr>
             ))}

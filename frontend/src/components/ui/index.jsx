@@ -498,10 +498,14 @@ export function DetailList({ children }) {
   );
 }
 
-// DetailRow — icon + label + value detail row.
+// DetailRow — icon + label + value detail row. The row wraps so a value too long
+// for the space left drops onto its own full-width line instead of being squeezed.
 export function DetailRow({ icon, label, children }) {
   return (
-    <div className="list-group-item d-flex flex-column flex-sm-row align-items-sm-center gap-1 gap-sm-3 py-2 px-3">
+    <div
+      className="list-group-item d-flex flex-column flex-sm-row flex-wrap align-items-sm-center gap-1 gap-sm-3 py-2 px-3"
+      style={{ rowGap: "0.25rem" }}
+    >
       <div className="d-flex align-items-center gap-2 text-muted flex-shrink-0" style={{ minWidth: 170 }}>
         <span
           className="d-inline-flex align-items-center justify-content-center rounded-circle bg-light text-secondary flex-shrink-0"
@@ -511,7 +515,7 @@ export function DetailRow({ icon, label, children }) {
         </span>
         <span style={{ fontSize: "0.82rem" }}>{label}</span>
       </div>
-      <div className="fw-semibold" style={{ fontSize: "0.92rem" }}>
+      <div className="fw-semibold" style={{ fontSize: "0.92rem", minWidth: 0 }}>
         {children}
       </div>
     </div>
