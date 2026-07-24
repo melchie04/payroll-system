@@ -1,9 +1,10 @@
 import { useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { PageHeader, TabsNav, FilterSelect } from "../../components/ui/index.jsx";
-import { timesheetCoverage, extractionSummary, payPeriods, clientNames } from "../../assets/data/index.js";
+import { timesheetCoverage, extractionSummary, payPeriods } from "../../assets/data/index.js";
 import { useTimesheets, resolveEmployee, deploymentState, parsePeriodLabel } from "../../context/TimesheetContext.jsx";
 import { useEmployees } from "../../context/EmployeesContext.jsx";
+import { useClients } from "../../context/ClientsContext.jsx";
 import { TimesheetUpload } from "../../components/timesheet/TimesheetUpload.jsx";
 import { TimesheetFiles } from "../../components/timesheet/TimesheetFiles.jsx";
 import { TimesheetCoverage } from "../../components/timesheet/TimesheetCoverage.jsx";
@@ -39,6 +40,7 @@ function inPeriod(file, period) {
 export default function Timesheet() {
   const { files } = useTimesheets();
   const { employees } = useEmployees();
+  const { clientNames } = useClients();
   const location = useLocation();
 
   // Upload is the default; returning from a sheet review reopens the tab it came from.

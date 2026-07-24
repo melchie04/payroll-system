@@ -14,15 +14,15 @@ import {
   deploymentState,
   parsePeriodLabel,
 } from "../../context/TimesheetContext.jsx";
-import { clientNames, sheetPeriods } from "../../assets/data/index.js";
+import { sheetPeriods } from "../../assets/data/index.js";
 import { useEmployees } from "../../context/EmployeesContext.jsx";
+import { useClients } from "../../context/ClientsContext.jsx";
 
 // Suggestions for the sheet fields, taken from the same lists the rest of the app
 // filters against. Each field stays typeable: OCR can read a name or a period that
 // is not on the list yet, and the operator should be able to keep it. Employee names
 // come from the live roster (resolved in the form below), so a newly added or renamed
 // employee shows up here without a refresh.
-const CLIENT_OPTIONS = clientNames;
 const PERIOD_OPTIONS = sheetPeriods;
 const HALF_OPTIONS = ["1-15", "16-31"];
 
@@ -87,6 +87,7 @@ function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, onReject 
   // Employee suggestions and the schedule that drives Late both read the live roster,
   // so an edit on the Employees page reaches this screen without a reload.
   const { employees } = useEmployees();
+  const { clientNames } = useClients();
   const employeeOptions = employees.map((e) => e.name);
 
   const [rows, setRows] = useState(file.rows);
@@ -494,7 +495,7 @@ function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, onReject 
                           label="Client"
                           value={client}
                           onChange={setClient}
-                          options={CLIENT_OPTIONS}
+                          options={clientNames}
                           disabled={readOnly}
                           hint="From the upload batch"
                         />

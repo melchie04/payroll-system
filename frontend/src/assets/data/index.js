@@ -568,6 +568,7 @@ export const clientStats = [
 export const clients = [
   {
     id: 1,
+    code: "CLI-001",
     name: "Acme Corp",
     contact: "Robert Cruz",
     email: "rcruz@acme.com",
@@ -586,6 +587,7 @@ export const clients = [
   },
   {
     id: 2,
+    code: "CLI-002",
     name: "Globex Inc",
     contact: "Maria Santos",
     email: "msantos@globex.com",
@@ -604,6 +606,7 @@ export const clients = [
   },
   {
     id: 3,
+    code: "CLI-003",
     name: "Initech",
     contact: "Paolo Reyes",
     email: "preyes@initech.com",
@@ -622,6 +625,7 @@ export const clients = [
   },
   {
     id: 4,
+    code: "CLI-004",
     name: "Soylent Corp",
     contact: "Angela Torres",
     email: "atorres@soylent.com",
@@ -640,6 +644,7 @@ export const clients = [
   },
   {
     id: 5,
+    code: "CLI-005",
     name: "Umbrella Logistics",
     contact: "Kevin Lim",
     email: "klim@umbrellalog.com",
@@ -658,6 +663,7 @@ export const clients = [
   },
   {
     id: 6,
+    code: "CLI-006",
     name: "Stark Retail Group",
     contact: "Grace Bautista",
     email: "gbautista@starkretail.com",
@@ -676,6 +682,7 @@ export const clients = [
   },
   {
     id: 7,
+    code: "CLI-007",
     name: "Wayne Construction",
     contact: "Dennis Ramos",
     email: "dramos@wayneconst.com",
@@ -908,7 +915,7 @@ export const employees = [
     code: "EMP-001",
     aliases: ["J. Doe", "Doe, John"],
     name: "John Doe",
-    client: "Acme Corp",
+    client: "CLI-001",
     position: "Developer",
     email: "johndoe@acme.com",
     phone: "+63 917 555 0101",
@@ -930,7 +937,7 @@ export const employees = [
     code: "EMP-002",
     aliases: ["J. Smith"],
     name: "Jane Smith",
-    client: "Globex Inc",
+    client: "CLI-002",
     position: "QA Engineer",
     email: "jsmith@globex.com",
     phone: "+63 917 555 0201",
@@ -952,7 +959,7 @@ export const employees = [
     code: "EMP-003",
     aliases: [],
     name: "Michael Brown",
-    client: "Initech",
+    client: "CLI-003",
     position: "Business Analyst",
     email: "mbrown@initech.com",
     phone: "+63 917 555 0301",
@@ -974,7 +981,7 @@ export const employees = [
     code: "EMP-004",
     aliases: [],
     name: "Emily Davis",
-    client: "Soylent Corp",
+    client: "CLI-004",
     position: "Project Manager",
     email: "edavis@soylent.com",
     phone: "+63 917 555 0401",
@@ -996,7 +1003,7 @@ export const employees = [
     code: "EMP-005",
     aliases: ["C. Wilson"],
     name: "Chris Wilson",
-    client: "Acme Corp",
+    client: "CLI-001",
     position: "Developer",
     email: "cwilson@acme.com",
     phone: "+63 917 555 0501",
@@ -1018,7 +1025,7 @@ export const employees = [
     code: "EMP-006",
     aliases: [],
     name: "Sophia Martinez",
-    client: "Globex Inc",
+    client: "CLI-002",
     position: "UI/UX Designer",
     email: "smartinez@globex.com",
     phone: "+63 917 555 0601",
@@ -1040,7 +1047,7 @@ export const employees = [
     code: "EMP-007",
     aliases: [],
     name: "Daniel Lee",
-    client: "Initech",
+    client: "CLI-003",
     position: "Developer",
     email: "dlee@initech.com",
     phone: "+63 917 555 0701",
@@ -1075,7 +1082,7 @@ export const employeeDocuments = [
   { id: 4, employeeId: 2, name: "Employment Contract.pdf", type: "pdf", uploaded: "Mar 3, 2023" },
 ];
 
-// Single source of truth for the client and employee names offered in dropdowns,
-// so every page filters against the same list.
-export const clientNames = clients.map((c) => c.name);
+// Single source of truth for the employee names offered in dropdowns.
+// Client names now come from ClientsContext so add / rename / remove is
+// reflected app-wide without a page refresh.
 export const employeeNames = employees.map((e) => e.name);

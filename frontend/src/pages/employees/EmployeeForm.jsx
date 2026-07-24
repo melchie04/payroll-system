@@ -2,13 +2,13 @@ import { useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { DataCard, BtnPrimary, FormField, PageHeader } from "../../components/ui/index.jsx";
 import { useEmployees } from "../../context/EmployeesContext.jsx";
-import { clientNames } from "../../assets/data/index.js";
+import { useClients } from "../../context/ClientsContext.jsx";
 
 const emptyForm = {
   name: "",
   code: "",
   aliases: "",
-  client: "Acme Corp",
+  client: "",
   position: "",
   email: "",
   phone: "",
@@ -28,12 +28,13 @@ export default function EmployeeForm() {
   const navigate = useNavigate();
   const location = useLocation();
   const { employees, getEmployeeById, addEmployee, updateEmployee } = useEmployees();
+  const { clients } = useClients();
 
   const isEdit = Boolean(id);
   const existing = isEdit ? getEmployeeById(id) : null;
 
   const [form, setForm] = useState(() => {
-    if (!isEdit) return emptyForm;
+    if (!isEdit) return { ...emptyForm, client: clients[0]?.code || "" };
     if (!existing) return emptyForm;
     return {
       name: existing.name,
@@ -246,8 +247,10 @@ export default function EmployeeForm() {
               <div className="col-12 col-md-6">
                 <FormField label="Client">
                   <select className="form-select" name="client" value={form.client} onChange={handleChange}>
-                    {clientNames.map((c) => (
-                      <option key={c}>{c}</option>
+                    {clients.map((c) => (
+                      <option key={c.code} value={c.code}>
+                        {c.name}
+                      </option>
                     ))}
                   </select>
                 </FormField>

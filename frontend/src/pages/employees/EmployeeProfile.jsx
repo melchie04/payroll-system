@@ -21,6 +21,7 @@ import {
 } from "../../components/ui/index.jsx";
 import { payslipHistory } from "../../assets/data/index.js";
 import { useEmployees } from "../../context/EmployeesContext.jsx";
+import { useClients } from "../../context/ClientsContext.jsx";
 import { useTimesheets, resolveEmployee, sheetTotals, parsePeriodLabel } from "../../context/TimesheetContext.jsx";
 import { formatCurrency } from "../../utils/currency.js";
 import { computeDeductions } from "../../utils/payslip.js";
@@ -53,6 +54,7 @@ export default function EmployeeProfile() {
   const [tab, setTab] = useState("overview");
 
   const { employees, getEmployeeById, getDocumentsByEmployee, addDocument, deleteDocument } = useEmployees();
+  const { clientNameByCode } = useClients();
   const { files } = useTimesheets();
 
   const employee = getEmployeeById(id);
@@ -159,7 +161,7 @@ export default function EmployeeProfile() {
           <div className="flex-grow-1">
             <PageHeader
               title={employee.name}
-              description={`${employee.position} · ${employee.client}`}
+              description={`${employee.position} · ${clientNameByCode(employee.client)}`}
               actions={
                 <Link to={`/employees/${employee.id}/edit`} className="btn btn-dark btn-sm d-inline-flex align-items-center gap-2">
                   <i className="fas fa-pen"></i> Edit
@@ -184,7 +186,7 @@ export default function EmployeeProfile() {
                 <div className="card-body">
                   <ProfileHeader
                     name={employee.name}
-                    subtitle={`${employee.position} at ${employee.client}`}
+                    subtitle={`${employee.position} at ${clientNameByCode(employee.client)}`}
                     subtitleIcon="fa-briefcase"
                     status={employee.status}
                   />
@@ -196,7 +198,7 @@ export default function EmployeeProfile() {
                       {(employee.aliases || []).length ? employee.aliases.join(", ") : "—"}
                     </DetailRow>
                     <DetailRow icon="fa-building" label="Client">
-                      {employee.client}
+                      {clientNameByCode(employee.client)}
                     </DetailRow>
                     <DetailRow icon="fa-toggle-on" label="Status">
                       <Badge status={employee.status} />
@@ -491,7 +493,7 @@ export default function EmployeeProfile() {
               <div className="print-area">
                 <PayslipDetails
                   employeeName={employee.name}
-                  subtitle={`${employee.position} · ${employee.client}`}
+                  subtitle={`${employee.position} · ${clientNameByCode(employee.client)}`}
                   status={payslipTarget.status}
                   period={payslipTarget.period}
                   summaryRows={[{ icon: "fa-money-bill-wave", label: "Gross Pay", value: formatCurrency(p.gross) }]}

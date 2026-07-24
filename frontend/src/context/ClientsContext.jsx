@@ -9,6 +9,10 @@ export function ClientsProvider({ children }) {
   const [clients, setClients] = useState(initialClients);
   const [documents, setDocuments] = useState(initialDocuments);
 
+  // Live list of client names for the dropdowns that still key on the name
+  // (timesheets, invoices, payroll). Rebuilds whenever clients change.
+  const clientNames = clients.map((c) => c.name);
+
   function addClient(data) {
     const newClient = { id: Date.now(), employees: 0, billing: "₱0.00", ...data };
     setClients((prev) => [...prev, newClient]);
@@ -25,6 +29,16 @@ export function ClientsProvider({ children }) {
 
   function getClientById(id) {
     return clients.find((c) => String(c.id) === String(id));
+  }
+
+  function getClientByCode(code) {
+    return clients.find((c) => String(c.code) === String(code));
+  }
+
+  // Employees link to their client by this stable code, so a client can be renamed
+  // without breaking the link. Falls back to the code itself if nothing matches.
+  function clientNameByCode(code) {
+    return getClientByCode(code)?.name ?? code ?? "";
   }
 
   function getDocumentsByClient(clientId) {
@@ -45,6 +59,9 @@ export function ClientsProvider({ children }) {
     updateClient,
     deleteClient,
     getClientById,
+    getClientByCode,
+    clientNameByCode,
+    clientNames,
     documents,
     getDocumentsByClient,
     addDocument,

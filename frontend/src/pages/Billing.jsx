@@ -20,8 +20,9 @@ import {
   DetailRow,
   PageHeader,
 } from "../components/ui/index.jsx";
-import { billingStats, invoices as initialInvoices, clients } from "../assets/data/index.js";
+import { billingStats, invoices as initialInvoices } from "../assets/data/index.js";
 import { exportToCsv } from "../utils/exportToCsv.js";
+import { useClients } from "../context/ClientsContext.jsx";
 
 const COMPANY = {
   name: "Payroll System Inc.",
@@ -40,6 +41,7 @@ const emptyInvoice = {
 // Billing — invoice list with create-invoice and view-invoice modals.
 export default function Billing() {
   const [invoices, setInvoices] = useState(initialInvoices);
+  const { clients, clientNames } = useClients();
   const [hidden, setHidden] = useState([]);
 
   function toggleHidden(id) {
@@ -214,10 +216,9 @@ export default function Billing() {
         <form id="createInvoiceForm" onSubmit={handleCreateInvoice}>
           <FormField label="Client">
             <select className="form-select" name="client" value={form.client} onChange={handleChange}>
-              <option>Acme Corp</option>
-              <option>Globex Inc</option>
-              <option>Initech</option>
-              <option>Soylent Corp</option>
+              {clientNames.map((c) => (
+                <option key={c}>{c}</option>
+              ))}
             </select>
           </FormField>
           <div className="row g-3">

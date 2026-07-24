@@ -25,6 +25,7 @@ import { payrollStats, payrollEmployees } from "../assets/data/index.js";
 import { exportToCsv } from "../utils/exportToCsv.js";
 import { parseCurrency, formatCurrency } from "../utils/currency.js";
 import { computeDeductions } from "../utils/payslip.js";
+import { useClients } from "../context/ClientsContext.jsx";
 
 const CSV_HEADERS = ["Employee", "Client", "Position", "Hours", "Rate", "Gross Pay", "Status"];
 
@@ -91,6 +92,7 @@ function PayrollRow({ row, checked, onToggle, onViewPayslip, onEditHours, onMark
 // Payroll — payroll run management with bulk actions, timesheet import, payslips, and edit-hours modals.
 export default function Payroll() {
   const [rows, setRows] = useState(payrollEmployees);
+  const { clientNames } = useClients();
   const [selected, setSelected] = useState([]);
 
   const toggleOne = (id) => setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
@@ -256,10 +258,9 @@ export default function Payroll() {
           <div className="col-12 col-md-3">
             <FilterSelect label="Client">
               <option>All Clients</option>
-              <option>Acme Corp</option>
-              <option>Globex Inc</option>
-              <option>Initech</option>
-              <option>Soylent Corp</option>
+              {clientNames.map((c) => (
+                <option key={c}>{c}</option>
+              ))}
             </FilterSelect>
           </div>
           <div className="col-12 col-md-3">
@@ -285,7 +286,7 @@ export default function Payroll() {
               <SearchInput placeholder="Search employee" />
               <FilterMenu>
                 <FilterCheckGroup label="Status" options={["Ready", "Pending", "Paid"]} />
-                <FilterCheckGroup label="Client" options={["Acme Corp", "Globex Inc", "Initech", "Soylent Corp"]} />
+                <FilterCheckGroup label="Client" options={clientNames} />
               </FilterMenu>
             </div>
           </div>

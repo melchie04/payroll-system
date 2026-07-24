@@ -54,7 +54,7 @@ export default function ClientProfile() {
   const client = getClientById(id);
 
   const clientInvoices = invoices.filter((inv) => inv.client === client?.name);
-  const assignedEmployees = allEmployees.filter((emp) => emp.client === client?.name);
+  const assignedEmployees = allEmployees.filter((emp) => emp.client === client?.code);
   const documents = client ? getDocumentsByClient(client.id) : [];
 
   const [docFile, setDocFile] = useState(null);
@@ -168,6 +168,9 @@ export default function ClientProfile() {
                     status={client.status}
                   />
                   <DetailList>
+                    <DetailRow icon="fa-hashtag" label="Client Code">
+                      {client.code || "—"}
+                    </DetailRow>
                     <DetailRow icon="fa-user" label="Contact Person">
                       {client.contact}
                     </DetailRow>

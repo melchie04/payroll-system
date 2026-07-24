@@ -5,6 +5,7 @@ import { useClients } from "../../context/ClientsContext.jsx";
 
 const emptyForm = {
   name: "",
+  code: "",
   contact: "",
   email: "",
   phone: "",
@@ -20,7 +21,7 @@ export default function ClientForm() {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const { getClientById, addClient, updateClient } = useClients();
+  const { clients, getClientById, addClient, updateClient } = useClients();
 
   const isEdit = Boolean(id);
   const existing = isEdit ? getClientById(id) : null;
@@ -30,6 +31,7 @@ export default function ClientForm() {
     if (!existing) return emptyForm;
     return {
       name: existing.name,
+      code: existing.code || "",
       contact: existing.contact,
       email: existing.email,
       phone: existing.phone || "",
@@ -44,6 +46,8 @@ export default function ClientForm() {
       },
     };
   });
+
+  const [errors, setErrors] = useState({});
 
   if (isEdit && !existing) {
     return (
@@ -70,6 +74,14 @@ export default function ClientForm() {
   function handleSubmit(e) {
     e.preventDefault();
     if (!form.name || !form.email) return;
+
+    const code = form.code.trim();
+    const found = {};
+    if (!code) found.code = "Client code is required.";
+    else if (clients.some((c) => String(c.id) !== String(existing?.id) && (c.code || "").trim().toLowerCase() === code.toLowerCase()))
+      found.code = "Another client already uses this code.";
+    setErrors(found);
+    if (Object.keys(found).length > 0) return;
 
     if (isEdit) {
       updateClient(existing.id, form);
@@ -122,6 +134,20 @@ export default function ClientForm() {
                   placeholder="e.g. Acme Corp"
                   required
                 />
+              </FormField>
+            </div>
+            <div className="col-12 col-md-6">
+              <FormField label="Client Code">
+                <input
+                  type="text"
+                  className={`form-control ${errors.code ? "is-invalid" : ""}`}
+                  name="code"
+                  value={form.code}
+                  onChange={handleChange}
+                  placeholder="e.g. CLI-001"
+                  required
+                />
+                {errors.code && <div className="invalid-feedback d-block">{errors.code}</div>}
               </FormField>
             </div>
             <div className="col-12 col-md-6">

@@ -46,11 +46,11 @@ STYLING SYSTEM
 
 DELIVERY — THIS MATTERS, GET IT RIGHT THE FIRST TIME
 - Give me the COMPLETE contents of every file you changed. Never a snippet, never a patch, never "insert this after line X", never a partial file.
-- Deliver downloadable files, not code pasted into the chat. Five files or fewer: individual downloads. More than five: a single zip mirroring my folder structure, made cumulative from the snapshot I gave you so that applying it brings everything up to date at once.
-- Because the zip is cumulative it will contain files you did not touch. Say so, and list its contents under two headings so I can tell them apart:
+- Deliver downloadable files, not code pasted into the chat. Send ONLY the files that actually changed — never the whole project. Five files or fewer: individual downloads I can drop straight into place. More than five: a single zip that contains only the changed files, mirroring my folder structure so each one lands where it belongs. Do NOT make the zip cumulative and do NOT include files I didn't change.
+- List the changed files under one heading:
     CHANGED — file path plus a one-line reason for each.
-    UNCHANGED — carried over from the snapshot so the zip stays cumulative.
   If a file is in CHANGED only because something else forced it (a shared component, a renamed import), say which change dragged it in.
+- If a file did NOT change but is related to what I asked — I might expect it to have changed, or it reads the same data — just NAME it and say why it was left alone. Do not send it.
 - If you have already sent me a file earlier in the conversation and are sending a newer version, say explicitly that it supersedes the earlier one. (List it as a bullet, filename only.)
 - Always include numbered, step-by-step instructions for applying the change, and name the exact screen, filter selection, and theme I should look at to verify it.
 

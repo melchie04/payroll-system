@@ -17,14 +17,14 @@ import {
   PageHeader,
 } from "../../components/ui/index.jsx";
 import { useEmployees } from "../../context/EmployeesContext.jsx";
-import { clientNames } from "../../assets/data/index.js";
+import { useClients } from "../../context/ClientsContext.jsx";
 import { useTimesheets, resolveEmployee } from "../../context/TimesheetContext.jsx";
 import { exportToCsv } from "../../utils/exportToCsv.js";
 
 const CSV_HEADERS = ["Code", "Name", "Client", "Position", "Email", "Rate", "Status"];
 
-function toCsvRows(list) {
-  return list.map((e) => [e.code || "", e.name, e.client, e.position, e.email, e.rate, e.status]);
+function toCsvRows(list, clientName) {
+  return list.map((e) => [e.code || "", e.name, clientName(e.client), e.position, e.email, e.rate, e.status]);
 }
 
 // Employees — employee list with selection, bulk actions, filters, and export.
@@ -32,6 +32,7 @@ export default function Employees() {
   const navigate = useNavigate();
   const { employees, deleteEmployee, archiveEmployee, restoreEmployee } = useEmployees();
   const { files } = useTimesheets();
+  const { clients, clientNameByCode } = useClients();
 
   const [selected, setSelected] = useState([]);
   const [client, setClient] = useState("All Clients");
@@ -106,12 +107,12 @@ export default function Employees() {
   }
 
   function handleExportAll() {
-    exportToCsv("employees", CSV_HEADERS, toCsvRows(employees));
+    exportToCsv("employees", CSV_HEADERS, toCsvRows(employees, clientNameByCode));
   }
 
   function handleExportSelected() {
     const rows = employees.filter((e) => selected.includes(e.id));
-    exportToCsv("employees-selected", CSV_HEADERS, toCsvRows(rows));
+    exportToCsv("employees-selected", CSV_HEADERS, toCsvRows(rows, clientNameByCode));
   }
 
   return (
@@ -140,8 +141,10 @@ export default function Employees() {
           <div className="col-12 col-md-4">
             <FilterSelect label="Client" value={client} onChange={(e) => setClient(e.target.value)}>
               <option>All Clients</option>
-              {clientNames.map((c) => (
-                <option key={c}>{c}</option>
+              {clients.map((c) => (
+                <option key={c.code} value={c.code}>
+                  {c.name}
+                </option>
               ))}
             </FilterSelect>
           </div>
@@ -234,7 +237,7 @@ export default function Employees() {
                   </Link>
                   <div className="text-muted small">{emp.code}</div>
                 </Td>
-                <Td>{emp.client}</Td>
+                <Td>{clientNameByCode(emp.client)}</Td>
                 <Td>{emp.position}</Td>
                 <Td>{emp.email}</Td>
                 <Td>{emp.rate}</Td>
