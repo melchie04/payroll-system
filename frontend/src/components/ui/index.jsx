@@ -388,10 +388,15 @@ export function FilterMenu({ children, onReset, onApply }) {
         <i className="fas fa-filter"></i>
       </button>
       <div className="dropdown-menu dropdown-menu-end shadow-sm p-3" style={{ minWidth: 240 }}>
-        <div className="text-uppercase text-muted fw-semibold mb-2 small" style={{ fontSize: 11, letterSpacing: 0.5 }}>
-          Filter Options
+        {/* Bootstrap only spares a menu click when it lands on the input itself, so a click on an
+            option's label would close the menu mid-edit and make Apply meaningless. Reset and Apply
+            sit outside this guard so they still close the menu as before. */}
+        <div onClick={(e) => e.stopPropagation()}>
+          <div className="text-uppercase text-muted fw-semibold mb-2 small" style={{ fontSize: 11, letterSpacing: 0.5 }}>
+            Filter Options
+          </div>
+          <div className="d-flex flex-column gap-3">{children}</div>
         </div>
-        <div className="d-flex flex-column gap-3">{children}</div>
         <hr className="my-3" />
         <div className="d-flex justify-content-between gap-2">
           <button type="button" className="btn btn-sm btn-outline-secondary w-50" onClick={onReset}>
@@ -408,8 +413,10 @@ export function FilterMenu({ children, onReset, onApply }) {
 
 // FilterCheckGroup — labeled checkbox group inside FilterMenu. Pass selected + onToggle
 // to make it filter; left out, it stays uncontrolled and renders exactly as before.
-export function FilterCheckGroup({ label, options, selected, onToggle }) {
+// Pass single for a one-of-many choice: it renders radios, so picking one clears the rest.
+export function FilterCheckGroup({ label, options, selected, onToggle, single }) {
   const controlled = typeof onToggle === "function";
+  const chosen = Array.isArray(selected) ? selected : selected ? [selected] : [];
   return (
     <div>
       <div className="text-uppercase text-muted fw-semibold mb-1" style={{ fontSize: 10.5, letterSpacing: 0.5 }}>
@@ -419,9 +426,10 @@ export function FilterCheckGroup({ label, options, selected, onToggle }) {
         <div className="form-check" key={opt}>
           <input
             className="form-check-input"
-            type="checkbox"
+            type={single ? "radio" : "checkbox"}
+            name={single ? `chk-${label}`.replace(/\s+/g, "-") : undefined}
             id={`chk-${label}-${opt}`.replace(/\s+/g, "-")}
-            {...(controlled ? { checked: (selected || []).includes(opt), onChange: () => onToggle(opt) } : {})}
+            {...(controlled ? { checked: chosen.includes(opt), onChange: () => onToggle(opt) } : {})}
           />
           <label className="form-check-label small" htmlFor={`chk-${label}-${opt}`.replace(/\s+/g, "-")}>
             {opt}

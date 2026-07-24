@@ -138,7 +138,7 @@ export default function Employees() {
       <section className="mb-4">
         <div className="row g-3 align-items-end">
           <div className="col-12 col-md-4">
-            <FilterSelect value={client} onChange={(e) => setClient(e.target.value)}>
+            <FilterSelect label="Client" value={client} onChange={(e) => setClient(e.target.value)}>
               <option>All Clients</option>
               {clientNames.map((c) => (
                 <option key={c}>{c}</option>
@@ -146,7 +146,7 @@ export default function Employees() {
             </FilterSelect>
           </div>
           <div className="col-12 col-md-4">
-            <FilterSelect value={position} onChange={(e) => setPosition(e.target.value)}>
+            <FilterSelect label="Position" value={position} onChange={(e) => setPosition(e.target.value)}>
               <option>All Positions</option>
               {positions.map((p) => (
                 <option key={p}>{p}</option>
@@ -154,8 +154,8 @@ export default function Employees() {
             </FilterSelect>
           </div>
           <div className="col-12 col-md-4">
-            <div className="d-flex gap-2 align-items-center w-100">
-              <SearchInput placeholder="Search employee" value={search} onChange={(e) => setSearch(e.target.value)} />
+            <div className="d-flex gap-2 align-items-end w-100">
+              <SearchInput label="Search Employees" placeholder="Search employee" value={search} onChange={(e) => setSearch(e.target.value)} />
               <FilterMenu
                 onApply={() => setStatus(statusDraft)}
                 onReset={() => {
