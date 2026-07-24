@@ -10,8 +10,8 @@ export default function ServerError() {
       title="Something Went Wrong"
       description="We ran into an unexpected error on our end. Please try again in a moment."
     >
-      <div className="d-flex gap-2 justify-content-center">
-        <button type="button" className="btn btn-outline-secondary rounded-pill px-4 py-2 fw-medium" onClick={() => window.location.reload()}>
+      <div className="d-flex flex-wrap gap-2 justify-content-center">
+        <button type="button" className="btn btn-outline-secondary rounded-pill px-4 py-2 fw-normal" onClick={() => window.location.reload()}>
           <i className="fas fa-rotate-right me-2"></i>
           Try Again
         </button>

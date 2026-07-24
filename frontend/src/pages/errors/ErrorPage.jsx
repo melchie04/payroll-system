@@ -42,7 +42,7 @@ export default function ErrorPage({ code, icon, accent = "#1a1a1a", title, descr
 // BackToDashboardLink — link back to the dashboard.
 export function BackToDashboardLink() {
   return (
-    <Link to="/" className="btn btn-dark rounded-pill px-4 py-2 fw-medium shadow-sm">
+    <Link to="/" className="btn btn-dark rounded-pill px-4 py-2 fw-normal shadow-sm">
       <i className="fas fa-house me-2"></i>
       Back to Dashboard
     </Link>
