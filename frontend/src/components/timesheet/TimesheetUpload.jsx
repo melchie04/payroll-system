@@ -398,7 +398,7 @@ export function TimesheetUpload({ summary, client, canUpload = true, onOpenSheet
           </DataCard>
 
           <DataCard title="Extraction Summary (Last 7 Days)">
-            <div className="card-body row g-2">
+            <div className="card-body row g-2 py-2">
               {summary.map((s) => (
                 <div className="col-6 col-md-3" key={s.label}>
                   <div className="border rounded-3 bg-light p-2 px-3 h-100 d-flex flex-column justify-content-between">
