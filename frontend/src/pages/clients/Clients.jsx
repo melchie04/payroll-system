@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   StatCard,
   DataCard,
@@ -47,13 +47,29 @@ export default function Clients() {
   ];
 
   const [selected, setSelected] = useState([]);
+  const [status, setStatus] = useState("All Statuses");
+  const [industry, setIndustry] = useState("All Industries");
+  const [search, setSearch] = useState("");
+
+  const visibleClients = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return clients.filter((c) => {
+      if (status !== "All Statuses" && c.status !== status) return false;
+      if (industry !== "All Industries" && c.industry !== industry) return false;
+      if (!q) return true;
+      return `${c.name} ${c.contact} ${c.email} ${c.industry}`.toLowerCase().includes(q);
+    });
+  }, [clients, status, industry, search]);
 
   const toggleOne = (id) => setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
 
-  const allSelected = clients.length > 0 && selected.length === clients.length;
+  // Select-all acts on the rows currently shown, so filtering then ticking the header
+  // never selects clients the operator cannot see.
+  const visibleIds = visibleClients.map((c) => c.id);
+  const allSelected = visibleClients.length > 0 && visibleIds.every((id) => selected.includes(id));
 
   function toggleAll() {
-    setSelected(allSelected ? [] : clients.map((c) => c.id));
+    setSelected(allSelected ? selected.filter((id) => !visibleIds.includes(id)) : [...new Set([...selected, ...visibleIds])]);
   }
 
   const [target, setTarget] = useState(null);
@@ -115,7 +131,7 @@ export default function Clients() {
       <section className="mb-4">
         <div className="row g-3 align-items-end">
           <div className="col-12 col-md-4">
-            <FilterSelect label="Status">
+            <FilterSelect label="Status" value={status} onChange={(e) => setStatus(e.target.value)}>
               <option>All Statuses</option>
               <option>Active</option>
               <option>At Risk</option>
@@ -123,7 +139,7 @@ export default function Clients() {
             </FilterSelect>
           </div>
           <div className="col-12 col-md-4">
-            <FilterSelect label="Industry">
+            <FilterSelect label="Industry" value={industry} onChange={(e) => setIndustry(e.target.value)}>
               <option>All Industries</option>
               <option>Manufacturing</option>
               <option>Technology</option>
@@ -139,7 +155,7 @@ export default function Clients() {
               Search Client
             </label>
             <div className="d-flex gap-2 align-items-center w-100">
-              <SearchInput placeholder="Search client" />
+              <SearchInput placeholder="Search client" value={search} onChange={(e) => setSearch(e.target.value)} />
               <FilterMenu>
                 <FilterCheckGroup label="Status" options={["Active", "At Risk", "Inactive"]} />
                 <FilterCheckGroup label="Industry" options={["Manufacturing", "Technology", "Finance", "Retail"]} />
@@ -170,6 +186,21 @@ export default function Clients() {
             </div>
           )}
 
+          {visibleClients.length === 0 ? (
+            <div className="text-center text-muted py-5 small">
+              <div>No clients match the filters.</div>
+              <BtnSecondary
+                className="mt-3"
+                onClick={() => {
+                  setStatus("All Statuses");
+                  setIndustry("All Industries");
+                  setSearch("");
+                }}
+              >
+                <i className="fas fa-rotate-left"></i> Clear Filters
+              </BtnSecondary>
+            </div>
+          ) : (
           <Table
             headers={[
               <span key="select-all">
@@ -187,7 +218,7 @@ export default function Clients() {
             ]}
             itemLabel="clients"
           >
-            {clients.map((c) => (
+            {visibleClients.map((c) => (
               <Tr key={c.id}>
                 <Td>
                   <input className="form-check-input" type="checkbox" checked={selected.includes(c.id)} onChange={() => toggleOne(c.id)} />
@@ -222,6 +253,7 @@ export default function Clients() {
               </Tr>
             ))}
           </Table>
+          )}
         </DataCard>
       </section>
 

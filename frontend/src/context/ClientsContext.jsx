@@ -14,7 +14,7 @@ export function ClientsProvider({ children }) {
   const clientNames = clients.map((c) => c.name);
 
   function addClient(data) {
-    const newClient = { id: Date.now(), billing: "₱0.00", ...data };
+    const newClient = { id: Date.now(), ...data };
     setClients((prev) => [...prev, newClient]);
     return newClient;
   }
