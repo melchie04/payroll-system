@@ -163,7 +163,7 @@ export default function ClientProfile() {
                 <div className="card-body">
                   <ProfileHeader
                     name={client.name}
-                    subtitle={`${client.industry} · ${client.employees} employees deployed`}
+                    subtitle={`${client.industry} · ${assignedEmployees.length} employees deployed`}
                     subtitleIcon="fa-industry"
                     status={client.status}
                   />

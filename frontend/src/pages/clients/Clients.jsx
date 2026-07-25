@@ -17,20 +17,33 @@ import {
   Modal,
   PageHeader,
 } from "../../components/ui/index.jsx";
-import { clientStats } from "../../assets/data/index.js";
+import { invoices } from "../../assets/data/index.js";
 import { useClients } from "../../context/ClientsContext.jsx";
+import { useEmployees } from "../../context/EmployeesContext.jsx";
+import { parseCurrency, formatCurrency } from "../../utils/currency.js";
 import { exportToCsv } from "../../utils/exportToCsv.js";
 
 const CSV_HEADERS = ["Client", "Contact Person", "Email", "Phone", "Industry", "Employees", "Billing", "Status"];
 
-function toCsvRows(list) {
-  return list.map((c) => [c.name, c.contact, c.email, c.phone, c.industry, c.employees, c.billing, c.status]);
+function toCsvRows(list, countFor) {
+  return list.map((c) => [c.name, c.contact, c.email, c.phone, c.industry, countFor(c.code), c.billing, c.status]);
 }
 
 // Clients — client list with selection, bulk actions, filters, and export.
 export default function Clients() {
   const navigate = useNavigate();
   const { clients, deleteClient } = useClients();
+  const { employees } = useEmployees();
+
+  // Live figures so the counts and totals can't drift from the stored records.
+  const countForClient = (code) => employees.filter((e) => e.client === code).length;
+  const outstanding = invoices.filter((inv) => inv.status !== "Paid").reduce((sum, inv) => sum + parseCurrency(inv.amount), 0);
+  const clientStats = [
+    { label: "Total Clients", value: String(clients.length) },
+    { label: "Active Clients", value: String(clients.filter((c) => c.status === "Active").length) },
+    { label: "Total Employees Deployed", value: String(employees.length) },
+    { label: "Outstanding Billing", value: formatCurrency(outstanding), valueColor: "var(--bs-danger)" },
+  ];
 
   const [selected, setSelected] = useState([]);
 
@@ -59,12 +72,12 @@ export default function Clients() {
   }
 
   function handleExportAll() {
-    exportToCsv("clients", CSV_HEADERS, toCsvRows(clients));
+    exportToCsv("clients", CSV_HEADERS, toCsvRows(clients, countForClient));
   }
 
   function handleExportSelected() {
     const rows = clients.filter((c) => selected.includes(c.id));
-    exportToCsv("clients-selected", CSV_HEADERS, toCsvRows(rows));
+    exportToCsv("clients-selected", CSV_HEADERS, toCsvRows(rows, countForClient));
   }
 
   return (
@@ -187,7 +200,7 @@ export default function Clients() {
                 <Td>{c.email}</Td>
                 <Td>{c.phone}</Td>
                 <Td>{c.industry}</Td>
-                <Td>{c.employees}</Td>
+                <Td>{countForClient(c.code)}</Td>
                 <Td>{c.billing}</Td>
                 <Td>
                   <Badge status={c.status} />

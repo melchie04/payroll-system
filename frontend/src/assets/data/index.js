@@ -552,19 +552,6 @@ export const extractionSummary = [
   { label: "Failed", value: 4, color: "#dc2626" },
 ];
 
-
-export const clientStats = [
-  {
-    label: "Total Clients",
-    value: "12",
-    sub: "↑ 2 new this month",
-    subColor: "#16a34a",
-  },
-  { label: "Active Clients", value: "9" },
-  { label: "Total Employees Deployed", value: "32" },
-  { label: "Outstanding Billing", value: "₱279,930.00", valueColor: "#dc2626" },
-];
-
 export const clients = [
   {
     id: 1,
