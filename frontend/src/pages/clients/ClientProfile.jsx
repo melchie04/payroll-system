@@ -18,6 +18,7 @@ import {
   TabsNav,
 } from "../../components/ui/index.jsx";
 import { invoices } from "../../assets/data/index.js";
+import { parseCurrency, formatCurrency } from "../../utils/currency.js";
 import { useClients } from "../../context/ClientsContext.jsx";
 import { useEmployees } from "../../context/EmployeesContext.jsx";
 
@@ -54,6 +55,7 @@ export default function ClientProfile() {
   const client = getClientById(id);
 
   const clientInvoices = invoices.filter((inv) => inv.client === client?.name);
+  const outstanding = clientInvoices.filter((inv) => inv.status !== "Paid").reduce((s, inv) => s + parseCurrency(inv.amount), 0);
   const assignedEmployees = allEmployees.filter((emp) => emp.client === client?.code);
   const documents = client ? getDocumentsByClient(client.id) : [];
 
@@ -186,8 +188,8 @@ export default function ClientProfile() {
                     <DetailRow icon="fa-calendar-day" label="Client Since">
                       {client.clientSince}
                     </DetailRow>
-                    <DetailRow icon="fa-file-invoice-dollar" label="Billing">
-                      {client.billing}
+                    <DetailRow icon="fa-file-invoice-dollar" label="Outstanding">
+                      {formatCurrency(outstanding)}
                     </DetailRow>
                     <DetailRow icon="fa-location-dot" label="Address">
                       {client.address}
