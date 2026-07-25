@@ -7,12 +7,10 @@ import {
   Tr,
   Td,
   Badge,
-  IconBtn,
+  ActionsMenu,
   BtnSecondary,
   ExportMenu,
   FilterSelect,
-  FilterMenu,
-  FilterCheckGroup,
   SearchInput,
   Modal,
   PageHeader,
@@ -32,7 +30,7 @@ function toCsvRows(list, countFor, outstandingFor) {
 // Clients — client list with selection, bulk actions, filters, and export.
 export default function Clients() {
   const navigate = useNavigate();
-  const { clients, deleteClient } = useClients();
+  const { clients, deleteClient, archiveClient, restoreClient } = useClients();
   const { employees } = useEmployees();
 
   // Live figures so the counts and totals can't drift from the stored records.
@@ -72,6 +70,13 @@ export default function Clients() {
     setSelected(allSelected ? selected.filter((id) => !visibleIds.includes(id)) : [...new Set([...selected, ...visibleIds])]);
   }
 
+  const selectedClients = clients.filter((c) => selected.includes(c.id));
+  // Archive keeps clients that have billing or staff history; only clients with neither
+  // can be hard-deleted.
+  const hasHistory = (c) => invoices.some((inv) => inv.client === c.name) || employees.some((e) => e.client === c.code);
+  const toArchive = selectedClients.filter((c) => hasHistory(c) && c.status !== "Inactive");
+  const toDelete = selectedClients.filter((c) => !hasHistory(c));
+
   const [target, setTarget] = useState(null);
 
   function confirmDelete() {
@@ -82,8 +87,17 @@ export default function Clients() {
     document.getElementById("clientDeleteModalClose")?.click();
   }
 
+  function confirmArchive() {
+    if (target) {
+      archiveClient(target.id);
+      setTarget(null);
+    }
+    document.getElementById("clientArchiveModalClose")?.click();
+  }
+
   function confirmBulkDelete() {
-    selected.forEach((id) => deleteClient(id));
+    toArchive.forEach((c) => archiveClient(c.id));
+    toDelete.forEach((c) => deleteClient(c.id));
     setSelected([]);
     document.getElementById("bulkDeleteModalClose")?.click();
   }
@@ -154,13 +168,7 @@ export default function Clients() {
             <label className="form-label text-uppercase text-muted fw-semibold mb-1 d-block" style={{ fontSize: 11, letterSpacing: 0.5 }}>
               Search Client
             </label>
-            <div className="d-flex gap-2 align-items-center w-100">
-              <SearchInput placeholder="Search client" value={search} onChange={(e) => setSearch(e.target.value)} />
-              <FilterMenu>
-                <FilterCheckGroup label="Status" options={["Active", "At Risk", "Inactive"]} />
-                <FilterCheckGroup label="Industry" options={["Manufacturing", "Technology", "Finance", "Retail"]} />
-              </FilterMenu>
-            </div>
+            <SearchInput placeholder="Search client" value={search} onChange={(e) => setSearch(e.target.value)} />
           </div>
         </div>
       </section>
@@ -180,7 +188,7 @@ export default function Clients() {
                   <i className="fas fa-download"></i> Export Selected
                 </button>
                 <button type="button" className="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#bulkDeleteModal">
-                  <i className="fas fa-trash"></i> Delete Selected
+                  <i className="fas fa-trash"></i> Remove Selected
                 </button>
               </div>
             </div>
@@ -238,17 +246,34 @@ export default function Clients() {
                   <Badge status={c.status} />
                 </Td>
                 <Td>
-                  <div className="d-flex align-items-center gap-1">
-                    <IconBtn title="View Details" onClick={() => navigate(`/clients/${c.id}`)}>
-                      <i className="fas fa-eye"></i>
-                    </IconBtn>
-                    <IconBtn title="Edit" onClick={() => navigate(`/clients/${c.id}/edit`)}>
-                      <i className="fas fa-pen"></i>
-                    </IconBtn>
-                    <IconBtn title="Delete" data-bs-toggle="modal" data-bs-target="#clientDeleteModal" onClick={() => setTarget(c)}>
-                      <i className="fas fa-trash text-danger"></i>
-                    </IconBtn>
-                  </div>
+                  <ActionsMenu
+                    items={[
+                      { label: "View details", icon: "fa-eye", onClick: () => navigate(`/clients/${c.id}`) },
+                      { label: "Edit client", icon: "fa-pen", onClick: () => navigate(`/clients/${c.id}/edit`) },
+                      { divider: true },
+                      c.status === "Inactive" && {
+                        label: "Restore client",
+                        icon: "fa-rotate-left",
+                        onClick: () => restoreClient(c.id),
+                      },
+                      c.status !== "Inactive" &&
+                        hasHistory(c) && {
+                          label: "Archive client",
+                          icon: "fa-box-archive",
+                          title: "Keeps the record so its invoices and staff still resolve",
+                          modalTarget: "clientArchiveModal",
+                          onClick: () => setTarget(c),
+                        },
+                      c.status !== "Inactive" &&
+                        !hasHistory(c) && {
+                          label: "Delete client",
+                          icon: "fa-trash",
+                          danger: true,
+                          modalTarget: "clientDeleteModal",
+                          onClick: () => setTarget(c),
+                        },
+                    ].filter(Boolean)}
+                  />
                 </Td>
               </Tr>
             ))}
@@ -277,6 +302,27 @@ export default function Clients() {
       </Modal>
 
       <Modal
+        id="clientArchiveModal"
+        title="Archive Client"
+        footer={
+          <>
+            <BtnSecondary id="clientArchiveModalClose" data-bs-dismiss="modal">
+              Cancel
+            </BtnSecondary>
+            <button type="button" className="btn btn-warning btn-sm" onClick={confirmArchive}>
+              <i className="fas fa-box-archive"></i> Archive
+            </button>
+          </>
+        }
+      >
+        <p className="mb-0">
+          <strong>{target?.name}</strong> has invoices or staff on record, so the record is kept and marked
+          Inactive instead of deleted. Those invoices and employees still resolve to this client. You can restore
+          it from the list at any time.
+        </p>
+      </Modal>
+
+      <Modal
         id="bulkDeleteModal"
         title="Delete Selected Clients"
         footer={
@@ -291,11 +337,24 @@ export default function Clients() {
         }
       >
         <p className="mb-0">
-          Are you sure you want to delete{" "}
-          <strong>
-            {selected.length} client{selected.length === 1 ? "" : "s"}
-          </strong>{" "}
-          from your list? This action cannot be undone.
+          {toDelete.length > 0 && (
+            <>
+              <strong>
+                {toDelete.length} client{toDelete.length === 1 ? "" : "s"}
+              </strong>{" "}
+              will be deleted permanently.
+            </>
+          )}
+          {toArchive.length > 0 && (
+            <>
+              {toDelete.length > 0 && " "}
+              <strong>
+                {toArchive.length} client{toArchive.length === 1 ? "" : "s"}
+              </strong>{" "}
+              have invoices or staff on record and will be archived instead, keeping those links intact.
+            </>
+          )}
+          {toDelete.length === 0 && toArchive.length === 0 && "Nothing to remove — the selected clients are already archived."}
         </p>
       </Modal>
     </>

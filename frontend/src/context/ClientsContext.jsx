@@ -27,6 +27,16 @@ export function ClientsProvider({ children }) {
     setClients((prev) => prev.filter((c) => String(c.id) !== String(id)));
   }
 
+  // Archiving keeps the record so invoices and employees that reference this client
+  // still resolve; hard delete is reserved for clients with no billing or staff history.
+  function archiveClient(id) {
+    updateClient(id, { status: "Inactive" });
+  }
+
+  function restoreClient(id) {
+    updateClient(id, { status: "Active" });
+  }
+
   function getClientById(id) {
     return clients.find((c) => String(c.id) === String(id));
   }
@@ -58,6 +68,8 @@ export function ClientsProvider({ children }) {
     addClient,
     updateClient,
     deleteClient,
+    archiveClient,
+    restoreClient,
     getClientById,
     getClientByCode,
     clientNameByCode,
