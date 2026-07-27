@@ -181,8 +181,8 @@ export default function EmployeeProfile() {
       {tab === "overview" && (
         <section className="mb-3">
           <div className="row g-3">
-            <div className="col-12 col-lg-7">
-              <DataCard title="Employment Details">
+            <div className="col-12 col-lg-7 d-flex flex-column gap-3">
+              <DataCard title="Personal Details">
                 <div className="card-body">
                   <ProfileHeader
                     name={employee.name}
@@ -197,6 +197,13 @@ export default function EmployeeProfile() {
                     <DetailRow icon="fa-tags" label="Also Known As">
                       {(employee.aliases || []).length ? employee.aliases.join(", ") : "—"}
                     </DetailRow>
+                  </DetailList>
+                </div>
+              </DataCard>
+
+              <DataCard title="Employment">
+                <div className="card-body">
+                  <DetailList>
                     <DetailRow icon="fa-building" label="Client">
                       {clientNameByCode(employee.client)}
                     </DetailRow>
@@ -209,6 +216,13 @@ export default function EmployeeProfile() {
                     <DetailRow icon="fa-calendar-day" label="Date Hired">
                       {employee.dateHired}
                     </DetailRow>
+                  </DetailList>
+                </div>
+              </DataCard>
+
+              <DataCard title="Schedule & Assignment">
+                <div className="card-body">
+                  <DetailList>
                     <DetailRow icon="fa-user-clock" label="Assignment">
                       {employee.assignmentStart
                         ? `${employee.assignmentStart} → ${employee.assignmentEnd || "open-ended"}`
