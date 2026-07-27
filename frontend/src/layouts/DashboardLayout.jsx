@@ -32,7 +32,7 @@ export default function DashboardLayout({ fixed = true }) {
         </div>
         <div id="layoutSidenav_content">
           <main>
-            <div className="container-fluid px-4">
+            <div className="container-fluid px-4 px-xl-5 py-3">
               <Outlet />
             </div>
           </main>
