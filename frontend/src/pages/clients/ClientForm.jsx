@@ -17,6 +17,13 @@ const emptyForm = {
   approvingRep: "",
   approvedFormCodes: [],
   uploadInstructions: "",
+  billingRate: "",
+  overtimeMultiplier: "",
+  nightDiffMultiplier: "",
+  sites: [],
+  contractStart: "",
+  contractEnd: "",
+  rateEffectiveDate: "",
   secondaryContact: { name: "", role: "", phone: "" },
 };
 
@@ -47,6 +54,13 @@ export default function ClientForm() {
       approvingRep: existing.approvingRep || "",
       approvedFormCodes: existing.approvedFormCodes || [],
       uploadInstructions: existing.uploadInstructions || "",
+      billingRate: existing.billingRate || "",
+      overtimeMultiplier: existing.overtimeMultiplier ?? "",
+      nightDiffMultiplier: existing.nightDiffMultiplier ?? "",
+      sites: existing.sites || [],
+      contractStart: existing.contractStart || "",
+      contractEnd: existing.contractEnd || "",
+      rateEffectiveDate: existing.rateEffectiveDate || "",
       secondaryContact: {
         name: existing.secondaryContact?.name || "",
         role: existing.secondaryContact?.role || "",
@@ -75,6 +89,15 @@ export default function ClientForm() {
   function handleFormCodes(e) {
     const list = e.target.value.split(",").map((s) => s.trim()).filter(Boolean);
     setForm((f) => ({ ...f, approvedFormCodes: list }));
+  }
+
+  function handleSites(e) {
+    const list = e.target.value.split(",").map((s) => s.trim()).filter(Boolean);
+    setForm((f) => ({ ...f, sites: list }));
+  }
+
+  function handleNumber(e) {
+    setForm((f) => ({ ...f, [e.target.name]: e.target.value === "" ? "" : Number(e.target.value) }));
   }
 
   function handleSecondaryChange(e) {
@@ -300,6 +323,49 @@ export default function ClientForm() {
                   This client signs timesheets (flag sheets missing the client signature)
                 </label>
               </div>
+            </div>
+
+            <div className="col-12">
+              <hr className="my-2" />
+              <div className="text-uppercase text-muted fw-semibold mb-3" style={{ fontSize: 11, letterSpacing: 0.5 }}>
+                Billing & Contract
+              </div>
+            </div>
+
+            <div className="col-12 col-md-6">
+              <FormField label="Billing Rate (charged to client)">
+                <input type="text" className="form-control" name="billingRate" value={form.billingRate} onChange={handleChange} placeholder="e.g. ₱1,100.00" />
+              </FormField>
+            </div>
+            <div className="col-6 col-md-3">
+              <FormField label="Overtime ×">
+                <input type="number" step="0.01" className="form-control" name="overtimeMultiplier" value={form.overtimeMultiplier} onChange={handleNumber} placeholder="1.25" />
+              </FormField>
+            </div>
+            <div className="col-6 col-md-3">
+              <FormField label="Night Diff ×">
+                <input type="number" step="0.01" className="form-control" name="nightDiffMultiplier" value={form.nightDiffMultiplier} onChange={handleNumber} placeholder="1.10" />
+              </FormField>
+            </div>
+            <div className="col-12">
+              <FormField label="Sites / Locations">
+                <input type="text" className="form-control" name="sites" value={form.sites.join(", ")} onChange={handleSites} placeholder="Comma-separated, e.g. Makati Office, Parañaque Plant" />
+              </FormField>
+            </div>
+            <div className="col-12 col-md-4">
+              <FormField label="Contract Start">
+                <input type="text" className="form-control" name="contractStart" value={form.contractStart} onChange={handleChange} placeholder="e.g. Feb 10, 2022" />
+              </FormField>
+            </div>
+            <div className="col-12 col-md-4">
+              <FormField label="Contract End">
+                <input type="text" className="form-control" name="contractEnd" value={form.contractEnd} onChange={handleChange} placeholder="e.g. Feb 9, 2025" />
+              </FormField>
+            </div>
+            <div className="col-12 col-md-4">
+              <FormField label="Rate Effective Date">
+                <input type="text" className="form-control" name="rateEffectiveDate" value={form.rateEffectiveDate} onChange={handleChange} placeholder="e.g. Jan 1, 2024" />
+              </FormField>
             </div>
 
             <div className="col-12">

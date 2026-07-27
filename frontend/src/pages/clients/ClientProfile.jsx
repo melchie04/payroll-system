@@ -218,6 +218,24 @@ export default function ClientProfile() {
                     <DetailRow icon="fa-circle-info" label="Upload instructions">
                       {client.uploadInstructions || "—"}
                     </DetailRow>
+                    <DetailRow icon="fa-money-bill-wave" label="Billing rate">
+                      {client.billingRate || "—"}
+                    </DetailRow>
+                    <DetailRow icon="fa-clock" label="Overtime multiplier">
+                      {client.overtimeMultiplier ? `${client.overtimeMultiplier}×` : "—"}
+                    </DetailRow>
+                    <DetailRow icon="fa-moon" label="Night differential">
+                      {client.nightDiffMultiplier ? `${client.nightDiffMultiplier}×` : "—"}
+                    </DetailRow>
+                    <DetailRow icon="fa-map-location-dot" label="Sites">
+                      {(client.sites || []).length ? client.sites.join(", ") : "—"}
+                    </DetailRow>
+                    <DetailRow icon="fa-file-signature" label="Contract">
+                      {client.contractStart || client.contractEnd ? `${client.contractStart || "—"} → ${client.contractEnd || "—"}` : "—"}
+                    </DetailRow>
+                    <DetailRow icon="fa-calendar-day" label="Rate effective">
+                      {client.rateEffectiveDate || "—"}
+                    </DetailRow>
                   </DetailList>
                 </div>
               </DataCard>
