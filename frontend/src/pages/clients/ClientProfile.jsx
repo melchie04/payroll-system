@@ -143,23 +143,21 @@ export default function ClientProfile() {
   return (
     <>
       <section>
-        <div className="mt-4">
-          <button
-            type="button"
-            onClick={handleBack}
-            className="btn btn-link text-muted small text-decoration-none d-inline-flex align-items-center gap-1 mb-2 p-0"
-          >
-            <i className="fas fa-arrow-left"></i> Back
+        <div className="mt-4 d-flex align-items-start gap-2">
+          <button type="button" onClick={handleBack} className="nav-icon-btn flex-shrink-0" style={{ marginTop: -6 }} aria-label="Back" title="Back">
+            <i className="fas fa-arrow-left"></i>
           </button>
-          <PageHeader
-            title={client.name}
-            description={`${client.industry} · Client since ${client.clientSince || "—"}`}
-            actions={
-              <Link to={`/clients/${client.id}/edit`} className="btn btn-dark btn-sm d-inline-flex align-items-center gap-2">
-                <i className="fas fa-pen"></i> Edit
-              </Link>
-            }
-          />
+          <div className="flex-grow-1">
+            <PageHeader
+              title={client.name}
+              description={`${client.industry} · Client since ${client.clientSince || "—"}`}
+              actions={
+                <Link to={`/clients/${client.id}/edit`} className="btn btn-dark btn-sm d-inline-flex align-items-center gap-2">
+                  <i className="fas fa-pen"></i> Edit
+                </Link>
+              }
+            />
+          </div>
         </div>
       </section>
 
@@ -172,7 +170,7 @@ export default function ClientProfile() {
       {tab === "overview" && (
         <section className="mb-3">
           <div className="row g-3">
-            <div className="col-12 col-lg-7">
+            <div className="col-12 col-lg-7 d-flex flex-column gap-3">
               <DataCard title="Client Details">
                 <div className="card-body">
                   <ProfileHeader
@@ -185,17 +183,8 @@ export default function ClientProfile() {
                     <DetailRow icon="fa-hashtag" label="Client Code">
                       {client.code || "—"}
                     </DetailRow>
-                    <DetailRow icon="fa-user" label="Contact Person">
-                      {client.contact}
-                    </DetailRow>
                     <DetailRow icon="fa-toggle-on" label="Status">
                       <Badge status={client.status} />
-                    </DetailRow>
-                    <DetailRow icon="fa-envelope" label="Email">
-                      {client.email}
-                    </DetailRow>
-                    <DetailRow icon="fa-phone" label="Phone">
-                      {client.phone}
                     </DetailRow>
                     <DetailRow icon="fa-calendar-day" label="Client Since">
                       {client.clientSince}
@@ -203,9 +192,13 @@ export default function ClientProfile() {
                     <DetailRow icon="fa-file-invoice-dollar" label="Outstanding">
                       {formatCurrency(outstanding)}
                     </DetailRow>
-                    <DetailRow icon="fa-location-dot" label="Address">
-                      {client.address}
-                    </DetailRow>
+                  </DetailList>
+                </div>
+              </DataCard>
+
+              <DataCard title="Timesheet Settings">
+                <div className="card-body">
+                  <DetailList>
                     <DetailRow icon="fa-signature" label="Client signature required">
                       {client.requiresClientSignature === false ? "No" : "Yes"}
                     </DetailRow>
@@ -218,6 +211,13 @@ export default function ClientProfile() {
                     <DetailRow icon="fa-circle-info" label="Upload instructions">
                       {client.uploadInstructions || "—"}
                     </DetailRow>
+                  </DetailList>
+                </div>
+              </DataCard>
+
+              <DataCard title="Billing & Contract">
+                <div className="card-body">
+                  <DetailList>
                     <DetailRow icon="fa-money-bill-wave" label="Billing rate">
                       {client.billingRate || "—"}
                     </DetailRow>
@@ -241,7 +241,26 @@ export default function ClientProfile() {
               </DataCard>
             </div>
 
-            <div className="col-12 col-lg-5">
+            <div className="col-12 col-lg-5 d-flex flex-column gap-3">
+              <DataCard title="Contact Details">
+                <div className="card-body">
+                  <DetailList>
+                    <DetailRow icon="fa-user" label="Contact Person">
+                      {client.contact}
+                    </DetailRow>
+                    <DetailRow icon="fa-envelope" label="Email">
+                      {client.email}
+                    </DetailRow>
+                    <DetailRow icon="fa-phone" label="Phone">
+                      {client.phone}
+                    </DetailRow>
+                    <DetailRow icon="fa-location-dot" label="Address">
+                      {client.address}
+                    </DetailRow>
+                  </DetailList>
+                </div>
+              </DataCard>
+
               <DataCard title="Secondary Contact">
                 <div className="card-body">
                   <DetailList>

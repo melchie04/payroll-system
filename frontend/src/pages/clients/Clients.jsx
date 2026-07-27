@@ -165,10 +165,7 @@ export default function Clients() {
             </FilterSelect>
           </div>
           <div className="col-12 col-md-4">
-            <label className="form-label text-uppercase text-muted fw-semibold mb-1 d-block" style={{ fontSize: 11, letterSpacing: 0.5 }}>
-              Search Client
-            </label>
-            <SearchInput placeholder="Search client" value={search} onChange={(e) => setSearch(e.target.value)} />
+            <SearchInput label="Search Clients" placeholder="Search client" value={search} onChange={(e) => setSearch(e.target.value)} />
           </div>
         </div>
       </section>

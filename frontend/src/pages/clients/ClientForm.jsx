@@ -139,26 +139,25 @@ export default function ClientForm() {
   return (
     <>
       <section>
-        <div className="mt-4">
-          <button
-            type="button"
-            onClick={handleBack}
-            className="btn btn-link text-muted small text-decoration-none d-inline-flex align-items-center gap-1 mb-2 p-0"
-          >
-            <i className="fas fa-arrow-left"></i> {backLabel}
+        <div className="mt-4 d-flex align-items-start gap-2">
+          <button type="button" onClick={handleBack} className="nav-icon-btn flex-shrink-0" style={{ marginTop: -6 }} aria-label={backLabel} title={backLabel}>
+            <i className="fas fa-arrow-left"></i>
           </button>
-          <PageHeader
-            title={isEdit ? "Edit Client" : "Add Client"}
-            description={isEdit ? `Update details for ${existing.name}.` : "Add a new client account."}
-          />
+          <div className="flex-grow-1">
+            <PageHeader
+              title={isEdit ? "Edit Client" : "Add Client"}
+              description={isEdit ? `Update details for ${existing.name}.` : "Add a new client account."}
+            />
+          </div>
         </div>
       </section>
 
       <hr className="my-3 opacity-25" />
 
-      <section className="mb-3">
-        <DataCard title="Client Details">
-          <form className="card-body row" onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
+        <section className="mb-3">
+          <DataCard title="Client Details">
+            <div className="card-body row g-3">
             <div className="col-12 col-md-6">
               <FormField label="Client / Company Name">
                 <input
@@ -267,12 +266,13 @@ export default function ClientForm() {
               </FormField>
             </div>
 
-            <div className="col-12">
-              <hr className="my-2" />
-              <div className="text-uppercase text-muted fw-semibold mb-3" style={{ fontSize: 11, letterSpacing: 0.5 }}>
-                Timesheet Settings
-              </div>
             </div>
+          </DataCard>
+        </section>
+
+        <section className="mb-3">
+          <DataCard title="Timesheet Settings">
+            <div className="card-body row g-3">
 
             <div className="col-12 col-md-6">
               <FormField label="Approving Representative">
@@ -325,12 +325,13 @@ export default function ClientForm() {
               </div>
             </div>
 
-            <div className="col-12">
-              <hr className="my-2" />
-              <div className="text-uppercase text-muted fw-semibold mb-3" style={{ fontSize: 11, letterSpacing: 0.5 }}>
-                Billing & Contract
-              </div>
             </div>
+          </DataCard>
+        </section>
+
+        <section className="mb-3">
+          <DataCard title="Billing & Contract">
+            <div className="card-body row g-3">
 
             <div className="col-12 col-md-6">
               <FormField label="Billing Rate (charged to client)">
@@ -368,12 +369,13 @@ export default function ClientForm() {
               </FormField>
             </div>
 
-            <div className="col-12">
-              <hr className="my-2" />
-              <div className="text-uppercase text-muted fw-semibold mb-3" style={{ fontSize: 11, letterSpacing: 0.5 }}>
-                Secondary Contact
-              </div>
             </div>
+          </DataCard>
+        </section>
+
+        <section className="mb-3">
+          <DataCard title="Secondary Contact">
+            <div className="card-body row g-3">
 
             <div className="col-12 col-md-4">
               <FormField label="Contact Name">
@@ -412,17 +414,21 @@ export default function ClientForm() {
               </FormField>
             </div>
 
-            <div className="col-12 d-flex gap-2">
-              <BtnPrimary type="submit">
-                <i className="fas fa-floppy-disk"></i> {isEdit ? "Save Changes" : "Add Client"}
-              </BtnPrimary>
-              <button type="button" onClick={handleBack} className="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2">
-                Cancel
-              </button>
             </div>
-          </form>
-        </DataCard>
-      </section>
+          </DataCard>
+        </section>
+
+        <section className="mb-3">
+          <div className="d-flex gap-2">
+            <BtnPrimary type="submit">
+              <i className="fas fa-floppy-disk"></i> {isEdit ? "Save Changes" : "Add Client"}
+            </BtnPrimary>
+            <button type="button" onClick={handleBack} className="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2">
+              Cancel
+            </button>
+          </div>
+        </section>
+      </form>
     </>
   );
 }
