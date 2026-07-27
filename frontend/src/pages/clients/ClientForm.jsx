@@ -13,6 +13,10 @@ const emptyForm = {
   status: "Active",
   clientSince: "",
   address: "",
+  requiresClientSignature: true,
+  approvingRep: "",
+  approvedFormCodes: [],
+  uploadInstructions: "",
   secondaryContact: { name: "", role: "", phone: "" },
 };
 
@@ -39,6 +43,10 @@ export default function ClientForm() {
       status: existing.status,
       clientSince: existing.clientSince || "",
       address: existing.address || "",
+      requiresClientSignature: existing.requiresClientSignature !== false,
+      approvingRep: existing.approvingRep || "",
+      approvedFormCodes: existing.approvedFormCodes || [],
+      uploadInstructions: existing.uploadInstructions || "",
       secondaryContact: {
         name: existing.secondaryContact?.name || "",
         role: existing.secondaryContact?.role || "",
@@ -62,6 +70,11 @@ export default function ClientForm() {
 
   function handleChange(e) {
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
+  }
+
+  function handleFormCodes(e) {
+    const list = e.target.value.split(",").map((s) => s.trim()).filter(Boolean);
+    setForm((f) => ({ ...f, approvedFormCodes: list }));
   }
 
   function handleSecondaryChange(e) {
@@ -229,6 +242,64 @@ export default function ClientForm() {
                   placeholder="Street, City, Province"
                 />
               </FormField>
+            </div>
+
+            <div className="col-12">
+              <hr className="my-2" />
+              <div className="text-uppercase text-muted fw-semibold mb-3" style={{ fontSize: 11, letterSpacing: 0.5 }}>
+                Timesheet Settings
+              </div>
+            </div>
+
+            <div className="col-12 col-md-6">
+              <FormField label="Approving Representative">
+                <input
+                  type="text"
+                  className="form-control"
+                  name="approvingRep"
+                  value={form.approvingRep}
+                  onChange={handleChange}
+                  placeholder="Who signs the client box, e.g. Robert Cruz"
+                />
+              </FormField>
+            </div>
+            <div className="col-12 col-md-6">
+              <FormField label="Approved Form Codes">
+                <input
+                  type="text"
+                  className="form-control"
+                  name="approvedFormCodes"
+                  value={form.approvedFormCodes.join(", ")}
+                  onChange={handleFormCodes}
+                  placeholder="Comma-separated, e.g. SSI.17-014, SSI.17-015"
+                />
+              </FormField>
+            </div>
+            <div className="col-12">
+              <FormField label="Upload Instructions">
+                <textarea
+                  className="form-control"
+                  name="uploadInstructions"
+                  value={form.uploadInstructions}
+                  onChange={handleChange}
+                  rows={2}
+                  placeholder="Shown on the upload screen when this client is selected"
+                />
+              </FormField>
+            </div>
+            <div className="col-12">
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  id="requiresClientSignature"
+                  checked={form.requiresClientSignature}
+                  onChange={(e) => setForm((f) => ({ ...f, requiresClientSignature: e.target.checked }))}
+                />
+                <label className="form-check-label" htmlFor="requiresClientSignature">
+                  This client signs timesheets (flag sheets missing the client signature)
+                </label>
+              </div>
             </div>
 
             <div className="col-12">

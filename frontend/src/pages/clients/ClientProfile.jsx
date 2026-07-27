@@ -194,6 +194,18 @@ export default function ClientProfile() {
                     <DetailRow icon="fa-location-dot" label="Address">
                       {client.address}
                     </DetailRow>
+                    <DetailRow icon="fa-signature" label="Client signature required">
+                      {client.requiresClientSignature === false ? "No" : "Yes"}
+                    </DetailRow>
+                    <DetailRow icon="fa-user-check" label="Approving representative">
+                      {client.approvingRep || "—"}
+                    </DetailRow>
+                    <DetailRow icon="fa-file-lines" label="Approved form codes">
+                      {(client.approvedFormCodes || []).length ? client.approvedFormCodes.join(", ") : "—"}
+                    </DetailRow>
+                    <DetailRow icon="fa-circle-info" label="Upload instructions">
+                      {client.uploadInstructions || "—"}
+                    </DetailRow>
                   </DetailList>
                 </div>
               </DataCard>

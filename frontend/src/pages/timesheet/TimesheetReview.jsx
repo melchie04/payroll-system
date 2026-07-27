@@ -87,7 +87,7 @@ function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, onReject 
   // Employee suggestions and the schedule that drives Late both read the live roster,
   // so an edit on the Employees page reaches this screen without a reload.
   const { employees } = useEmployees();
-  const { clientNames } = useClients();
+  const { clientNames, clients } = useClients();
   const employeeOptions = employees.map((e) => e.name);
 
   const [rows, setRows] = useState(file.rows);
@@ -95,6 +95,7 @@ function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, onReject 
   const [period, setPeriod] = useState(file.period.label || "");
   const [periodConfirmed, setPeriodConfirmed] = useState(file.period.confirmed);
   const [client, setClient] = useState(file.client || "");
+  const clientRecord = clients.find((c) => c.name === file.client);
   const [half, setHalf] = useState(file.half || "");
 
   const readOnly = file.status === "Approved" || file.status === "Rejected";
@@ -242,7 +243,17 @@ function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, onReject 
       sub: "The roster shows this person was not on assignment for these dates. Check the employee record before approving.",
     },
     file.employee.confidence < 0.85 && { title: "Employee name read with low confidence", sub: "Check the name against the sheet before approving." },
-    !file.signatures.client && { title: "Client signature not detected", sub: "The client signature box appears to be empty." },
+    clientRecord?.requiresClientSignature !== false &&
+      !file.signatures.client && {
+        title: clientRecord?.approvingRep ? `Client signature (${clientRecord.approvingRep}) not detected` : "Client signature not detected",
+        sub: "The client signature box appears to be empty.",
+      },
+    clientRecord?.approvedFormCodes?.length &&
+      file.formCode &&
+      !clientRecord.approvedFormCodes.includes(file.formCode) && {
+        title: `Form ${file.formCode} is not approved for this client`,
+        sub: `Approved forms for ${file.client}: ${clientRecord.approvedFormCodes.join(", ")}.`,
+      },
   ].filter(Boolean);
 
   // The scanned sheet holds the left column; the attention card and the details

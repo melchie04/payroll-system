@@ -204,8 +204,9 @@ export function sheetMismatches(rows = [], handwritten, schedule = null) {
 // opening it. The one thing left out is the Period Covered tick, because that is a
 // person's confirmation rather than something read off the page; approving in bulk
 // asks for it once, over the whole batch.
-export function sheetFindings(file, allFiles = [], roster = []) {
+export function sheetFindings(file, allFiles = [], roster = [], clients = []) {
   if (!file) return ["Sheet not found"];
+  const client = clients.find((c) => c.name === file.client);
   const findings = [];
 
   if (file.status !== "Needs Review") findings.push("Not awaiting review");
@@ -218,7 +219,10 @@ export function sheetFindings(file, allFiles = [], roster = []) {
   const signatures = file.signatures || {};
   if (!signatures.employee) findings.push("Employee signature not detected");
   if (!signatures.supervisor) findings.push("Supervisor signature not detected");
-  if (!signatures.client) findings.push("Client signature not detected");
+  if (client?.requiresClientSignature !== false && !signatures.client)
+    findings.push(client?.approvingRep ? `Client signature (${client.approvingRep}) not detected` : "Client signature not detected");
+  if (client?.approvedFormCodes?.length && file.formCode && !client.approvedFormCodes.includes(file.formCode))
+    findings.push(`Form ${file.formCode} is not approved for this client`);
 
   if (findDuplicateSheets(allFiles, file, null, roster).length > 0) findings.push("Days already covered by another sheet");
   const matched = resolveEmployee(file.employee, roster);
@@ -235,8 +239,8 @@ export function sheetFindings(file, allFiles = [], roster = []) {
 }
 
 // A clean sheet is one with nothing flagged at all, not merely nothing blocking.
-export function isSheetClean(file, allFiles = [], roster = []) {
-  return sheetFindings(file, allFiles, roster).length === 0;
+export function isSheetClean(file, allFiles = [], roster = [], clients = []) {
+  return sheetFindings(file, allFiles, roster, clients).length === 0;
 }
 
 // Folds what the review screen holds in its fields back onto the stored sheet.

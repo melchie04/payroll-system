@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { DataCard, Table, Tr, Td, Badge, BtnSecondary, BtnDanger, Modal, ActionsMenu, FilterSelect, SearchInput } from "../ui/index.jsx";
 import { useTimesheets, findDuplicateSheets, isSheetClean, sheetTotals } from "../../context/TimesheetContext.jsx";
 import { useEmployees } from "../../context/EmployeesContext.jsx";
+import { useClients } from "../../context/ClientsContext.jsx";
 
 const ALL_STATUSES = "All Statuses";
 const ALL_SOURCES = "All Sources";
@@ -16,6 +17,7 @@ export function TimesheetFiles({ files = [] }) {
   const navigate = useNavigate();
   const { files: allFiles, retryFile, discardFile, approveMany } = useTimesheets();
   const { employees } = useEmployees();
+  const { clients } = useClients();
 
   const [status, setStatus] = useState(ALL_STATUSES);
   const [source, setSource] = useState(ALL_SOURCES);
@@ -39,7 +41,7 @@ export function TimesheetFiles({ files = [] }) {
 
   // Sheets awaiting review with nothing flagged on them at all. Opening each one
   // would show an empty Needs Attention card, so the reviewer is offered the batch.
-  const clean = useMemo(() => visible.filter((f) => isSheetClean(f, allFiles, employees)), [visible, allFiles, employees]);
+  const clean = useMemo(() => visible.filter((f) => isSheetClean(f, allFiles, employees, clients)), [visible, allFiles, employees, clients]);
 
   // The stored preview is the uploaded file itself, so the download is the original
   // document rather than anything regenerated from it.
@@ -69,7 +71,7 @@ export function TimesheetFiles({ files = [] }) {
       if (clashes.length > 0) map.set(f.id, clashes);
     }
     return map;
-  }, [files, allFiles]);
+  }, [files, allFiles, employees]);
 
   function handleRetry() {
     if (retryTarget) {

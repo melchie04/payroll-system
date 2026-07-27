@@ -40,12 +40,13 @@ function inPeriod(file, period) {
 export default function Timesheet() {
   const { files } = useTimesheets();
   const { employees } = useEmployees();
-  const { clientNames } = useClients();
+  const { clientNames, clients } = useClients();
   const location = useLocation();
 
   // Upload is the default; returning from a sheet review reopens the tab it came from.
   const [tab, setTab] = useState(location.state?.tab || "upload");
   const [client, setClient] = useState("Acme Corp");
+  const selectedClient = clients.find((c) => c.name === client);
   const [period, setPeriod] = useState(payPeriods[0].label);
 
   const activePeriod = useMemo(() => payPeriods.find((p) => p.label === period) || payPeriods[0], [period]);
@@ -146,6 +147,16 @@ export default function Timesheet() {
               {gaps > 0 && `${gaps} employee${gaps === 1 ? "" : "s"} with missing days`}
               {" — payroll collects approved days only."}
             </div>
+          </div>
+        </div>
+      )}
+
+      {tab === "upload" && selectedClient?.uploadInstructions && (
+        <div className="ts-notice ts-notice-secondary d-flex align-items-start gap-3 py-2 px-3 mb-4">
+          <i className="fas fa-circle-info ts-notice-icon flex-shrink-0 mt-1"></i>
+          <div style={{ fontSize: "0.8125rem" }}>
+            <strong>Upload instructions — {client}</strong>
+            <div className="ts-notice-sub" style={{ fontSize: 11.5 }}>{selectedClient.uploadInstructions}</div>
           </div>
         </div>
       )}
