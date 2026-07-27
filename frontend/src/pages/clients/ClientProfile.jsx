@@ -6,6 +6,7 @@ import {
   Tr,
   Td,
   Badge,
+  FilterSelect,
   BtnPrimary,
   BtnSecondary,
   IconBtn,
@@ -17,10 +18,12 @@ import {
   PageHeader,
   TabsNav,
 } from "../../components/ui/index.jsx";
-import { invoices } from "../../assets/data/index.js";
+import { invoices, timesheetCoverage, payPeriods } from "../../assets/data/index.js";
 import { parseCurrency, formatCurrency } from "../../utils/currency.js";
 import { useClients } from "../../context/ClientsContext.jsx";
 import { useEmployees } from "../../context/EmployeesContext.jsx";
+import { resolveEmployee, deploymentState, parsePeriodLabel } from "../../context/TimesheetContext.jsx";
+import { TimesheetCoverage } from "../../components/timesheet/TimesheetCoverage.jsx";
 
 const fileIcons = { pdf: "📕", img: "🖼️" };
 
@@ -28,6 +31,7 @@ const TABS = [
   { key: "overview", label: "Overview", icon: "fa-id-card" },
   { key: "billing", label: "Billing History", icon: "fa-file-invoice-dollar" },
   { key: "employees", label: "Assigned Employees", icon: "fa-users" },
+  { key: "coverage", label: "Timesheet Coverage", icon: "fa-calendar-check" },
   { key: "documents", label: "Documents", icon: "fa-folder-open" },
 ];
 
@@ -63,6 +67,14 @@ export default function ClientProfile() {
   const [docName, setDocName] = useState("");
   const [docType, setDocType] = useState("pdf");
   const [dragOver, setDragOver] = useState(false);
+
+  const [coveragePeriod, setCoveragePeriod] = useState(payPeriods[0].label);
+  const coverageRows = timesheetCoverage
+    .filter((r) => r.client === client?.name && r.period === coveragePeriod)
+    .map((r) => {
+      const state = deploymentState(resolveEmployee({ name: r.employee }, allEmployees), parsePeriodLabel(r.period));
+      return { ...r, expected: state.expected, notExpectedReason: state.reason };
+    });
 
   function resetUploadForm() {
     setDocFile(null);
@@ -285,6 +297,21 @@ export default function ClientProfile() {
               </>
             )}
           </DataCard>
+        </section>
+      )}
+
+      {tab === "coverage" && (
+        <section className="mb-3">
+          <div className="row g-3 align-items-end mb-3">
+            <div className="col-12 col-md-4">
+              <FilterSelect label="Pay Period" value={coveragePeriod} onChange={(e) => setCoveragePeriod(e.target.value)}>
+                {payPeriods.map((pp) => (
+                  <option key={pp.label}>{pp.label}</option>
+                ))}
+              </FilterSelect>
+            </div>
+          </div>
+          <TimesheetCoverage rows={coverageRows} period={coveragePeriod} onUploadFor={() => navigate("/timesheet")} />
         </section>
       )}
 
