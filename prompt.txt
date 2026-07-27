@@ -16,8 +16,8 @@ PROJECT CONTEXT
 - Tell me which files you read from the snapshot before you answer.
 
 SCOPE
-- Finished pages: auth/, errors/, topnav/, timesheet/, and employees/. These are the reference for "uniform" — when a task says make something uniform, it means uniform with these, never with the unfinished pages. Do not copy a pattern from an unfinished page.
-- Not yet reworked: Dashboard, Payroll, Billing, and Clients. (In future I plan to move these into dashboard/, payroll/, billing/, and clients/ folders rather than leaving them at the root of pages/.)
+- Finished pages: auth/, errors/, topnav/, timesheet/, employees/, and clients/. These are the reference for "uniform" — when a task says make something uniform, it means uniform with these, never with the unfinished pages. Do not copy a pattern from an unfinished page.
+- Not yet reworked: Dashboard, Payroll, and Billing. (In future I plan to move these into dashboard/, payroll/, and billing/ folders rather than leaving them at the root of pages/.)
 - I am satisfied with the look of every finished page. Do not change or update one unless the TASK block explicitly says to.
 - When the TASK block DOES ask me to restyle a finished page, that page becomes the new reference: check every other finished page for the same pattern and tell me which ones now need the same change to stay uniform. List them before you change anything; do not change them without my say-so unless the shared-code exception below applies.
 - Do not change anything outside what I ask for.
