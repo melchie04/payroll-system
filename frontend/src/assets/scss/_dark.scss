@@ -8,6 +8,10 @@
   --app-dark-border: var(--bs-gray-800);
   --app-dark-text: var(--bs-gray-200);
   --app-dark-text-muted: #9aa4ae;
+
+  // The dashboard ring's unfilled track: a light grey plate would glare against the
+  // dark plane, so it drops to the same step as the raised surfaces.
+  --app-chart-track: #2a2f35;
 }
 
 // --- Content plane ---------------------------------------------------------

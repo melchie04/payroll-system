@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router";
 import {
   DataCard,
   Table,
@@ -18,9 +18,10 @@ import {
   PageHeader,
   TabsNav,
 } from "../../components/ui/index.jsx";
-import { invoices, timesheetCoverage, payPeriods } from "../../assets/data/index.js";
+import { timesheetCoverage, payPeriods } from "../../assets/data/index.js";
 import { parseCurrency, formatCurrency } from "../../utils/currency.js";
 import { useClients } from "../../context/ClientsContext.jsx";
+import { useInvoices } from "../../context/InvoicesContext.jsx";
 import { useEmployees } from "../../context/EmployeesContext.jsx";
 import { resolveEmployee, deploymentState, parsePeriodLabel } from "../../context/TimesheetContext.jsx";
 import { TimesheetCoverage } from "../../components/timesheet/TimesheetCoverage.jsx";
@@ -55,10 +56,11 @@ export default function ClientProfile() {
 
   const { getClientById, getDocumentsByClient, addDocument, deleteDocument } = useClients();
   const { employees: allEmployees } = useEmployees();
+  const { invoicesForClient } = useInvoices();
 
   const client = getClientById(id);
 
-  const clientInvoices = invoices.filter((inv) => inv.client === client?.name);
+  const clientInvoices = invoicesForClient(client?.code);
   const outstanding = clientInvoices.filter((inv) => inv.status !== "Paid").reduce((s, inv) => s + parseCurrency(inv.amount), 0);
   const assignedEmployees = allEmployees.filter((emp) => emp.client === client?.code);
   const documents = client ? getDocumentsByClient(client.id) : [];
@@ -291,7 +293,11 @@ export default function ClientProfile() {
                 <Table headers={["Invoice #", "Invoice Date", "Due Date", "Amount", "Status"]} itemLabel="invoices">
                   {clientInvoices.map((inv) => (
                     <Tr key={inv.id}>
-                      <Td bold>{inv.id}</Td>
+                      <Td bold>
+                        <Link to={`/billing/${inv.id}`} className="fw-semibold text-decoration-none">
+                          {inv.id}
+                        </Link>
+                      </Td>
                       <Td>{inv.invoiceDate}</Td>
                       <Td>{inv.dueDate}</Td>
                       <Td>{inv.amount}</Td>
@@ -433,7 +439,7 @@ export default function ClientProfile() {
               <div className="mb-2" style={{ fontSize: 28 }}>
                 <i className="fas fa-cloud-arrow-up text-muted"></i>
               </div>
-              <div className="small fw-medium mb-1">Drag and drop a file here, or click to browse</div>
+              <div className="small mb-1">Drag and drop a file here, or click to browse</div>
               <div className="text-muted" style={{ fontSize: 11 }}>
                 Supports: PDF, JPG, PNG
               </div>

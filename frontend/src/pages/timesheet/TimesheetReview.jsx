@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router";
 import { DataCard, Table, Tr, Td, Badge, BtnPrimary, BtnSecondary, BtnDanger, Modal, PageHeader, TabsNav } from "../../components/ui/index.jsx";
 import {
   useTimesheets,
@@ -17,6 +17,7 @@ import {
 import { sheetPeriods } from "../../assets/data/index.js";
 import { useEmployees } from "../../context/EmployeesContext.jsx";
 import { useClients } from "../../context/ClientsContext.jsx";
+import { useActivity } from "../../context/ActivityContext.jsx";
 
 // Suggestions for the sheet fields, taken from the same lists the rest of the app
 // filters against. Each field stays typeable: OCR can read a name or a period that
@@ -49,6 +50,7 @@ export default function TimesheetReview() {
   const navigate = useNavigate();
   const location = useLocation();
   const { files, getFileById, approveFile, saveFile, rejectFile } = useTimesheets();
+  const { logActivity } = useActivity();
 
   const file = getFileById(id);
 
@@ -68,6 +70,24 @@ export default function TimesheetReview() {
   const backToSheets = () =>
     location.key !== "default" ? navigate(-1) : navigate("/timesheet", { state: { tab: "sheets" } });
 
+  // Approving is what turns a sheet into money, so each outcome is recorded. The name
+  // is read from the draft, since a reviewer may have corrected it on this screen.
+  const who = (draft) => draft?.employee || file.employee?.name || "an unidentified employee";
+  const trail = (action, detail) => logActivity({ action, detail, module: "Timesheet" });
+
+  const handleApprove = (id, draft) => {
+    approveFile(id, draft);
+    trail("Approved timesheet", `Approved ${file.name} for ${who(draft)}`);
+  };
+  const handleSave = (id, draft) => {
+    saveFile(id, draft);
+    trail("Saved timesheet review", `Saved corrections to ${file.name}`);
+  };
+  const handleReject = (id, rejection) => {
+    rejectFile(id, rejection);
+    trail("Rejected timesheet", `Rejected ${file.name} (${rejection?.reasons?.length || 0} reason(s))`);
+  };
+
   // key resets the form when the reviewer moves straight from one sheet to another.
   return (
     <TimesheetReviewForm
@@ -75,9 +95,9 @@ export default function TimesheetReview() {
       file={file}
       files={files}
       onBack={backToSheets}
-      onApprove={approveFile}
-      onSave={saveFile}
-      onReject={rejectFile}
+      onApprove={handleApprove}
+      onSave={handleSave}
+      onReject={handleReject}
     />
   );
 }
@@ -87,8 +107,12 @@ function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, onReject 
   // Employee suggestions and the schedule that drives Late both read the live roster,
   // so an edit on the Employees page reaches this screen without a reload.
   const { employees } = useEmployees();
-  const { clientNames, clients } = useClients();
+  const { activeClientNames, clients } = useClients();
   const employeeOptions = employees.map((e) => e.name);
+
+  // The sheet's own client stays selectable even if that client has since been
+  // archived, so a correction screen can never lose the value it is showing.
+  const clientOptions = [...new Set([...activeClientNames, file.client].filter(Boolean))];
 
   const [rows, setRows] = useState(file.rows);
   const [employee, setEmployee] = useState(file.employee.name || "");
@@ -506,7 +530,7 @@ function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, onReject 
                           label="Client"
                           value={client}
                           onChange={setClient}
-                          options={clientNames}
+                          options={clientOptions}
                           disabled={readOnly}
                           hint="From the upload batch"
                         />

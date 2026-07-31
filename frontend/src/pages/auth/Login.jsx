@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { useCurrentUser } from "../../context/CurrentUserContext.jsx";
 
 // Login — sign-in form; redirects to Change Password when a password change is required.

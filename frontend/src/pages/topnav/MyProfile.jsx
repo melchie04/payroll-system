@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { DataCard, BtnPrimary, FormField, PageHeader } from "../../components/ui/index.jsx";
 import { useCurrentUser } from "../../context/CurrentUserContext.jsx";
+import { useActivity } from "../../context/ActivityContext.jsx";
 
 const AVATAR_COLORS = ["#1a1a1a", "#0d6efd", "#198754", "#dc3545", "#997404", "#6f42c1"];
 
@@ -17,6 +18,7 @@ function initialsOf(name = "") {
 // MyProfile — edit the current user's profile details and avatar.
 export default function MyProfile() {
   const { user, updateUser } = useCurrentUser();
+  const { logActivity } = useActivity();
 
   const [form, setForm] = useState({ name: user.name, email: user.email });
   const [avatarImage, setAvatarImage] = useState(user.avatarImage);
@@ -57,6 +59,7 @@ export default function MyProfile() {
     e.preventDefault();
     if (!form.name || !form.email) return;
     updateUser({ ...form, avatarImage, avatarColor });
+    logActivity({ action: "Updated profile", detail: "Updated their own profile details", module: "Settings" });
     setSaved(true);
   }
 

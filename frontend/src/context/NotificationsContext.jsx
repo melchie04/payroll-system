@@ -18,7 +18,17 @@ export function NotificationsProvider({ children }) {
     setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)));
   }
 
-  const value = { notifications, unreadCount, markAllRead, markOneRead };
+  // addNotification — raises a new unread notification. The seeded entries carry a
+  // written age ("2h ago") rather than a date, so a fresh one says "Just now" and
+  // keeps the same shape the bell and the Notifications page already render.
+  function addNotification({ icon = "\ud83d\udd14", title, bold = "", sub = "", type }) {
+    setNotifications((prev) => {
+      const nextId = prev.reduce((max, n) => (Number(n.id) > max ? Number(n.id) : max), 0) + 1;
+      return [{ id: nextId, icon, title, bold, sub, time: "Just now", read: false, type }, ...prev];
+    });
+  }
+
+  const value = { notifications, unreadCount, markAllRead, markOneRead, addNotification };
 
   return <NotificationsContext.Provider value={value}>{children}</NotificationsContext.Provider>;
 }

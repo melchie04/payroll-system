@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router";
 import {
   DataCard,
   Table,
@@ -428,7 +428,7 @@ export default function EmployeeProfile() {
               <div className="mb-2" style={{ fontSize: 28 }}>
                 <i className="fas fa-cloud-arrow-up text-muted"></i>
               </div>
-              <div className="small fw-medium mb-1">Drag and drop a file here, or click to browse</div>
+              <div className="small mb-1">Drag and drop a file here, or click to browse</div>
               <div className="text-muted" style={{ fontSize: 11 }}>
                 Supports: PDF, JPG, PNG
               </div>

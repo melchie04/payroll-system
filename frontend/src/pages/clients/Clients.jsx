@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router";
 import { useMemo, useState } from "react";
 import {
   StatCard,
@@ -15,8 +15,9 @@ import {
   Modal,
   PageHeader,
 } from "../../components/ui/index.jsx";
-import { invoices } from "../../assets/data/index.js";
 import { useClients } from "../../context/ClientsContext.jsx";
+import { useActivity } from "../../context/ActivityContext.jsx";
+import { useInvoices } from "../../context/InvoicesContext.jsx";
 import { useEmployees } from "../../context/EmployeesContext.jsx";
 import { parseCurrency, formatCurrency } from "../../utils/currency.js";
 import { exportToCsv } from "../../utils/exportToCsv.js";
@@ -24,7 +25,7 @@ import { exportToCsv } from "../../utils/exportToCsv.js";
 const CSV_HEADERS = ["Client", "Contact Person", "Email", "Phone", "Industry", "Employees", "Outstanding", "Status"];
 
 function toCsvRows(list, countFor, outstandingFor) {
-  return list.map((c) => [c.name, c.contact, c.email, c.phone, c.industry, countFor(c.code), formatCurrency(outstandingFor(c.name)), c.status]);
+  return list.map((c) => [c.name, c.contact, c.email, c.phone, c.industry, countFor(c.code), formatCurrency(outstandingFor(c.code)), c.status]);
 }
 
 // Clients — client list with selection, bulk actions, filters, and export.
@@ -32,10 +33,14 @@ export default function Clients() {
   const navigate = useNavigate();
   const { clients, deleteClient, archiveClient, restoreClient } = useClients();
   const { employees } = useEmployees();
+  // Invoices come from the shared store now, so one raised on the Billing page shows
+  // up in these totals straight away instead of only the seeded ones being counted.
+  const { invoices, outstandingForClient, hasInvoices } = useInvoices();
+  const { logActivity } = useActivity();
 
   // Live figures so the counts and totals can't drift from the stored records.
   const countForClient = (code) => employees.filter((e) => e.client === code).length;
-  const outstandingFor = (name) => invoices.filter((inv) => inv.client === name && inv.status !== "Paid").reduce((s, inv) => s + parseCurrency(inv.amount), 0);
+  const outstandingFor = (code) => outstandingForClient(code);
   const outstanding = invoices.filter((inv) => inv.status !== "Paid").reduce((sum, inv) => sum + parseCurrency(inv.amount), 0);
   const clientStats = [
     { label: "Total Clients", value: String(clients.length) },
@@ -73,7 +78,7 @@ export default function Clients() {
   const selectedClients = clients.filter((c) => selected.includes(c.id));
   // Archive keeps clients that have billing or staff history; only clients with neither
   // can be hard-deleted.
-  const hasHistory = (c) => invoices.some((inv) => inv.client === c.name) || employees.some((e) => e.client === c.code);
+  const hasHistory = (c) => hasInvoices(c.code) || employees.some((e) => e.client === c.code);
   const toArchive = selectedClients.filter((c) => hasHistory(c) && c.status !== "Inactive");
   const toDelete = selectedClients.filter((c) => !hasHistory(c));
 
@@ -81,6 +86,7 @@ export default function Clients() {
 
   function confirmDelete() {
     if (target) {
+      logActivity({ action: "Deleted client", detail: `Deleted ${target.name} (${target.code})`, module: "Clients" });
       deleteClient(target.id);
       setTarget(null);
     }
@@ -89,6 +95,7 @@ export default function Clients() {
 
   function confirmArchive() {
     if (target) {
+      logActivity({ action: "Archived client", detail: `Archived ${target.name} (${target.code})`, module: "Clients" });
       archiveClient(target.id);
       setTarget(null);
     }
@@ -96,8 +103,14 @@ export default function Clients() {
   }
 
   function confirmBulkDelete() {
-    toArchive.forEach((c) => archiveClient(c.id));
-    toDelete.forEach((c) => deleteClient(c.id));
+    toArchive.forEach((c) => {
+      logActivity({ action: "Archived client", detail: `Archived ${c.name} (${c.code})`, module: "Clients" });
+      archiveClient(c.id);
+    });
+    toDelete.forEach((c) => {
+      logActivity({ action: "Deleted client", detail: `Deleted ${c.name} (${c.code})`, module: "Clients" });
+      deleteClient(c.id);
+    });
     setSelected([]);
     document.getElementById("bulkDeleteModalClose")?.click();
   }
@@ -238,7 +251,7 @@ export default function Clients() {
                 <Td>{c.phone}</Td>
                 <Td>{c.industry}</Td>
                 <Td>{countForClient(c.code)}</Td>
-                <Td>{formatCurrency(outstandingFor(c.name))}</Td>
+                <Td>{formatCurrency(outstandingFor(c.code))}</Td>
                 <Td>
                   <Badge status={c.status} />
                 </Td>
@@ -251,7 +264,10 @@ export default function Clients() {
                       c.status === "Inactive" && {
                         label: "Restore client",
                         icon: "fa-rotate-left",
-                        onClick: () => restoreClient(c.id),
+                        onClick: () => {
+                          logActivity({ action: "Restored client", detail: `Restored ${c.name} (${c.code})`, module: "Clients" });
+                          restoreClient(c.id);
+                        },
                       },
                       c.status !== "Inactive" &&
                         hasHistory(c) && {

@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router";
 import { DataCard, BtnPrimary, FormField, PageHeader } from "../../components/ui/index.jsx";
 import { useClients } from "../../context/ClientsContext.jsx";
+import { useActivity } from "../../context/ActivityContext.jsx";
 
 const emptyForm = {
   name: "",
@@ -33,6 +34,7 @@ export default function ClientForm() {
   const navigate = useNavigate();
   const location = useLocation();
   const { clients, getClientById, addClient, updateClient } = useClients();
+  const { logActivity } = useActivity();
 
   const isEdit = Boolean(id);
   const existing = isEdit ? getClientById(id) : null;
@@ -121,9 +123,11 @@ export default function ClientForm() {
 
     if (isEdit) {
       updateClient(existing.id, form);
+      logActivity({ action: "Updated client", detail: `Updated ${form.name} (${code})`, module: "Clients" });
       navigate(`/clients/${existing.id}`);
     } else {
       const created = addClient(form);
+      logActivity({ action: "Added client", detail: `Added ${form.name} (${code})`, module: "Clients" });
       navigate(`/clients/${created.id}`);
     }
   }

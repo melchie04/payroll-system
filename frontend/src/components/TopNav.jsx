@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { useTheme } from "../context/ThemeContext.jsx";
 import { useCurrentUser } from "../context/CurrentUserContext.jsx";
 import { useNotifications } from "../context/NotificationsContext.jsx";
@@ -46,7 +46,7 @@ function NotificationsMenu({ id, align = "end" }) {
       {recent.map((n, i) => (
         <li key={n.id}>
           <Link
-            className={`dropdown-item py-2 text-wrap ${i < recent.length - 1 ? "border-bottom border-light-subtle" : ""}`}
+            className={`dropdown-item py-2 text-wrap ${i < recent.length - 1 ? "border-bottom" : ""}`}
             to="/notifications"
             style={{
               display: "-webkit-box",
@@ -120,7 +120,7 @@ function UserTrigger({ id, user, nameClassName = "d-none d-sm-inline" }) {
           {initialsOf(user.name)}
         </span>
       )}
-      <span className={`fw-medium text-body ${nameClassName}`}>{user.name}</span>
+      <span className={`text-body ${nameClassName}`}>{user.name}</span>
       <i className="fas fa-chevron-down text-secondary" style={{ fontSize: "0.6rem" }}></i>
     </a>
   );

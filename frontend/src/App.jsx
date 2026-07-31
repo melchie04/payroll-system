@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router";
 
 import DashboardLayout from "./layouts/DashboardLayout.jsx";
 import AuthLayout from "./layouts/AuthLayout.jsx";
@@ -10,6 +10,8 @@ import ChangePassword from "./pages/auth/ChangePassword.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
 import Payroll from "./pages/Payroll.jsx";
 import Billing from "./pages/Billing.jsx";
+import Invoice from "./pages/Invoice.jsx";
+import Payslip from "./pages/Payslip.jsx";
 import Timesheet from "./pages/timesheet/Timesheet.jsx";
 import TimesheetReview from "./pages/timesheet/TimesheetReview.jsx";
 import Notifications from "./pages/topnav/Notifications.jsx";
@@ -41,7 +43,9 @@ export default function App() {
       <Route element={<DashboardLayout />}>
         <Route path="/" element={<Dashboard />} />
         <Route path="/payroll" element={<Payroll />} />
+        <Route path="/payroll/:id" element={<Payslip />} />
         <Route path="/billing" element={<Billing />} />
+        <Route path="/billing/:id" element={<Invoice />} />
         <Route path="/timesheet" element={<Timesheet />} />
         <Route path="/timesheet/:id" element={<TimesheetReview />} />
 

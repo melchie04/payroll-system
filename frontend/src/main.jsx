@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter } from "react-router";
 
 import "bootstrap";
 import "@fortawesome/fontawesome-free/css/all.min.css";
@@ -14,6 +14,9 @@ import { ClientsProvider } from "./context/ClientsContext.jsx";
 import { TimesheetProvider } from "./context/TimesheetContext.jsx";
 import { CurrentUserProvider } from "./context/CurrentUserContext.jsx";
 import { NotificationsProvider } from "./context/NotificationsContext.jsx";
+import { ActivityProvider } from "./context/ActivityContext.jsx";
+import { InvoicesProvider } from "./context/InvoicesContext.jsx";
+import { PayrollProvider } from "./context/PayrollContext.jsx";
 import App from "./App.jsx";
 
 // App entry point — mounts the router, global providers, and styles.
@@ -22,15 +25,21 @@ createRoot(document.getElementById("root")).render(
     <BrowserRouter>
       <ThemeProvider>
         <CurrentUserProvider>
-          <NotificationsProvider>
-            <ClientsProvider>
-              <EmployeesProvider>
-                <TimesheetProvider>
-                  <App />
-                </TimesheetProvider>
-              </EmployeesProvider>
-            </ClientsProvider>
-          </NotificationsProvider>
+          <ActivityProvider>
+            <NotificationsProvider>
+              <ClientsProvider>
+                <InvoicesProvider>
+                  <EmployeesProvider>
+                    <TimesheetProvider>
+                      <PayrollProvider>
+                        <App />
+                      </PayrollProvider>
+                    </TimesheetProvider>
+                  </EmployeesProvider>
+                </InvoicesProvider>
+              </ClientsProvider>
+            </NotificationsProvider>
+          </ActivityProvider>
         </CurrentUserProvider>
       </ThemeProvider>
     </BrowserRouter>

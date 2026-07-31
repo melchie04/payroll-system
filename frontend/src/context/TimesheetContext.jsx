@@ -128,6 +128,18 @@ export function resolveEmployee(employee, roster = []) {
   );
 }
 
+// resolveClient — the client record a sheet belongs to. Prefers the stable code the
+// upload stored, falling back to the written name so a sheet filed before codes were
+// recorded still resolves. A renamed client keeps its sheets either way.
+export function resolveClient(file, clients = []) {
+  if (!file) return null;
+  if (file.clientCode) {
+    const byCode = clients.find((c) => c.code === file.clientCode);
+    if (byCode) return byCode;
+  }
+  return clients.find((c) => c.name === file.client) || null;
+}
+
 // parseIsoDate — "YYYY-MM-DD" as a local date, so an assignment window compares
 // cleanly against the local dates parsePeriodLabel returns.
 function parseIsoDate(value) {
@@ -206,7 +218,7 @@ export function sheetMismatches(rows = [], handwritten, schedule = null) {
 // asks for it once, over the whole batch.
 export function sheetFindings(file, allFiles = [], roster = [], clients = []) {
   if (!file) return ["Sheet not found"];
-  const client = clients.find((c) => c.name === file.client);
+  const client = resolveClient(file, clients);
   const findings = [];
 
   if (file.status !== "Needs Review") findings.push("Not awaiting review");
@@ -309,6 +321,7 @@ export function TimesheetProvider({ children }) {
       name: item.name,
       type: item.type,
       source: item.source,
+      clientCode: item.clientCode || null,
       uploaded: new Date().toLocaleString([], { month: "short", day: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }),
       status: "Processing",
       client: item.client,

@@ -2,45 +2,43 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { DataCard, BtnPrimary, BtnSecondary, IconBtn } from "../ui/index.jsx";
 import { useTimesheets } from "../../context/TimesheetContext.jsx";
 
+// Icon tone follows the level, so a row can never contradict its own label. Red is
+// reserved for something that actually goes wrong, which is why "Preferred" is not it.
+const LEVEL_TONE = { Required: "text-secondary", Preferred: "text-secondary", Avoid: "text-warning" };
+
 const REQUIREMENTS = [
   {
     icon: "fa-file-lines",
-    tone: "text-secondary",
     title: "The standard STRON'L form",
     sub: "Days 1–15 or days 16–31 version",
     level: "Required",
   },
   {
     icon: "fa-user",
-    tone: "text-secondary",
     title: "One employee per sheet",
     sub: "Do not combine people on one form",
     level: "Required",
   },
   {
     icon: "fa-calendar-days",
-    tone: "text-secondary",
     title: "Period Covered, filled in and legible",
     sub: "Write the month and year in full",
     level: "Required",
   },
   {
     icon: "fa-signature",
-    tone: "text-secondary",
     title: "Employee and supervisor signatures",
     sub: "Client signature where applicable",
     level: "Required",
   },
   {
     icon: "fa-file-pdf",
-    tone: "text-danger",
     title: "Scanned PDF from 300 DPI",
     sub: "Photos accepted from 1600px on the long edge",
     level: "Preferred",
   },
   {
     icon: "fa-triangle-exclamation",
-    tone: "text-warning",
     title: "No glare, folds or cropped edges",
     sub: "The whole grid must be visible and flat",
     level: "Avoid",
@@ -198,6 +196,7 @@ export function TimesheetUpload({ summary, client, canUpload = true, onOpenSheet
         name: q.name,
         type: q.type,
         source: q.source,
+        clientCode,
         client,
         previewUrl: URL.createObjectURL(q.file),
       })),
@@ -374,7 +373,7 @@ export function TimesheetUpload({ summary, client, canUpload = true, onOpenSheet
               {REQUIREMENTS.map((r) => (
                 <div className="list-group-item d-flex align-items-center gap-3 px-3 py-2" key={r.title}>
                   <div
-                    className={`d-flex align-items-center justify-content-center flex-shrink-0 border rounded-2 bg-light ${r.tone}`}
+                    className={`d-flex align-items-center justify-content-center flex-shrink-0 border rounded-2 bg-light ${LEVEL_TONE[r.level]}`}
                     style={{ width: 30, height: 30, fontSize: 12 }}
                   >
                     <i className={`fas ${r.icon}`}></i>

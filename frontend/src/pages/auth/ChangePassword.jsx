@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { useCurrentUser } from "../../context/CurrentUserContext.jsx";
 
 // RequirementRow — password requirement checklist row.

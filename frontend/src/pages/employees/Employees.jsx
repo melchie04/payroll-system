@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router";
 import { useMemo, useState } from "react";
 import {
   DataCard,
@@ -17,6 +17,7 @@ import {
   PageHeader,
 } from "../../components/ui/index.jsx";
 import { useEmployees } from "../../context/EmployeesContext.jsx";
+import { useActivity } from "../../context/ActivityContext.jsx";
 import { useClients } from "../../context/ClientsContext.jsx";
 import { useTimesheets, resolveEmployee } from "../../context/TimesheetContext.jsx";
 import { exportToCsv } from "../../utils/exportToCsv.js";
@@ -31,6 +32,7 @@ function toCsvRows(list, clientName) {
 export default function Employees() {
   const navigate = useNavigate();
   const { employees, deleteEmployee, archiveEmployee, restoreEmployee } = useEmployees();
+  const { logActivity } = useActivity();
   const { files } = useTimesheets();
   const { clients, clientNameByCode } = useClients();
 
@@ -85,6 +87,7 @@ export default function Employees() {
 
   function confirmDelete() {
     if (target) {
+      logActivity({ action: "Deleted employee", detail: `Deleted ${target.name} (${target.code})`, module: "Employees" });
       deleteEmployee(target.id);
       setTarget(null);
     }
@@ -93,6 +96,7 @@ export default function Employees() {
 
   function confirmArchive() {
     if (target) {
+      logActivity({ action: "Archived employee", detail: `Archived ${target.name} (${target.code})`, module: "Employees" });
       archiveEmployee(target.id);
       setTarget(null);
     }
@@ -100,8 +104,14 @@ export default function Employees() {
   }
 
   function confirmBulkDelete() {
-    toArchive.forEach((e) => archiveEmployee(e.id));
-    toDelete.forEach((e) => deleteEmployee(e.id));
+    toArchive.forEach((e) => {
+      logActivity({ action: "Archived employee", detail: `Archived ${e.name} (${e.code})`, module: "Employees" });
+      archiveEmployee(e.id);
+    });
+    toDelete.forEach((e) => {
+      logActivity({ action: "Deleted employee", detail: `Deleted ${e.name} (${e.code})`, module: "Employees" });
+      deleteEmployee(e.id);
+    });
     setSelected([]);
     document.getElementById("bulkDeleteModalClose")?.click();
   }
@@ -253,7 +263,10 @@ export default function Employees() {
                       emp.status === "Inactive" && {
                         label: "Restore employee",
                         icon: "fa-rotate-left",
-                        onClick: () => restoreEmployee(emp.id),
+                        onClick: () => {
+                          logActivity({ action: "Restored employee", detail: `Restored ${emp.name} (${emp.code})`, module: "Employees" });
+                          restoreEmployee(emp.id);
+                        },
                       },
                       emp.status !== "Inactive" &&
                         hasHistory(emp) && {

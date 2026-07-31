@@ -12,8 +12,8 @@ import {
   ExportMenu,
   PageHeader,
 } from "../../components/ui/index.jsx";
-import { activityLog } from "../../assets/data/index.js";
 import { exportToCsv } from "../../utils/exportToCsv.js";
+import { useActivity } from "../../context/ActivityContext.jsx";
 
 const ALL_MODULES = "All Modules";
 const ALL_USERS = "All Users";
@@ -35,6 +35,9 @@ function withinRange(stamp, range) {
 
 // ActivityLog — filterable, exportable audit log table.
 export default function ActivityLog() {
+  // The log is shared state now, so an action taken elsewhere in the app shows up here
+  // without a reload rather than only the seeded history being visible.
+  const { entries } = useActivity();
   const [module, setModule] = useState(ALL_MODULES);
   const [user, setUser] = useState(ALL_USERS);
   const [search, setSearch] = useState("");
@@ -44,21 +47,21 @@ export default function ActivityLog() {
 
   // Both option lists are read from the log, so an entry from a new module or a new
   // person can never end up unfilterable.
-  const modules = useMemo(() => [...new Set(activityLog.map((log) => log.module))], []);
-  const userNames = useMemo(() => [...new Set(activityLog.map((log) => log.user))], []);
+  const modules = useMemo(() => [...new Set(entries.map((log) => log.module))], [entries]);
+  const userNames = useMemo(() => [...new Set(entries.map((log) => log.user))], [entries]);
 
   const visible = useMemo(() => {
     const query = search.trim().toLowerCase();
-    return activityLog.filter((log) => {
+    return entries.filter((log) => {
       if (module !== ALL_MODULES && log.module !== module) return false;
       if (user !== ALL_USERS && log.user !== user) return false;
       if (!withinRange(log.timestamp, range)) return false;
       if (!query) return true;
       return `${log.user} ${log.action} ${log.detail} ${log.module}`.toLowerCase().includes(query);
     });
-  }, [module, user, range, search]);
+  }, [entries, module, user, range, search]);
 
-  const filtered = visible.length !== activityLog.length;
+  const filtered = visible.length !== entries.length;
 
   function clearFilters() {
     setModule(ALL_MODULES);
@@ -68,11 +71,12 @@ export default function ActivityLog() {
     setRange(ALL_TIME);
   }
 
+  // Exports the rows currently shown, so a filtered view and its export agree.
   function handleExportAll() {
     exportToCsv(
       "activity-log",
       ["User", "Action", "Details", "Module", "Timestamp"],
-      activityLog.map((log) => [log.user, log.action, log.detail, log.module, log.timestamp]),
+      visible.map((log) => [log.user, log.action, log.detail, log.module, log.timestamp]),
     );
   }
 
@@ -128,7 +132,7 @@ export default function ActivityLog() {
           action={
             <div className="d-flex align-items-center gap-3">
               <span className="text-muted" style={{ fontSize: 11.5 }}>
-                {filtered ? `${visible.length} of ${activityLog.length} activities` : `${activityLog.length} activities`}
+                {filtered ? `${visible.length} of ${entries.length} activities` : `${entries.length} activities`}
               </span>
               <ExportMenu onExportCsv={handleExportAll} />
             </div>

@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink } from "react-router";
 import { useTheme } from "../context/ThemeContext";
 
 const NAV_ITEMS = [

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet } from "react-router";
 import TopNav from "../components/TopNav.jsx";
 import SideNav from "../components/SideNav.jsx";
 import Footer from "../components/Footer.jsx";
@@ -32,7 +32,7 @@ export default function DashboardLayout({ fixed = true }) {
         </div>
         <div id="layoutSidenav_content">
           <main>
-            <div className="container-fluid px-4 px-xl-5 py-3">
+            <div className="container-fluid px-4 px-xl-5">
               <Outlet />
             </div>
           </main>

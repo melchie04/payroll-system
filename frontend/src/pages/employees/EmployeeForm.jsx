@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router";
 import { DataCard, BtnPrimary, FormField, PageHeader } from "../../components/ui/index.jsx";
 import { useEmployees } from "../../context/EmployeesContext.jsx";
+import { useActivity } from "../../context/ActivityContext.jsx";
 import { useClients } from "../../context/ClientsContext.jsx";
 
 const emptyForm = {
@@ -29,6 +30,7 @@ export default function EmployeeForm() {
   const location = useLocation();
   const { employees, getEmployeeById, addEmployee, updateEmployee } = useEmployees();
   const { clients } = useClients();
+  const { logActivity } = useActivity();
 
   const isEdit = Boolean(id);
   const existing = isEdit ? getEmployeeById(id) : null;
@@ -129,9 +131,11 @@ export default function EmployeeForm() {
 
     if (isEdit) {
       updateEmployee(existing.id, payload);
+      logActivity({ action: "Updated employee", detail: `Updated ${payload.name} (${payload.code})`, module: "Employees" });
       navigate(`/employees/${existing.id}`);
     } else {
       const created = addEmployee(payload);
+      logActivity({ action: "Added employee", detail: `Added ${payload.name} (${payload.code})`, module: "Employees" });
       navigate(`/employees/${created.id}`);
     }
   }

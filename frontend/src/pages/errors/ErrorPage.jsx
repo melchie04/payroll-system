@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 
 // ErrorPage — shared shell for the error pages.
 export default function ErrorPage({ code, icon, accent = "#1a1a1a", title, description, children }) {

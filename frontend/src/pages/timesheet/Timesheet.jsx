@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import { PageHeader, TabsNav, FilterSelect } from "../../components/ui/index.jsx";
 import { timesheetCoverage, extractionSummary, payPeriods } from "../../assets/data/index.js";
 import { useTimesheets, resolveEmployee, deploymentState, parsePeriodLabel } from "../../context/TimesheetContext.jsx";
@@ -40,13 +40,20 @@ function inPeriod(file, period) {
 export default function Timesheet() {
   const { files } = useTimesheets();
   const { employees } = useEmployees();
-  const { clientNames, clients } = useClients();
+  const { activeClientNames, clients } = useClients();
   const location = useLocation();
 
   // Upload is the default; returning from a sheet review reopens the tab it came from.
   const [tab, setTab] = useState(location.state?.tab || "upload");
   const [client, setClient] = useState("Acme Corp");
   const selectedClient = clients.find((c) => c.name === client);
+
+  // Archived clients are not offered, but the one already chosen stays in the list so
+  // archiving a client mid-session cannot leave the filter pointing at a missing option.
+  const clientOptions = useMemo(
+    () => [...new Set([...activeClientNames, client].filter(Boolean))],
+    [activeClientNames, client],
+  );
   const [period, setPeriod] = useState(payPeriods[0].label);
 
   const activePeriod = useMemo(() => payPeriods.find((p) => p.label === period) || payPeriods[0], [period]);
@@ -121,7 +128,7 @@ export default function Timesheet() {
           <div className="col-12 col-md-6 col-xl-3">
             <FilterSelect label="Client" value={client} onChange={(e) => setClient(e.target.value)}>
               <option>{ALL_CLIENTS}</option>
-              {clientNames.map((c) => (
+              {clientOptions.map((c) => (
                 <option key={c}>{c}</option>
               ))}
             </FilterSelect>
@@ -165,6 +172,7 @@ export default function Timesheet() {
         <TimesheetUpload
           summary={extractionSummary}
           client={client}
+          clientCode={selectedClient?.code}
           canUpload={client !== ALL_CLIENTS}
           onOpenSheets={() => setTab("sheets")}
         />

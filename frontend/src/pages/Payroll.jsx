@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router";
 import { Modal as BsModal } from "bootstrap";
 import {
   StatCard,
@@ -9,98 +10,103 @@ import {
   Badge,
   BtnPrimary,
   BtnSecondary,
-  IconBtn,
   ExportMenu,
   FilterSelect,
-  FilterMenu,
-  FilterCheckGroup,
   SearchInput,
   ActionsMenu,
   Modal,
   FormField,
-  PayslipDetails,
   PageHeader,
 } from "../components/ui/index.jsx";
-import { payrollStats, payrollEmployees } from "../assets/data/index.js";
+import { payPeriods } from "../assets/data/index.js";
 import { exportToCsv } from "../utils/exportToCsv.js";
-import { parseCurrency, formatCurrency } from "../utils/currency.js";
+import { formatCurrency } from "../utils/currency.js";
 import { computeDeductions } from "../utils/payslip.js";
+import { buildPayrollRows } from "../utils/payrollRun.js";
 import { useClients } from "../context/ClientsContext.jsx";
+import { useEmployees } from "../context/EmployeesContext.jsx";
+import { useTimesheets } from "../context/TimesheetContext.jsx";
+import { usePayroll } from "../context/PayrollContext.jsx";
+import { useActivity } from "../context/ActivityContext.jsx";
+import { useNotifications } from "../context/NotificationsContext.jsx";
 
-const CSV_HEADERS = ["Employee", "Client", "Position", "Hours", "Rate", "Gross Pay", "Status"];
+const ALL_CLIENTS = "All Clients";
+const ALL_STATUSES = "All Statuses";
+const STATUSES = ["Ready", "Pending", "Paid"];
+const CSV_HEADERS = ["Employee Code", "Employee", "Client", "Position", "Pay Period", "Hours", "Rate", "Gross Pay", "Net Pay", "Status"];
 
 function toCsvRows(list) {
-  return list.map((r) => [r.name, r.client, r.position, r.hours, r.rate, r.gross, r.status]);
+  return list.map((r) => [
+    r.code,
+    r.name,
+    r.client,
+    r.position,
+    r.period,
+    r.hours,
+    formatCurrency(r.rate),
+    formatCurrency(r.gross),
+    formatCurrency(computeDeductions(r.gross).net),
+    r.status,
+  ]);
 }
 
-function formatFileSize(bytes) {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-}
-
-// PayrollRow — single payroll table row with its status-aware actions menu.
-function PayrollRow({ row, checked, onToggle, onViewPayslip, onEditHours, onMarkPaid, onDelete }) {
-  const items = [
-    {
-      label: "View Payslip",
-      icon: "fa-file-invoice",
-      modalTarget: "viewPayslipModal",
-      onClick: onViewPayslip,
-    },
-    row.status !== "Paid" && {
-      label: "Edit Hours",
-      icon: "fa-pen",
-      onClick: onEditHours,
-    },
-    row.status === "Ready" && {
-      label: "Mark as Paid",
-      icon: "fa-check",
-      onClick: onMarkPaid,
-    },
-    { divider: true },
-    {
-      label: "Delete",
-      icon: "fa-trash",
-      danger: true,
-      modalTarget: "payrollDeleteModal",
-      onClick: onDelete,
-    },
-  ].filter(Boolean);
-
-  return (
-    <Tr>
-      <Td>
-        <input className="form-check-input" type="checkbox" checked={checked} onChange={onToggle} />
-      </Td>
-      <Td bold>{row.name}</Td>
-      <Td>{row.client}</Td>
-      <Td>{row.position}</Td>
-      <Td>{row.hours}</Td>
-      <Td>{row.rate}</Td>
-      <Td>{row.gross}</Td>
-      <Td>
-        <Badge status={row.status} />
-      </Td>
-      <Td>
-        <ActionsMenu items={items} />
-      </Td>
-    </Tr>
-  );
-}
-
-// Payroll — payroll run management with bulk actions, timesheet import, payslips, and edit-hours modals.
+// Payroll — the run for one pay period, recalculated from approved timesheets.
 export default function Payroll() {
-  const [rows, setRows] = useState(payrollEmployees);
-  const { clientNames } = useClients();
+  const navigate = useNavigate();
+  const { clients } = useClients();
+  const { employees } = useEmployees();
+  const { files } = useTimesheets();
+  const { overrides, setStatus, setStatusMany, setHours, clearOverride } = usePayroll();
+  const { logActivity } = useActivity();
+  const { addNotification } = useNotifications();
+
+  const [periodLabel, setPeriodLabel] = useState(payPeriods[0].label);
+  const period = payPeriods.find((p) => p.label === periodLabel) || payPeriods[0];
+
+  // Rebuilt from the sheets on every render rather than stored, so approving a sheet
+  // on the Timesheet page changes this run without anything needing to be re-imported.
+  const rows = buildPayrollRows({ period, employees, files, clients, overrides });
+
+  const [clientFilter, setClientFilter] = useState(ALL_CLIENTS);
+  const [statusFilter, setStatusFilter] = useState(ALL_STATUSES);
+  const [search, setSearch] = useState("");
+
+  const query = search.trim().toLowerCase();
+  const visibleRows = rows.filter((r) => {
+    if (clientFilter !== ALL_CLIENTS && r.clientCode !== clientFilter) return false;
+    if (statusFilter !== ALL_STATUSES && r.status !== statusFilter) return false;
+    if (!query) return true;
+    return `${r.code} ${r.name} ${r.client} ${r.position}`.toLowerCase().includes(query);
+  });
+
+  const filtering = visibleRows.length !== rows.length;
+
+  function clearFilters() {
+    setClientFilter(ALL_CLIENTS);
+    setStatusFilter(ALL_STATUSES);
+    setSearch("");
+  }
+
+  const totalHours = rows.reduce((sum, r) => sum + r.hours, 0);
+  const grossTotal = rows.reduce((sum, r) => sum + r.gross, 0);
+  const netTotal = rows.reduce((sum, r) => sum + computeDeductions(r.gross).net, 0);
+  const stats = [
+    { label: "Employees In Run", value: String(rows.length), sub: `${rows.filter((r) => r.status === "Pending").length} still pending` },
+    { label: "Total Hours", value: totalHours.toFixed(2) },
+    { label: "Gross Payroll", value: formatCurrency(grossTotal) },
+    { label: "Net Payroll", value: formatCurrency(netTotal) },
+  ];
+
   const [selected, setSelected] = useState([]);
+  const toggleOne = (key) => setSelected((prev) => (prev.includes(key) ? prev.filter((x) => x !== key) : [...prev, key]));
 
-  const toggleOne = (id) => setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
-
-  const allSelected = rows.length > 0 && selected.length === rows.length;
+  // Select-all acts on the rows currently shown, so filtering then ticking the header
+  // never selects people the operator cannot see.
+  const visibleKeys = visibleRows.map((r) => r.key);
+  const allSelected = visibleRows.length > 0 && visibleKeys.every((k) => selected.includes(k));
 
   function toggleAll() {
-    setSelected(allSelected ? [] : rows.map((r) => r.id));
+    setSelected(allSelected ? selected.filter((k) => !visibleKeys.includes(k)) : [...new Set([...selected, ...visibleKeys])]);
   }
 
   const [banner, setBanner] = useState(null);
@@ -111,103 +117,66 @@ export default function Payroll() {
     return () => clearTimeout(timer);
   }, [banner]);
 
-  const [target, setTarget] = useState(null);
-
-  function confirmDelete() {
-    if (target) {
-      setRows((prev) => prev.filter((r) => r.id !== target.id));
-      setTarget(null);
-    }
-    document.getElementById("payrollDeleteModalClose")?.click();
+  function markPaid(row) {
+    if (row.status === "Paid") return;
+    setStatus(row.key, "Paid");
+    logActivity({ action: "Marked payroll paid", detail: `${row.name} (${row.code}) for ${row.period}`, module: "Payroll" });
   }
 
-  function bulkMarkReady() {
-    setRows((prev) => prev.map((r) => (selected.includes(r.id) ? { ...r, status: "Ready" } : r)));
+  function markSelectedPaid() {
+    const targets = rows.filter((r) => selected.includes(r.key) && r.status !== "Paid");
+    if (targets.length === 0) return;
+    setStatusMany(targets.map((r) => r.key), "Paid");
+    logActivity({ action: "Marked payroll paid", detail: `${targets.length} employee(s) for ${period.label}`, module: "Payroll" });
     setSelected([]);
-  }
-
-  function confirmBulkDelete() {
-    setRows((prev) => prev.filter((r) => !selected.includes(r.id)));
-    setSelected([]);
-    document.getElementById("bulkDeleteModalClose")?.click();
-  }
-
-  function handleExportAll() {
-    exportToCsv("payroll", CSV_HEADERS, toCsvRows(rows));
-  }
-
-  function handleExportSelected() {
-    const selectedRows = rows.filter((r) => selected.includes(r.id));
-    exportToCsv("payroll-selected", CSV_HEADERS, toCsvRows(selectedRows));
   }
 
   const readyRows = rows.filter((r) => r.status === "Ready");
-  const readyTotal = readyRows.reduce((sum, r) => sum + parseCurrency(r.gross), 0);
-  const pendingCount = rows.filter((r) => r.status === "Pending").length;
 
   function handleRunPayroll() {
     if (readyRows.length === 0) return;
-    setRows((prev) => prev.map((r) => (r.status === "Ready" ? { ...r, status: "Paid" } : r)));
+    setStatusMany(readyRows.map((r) => r.key), "Paid");
+    logActivity({ action: "Ran payroll", detail: `Processed ${readyRows.length} employee(s) for ${period.label}`, module: "Payroll" });
+    addNotification({
+      icon: "\ud83d\udcb3",
+      title: "Payroll run for",
+      bold: period.label,
+      sub: `covered ${readyRows.length} employee${readyRows.length === 1 ? "" : "s"}`,
+      type: "Payroll",
+    });
     setBanner(`Payroll run completed — ${readyRows.length} employee${readyRows.length === 1 ? "" : "s"} marked as paid.`);
     document.getElementById("runPayrollModalClose")?.click();
   }
 
-  const [importFile, setImportFile] = useState(null);
-  const [importDragOver, setImportDragOver] = useState(false);
-
-  function resetImportForm() {
-    setImportFile(null);
-    setImportDragOver(false);
+  function handleExportAll() {
+    exportToCsv("payroll", CSV_HEADERS, toCsvRows(visibleRows));
   }
 
-  function handleImportFileChange(e) {
-    setImportFile(e.target.files?.[0] || null);
+  function handleExportSelected() {
+    exportToCsv("payroll-selected", CSV_HEADERS, toCsvRows(rows.filter((r) => selected.includes(r.key))));
   }
 
-  function handleImportDrop(e) {
-    e.preventDefault();
-    setImportDragOver(false);
-    setImportFile(e.dataTransfer.files?.[0] || null);
-  }
-
-  function handleImportTimesheet(e) {
-    e.preventDefault();
-    if (!importFile) return;
-    const toUpdate = rows.filter((r) => r.status === "Pending");
-    setRows((prev) => prev.map((r) => (r.status === "Pending" ? { ...r, status: "Ready" } : r)));
-    setBanner(`Timesheet imported — ${toUpdate.length} employee${toUpdate.length === 1 ? "" : "s"} updated to Ready.`);
-    resetImportForm();
-    document.getElementById("importTimesheetModalClose")?.click();
-  }
-
-  const [payslipTarget, setPayslipTarget] = useState(null);
-
-  const [editHoursTarget, setEditHoursTarget] = useState(null);
-  const [editHoursValue, setEditHoursValue] = useState("");
-  const editHoursModalInstance = useRef(null);
+  const [editTarget, setEditTarget] = useState(null);
+  const [editValue, setEditValue] = useState("");
+  const editModal = useRef(null);
 
   useEffect(() => {
-    editHoursModalInstance.current = new BsModal(document.getElementById("editHoursModal"));
+    editModal.current = new BsModal(document.getElementById("editHoursModal"));
   }, []);
 
   function openEditHours(row) {
-    setEditHoursTarget(row);
-    setEditHoursValue(row.hours);
-    editHoursModalInstance.current?.show();
+    setEditTarget(row);
+    setEditValue(String(row.hours));
+    editModal.current?.show();
   }
 
   function handleEditHoursSubmit(e) {
     e.preventDefault();
-    const hoursNum = Number(editHoursValue);
-    if (!hoursNum || hoursNum <= 0) return;
-    const rateNum = parseCurrency(editHoursTarget.rate);
-    const newGross = formatCurrency(hoursNum * rateNum);
-    setRows((prev) => prev.map((r) => (r.id === editHoursTarget.id ? { ...r, hours: hoursNum.toFixed(2), gross: newGross } : r)));
-    editHoursModalInstance.current?.hide();
-  }
-
-  function markRowPaid(row) {
-    setRows((prev) => prev.map((r) => (r.id === row.id ? { ...r, status: "Paid" } : r)));
+    const hours = Number(editValue);
+    if (!Number.isFinite(hours) || hours < 0) return;
+    setHours(editTarget.key, hours);
+    logActivity({ action: "Adjusted payroll hours", detail: `${editTarget.name} (${editTarget.code}) set to ${hours} hrs`, module: "Payroll" });
+    editModal.current?.hide();
   }
 
   return (
@@ -216,13 +185,10 @@ export default function Payroll() {
         <div className="mt-4">
           <PageHeader
             title="Payroll"
-            description="Manage and process payroll for your employees."
+            description="Process payroll from approved timesheets."
             actions={
               <>
                 <ExportMenu onExportCsv={handleExportAll} />
-                <BtnSecondary data-bs-toggle="modal" data-bs-target="#importTimesheetModal">
-                  <i className="fas fa-upload"></i> Import Timesheet
-                </BtnSecondary>
                 <BtnPrimary data-bs-toggle="modal" data-bs-target="#runPayrollModal">
                   <i className="fas fa-play"></i> Run Payroll
                 </BtnPrimary>
@@ -234,9 +200,9 @@ export default function Payroll() {
 
       {banner && (
         <section>
-          <div className="alert alert-success py-2 small d-flex align-items-center gap-2 mb-3">
-            <i className="fas fa-circle-check"></i>
-            {banner}
+          <div className="ts-notice ts-notice-success d-flex align-items-start gap-3 py-2 px-3 mb-3">
+            <i className="fas fa-circle-check ts-notice-icon flex-shrink-0 mt-1"></i>
+            <div style={{ fontSize: "0.8125rem" }}>{banner}</div>
           </div>
         </section>
       )}
@@ -245,7 +211,7 @@ export default function Payroll() {
 
       <section className="mb-4">
         <div className="row g-3">
-          {payrollStats.map((s) => (
+          {stats.map((s) => (
             <div className="col-xl-3 col-md-6" key={s.label}>
               <StatCard {...s} />
             </div>
@@ -256,39 +222,32 @@ export default function Payroll() {
       <section className="mb-4">
         <div className="row g-3 align-items-end">
           <div className="col-12 col-md-3">
-            <FilterSelect label="Client">
-              <option>All Clients</option>
-              {clientNames.map((c) => (
-                <option key={c}>{c}</option>
+            <FilterSelect label="Pay Period" value={periodLabel} onChange={(e) => setPeriodLabel(e.target.value)}>
+              {payPeriods.map((p) => (
+                <option key={p.label}>{p.label}</option>
               ))}
             </FilterSelect>
           </div>
           <div className="col-12 col-md-3">
-            <FilterSelect label="Pay Period">
-              <option>May 12 – May 25, 2024</option>
-              <option>Apr 28 – May 11, 2024</option>
+            <FilterSelect label="Client" value={clientFilter} onChange={(e) => setClientFilter(e.target.value)}>
+              <option value={ALL_CLIENTS}>{ALL_CLIENTS}</option>
+              {clients.map((c) => (
+                <option key={c.code} value={c.code}>
+                  {c.name}
+                </option>
+              ))}
             </FilterSelect>
           </div>
           <div className="col-12 col-md-3">
-            <FilterSelect label="Status">
-              <option>All</option>
-              <option>Ready</option>
-              <option>Pending</option>
-              <option>Paid</option>
+            <FilterSelect label="Status" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+              <option>{ALL_STATUSES}</option>
+              {STATUSES.map((s) => (
+                <option key={s}>{s}</option>
+              ))}
             </FilterSelect>
           </div>
-
           <div className="col-12 col-md-3">
-            <label className="form-label text-uppercase text-muted fw-semibold mb-1 d-block" style={{ fontSize: 11, letterSpacing: 0.5 }}>
-              Search Employee
-            </label>
-            <div className="d-flex gap-2 align-items-center w-100">
-              <SearchInput placeholder="Search employee" />
-              <FilterMenu>
-                <FilterCheckGroup label="Status" options={["Ready", "Pending", "Paid"]} />
-                <FilterCheckGroup label="Client" options={clientNames} />
-              </FilterMenu>
-            </div>
+            <SearchInput label="Search Employee" placeholder="Search employee" value={search} onChange={(e) => setSearch(e.target.value)} />
           </div>
         </div>
       </section>
@@ -304,49 +263,91 @@ export default function Payroll() {
                 <button type="button" className="btn btn-sm btn-outline-secondary" onClick={() => setSelected([])}>
                   Clear Selection
                 </button>
-                <button type="button" className="btn btn-sm btn-outline-success" onClick={bulkMarkReady}>
-                  <i className="fas fa-check"></i> Mark as Ready
-                </button>
                 <button type="button" className="btn btn-sm btn-outline-secondary" onClick={handleExportSelected}>
                   <i className="fas fa-download"></i> Export Selected
                 </button>
-                <button type="button" className="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#bulkDeleteModal">
-                  <i className="fas fa-trash"></i> Delete Selected
+                <button type="button" className="btn btn-sm btn-dark" onClick={markSelectedPaid}>
+                  <i className="fas fa-check"></i> Mark as Paid
                 </button>
               </div>
             </div>
           )}
 
-          <Table
-            headers={[
-              <span key="select-all">
-                <input type="checkbox" className="form-check-input" checked={allSelected} onChange={toggleAll} />
-              </span>,
-              "Employee",
-              "Client",
-              "Position",
-              "Hours",
-              "Rate (₱)",
-              "Gross Pay (₱)",
-              "Status",
-              "Actions",
-            ]}
-            itemLabel="employees"
-          >
-            {rows.map((row) => (
-              <PayrollRow
-                key={row.id}
-                row={row}
-                checked={selected.includes(row.id)}
-                onToggle={() => toggleOne(row.id)}
-                onViewPayslip={() => setPayslipTarget(row)}
-                onEditHours={() => openEditHours(row)}
-                onMarkPaid={() => markRowPaid(row)}
-                onDelete={() => setTarget(row)}
-              />
-            ))}
-          </Table>
+          {visibleRows.length === 0 ? (
+            <div className="text-center text-muted py-5 small">
+              <div>{rows.length === 0 ? "No employees are deployed for this pay period." : "No employees match the filters."}</div>
+              {rows.length > 0 && (
+                <BtnSecondary className="mt-3" onClick={clearFilters}>
+                  <i className="fas fa-rotate-left"></i> Clear Filters
+                </BtnSecondary>
+              )}
+            </div>
+          ) : (
+            <Table
+              headers={[
+                <span key="select-all">
+                  <input type="checkbox" className="form-check-input" checked={allSelected} onChange={toggleAll} />
+                </span>,
+                "Employee",
+                "Client",
+                "Position",
+                "Hours",
+                "Rate (₱)",
+                "Gross Pay (₱)",
+                "Status",
+                "Actions",
+              ]}
+              itemLabel="employees"
+            >
+              {visibleRows.map((row) => (
+                <Tr key={row.key}>
+                  <Td>
+                    <input className="form-check-input" type="checkbox" checked={selected.includes(row.key)} onChange={() => toggleOne(row.key)} />
+                  </Td>
+                  <Td bold>
+                    <button type="button" className="btn btn-link p-0 fw-semibold text-decoration-none" onClick={() => navigate(`/payroll/${row.employeeId}`)}>
+                      {row.name}
+                    </button>
+                    <div className="text-muted" style={{ fontSize: 11.5 }}>
+                      {row.code}
+                    </div>
+                  </Td>
+                  <Td>{row.client}</Td>
+                  <Td>{row.position}</Td>
+                  <Td>
+                    {row.hours.toFixed(2)}
+                    {row.edited && (
+                      <div className="text-muted" style={{ fontSize: 11.5 }}>
+                        adjusted by hand
+                      </div>
+                    )}
+                  </Td>
+                  <Td>{formatCurrency(row.rate)}</Td>
+                  <Td>{formatCurrency(row.gross)}</Td>
+                  <Td>
+                    <Badge status={row.status} />
+                  </Td>
+                  <Td>
+                    <ActionsMenu
+                      items={[
+                        { label: "View payslip", icon: "fa-file-invoice", onClick: () => navigate(`/payroll/${row.employeeId}`) },
+                        row.status !== "Paid" && { label: "Edit hours", icon: "fa-pen", onClick: () => openEditHours(row) },
+                        row.edited && { label: "Use timesheet hours", icon: "fa-rotate-left", onClick: () => clearOverride(row.key) },
+                        { divider: true },
+                        row.status !== "Paid" && { label: "Mark as paid", icon: "fa-check", onClick: () => markPaid(row) },
+                      ].filter(Boolean)}
+                    />
+                  </Td>
+                </Tr>
+              ))}
+            </Table>
+          )}
         </DataCard>
+        {filtering && (
+          <div className="text-muted mt-2" style={{ fontSize: 11.5 }}>
+            Showing {visibleRows.length} of {rows.length} employees. Export sends what is shown.
+          </div>
+        )}
       </section>
 
       <Modal
@@ -357,136 +358,27 @@ export default function Payroll() {
             <BtnSecondary id="runPayrollModalClose" data-bs-dismiss="modal">
               Cancel
             </BtnSecondary>
-            <button type="button" className="btn btn-dark btn-sm" onClick={handleRunPayroll} disabled={readyRows.length === 0}>
+            <BtnPrimary onClick={handleRunPayroll} disabled={readyRows.length === 0}>
               <i className="fas fa-play"></i> Run Payroll
-            </button>
-          </>
-        }
-      >
-        {readyRows.length === 0 ? (
-          <p className="mb-0 text-muted">No employees are marked Ready yet. Review pending timesheets and mark them Ready before running payroll.</p>
-        ) : (
-          <>
-            <p className="mb-3">You&rsquo;re about to run payroll for the current pay period.</p>
-            <div className="bg-light rounded-3 p-3 mb-2">
-              <div className="d-flex justify-content-between small mb-1">
-                <span className="text-muted">Employees to be paid</span>
-                <span className="fw-semibold">{readyRows.length}</span>
-              </div>
-              <div className="d-flex justify-content-between small">
-                <span className="text-muted">Total gross pay</span>
-                <span className="fw-semibold">{formatCurrency(readyTotal)}</span>
-              </div>
-            </div>
-            {pendingCount > 0 && (
-              <p className="text-warning small mb-0">
-                <i className="fas fa-triangle-exclamation"></i> {pendingCount} employee
-                {pendingCount === 1 ? "" : "s"} still Pending won&rsquo;t be included in this run.
-              </p>
-            )}
-          </>
-        )}
-      </Modal>
-
-      <Modal
-        id="importTimesheetModal"
-        title="Import Timesheet"
-        footer={
-          <>
-            <BtnSecondary id="importTimesheetModalClose" data-bs-dismiss="modal" onClick={resetImportForm}>
-              Cancel
-            </BtnSecondary>
-            <BtnPrimary type="submit" form="importTimesheetForm" disabled={!importFile}>
-              <i className="fas fa-upload"></i> Import
             </BtnPrimary>
           </>
         }
       >
-        <form id="importTimesheetForm" onSubmit={handleImportTimesheet}>
-          <input type="file" id="payroll-import-input" className="d-none" accept=".csv,.xlsx,.pdf" onChange={handleImportFileChange} />
-
-          {!importFile ? (
-            <div
-              onDragOver={(e) => {
-                e.preventDefault();
-                setImportDragOver(true);
-              }}
-              onDragLeave={() => setImportDragOver(false)}
-              onDrop={handleImportDrop}
-              onClick={() => document.getElementById("payroll-import-input").click()}
-              className={`text-center rounded-3 py-4 px-3 mb-3 ${importDragOver ? "bg-light" : ""}`}
-              style={{
-                border: `2px dashed ${importDragOver ? "#aaa" : "var(--bs-border-color)"}`,
-                cursor: "pointer",
-              }}
-            >
-              <div className="mb-2" style={{ fontSize: 28 }}>
-                <i className="fas fa-cloud-arrow-up text-muted"></i>
-              </div>
-              <div className="small fw-medium mb-1">Drag and drop a timesheet export here, or click to browse</div>
-              <div className="text-muted" style={{ fontSize: 11 }}>
-                Supports: CSV, XLSX, PDF
-              </div>
-            </div>
-          ) : (
-            <div className="d-flex align-items-center justify-content-between gap-3 border rounded-3 p-3 mb-3">
-              <div className="d-flex align-items-center gap-3 min-w-0">
-                <span style={{ fontSize: 22 }}>📄</span>
-                <div className="text-truncate">
-                  <div className="small fw-semibold text-dark text-truncate">{importFile.name}</div>
-                  <div className="text-muted" style={{ fontSize: 11.5 }}>
-                    {formatFileSize(importFile.size)}
-                  </div>
-                </div>
-              </div>
-              <IconBtn title="Remove file" onClick={resetImportForm}>
-                <i className="fas fa-xmark"></i>
-              </IconBtn>
-            </div>
-          )}
-
-          <p className="text-muted small mb-0">Importing will mark all Pending employees as Ready once their hours are validated.</p>
-        </form>
-      </Modal>
-
-      <Modal
-        id="viewPayslipModal"
-        title="Payslip"
-        footer={
+        {readyRows.length === 0 ? (
+          <p className="text-muted small mb-0">
+            Nothing is ready for {period.label}. An employee becomes ready once an approved timesheet covers this period.
+          </p>
+        ) : (
           <>
-            <BtnSecondary data-bs-dismiss="modal">Close</BtnSecondary>
-            <button type="button" className="btn btn-dark btn-sm" onClick={() => window.print()}>
-              <i className="fas fa-file-pdf"></i> Download PDF
-            </button>
+            <p className="small mb-2">
+              This will mark <strong>{readyRows.length}</strong> employee{readyRows.length === 1 ? "" : "s"} as paid for{" "}
+              <strong>{period.label}</strong>, totalling {formatCurrency(readyRows.reduce((s, r) => s + r.gross, 0))} gross.
+            </p>
+            <p className="text-muted small mb-0">
+              {rows.filter((r) => r.status === "Pending").length} employee(s) are still pending and will be left alone.
+            </p>
           </>
-        }
-      >
-        {payslipTarget &&
-          (() => {
-            const p = computeDeductions(payslipTarget.gross);
-            return (
-              <div className="print-area">
-                <PayslipDetails
-                  employeeName={payslipTarget.name}
-                  subtitle={`${payslipTarget.position} · ${payslipTarget.client}`}
-                  status={payslipTarget.status}
-                  period="May 12 – 25, 2024"
-                  summaryRows={[
-                    { icon: "fa-clock", label: "Hours Worked", value: payslipTarget.hours },
-                    { icon: "fa-sack-dollar", label: "Rate", value: `${payslipTarget.rate} / hr` },
-                    { icon: "fa-money-bill-wave", label: "Gross Pay", value: formatCurrency(p.gross) },
-                  ]}
-                  deductionRows={[
-                    { icon: "fa-shield-halved", label: "SSS", value: formatCurrency(p.sss) },
-                    { icon: "fa-briefcase-medical", label: "PhilHealth", value: formatCurrency(p.philhealth) },
-                    { icon: "fa-house", label: "Pag-IBIG", value: formatCurrency(p.pagibig) },
-                    { icon: "fa-receipt", label: "Withholding Tax", value: formatCurrency(p.tax) },
-                  ]}
-                  netPay={formatCurrency(p.net)}
-                />
-              </div>
-            );
-          })()}
+        )}
       </Modal>
 
       <Modal
@@ -496,75 +388,26 @@ export default function Payroll() {
           <>
             <BtnSecondary data-bs-dismiss="modal">Cancel</BtnSecondary>
             <BtnPrimary type="submit" form="editHoursForm">
-              <i className="fas fa-floppy-disk"></i> Save Changes
+              Save Hours
             </BtnPrimary>
           </>
         }
       >
-        {editHoursTarget && (
-          <form id="editHoursForm" onSubmit={handleEditHoursSubmit}>
-            <p className="text-muted small mb-3">
-              Update hours worked for <strong>{editHoursTarget.name}</strong>. Gross pay will be recalculated automatically.
-            </p>
-            <FormField label="Hours Worked">
-              <input
-                type="number"
-                min="0"
-                step="0.01"
-                className="form-control"
-                value={editHoursValue}
-                onChange={(e) => setEditHoursValue(e.target.value)}
-                required
-              />
-            </FormField>
-            <div className="bg-light rounded-3 p-3 d-flex justify-content-between small">
-              <span className="text-muted">New Gross Pay</span>
-              <span className="fw-semibold">{formatCurrency(parseCurrency(editHoursTarget.rate) * (Number(editHoursValue) || 0))}</span>
-            </div>
-          </form>
-        )}
-      </Modal>
-
-      <Modal
-        id="payrollDeleteModal"
-        title="Remove from Payroll Run"
-        footer={
-          <>
-            <BtnSecondary id="payrollDeleteModalClose" data-bs-dismiss="modal">
-              Cancel
-            </BtnSecondary>
-            <button type="button" className="btn btn-danger btn-sm" onClick={confirmDelete}>
-              <i className="fas fa-trash"></i> Remove
-            </button>
-          </>
-        }
-      >
-        <p className="mb-0">
-          Are you sure you want to remove <strong>{target?.name}</strong> from this payroll run? This action cannot be undone.
-        </p>
-      </Modal>
-
-      <Modal
-        id="bulkDeleteModal"
-        title="Remove Selected From Payroll Run"
-        footer={
-          <>
-            <BtnSecondary id="bulkDeleteModalClose" data-bs-dismiss="modal">
-              Cancel
-            </BtnSecondary>
-            <button type="button" className="btn btn-danger btn-sm" onClick={confirmBulkDelete}>
-              <i className="fas fa-trash"></i> Remove {selected.length || ""}
-            </button>
-          </>
-        }
-      >
-        <p className="mb-0">
-          Are you sure you want to remove{" "}
-          <strong>
-            {selected.length} employee{selected.length === 1 ? "" : "s"}
-          </strong>{" "}
-          from this payroll run? This action cannot be undone.
-        </p>
+        <form id="editHoursForm" onSubmit={handleEditHoursSubmit}>
+          {editTarget && (
+            <>
+              <p className="text-muted small">
+                {editTarget.name} · {editTarget.period}
+                <br />
+                Timesheets support {(editTarget.regular + editTarget.overtime).toFixed(2)} hrs across {editTarget.sheets} approved sheet
+                {editTarget.sheets === 1 ? "" : "s"}.
+              </p>
+              <FormField label="Hours">
+                <input type="number" min="0" step="0.25" className="form-control" value={editValue} onChange={(e) => setEditValue(e.target.value)} required />
+              </FormField>
+            </>
+          )}
+        </form>
       </Modal>
     </>
   );

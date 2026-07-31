@@ -13,6 +13,13 @@ export function ClientsProvider({ children }) {
   // (timesheets, invoices, payroll). Rebuilds whenever clients change.
   const clientNames = clients.map((c) => c.name);
 
+  // Archived clients stay in `clientNames` so an existing record still resolves its
+  // own client; anything offering a NEW choice reads these instead, so a client that
+  // has been archived can never be picked again. One definition, two shapes: the
+  // records where a code is needed, the names where a plain dropdown is enough.
+  const activeClients = clients.filter((c) => c.status !== "Inactive");
+  const activeClientNames = activeClients.map((c) => c.name);
+
   function addClient(data) {
     const newClient = { id: Date.now(), ...data };
     setClients((prev) => [...prev, newClient]);
@@ -74,6 +81,8 @@ export function ClientsProvider({ children }) {
     getClientByCode,
     clientNameByCode,
     clientNames,
+    activeClients,
+    activeClientNames,
     documents,
     getDocumentsByClient,
     addDocument,
