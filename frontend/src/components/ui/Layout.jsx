@@ -74,3 +74,17 @@ export function BrandMark({ size = 40, className = "" }) {
     </span>
   );
 }
+
+// BrandLockup — the mark and the wordmark on one line, the same pairing the top bar
+// uses. Pairing them anchors the mark to something instead of leaving it floating on
+// its own above a heading.
+export function BrandLockup({ className = "" }) {
+  return (
+    <div className={`d-flex align-items-center justify-content-center gap-2 ${className}`}>
+      <BrandMark size={26} />
+      <span className="fw-semibold" style={{ fontSize: "var(--app-fs-5)", letterSpacing: "0.12em" }}>
+        PAYROLL
+      </span>
+    </div>
+  );
+}

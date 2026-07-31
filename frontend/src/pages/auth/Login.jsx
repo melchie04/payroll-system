@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BrandMark } from "../../components/ui/index.jsx";
+import { BrandLockup } from "../../components/ui/index.jsx";
 import { useNavigate } from "react-router";
 import { useCurrentUser } from "../../context/CurrentUserContext.jsx";
 
@@ -16,9 +16,8 @@ export default function Login() {
 
   return (
     <div className="w-100" style={{ maxWidth: 360 }}>
-      <div className="text-center mb-3">
-        <BrandMark size={44} />
-      </div>
+      <BrandLockup className="mb-2" />
+      <hr className="mx-auto mb-3 opacity-25" style={{ maxWidth: 200 }} />
       <h1
         className="text-center fw-normal text-secondary mb-4 tracking-wide text-uppercase"
         style={{
