@@ -352,7 +352,7 @@ export default function EmployeeForm() {
                 <FormField label="Assignment End">
                   <input type="date" className="form-control" name="assignmentEnd" value={form.assignmentEnd} onChange={handleChange} />
                 </FormField>
-                <div className="text-muted" style={{ fontSize: 11.5 }}>
+                <div className="text-muted" style={{ fontSize: "var(--app-fs-1)" }}>
                   Leave blank while the assignment is open-ended.
                 </div>
               </div>

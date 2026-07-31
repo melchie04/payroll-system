@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { DataCard, BtnPrimary, FormField, PageHeader } from "../../components/ui/index.jsx";
+import { ChangePasswordCard } from "./ChangePasswordCard.jsx";
 import { useCurrentUser } from "../../context/CurrentUserContext.jsx";
 import { useActivity } from "../../context/ActivityContext.jsx";
 
@@ -92,7 +93,7 @@ export default function MyProfile() {
                 ) : (
                   <div
                     className="d-flex align-items-center justify-content-center rounded-circle text-white fw-semibold"
-                    style={{ width: 72, height: 72, fontSize: "1.4rem", background: avatarColor }}
+                    style={{ width: 72, height: 72, fontSize: "var(--app-fs-7)", background: avatarColor }}
                   >
                     {initialsOf(form.name)}
                   </div>
@@ -118,7 +119,7 @@ export default function MyProfile() {
 
                 {!avatarImage && (
                   <div>
-                    <div className="text-uppercase text-muted fw-semibold mb-2" style={{ fontSize: 11, letterSpacing: 0.5 }}>
+                    <div className="text-uppercase text-muted fw-semibold mb-2" style={{ fontSize: "var(--app-fs-1)", letterSpacing: 0.5 }}>
                       Or pick a color for your initials
                     </div>
                     <div className="d-flex gap-2">
@@ -162,7 +163,7 @@ export default function MyProfile() {
                 <FormField label="Role">
                   <input type="text" className="form-control" value={user.role} disabled readOnly />
                 </FormField>
-                <div className="text-muted" style={{ fontSize: 11.5 }}>
+                <div className="text-muted" style={{ fontSize: "var(--app-fs-1)" }}>
                   Your role is managed by an administrator in Settings.
                 </div>
               </div>
@@ -176,6 +177,8 @@ export default function MyProfile() {
           </DataCard>
         </section>
       </form>
+
+      <ChangePasswordCard />
     </>
   );
 }

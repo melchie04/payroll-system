@@ -11,7 +11,7 @@ export default function ErrorPage({ code, icon, accent = "#1a1a1a", title, descr
           height: 72,
           background: `${accent}1a`,
           color: accent,
-          fontSize: "1.75rem",
+          fontSize: "var(--app-fs-8)",
         }}
       >
         <i className={`fas ${icon}`}></i>
@@ -20,7 +20,7 @@ export default function ErrorPage({ code, icon, accent = "#1a1a1a", title, descr
       <div
         className="fw-bold mb-2"
         style={{
-          fontSize: "4.5rem",
+          fontSize: "var(--app-fs-display)",
           lineHeight: 1,
           letterSpacing: "-0.02em",
           color: "#1a1a1a",
@@ -30,7 +30,7 @@ export default function ErrorPage({ code, icon, accent = "#1a1a1a", title, descr
       </div>
 
       <h1 className="h4 fw-semibold mb-2">{title}</h1>
-      <p className="text-muted mb-4" style={{ maxWidth: 420, fontSize: "0.95rem" }}>
+      <p className="text-muted mb-4" style={{ maxWidth: 420, fontSize: "var(--app-fs-4)" }}>
         {description}
       </p>
 

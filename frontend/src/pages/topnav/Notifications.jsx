@@ -48,18 +48,18 @@ export default function Notifications() {
               <div className={`list-group-item d-flex align-items-start gap-3 px-3 py-3 ${!n.read ? "bg-light" : ""}`} key={n.id}>
                 <div
                   className="d-flex align-items-center justify-content-center flex-shrink-0 border rounded-3 bg-white text-secondary"
-                  style={{ width: 40, height: 40, fontSize: 16 }}
+                  style={{ width: 40, height: 40, fontSize: "var(--app-fs-5)" }}
                 >
                   {n.icon}
                 </div>
 
                 <div className="flex-grow-1" style={{ minWidth: 0 }}>
                   <div className="d-flex flex-column flex-sm-row justify-content-between align-items-start gap-1 gap-sm-4 mb-2">
-                    <div className="text-dark lh-base" style={{ fontSize: "0.9375rem", overflowWrap: "anywhere" }}>
+                    <div className="text-dark lh-base" style={{ fontSize: "var(--app-fs-4)", overflowWrap: "anywhere" }}>
                       <span>{n.title} </span>
                       <strong className="fw-semibold">{n.bold}</strong> <span>{n.sub}</span>
                     </div>
-                    <div className="text-muted text-nowrap" style={{ fontSize: 12 }}>
+                    <div className="text-muted text-nowrap" style={{ fontSize: "var(--app-fs-2)" }}>
                       {n.time}
                     </div>
                   </div>
@@ -68,13 +68,13 @@ export default function Notifications() {
                     <span className="badge rounded-pill bg-secondary bg-opacity-10 text-secondary fw-normal py-1">{n.type}</span>
                     {!n.read && (
                       <>
-                        <span className="text-muted" style={{ fontSize: 12 }}>
+                        <span className="text-muted" style={{ fontSize: "var(--app-fs-2)" }}>
                           &middot;
                         </span>
                         <button
                           type="button"
                           className="btn btn-sm btn-link p-0 text-decoration-none"
-                          style={{ fontSize: 12 }}
+                          style={{ fontSize: "var(--app-fs-2)" }}
                           onClick={() => markOneRead(n.id)}
                         >
                           Mark as read
@@ -85,7 +85,7 @@ export default function Notifications() {
                 </div>
 
                 {!n.read && (
-                  <span className="rounded-circle flex-shrink-0 mt-2" style={{ width: 8, height: 8, background: "#ff9c55" }}>
+                  <span className="rounded-circle flex-shrink-0 mt-2" style={{ width: 8, height: 8, background: "var(--app-dot-color)" }}>
                     <span className="visually-hidden">Unread</span>
                   </span>
                 )}

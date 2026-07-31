@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { BrandMark } from "./ui/index.jsx";
 import { Link } from "react-router";
 import { useTheme } from "../context/ThemeContext.jsx";
 import { useCurrentUser } from "../context/CurrentUserContext.jsx";
@@ -26,7 +27,7 @@ function NotificationsMenu({ id, align = "end" }) {
       style={{
         minWidth: "280px",
         maxWidth: "calc(100vw - 32px)",
-        fontSize: "0.9rem",
+        fontSize: "var(--app-fs-4)",
       }}
     >
       <li>
@@ -55,7 +56,7 @@ function NotificationsMenu({ id, align = "end" }) {
               overflow: "hidden",
             }}
           >
-            <span className={!n.read ? "fw-semibold" : ""}>
+            <span>
               {n.title} {n.bold} {n.sub}
             </span>
           </Link>
@@ -88,7 +89,7 @@ function NotificationsTrigger({ id }) {
         {unreadCount > 0 && (
           <span
             className="nav-badge-dot position-absolute top-0 start-100 translate-middle rounded-circle"
-            style={{ width: 8, height: 8, background: "#ff9c55", border: "1.5px solid var(--bs-body-bg)" }}
+            style={{ width: 8, height: 8, background: "var(--app-dot-color)", border: "1.5px solid var(--bs-body-bg)" }}
           >
             <span className="visually-hidden">New notifications</span>
           </span>
@@ -108,20 +109,20 @@ function UserTrigger({ id, user, nameClassName = "d-none d-sm-inline" }) {
       role="button"
       data-bs-toggle="dropdown"
       aria-expanded="false"
-      style={{ fontSize: "0.95rem" }}
+      style={{ fontSize: "var(--app-fs-4)" }}
     >
       {user.avatarImage ? (
-        <img src={user.avatarImage} alt={user.name} className="rounded-circle" style={{ width: 36, height: 36, objectFit: "cover" }} />
+        <img src={user.avatarImage} alt={user.name} className="app-avatar rounded-circle" style={{ width: 36, height: 36, objectFit: "cover" }} />
       ) : (
         <span
-          className="d-inline-flex align-items-center justify-content-center rounded-circle text-white fw-semibold flex-shrink-0"
-          style={{ width: 36, height: 36, fontSize: "0.85rem", background: user.avatarColor }}
+          className="app-avatar d-inline-flex align-items-center justify-content-center rounded-circle text-white fw-semibold flex-shrink-0"
+          style={{ width: 36, height: 36, fontSize: "var(--app-fs-3)", background: user.avatarColor }}
         >
           {initialsOf(user.name)}
         </span>
       )}
       <span className={`text-body ${nameClassName}`}>{user.name}</span>
-      <i className="fas fa-chevron-down text-secondary" style={{ fontSize: "0.6rem" }}></i>
+      <i className="fas fa-chevron-down text-secondary" style={{ fontSize: "var(--app-fs-1)" }}></i>
     </a>
   );
 }
@@ -132,7 +133,7 @@ function UserMenu({ id, user }) {
     <ul
       className="topnav-dropdown-menu dropdown-menu dropdown-menu-end position-absolute shadow-sm"
       aria-labelledby={id}
-      style={{ maxWidth: "calc(100vw - 32px)", fontSize: "0.9rem" }}
+      style={{ maxWidth: "calc(100vw - 32px)", fontSize: "var(--app-fs-4)" }}
     >
       <li>
         <div className="dropdown-header py-2 text-decoration-none" style={{ fontSize: "inherit" }}>
@@ -219,18 +220,7 @@ export default function TopNav({ onToggleSidebar }) {
           className="nav-brand-mobile navbar-brand ps-1 ps-md-3 d-flex justify-content-center justify-content-md-start align-items-center gap-2"
           to="/"
         >
-          <span
-            className="d-inline-flex align-items-center justify-content-center rounded-2 fw-bold"
-            style={{
-              width: 26,
-              height: 26,
-              background: isDark ? "#fff" : "#1a1a1a",
-              color: isDark ? "#1a1a1a" : "#fff",
-              fontSize: 12,
-            }}
-          >
-            P
-          </span>
+          <BrandMark size={26} />
           <span className="fs-6 fw-semibold tracking-wider">PAYROLL</span>
         </Link>
 

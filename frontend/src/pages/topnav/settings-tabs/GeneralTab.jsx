@@ -1,4 +1,4 @@
-import { DataCard, BtnPrimary, FormField, SectionHeading } from "../ui/index.jsx";
+import { DataCard, BtnPrimary, FormField, SectionHeading } from "../../../components/ui/index.jsx";
 
 // GeneralTab — general company/preferences settings tab.
 export function GeneralTab({ generalSaved, onSave }) {
@@ -25,7 +25,7 @@ export function GeneralTab({ generalSaved, onSave }) {
                 <FormField label="Support Email">
                   <input type="email" className="form-control" defaultValue="support@payrollsys.com" />
                 </FormField>
-                <div className="text-muted" style={{ fontSize: 11.5 }}>
+                <div className="text-muted" style={{ fontSize: "var(--app-fs-1)" }}>
                   Shown to employees on payslips and system emails.
                 </div>
               </div>
@@ -51,7 +51,7 @@ export function GeneralTab({ generalSaved, onSave }) {
                     <option value="weekly">Weekly</option>
                   </select>
                 </FormField>
-                <div className="text-muted" style={{ fontSize: 11.5 }}>
+                <div className="text-muted" style={{ fontSize: "var(--app-fs-1)" }}>
                   Applied to new payroll runs. Existing runs keep their schedule.
                 </div>
               </div>

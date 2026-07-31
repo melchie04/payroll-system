@@ -1,9 +1,9 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router";
-import { DataCard, Table, Tr, Td, Badge, BtnSecondary, BtnDanger, Modal, ActionsMenu, FilterSelect, SearchInput } from "../ui/index.jsx";
-import { useTimesheets, findDuplicateSheets, isSheetClean, sheetTotals } from "../../context/TimesheetContext.jsx";
-import { useEmployees } from "../../context/EmployeesContext.jsx";
-import { useClients } from "../../context/ClientsContext.jsx";
+import { DataCard, Table, Tr, Td, Badge, BtnSecondary, BtnDanger, Modal, ActionsMenu, FilterSelect, SearchInput } from "../../../components/ui/index.jsx";
+import { useTimesheets, findDuplicateSheets, isSheetClean, sheetTotals } from "../../../context/TimesheetContext.jsx";
+import { useEmployees } from "../../../context/EmployeesContext.jsx";
+import { useClients } from "../../../context/ClientsContext.jsx";
 
 const ALL_STATUSES = "All Statuses";
 const ALL_SOURCES = "All Sources";
@@ -124,7 +124,7 @@ export function TimesheetFiles({ files = [] }) {
         <DataCard
           title="Uploaded Sheets"
           action={
-            <span className="text-muted" style={{ fontSize: 11.5 }}>
+            <span className="text-muted" style={{ fontSize: "var(--app-fs-1)" }}>
               {filtered ? `${visible.length} of ${files.length} sheets` : `${files.length} sheet${files.length === 1 ? "" : "s"}`}
             </span>
           }
@@ -150,11 +150,11 @@ export function TimesheetFiles({ files = [] }) {
               {clean.length > 0 && (
                 <div className="ts-notice ts-notice-success d-flex flex-column flex-sm-row align-items-sm-center gap-2 gap-sm-3 mx-3 mt-3 mb-3 py-2 px-3">
                   <i className="fas fa-circle-check ts-notice-icon flex-shrink-0"></i>
-                  <div className="flex-grow-1" style={{ fontSize: "0.8125rem" }}>
+                  <div className="flex-grow-1" style={{ fontSize: "var(--app-fs-3)" }}>
                     <strong>
                       {clean.length} sheet{clean.length === 1 ? "" : "s"} with nothing flagged
                     </strong>
-                    <div className="ts-notice-sub" style={{ fontSize: 11.5 }}>
+                    <div className="ts-notice-sub" style={{ fontSize: "var(--app-fs-1)" }}>
                       Names matched, signatures present, totals agree with the handwritten figures.
                     </div>
                   </div>
@@ -179,7 +179,7 @@ export function TimesheetFiles({ files = [] }) {
                       {f.rejection && (
                         <div
                           className="text-danger d-flex align-items-center gap-1 text-truncate"
-                          style={{ fontSize: 11.5, maxWidth: 440 }}
+                          style={{ fontSize: "var(--app-fs-1)", maxWidth: 440 }}
                           title={[f.rejection.reasons.join(" · "), f.rejection.note].filter(Boolean).join(" — ")}
                         >
                           <i className="fas fa-rotate-left flex-shrink-0"></i>
@@ -192,7 +192,7 @@ export function TimesheetFiles({ files = [] }) {
                       {duplicates.has(f.id) && (
                         <div
                           className="ts-warn d-flex align-items-center gap-1"
-                          style={{ fontSize: 11.5 }}
+                          style={{ fontSize: "var(--app-fs-1)" }}
                           title={`Same days as ${duplicates
                             .get(f.id)
                             .map((d) => d.name)
@@ -302,14 +302,14 @@ export function TimesheetFiles({ files = [] }) {
               return (
                 <div className="list-group-item px-3 py-2" key={f.id}>
                   <div className="d-flex flex-wrap align-items-baseline gap-2">
-                    <span className="fw-semibold" style={{ fontSize: "0.8125rem" }}>
+                    <span className="fw-semibold" style={{ fontSize: "var(--app-fs-3)" }}>
                       {f.employee.name}
                     </span>
-                    <span className="text-muted" style={{ fontSize: 11.5 }}>
+                    <span className="text-muted" style={{ fontSize: "var(--app-fs-1)" }}>
                       {f.client}
                     </span>
                   </div>
-                  <div className="text-muted" style={{ fontSize: 11.5 }}>
+                  <div className="text-muted" style={{ fontSize: "var(--app-fs-1)" }}>
                     {f.period.label} · {totals.days} days · {totals.regular} hrs
                     {totals.late > 0 && ` · ${totals.late} mins late`}
                   </div>
@@ -326,7 +326,7 @@ export function TimesheetFiles({ files = [] }) {
             checked={bulkConfirmed}
             onChange={(e) => setBulkConfirmed(e.target.checked)}
           />
-          <span style={{ fontSize: "0.8125rem" }}>I have checked the Period Covered on each sheet above</span>
+          <span style={{ fontSize: "var(--app-fs-3)" }}>I have checked the Period Covered on each sheet above</span>
         </label>
       </Modal>
 
@@ -347,7 +347,7 @@ export function TimesheetFiles({ files = [] }) {
         <div className="d-flex align-items-start gap-3">
           <div
             className="d-flex align-items-center justify-content-center flex-shrink-0 rounded-3 bg-warning bg-opacity-10 text-warning"
-            style={{ width: 40, height: 40, fontSize: 15 }}
+            style={{ width: 40, height: 40, fontSize: "var(--app-fs-4)" }}
           >
             <i className="fas fa-triangle-exclamation"></i>
           </div>
@@ -381,7 +381,7 @@ export function TimesheetFiles({ files = [] }) {
         <div className="d-flex align-items-start gap-3">
           <div
             className="d-flex align-items-center justify-content-center flex-shrink-0 rounded-3 bg-danger bg-opacity-10 text-danger"
-            style={{ width: 40, height: 40, fontSize: 15 }}
+            style={{ width: 40, height: 40, fontSize: "var(--app-fs-4)" }}
           >
             <i className="fas fa-triangle-exclamation"></i>
           </div>

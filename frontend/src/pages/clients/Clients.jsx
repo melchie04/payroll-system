@@ -43,10 +43,10 @@ export default function Clients() {
   const outstandingFor = (code) => outstandingForClient(code);
   const outstanding = invoices.filter((inv) => inv.status !== "Paid").reduce((sum, inv) => sum + parseCurrency(inv.amount), 0);
   const clientStats = [
-    { label: "Total Clients", value: String(clients.length) },
-    { label: "Active Clients", value: String(clients.filter((c) => c.status === "Active").length) },
-    { label: "Total Employees Deployed", value: String(employees.length) },
-    { label: "Outstanding Billing", value: formatCurrency(outstanding), valueColor: "var(--bs-danger)" },
+    { label: "Total Clients", value: String(clients.length), icon: "fa-building" },
+    { label: "Active Clients", value: String(clients.filter((c) => c.status === "Active").length), icon: "fa-building" },
+    { label: "Total Employees Deployed", value: String(employees.length), icon: "fa-user-check" },
+    { label: "Outstanding Billing", value: formatCurrency(outstanding), valueColor: "var(--bs-danger)", icon: "fa-hourglass-half" },
   ];
 
   const [selected, setSelected] = useState([]);

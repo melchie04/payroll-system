@@ -9,19 +9,33 @@
   --app-heading-muted: #8a929a;   // Light sidebar section headings
   --app-blob-cool: #4f8cff;       // Auth/error background wash
   --app-blob-warm: #ff8a65;
-  --app-dot-rgb: 255, 156, 85;    // Notification pulse (used as rgba)
+  --app-dot-rgb: 220, 53, 69;     // Unread notification dot (used as rgba)
   --app-chart-track: #f3f4f6;     // Unfilled part of the dashboard ring
+  // Depth. Cards sit on the plane rather than being outlined boxes; the second
+  // step is what a pointer-responsive surface lifts to.
+  --app-shadow-1: 0 1px 2px rgba(16, 24, 40, 0.04), 0 1px 3px rgba(16, 24, 40, 0.06);
+  --app-shadow-2: 0 4px 6px -2px rgba(16, 24, 40, 0.05), 0 12px 16px -4px rgba(16, 24, 40, 0.1);
+  --app-row-hover: rgba(16, 24, 40, 0.028);   // Table row under the pointer
+  --app-surface-radius: 0.625rem;             // 10px — one radius for every card
 
-  // Type scale — the app's own font sizes, smallest to largest. Steps 2 and 5
-  // (11.5px, 14.4px) are odd values carried over from existing pages; kept as-is
-  // so nothing shifts. See notes if you want them normalised.
-  --app-fs-1: 0.6875rem;          // 11px   — separators, small toggles
-  --app-fs-2: 0.71875rem;         // 11.5px — field hints
-  --app-fs-3: 0.75rem;            // 12px   — uppercase section labels
-  --app-fs-4: 0.8125rem;          // 13px   — dense table / cell text
-  --app-fs-5: 0.9rem;             // 14.4px — sidebar nav icons
-  --app-fs-6: 1rem;               // 16px   — base / topnav icon glyphs
-  --app-fs-7: 1.1875rem;          // 19px   — feature icons
+  // The P mark, used in the top bar, on the auth pages and as the favicon.
+  --app-brand-bg: #1a1a1a;
+  --app-brand-fg: #ffffff;
+
+  // Unread marker. One value for the bell and the notifications list.
+  --app-dot-color: #d92d3f;
+
+  // Type scale — one ladder for the whole app: 11/12/13/14/16/20/24/32px. Every
+  // size in the UI is one of these; nothing sets a raw px or rem font-size.
+  --app-fs-1: 0.6875rem;          // 11px — micro labels, badges, table meta
+  --app-fs-2: 0.75rem;            // 12px — hints and captions
+  --app-fs-3: 0.8125rem;          // 13px — dense table and cell text
+  --app-fs-4: 0.875rem;           // 14px — small body
+  --app-fs-5: 1rem;               // 16px — base
+  --app-fs-6: 1.25rem;            // 20px — card and section titles
+  --app-fs-7: 1.5rem;             // 24px — page titles and stat values
+  --app-fs-8: 2rem;               // 32px — the largest figure on a page
+  --app-fs-display: 4.5rem;       // Error-page glyphs only
 }
 
 // Smooth the colour swap when the theme flips. ThemeContext adds .theme-transition

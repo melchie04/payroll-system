@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Modal as BsModal } from "bootstrap";
-import { DataCard, Table, Tr, Td, Badge, BtnPrimary, BtnSecondary, BtnDanger, ActionsMenu, Modal, FormField, RequirementRow } from "../ui/index.jsx";
+import { DataCard, Table, Tr, Td, Badge, BtnPrimary, BtnSecondary, BtnDanger, ActionsMenu, Modal, FormField, RequirementRow } from "../../../components/ui/index.jsx";
 
 const emptyResetForm = { password: "", confirmPassword: "" };
 
@@ -350,7 +350,7 @@ function DeleteUserModal({ target, onConfirm }) {
       <div className="d-flex align-items-start gap-3">
         <div
           className="d-flex align-items-center justify-content-center flex-shrink-0 rounded-3 bg-danger bg-opacity-10 text-danger"
-          style={{ width: 40, height: 40, fontSize: 15 }}
+          style={{ width: 40, height: 40, fontSize: "var(--app-fs-4)" }}
         >
           <i className="fas fa-triangle-exclamation"></i>
         </div>
@@ -429,7 +429,7 @@ function ResetPasswordModal({
         </FormField>
 
         <div className="bg-light rounded-3 px-3 py-3 mb-3">
-          <div className="text-uppercase text-muted fw-semibold mb-2" style={{ fontSize: 11, letterSpacing: 0.5 }}>
+          <div className="text-uppercase text-muted fw-semibold mb-2" style={{ fontSize: "var(--app-fs-1)", letterSpacing: 0.5 }}>
             Password Requirements
           </div>
           <div className="row row-cols-1 g-2">

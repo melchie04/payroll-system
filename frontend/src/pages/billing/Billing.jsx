@@ -16,17 +16,17 @@ import {
   Modal,
   FormField,
   PageHeader,
-} from "../components/ui/index.jsx";
-import { sheetPeriods } from "../assets/data/index.js";
-import { exportToCsv } from "../utils/exportToCsv.js";
-import { parseCurrency, formatCurrency } from "../utils/currency.js";
-import { billableFor } from "../utils/billing.js";
-import { useClients } from "../context/ClientsContext.jsx";
-import { useInvoices } from "../context/InvoicesContext.jsx";
-import { useTimesheets } from "../context/TimesheetContext.jsx";
-import { useEmployees } from "../context/EmployeesContext.jsx";
-import { useActivity } from "../context/ActivityContext.jsx";
-import { useNotifications } from "../context/NotificationsContext.jsx";
+} from "../../components/ui/index.jsx";
+import { sheetPeriods } from "../../assets/data/index.js";
+import { exportToCsv } from "../../utils/exportToCsv.js";
+import { parseCurrency, formatCurrency } from "../../utils/currency.js";
+import { billableFor } from "../../utils/billing.js";
+import { useClients } from "../../context/ClientsContext.jsx";
+import { useInvoices } from "../../context/InvoicesContext.jsx";
+import { useTimesheets } from "../../context/TimesheetContext.jsx";
+import { useEmployees } from "../../context/EmployeesContext.jsx";
+import { useActivity } from "../../context/ActivityContext.jsx";
+import { useNotifications } from "../../context/NotificationsContext.jsx";
 
 const ALL_CLIENTS = "All Clients";
 const ALL_STATUSES = "All Statuses";
@@ -53,10 +53,10 @@ export default function Billing() {
   const stats = useMemo(() => {
     const sum = (list) => list.reduce((total, inv) => total + parseCurrency(inv.amount), 0);
     return [
-      { label: "Total Invoiced", value: formatCurrency(sum(invoices)) },
-      { label: "Paid Amount", value: formatCurrency(sum(invoices.filter((inv) => inv.status === "Paid"))) },
-      { label: "Outstanding", value: formatCurrency(sum(invoices.filter((inv) => inv.status !== "Paid"))) },
-      { label: "Overdue", value: formatCurrency(sum(invoices.filter((inv) => inv.status === "Overdue"))), valueColor: "var(--bs-danger)" },
+      { label: "Total Invoiced", value: formatCurrency(sum(invoices)), icon: "fa-file-invoice" },
+      { label: "Paid Amount", value: formatCurrency(sum(invoices.filter((inv) => inv.status === "Paid"))), icon: "fa-circle-check" },
+      { label: "Outstanding", value: formatCurrency(sum(invoices.filter((inv) => inv.status !== "Paid"))), icon: "fa-hourglass-half" },
+      { label: "Overdue", value: formatCurrency(sum(invoices.filter((inv) => inv.status === "Overdue"))), valueColor: "var(--bs-danger)", icon: "fa-triangle-exclamation" },
     ];
   }, [invoices]);
 
@@ -364,7 +364,7 @@ export default function Billing() {
           )}
         </DataCard>
         {filtering && (
-          <div className="text-muted mt-2" style={{ fontSize: 11.5 }}>
+          <div className="text-muted mt-2" style={{ fontSize: "var(--app-fs-1)" }}>
             Showing {visibleInvoices.length} of {invoices.length} invoices. Export sends what is shown.
           </div>
         )}
@@ -457,7 +457,7 @@ export default function Billing() {
             </FormField>
             {calculated.ready ? (
               <div className="d-flex flex-wrap align-items-center gap-2 mt-1">
-                <span className="text-muted" style={{ fontSize: 11.5 }}>
+                <span className="text-muted" style={{ fontSize: "var(--app-fs-1)" }}>
                   {calculated.sheetCount} approved sheet{calculated.sheetCount === 1 ? "" : "s"} · {calculated.regular} regular hrs
                   {calculated.overtime ? ` · ${calculated.overtime} OT hrs` : ""} = {formatCurrency(calculated.total)}
                 </span>
@@ -466,7 +466,7 @@ export default function Billing() {
                 </button>
               </div>
             ) : (
-              <div className="text-muted mt-1" style={{ fontSize: 11.5 }}>
+              <div className="text-muted mt-1" style={{ fontSize: "var(--app-fs-1)" }}>
                 {calculated.reason} — enter the amount yourself.
               </div>
             )}

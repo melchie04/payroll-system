@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { DataCard, BtnPrimary, BtnSecondary, IconBtn } from "../ui/index.jsx";
-import { useTimesheets } from "../../context/TimesheetContext.jsx";
+import { DataCard, BtnPrimary, BtnSecondary, IconBtn } from "../../../components/ui/index.jsx";
+import { useTimesheets } from "../../../context/TimesheetContext.jsx";
 
 // Icon tone follows the level, so a row can never contradict its own label. Red is
 // reserved for something that actually goes wrong, which is why "Preferred" is not it.
@@ -256,7 +256,7 @@ export function TimesheetUpload({ summary, client, canUpload = true, onOpenSheet
             )}
 
             <div className="ts-dropzone-meta mt-3 pt-3 w-100">
-              <div className="d-flex flex-wrap justify-content-center gap-3 text-muted" style={{ fontSize: 11.5 }}>
+              <div className="d-flex flex-wrap justify-content-center gap-3 text-muted" style={{ fontSize: "var(--app-fs-1)" }}>
                 <span>
                   <i className="fas fa-file-pdf me-1"></i> PDF, JPG, PNG
                 </span>
@@ -275,7 +275,7 @@ export function TimesheetUpload({ summary, client, canUpload = true, onOpenSheet
               <DataCard
                 title="Upload Queue"
                 action={
-                  <span className="text-muted" style={{ fontSize: 11.5 }}>
+                  <span className="text-muted" style={{ fontSize: "var(--app-fs-1)" }}>
                     {done.length} of {queue.length} ready
                     {rejected.length > 0 && ` · ${rejected.length} rejected`}
                   </span>
@@ -289,16 +289,16 @@ export function TimesheetUpload({ summary, client, canUpload = true, onOpenSheet
                           className={`d-flex align-items-center justify-content-center flex-shrink-0 border rounded-2 bg-light ${
                             q.state === "error" ? "text-danger" : q.state === "done" ? "text-success" : "text-secondary"
                           }`}
-                          style={{ width: 30, height: 30, fontSize: 12 }}
+                          style={{ width: 30, height: 30, fontSize: "var(--app-fs-2)" }}
                         >
                           <i className={`fas ${q.type === "pdf" ? "fa-file-pdf" : "fa-file-image"}`}></i>
                         </div>
 
                         <div className="flex-grow-1" style={{ minWidth: 0 }}>
-                          <div className="fw-semibold text-truncate" style={{ fontSize: "0.8125rem" }} title={q.name}>
+                          <div className="fw-semibold text-truncate" style={{ fontSize: "var(--app-fs-3)" }} title={q.name}>
                             {q.name}
                           </div>
-                          <div className="text-muted" style={{ fontSize: 11 }}>
+                          <div className="text-muted" style={{ fontSize: "var(--app-fs-1)" }}>
                             {formatSize(q.size)} · {q.source}
                             {q.state === "done" && " · Ready to file"}
                             {q.state === "error" && " · Could not be read"}
@@ -325,16 +325,16 @@ export function TimesheetUpload({ summary, client, canUpload = true, onOpenSheet
                     <div className="list-group-item px-3 py-2 d-flex align-items-center gap-3" key={r.id}>
                       <div
                         className="d-flex align-items-center justify-content-center flex-shrink-0 border rounded-2 bg-light text-danger"
-                        style={{ width: 30, height: 30, fontSize: 12 }}
+                        style={{ width: 30, height: 30, fontSize: "var(--app-fs-2)" }}
                       >
                         <i className="fas fa-file-circle-xmark"></i>
                       </div>
 
                       <div className="flex-grow-1" style={{ minWidth: 0 }}>
-                        <div className="fw-semibold text-truncate text-decoration-line-through" style={{ fontSize: "0.8125rem" }} title={r.name}>
+                        <div className="fw-semibold text-truncate text-decoration-line-through" style={{ fontSize: "var(--app-fs-3)" }} title={r.name}>
                           {r.name}
                         </div>
-                        <div className="text-danger" style={{ fontSize: 11 }}>
+                        <div className="text-danger" style={{ fontSize: "var(--app-fs-1)" }}>
                           {r.reason} — {r.hint}
                         </div>
                       </div>
@@ -374,16 +374,16 @@ export function TimesheetUpload({ summary, client, canUpload = true, onOpenSheet
                 <div className="list-group-item d-flex align-items-center gap-3 px-3 py-2" key={r.title}>
                   <div
                     className={`d-flex align-items-center justify-content-center flex-shrink-0 border rounded-2 bg-light ${LEVEL_TONE[r.level]}`}
-                    style={{ width: 30, height: 30, fontSize: 12 }}
+                    style={{ width: 30, height: 30, fontSize: "var(--app-fs-2)" }}
                   >
                     <i className={`fas ${r.icon}`}></i>
                   </div>
 
                   <div className="flex-grow-1" style={{ minWidth: 0 }}>
-                    <div className="fw-semibold" style={{ fontSize: "0.8125rem" }}>
+                    <div className="fw-semibold" style={{ fontSize: "var(--app-fs-3)" }}>
                       {r.title}
                     </div>
-                    <div className="text-muted" style={{ fontSize: 11 }}>
+                    <div className="text-muted" style={{ fontSize: "var(--app-fs-1)" }}>
                       {r.sub}
                     </div>
                   </div>
@@ -401,7 +401,7 @@ export function TimesheetUpload({ summary, client, canUpload = true, onOpenSheet
               {summary.map((s) => (
                 <div className="col-6 col-md-3" key={s.label}>
                   <div className="border rounded-3 bg-light p-2 px-3 h-100 d-flex flex-column justify-content-between">
-                    <div className="text-muted fw-semibold" style={{ fontSize: 12 }}>
+                    <div className="text-muted fw-semibold" style={{ fontSize: "var(--app-fs-2)" }}>
                       {s.label}
                     </div>
                     <div className="fs-4 fw-bold mt-auto" style={s.color ? { color: s.color } : undefined}>

@@ -12,6 +12,23 @@
   // The dashboard ring's unfilled track: a light grey plate would glare against the
   // dark plane, so it drops to the same step as the raised surfaces.
   --app-chart-track: #2a2f35;
+  // On a dark plane a light shadow reads as haze, so depth comes from a deeper,
+  // tighter shadow and a lighter row tint instead.
+  --app-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --app-shadow-2: 0 4px 6px -2px rgba(0, 0, 0, 0.45), 0 12px 16px -4px rgba(0, 0, 0, 0.5);
+  --app-row-hover: rgba(255, 255, 255, 0.04);
+
+  // The mark inverts so it stays the strongest thing in the top bar.
+  --app-brand-bg: #ffffff;
+  --app-brand-fg: #1a1a1a;
+
+  // Danger red is mixed for white paper and goes muddy on the dark bar, so the
+  // unread marker lifts to a red that still reads as red at 8px.
+  --app-dot-color: #ff6b6b;
+
+  // The unread dot was a pale peach that vanished on white; danger red is the
+  // convention for an unread count and holds up on both planes.
+  --app-dot-rgb: 220, 53, 69;
 }
 
 // --- Content plane ---------------------------------------------------------
@@ -288,4 +305,24 @@
 
 [data-bs-theme="dark"] .sb-topnav {
   --bs-body-bg: var(--app-dark-surface);
+}
+
+// --- Readability fixes for the dark plane ------------------------------------
+
+// The avatar is a dark disc on a dark bar, so it needs a rim to read as a control.
+[data-bs-theme="dark"] .app-avatar {
+  box-shadow: 0 0 0 2px var(--app-dark-surface-2);
+}
+
+// Bootstrap's link blue is tuned for white. On the dark plane it glares, so links
+// step up to the lighter tint Bootstrap ships for exactly this case.
+[data-bs-theme="dark"] {
+  --bs-link-color: #7fb1ff;
+  --bs-link-hover-color: #a5c9ff;
+  --bs-link-color-rgb: 127, 177, 255;
+}
+
+[data-bs-theme="dark"] .text-primary,
+[data-bs-theme="dark"] .btn-link {
+  color: #7fb1ff !important;
 }

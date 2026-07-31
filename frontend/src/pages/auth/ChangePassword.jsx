@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { BrandMark } from "../../components/ui/index.jsx";
 import { useNavigate } from "react-router";
 import { useCurrentUser } from "../../context/CurrentUserContext.jsx";
 
@@ -59,7 +60,7 @@ export default function ChangePassword() {
         >
           <i className="fas fa-circle-check"></i>
         </div>
-        <h1 className="fw-normal text-secondary mb-2" style={{ fontSize: "1.35rem", color: "#777777" }}>
+        <h1 className="fw-normal text-secondary mb-2" style={{ fontSize: "var(--app-fs-6)", color: "#777777" }}>
           Password set
         </h1>
         <p className="text-muted mb-4" style={{ fontSize: "0.9rem" }}>
@@ -79,10 +80,13 @@ export default function ChangePassword() {
 
   return (
     <div className="w-100" style={{ maxWidth: 360 }}>
+      <div className="text-center mb-3">
+        <BrandMark size={44} />
+      </div>
       <h1
         className="text-center fw-normal text-secondary mb-2 tracking-wide text-uppercase"
         style={{
-          fontSize: "1.35rem",
+          fontSize: "var(--app-fs-6)",
           color: "#777777",
           letterSpacing: "0.08em",
         }}
@@ -102,7 +106,7 @@ export default function ChangePassword() {
                 style={{
                   width: "24px",
                   height: "24px",
-                  fontSize: "0.75rem",
+                  fontSize: "var(--app-fs-2)",
                   borderColor: "#cccccc",
                 }}
               >
@@ -126,7 +130,7 @@ export default function ChangePassword() {
               onClick={() => setShowPassword((s) => !s)}
               style={{ borderColor: "#cccccc" }}
             >
-              <i className={`fas ${showPassword ? "fa-eye-slash" : "fa-eye"}`} style={{ fontSize: "0.75rem" }}></i>
+              <i className={`fas ${showPassword ? "fa-eye-slash" : "fa-eye"}`} style={{ fontSize: "var(--app-fs-2)" }}></i>
             </button>
           </div>
         </div>
@@ -139,7 +143,7 @@ export default function ChangePassword() {
                 style={{
                   width: "24px",
                   height: "24px",
-                  fontSize: "0.75rem",
+                  fontSize: "var(--app-fs-2)",
                   borderColor: "#cccccc",
                 }}
               >
@@ -163,7 +167,7 @@ export default function ChangePassword() {
               onClick={() => setShowPassword((s) => !s)}
               style={{ borderColor: "#cccccc" }}
             >
-              <i className={`fas ${showPassword ? "fa-eye-slash" : "fa-eye"}`} style={{ fontSize: "0.75rem" }}></i>
+              <i className={`fas ${showPassword ? "fa-eye-slash" : "fa-eye"}`} style={{ fontSize: "var(--app-fs-2)" }}></i>
             </button>
           </div>
         </div>
@@ -176,7 +180,7 @@ export default function ChangePassword() {
                 style={{
                   width: "24px",
                   height: "24px",
-                  fontSize: "0.75rem",
+                  fontSize: "var(--app-fs-2)",
                   borderColor: "#cccccc",
                 }}
               >
@@ -200,7 +204,7 @@ export default function ChangePassword() {
               onClick={() => setShowPassword((s) => !s)}
               style={{ borderColor: "#cccccc" }}
             >
-              <i className={`fas ${showPassword ? "fa-eye-slash" : "fa-eye"}`} style={{ fontSize: "0.75rem" }}></i>
+              <i className={`fas ${showPassword ? "fa-eye-slash" : "fa-eye"}`} style={{ fontSize: "var(--app-fs-2)" }}></i>
             </button>
           </div>
         </div>

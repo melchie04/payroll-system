@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router";
-import { DataCard, Table, Tr, Td, BtnPrimary, FilterSelect, PayslipDetails, PageHeader } from "../components/ui/index.jsx";
-import { payPeriods } from "../assets/data/index.js";
-import { formatCurrency } from "../utils/currency.js";
-import { computeDeductions } from "../utils/payslip.js";
-import { buildPayrollRows, sheetsForEmployee } from "../utils/payrollRun.js";
-import { useClients } from "../context/ClientsContext.jsx";
-import { useEmployees } from "../context/EmployeesContext.jsx";
-import { useTimesheets } from "../context/TimesheetContext.jsx";
-import { usePayroll } from "../context/PayrollContext.jsx";
-import { useActivity } from "../context/ActivityContext.jsx";
+import { DataCard, Table, Tr, Td, BtnPrimary, FilterSelect, PayslipDetails, PageHeader } from "../../components/ui/index.jsx";
+import { payPeriods } from "../../assets/data/index.js";
+import { formatCurrency } from "../../utils/currency.js";
+import { computeDeductions } from "../../utils/payslip.js";
+import { buildPayrollRows, sheetsForEmployee } from "../../utils/payrollRun.js";
+import { useClients } from "../../context/ClientsContext.jsx";
+import { useEmployees } from "../../context/EmployeesContext.jsx";
+import { useTimesheets } from "../../context/TimesheetContext.jsx";
+import { usePayroll } from "../../context/PayrollContext.jsx";
+import { useActivity } from "../../context/ActivityContext.jsx";
 
 // Payslip — one employee's pay for one period, and the approved sheets behind it.
 export default function Payslip() {

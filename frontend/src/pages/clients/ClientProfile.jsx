@@ -24,7 +24,7 @@ import { useClients } from "../../context/ClientsContext.jsx";
 import { useInvoices } from "../../context/InvoicesContext.jsx";
 import { useEmployees } from "../../context/EmployeesContext.jsx";
 import { resolveEmployee, deploymentState, parsePeriodLabel } from "../../context/TimesheetContext.jsx";
-import { TimesheetCoverage } from "../../components/timesheet/TimesheetCoverage.jsx";
+import { TimesheetCoverage } from "../timesheet/tabs/TimesheetCoverage.jsx";
 
 const fileIcons = { pdf: "📕", img: "🖼️" };
 
@@ -375,10 +375,10 @@ export default function ClientProfile() {
                 {documents.map((doc) => (
                   <div className="list-group-item d-flex align-items-center justify-content-between gap-3 py-3" key={doc.id}>
                     <div className="d-flex align-items-center gap-3">
-                      <span style={{ fontSize: 22 }}>{fileIcons[doc.type]}</span>
+                      <span style={{ fontSize: "var(--app-fs-7)" }}>{fileIcons[doc.type]}</span>
                       <div>
                         <div className="small fw-semibold text-dark">{doc.name}</div>
-                        <div className="text-muted" style={{ fontSize: 11.5 }}>
+                        <div className="text-muted" style={{ fontSize: "var(--app-fs-1)" }}>
                           Uploaded on {doc.uploaded}
                         </div>
                       </div>
@@ -436,21 +436,21 @@ export default function ClientProfile() {
                 cursor: "pointer",
               }}
             >
-              <div className="mb-2" style={{ fontSize: 28 }}>
+              <div className="mb-2" style={{ fontSize: "var(--app-fs-8)" }}>
                 <i className="fas fa-cloud-arrow-up text-muted"></i>
               </div>
               <div className="small mb-1">Drag and drop a file here, or click to browse</div>
-              <div className="text-muted" style={{ fontSize: 11 }}>
+              <div className="text-muted" style={{ fontSize: "var(--app-fs-1)" }}>
                 Supports: PDF, JPG, PNG
               </div>
             </div>
           ) : (
             <div className="d-flex align-items-center justify-content-between gap-3 border rounded-3 p-3 mb-3">
               <div className="d-flex align-items-center gap-3 min-w-0">
-                <span style={{ fontSize: 22 }}>{docType === "img" ? "🖼️" : "📕"}</span>
+                <span style={{ fontSize: "var(--app-fs-7)" }}>{docType === "img" ? "🖼️" : "📕"}</span>
                 <div className="text-truncate">
                   <div className="small fw-semibold text-dark text-truncate">{docFile.name}</div>
-                  <div className="text-muted" style={{ fontSize: 11.5 }}>
+                  <div className="text-muted" style={{ fontSize: "var(--app-fs-1)" }}>
                     {formatFileSize(docFile.size)}
                   </div>
                 </div>

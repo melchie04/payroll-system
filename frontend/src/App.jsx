@@ -7,11 +7,11 @@ import ErrorLayout from "./layouts/ErrorLayout.jsx";
 import Login from "./pages/auth/Login.jsx";
 import ChangePassword from "./pages/auth/ChangePassword.jsx";
 
-import Dashboard from "./pages/Dashboard.jsx";
-import Payroll from "./pages/Payroll.jsx";
-import Billing from "./pages/Billing.jsx";
-import Invoice from "./pages/Invoice.jsx";
-import Payslip from "./pages/Payslip.jsx";
+import Dashboard from "./pages/dashboard/Dashboard.jsx";
+import Payroll from "./pages/payroll/Payroll.jsx";
+import Billing from "./pages/billing/Billing.jsx";
+import Invoice from "./pages/billing/Invoice.jsx";
+import Payslip from "./pages/payroll/Payslip.jsx";
 import Timesheet from "./pages/timesheet/Timesheet.jsx";
 import TimesheetReview from "./pages/timesheet/TimesheetReview.jsx";
 import Notifications from "./pages/topnav/Notifications.jsx";

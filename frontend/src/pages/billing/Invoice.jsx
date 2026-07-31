@@ -1,11 +1,11 @@
 import { Link, useLocation, useNavigate, useParams } from "react-router";
-import { DataCard, Table, Tr, Td, Badge, BtnPrimary, DetailList, DetailRow, PageHeader } from "../components/ui/index.jsx";
-import { formatCurrency, parseCurrency } from "../utils/currency.js";
-import { invoiceLines } from "../utils/billing.js";
-import { useClients } from "../context/ClientsContext.jsx";
-import { useInvoices } from "../context/InvoicesContext.jsx";
-import { useActivity } from "../context/ActivityContext.jsx";
-import { useNotifications } from "../context/NotificationsContext.jsx";
+import { DataCard, Table, Tr, Td, Badge, BtnPrimary, DetailList, DetailRow, PageHeader } from "../../components/ui/index.jsx";
+import { formatCurrency, parseCurrency } from "../../utils/currency.js";
+import { invoiceLines } from "../../utils/billing.js";
+import { useClients } from "../../context/ClientsContext.jsx";
+import { useInvoices } from "../../context/InvoicesContext.jsx";
+import { useActivity } from "../../context/ActivityContext.jsx";
+import { useNotifications } from "../../context/NotificationsContext.jsx";
 
 const COMPANY = {
   name: "Payroll System Inc.",
@@ -152,7 +152,7 @@ export default function Invoice() {
                 <Tr key={`${line.description}-${i}`}>
                   <Td bold>
                     {line.description}
-                    <div className="text-muted" style={{ fontSize: 11.5 }}>
+                    <div className="text-muted" style={{ fontSize: "var(--app-fs-1)" }}>
                       {line.detail}
                     </div>
                   </Td>

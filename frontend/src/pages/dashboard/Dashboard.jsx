@@ -1,16 +1,16 @@
 import { Link } from "react-router";
-import { StatCard, DataCard, Table, Tr, Td, Badge, PageHeader } from "../components/ui/index.jsx";
-import { payPeriods, sheetPeriods } from "../assets/data/index.js";
-import { formatCurrency } from "../utils/currency.js";
-import { computeDeductions } from "../utils/payslip.js";
-import { buildPayrollRows } from "../utils/payrollRun.js";
-import { billableFor } from "../utils/billing.js";
-import { useClients } from "../context/ClientsContext.jsx";
-import { useEmployees } from "../context/EmployeesContext.jsx";
-import { useTimesheets } from "../context/TimesheetContext.jsx";
-import { useInvoices } from "../context/InvoicesContext.jsx";
-import { usePayroll } from "../context/PayrollContext.jsx";
-import { useActivity } from "../context/ActivityContext.jsx";
+import { StatCard, DataCard, Table, Tr, Td, Badge, PageHeader } from "../../components/ui/index.jsx";
+import { payPeriods, sheetPeriods } from "../../assets/data/index.js";
+import { formatCurrency } from "../../utils/currency.js";
+import { computeDeductions } from "../../utils/payslip.js";
+import { buildPayrollRows } from "../../utils/payrollRun.js";
+import { billableFor } from "../../utils/billing.js";
+import { useClients } from "../../context/ClientsContext.jsx";
+import { useEmployees } from "../../context/EmployeesContext.jsx";
+import { useTimesheets } from "../../context/TimesheetContext.jsx";
+import { useInvoices } from "../../context/InvoicesContext.jsx";
+import { usePayroll } from "../../context/PayrollContext.jsx";
+import { useActivity } from "../../context/ActivityContext.jsx";
 
 // One colour per payroll status, taken from the framework tokens so the ring follows
 // the theme instead of freezing a light-mode palette into the markup.
@@ -61,14 +61,14 @@ export default function Dashboard() {
   const activeClients = clients.filter((c) => c.status === "Active");
 
   const stats = [
-    { to: "/clients", label: "Active Clients", value: String(activeClients.length), sub: `${clients.length} on file` },
+    { to: "/clients", label: "Active Clients", value: String(activeClients.length), icon: "fa-building", sub: `${clients.length} on file` },
     {
       to: "/payroll",
       label: "Pending Payroll",
       value: formatCurrency(pendingPayroll),
       sub: `For ${rows.filter((r) => r.status !== "Paid").length} employees`,
     },
-    { to: "/billing", label: "Unbilled Amount", value: formatCurrency(unbilled), sub: "Approved work not yet invoiced" },
+    { to: "/billing", label: "Unbilled Amount", value: formatCurrency(unbilled), icon: "fa-file-invoice-dollar", sub: "Approved work not yet invoiced" },
     {
       to: "/billing",
       label: "Overdue Invoices",
@@ -81,14 +81,19 @@ export default function Dashboard() {
   // The ring, its legend and the total in the middle all read the same counts, so the
   // three can never drift apart the way three hand-typed sets of numbers did.
   const total = rows.length;
-  let offset = 0;
-  const ring = SEGMENTS.map((segment) => {
+  const slices = SEGMENTS.map((segment) => {
     const count = rows.filter((r) => r.status === segment.label).length;
-    const pct = total > 0 ? (count / total) * 100 : 0;
-    const arc = { ...segment, count, pct, dash: `${pct} ${100 - pct}`, offset: -offset };
-    offset += pct;
-    return arc;
+    return { ...segment, count, pct: total > 0 ? (count / total) * 100 : 0 };
   });
+
+  // Each arc starts where the ones before it finished. That running total is summed
+  // from the slices rather than accumulated in a variable, so nothing is reassigned
+  // while the component renders.
+  const ring = slices.map((slice, i) => ({
+    ...slice,
+    dash: `${slice.pct} ${100 - slice.pct}`,
+    offset: -slices.slice(0, i).reduce((sum, s) => sum + s.pct, 0),
+  }));
 
   const recent = entries.slice(0, 5);
 
@@ -107,7 +112,7 @@ export default function Dashboard() {
           {stats.map((s) => (
             <div className="col-xl-3 col-md-6" key={s.label}>
               <Link to={s.to} className="text-decoration-none text-reset d-block h-100">
-                <StatCard label={s.label} value={s.value} sub={s.sub} valueColor={s.valueColor} />
+                <StatCard label={s.label} value={s.value} sub={s.sub} valueColor={s.valueColor} icon={s.icon} />
               </Link>
             </div>
           ))}
@@ -137,10 +142,10 @@ export default function Dashboard() {
                     ))}
                   </svg>
                   <div className="position-absolute top-50 start-50 translate-middle text-center">
-                    <div className="lh-1 fw-bold text-body" style={{ fontSize: "1.6rem", letterSpacing: "-0.5px" }}>
+                    <div className="lh-1 fw-bold text-body" style={{ fontSize: "var(--app-fs-7)", letterSpacing: "-0.5px" }}>
                       {total}
                     </div>
-                    <div className="text-uppercase text-muted fw-bold mt-1" style={{ fontSize: "10px", letterSpacing: "0.5px" }}>
+                    <div className="text-uppercase text-muted fw-bold mt-1" style={{ fontSize: "var(--app-fs-1)", letterSpacing: "0.5px" }}>
                       Total
                     </div>
                   </div>
@@ -153,15 +158,15 @@ export default function Dashboard() {
                           className="d-inline-block flex-shrink-0"
                           style={{ width: 10, height: 10, borderRadius: "50%", background: arc.colour }}
                         />
-                        <span className="text-secondary" style={{ fontSize: "13px" }}>
+                        <span className="text-secondary" style={{ fontSize: "var(--app-fs-3)" }}>
                           {arc.label}
                         </span>
                       </div>
                       <div className="text-end ps-3">
-                        <span className="fw-semibold text-body" style={{ fontSize: "13px" }}>
+                        <span className="fw-semibold text-body" style={{ fontSize: "var(--app-fs-3)" }}>
                           {arc.count}
                         </span>
-                        <span className="text-muted ms-1" style={{ fontSize: "11.5px" }}>
+                        <span className="text-muted ms-1" style={{ fontSize: "var(--app-fs-1)" }}>
                           ({Math.round(arc.pct)}%)
                         </span>
                       </div>
@@ -188,7 +193,7 @@ export default function Dashboard() {
                     <div className="list-group-item d-flex align-items-start gap-3 py-3 py-md-2" key={entry.id}>
                       <div
                         className="d-flex align-items-center justify-content-center flex-shrink-0 border rounded-2 bg-light text-secondary"
-                        style={{ width: 36, height: 36, fontSize: 14 }}
+                        style={{ width: 36, height: 36, fontSize: "var(--app-fs-4)" }}
                       >
                         {MODULE_ICON[entry.module] || "\ud83d\udcdd"}
                       </div>
@@ -198,11 +203,11 @@ export default function Dashboard() {
                             <span>{entry.action} </span>
                             <strong className="fw-semibold">{entry.user}</strong>
                           </div>
-                          <div className="text-muted text-nowrap" style={{ fontSize: "11px", marginTop: "1px" }}>
+                          <div className="text-muted text-nowrap" style={{ fontSize: "var(--app-fs-1)", marginTop: "1px" }}>
                             {entry.timestamp}
                           </div>
                         </div>
-                        <div className="text-muted" style={{ fontSize: "12px", lineHeight: "1.4" }}>
+                        <div className="text-muted" style={{ fontSize: "var(--app-fs-2)", lineHeight: "1.4" }}>
                           {entry.detail}
                         </div>
                       </div>

@@ -1,4 +1,4 @@
-import { DataCard, Table, Tr, Td, Badge, BtnSecondary } from "../ui/index.jsx";
+import { DataCard, Table, Tr, Td, Badge, BtnSecondary } from "../../../components/ui/index.jsx";
 
 // TimesheetCoverage — which employees have approved days for the selected period.
 // A gap means paperwork is missing, not that the person did not work.
@@ -32,10 +32,10 @@ export function TimesheetCoverage({ rows = [], period, onUploadFor }) {
           <div className="row g-2">
             <div className="col-6 col-md-3">
               <div className="border rounded-3 bg-light p-2 px-3 h-100 d-flex flex-column justify-content-between">
-                <div className="text-muted fw-semibold" style={{ fontSize: 12 }}>
+                <div className="text-muted fw-semibold" style={{ fontSize: "var(--app-fs-2)" }}>
                   Pay Period
                 </div>
-                <div className="fw-bold mt-auto" style={{ fontSize: "0.95rem", lineHeight: 1.4 }}>
+                <div className="fw-bold mt-auto" style={{ fontSize: "var(--app-fs-4)", lineHeight: 1.4 }}>
                   {period}
                 </div>
               </div>
@@ -43,7 +43,7 @@ export function TimesheetCoverage({ rows = [], period, onUploadFor }) {
             {stats.map((s) => (
               <div className="col-6 col-md-3" key={s.label}>
                 <div className="border rounded-3 bg-light p-2 px-3 h-100 d-flex flex-column justify-content-between">
-                  <div className="text-muted fw-semibold" style={{ fontSize: 12 }}>
+                  <div className="text-muted fw-semibold" style={{ fontSize: "var(--app-fs-2)" }}>
                     {s.label}
                   </div>
                   <div className="fs-4 fw-bold mt-auto" style={s.color ? { color: s.color } : undefined}>
@@ -70,12 +70,12 @@ export function TimesheetCoverage({ rows = [], period, onUploadFor }) {
                 <Td>
                   {r.covered || <span className="text-muted">&mdash;</span>}
                   {r.gap && r.expected !== false && (
-                    <div className="ts-warn" style={{ fontSize: 11.5 }}>
+                    <div className="ts-warn" style={{ fontSize: "var(--app-fs-1)" }}>
                       Missing {r.gap}
                     </div>
                   )}
                   {r.expected === false && (
-                    <div className="text-muted" style={{ fontSize: 11.5 }}>
+                    <div className="text-muted" style={{ fontSize: "var(--app-fs-1)" }}>
                       {r.notExpectedReason}
                     </div>
                   )}

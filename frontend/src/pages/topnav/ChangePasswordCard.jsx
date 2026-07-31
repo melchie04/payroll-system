@@ -1,8 +1,44 @@
-import { DataCard, BtnPrimary, FormField, RequirementRow, SectionHeading } from "../ui/index.jsx";
+import { useEffect, useState } from "react";
+import { DataCard, BtnPrimary, FormField, RequirementRow, SectionHeading } from "../../components/ui/index.jsx";
 
-// ChangePasswordTab — self-service change password form tab.
-export function ChangePasswordTab({ self, onChange, onSubmit, onToggleShowPassword }) {
-  const { form, touched, success, showPassword, hasLength, hasCase, hasNumber, hasSpecial, matches, canSubmit } = self;
+// ChangePasswordCard — self-service password change. It owns its own state, so it can
+// sit on the profile page without a parent having to hold the form for it.
+export function ChangePasswordCard() {
+  const [form, setForm] = useState({ currentPassword: "", newPassword: "", confirmPassword: "" });
+  const [touched, setTouched] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const hasLength = form.newPassword.length >= 8;
+  const hasCase = /[a-z]/.test(form.newPassword) && /[A-Z]/.test(form.newPassword);
+  const hasNumber = /[0-9]/.test(form.newPassword);
+  const hasSpecial = /[^A-Za-z0-9]/.test(form.newPassword);
+  const matches = form.newPassword.length > 0 && form.newPassword === form.confirmPassword;
+  const canSubmit = form.currentPassword.length > 0 && hasLength && hasCase && hasNumber && hasSpecial && matches;
+
+  useEffect(() => {
+    if (!success) return;
+    const timer = setTimeout(() => setSuccess(false), 4000);
+    return () => clearTimeout(timer);
+  }, [success]);
+
+  function onChange(e) {
+    setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
+    setSuccess(false);
+  }
+
+  function onToggleShowPassword() {
+    setShowPassword((v) => !v);
+  }
+
+  function onSubmit(e) {
+    e.preventDefault();
+    setTouched(true);
+    if (!canSubmit) return;
+    setForm({ currentPassword: "", newPassword: "", confirmPassword: "" });
+    setTouched(false);
+    setSuccess(true);
+  }
 
   return (
     <section className="mb-3">
@@ -35,7 +71,7 @@ export function ChangePasswordTab({ self, onChange, onSubmit, onToggleShowPasswo
                     </button>
                   </div>
                 </FormField>
-                <div className="text-muted" style={{ fontSize: 11.5 }}>
+                <div className="text-muted" style={{ fontSize: "var(--app-fs-1)" }}>
                   Confirm it's you before setting a new password.
                 </div>
               </div>
@@ -75,7 +111,7 @@ export function ChangePasswordTab({ self, onChange, onSubmit, onToggleShowPasswo
 
               <div className="col-12">
                 <div className="bg-light rounded-3 px-3 py-3">
-                  <div className="text-uppercase text-muted fw-semibold mb-2" style={{ fontSize: 11, letterSpacing: 0.5 }}>
+                  <div className="text-uppercase text-muted fw-semibold mb-2" style={{ fontSize: "var(--app-fs-1)", letterSpacing: 0.5 }}>
                     Password Requirements
                   </div>
                   <div className="row row-cols-1 row-cols-md-2 g-2">

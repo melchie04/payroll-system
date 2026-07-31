@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { BrandMark } from "../../components/ui/index.jsx";
 import { useNavigate } from "react-router";
 import { useCurrentUser } from "../../context/CurrentUserContext.jsx";
 
@@ -15,10 +16,13 @@ export default function Login() {
 
   return (
     <div className="w-100" style={{ maxWidth: 360 }}>
+      <div className="text-center mb-3">
+        <BrandMark size={44} />
+      </div>
       <h1
         className="text-center fw-normal text-secondary mb-4 tracking-wide text-uppercase"
         style={{
-          fontSize: "1.35rem",
+          fontSize: "var(--app-fs-6)",
           color: "#777777",
           letterSpacing: "0.08em",
         }}
@@ -35,7 +39,7 @@ export default function Login() {
                 style={{
                   width: "24px",
                   height: "24px",
-                  fontSize: "0.75rem",
+                  fontSize: "var(--app-fs-2)",
                   borderColor: "#cccccc",
                 }}
               >
@@ -61,7 +65,7 @@ export default function Login() {
                 style={{
                   width: "24px",
                   height: "24px",
-                  fontSize: "0.75rem",
+                  fontSize: "var(--app-fs-2)",
                   borderColor: "#cccccc",
                 }}
               >
@@ -87,7 +91,7 @@ export default function Login() {
                 style={{
                   width: "24px",
                   height: "24px",
-                  fontSize: "0.75rem",
+                  fontSize: "var(--app-fs-2)",
                   borderColor: "#cccccc",
                 }}
               >

@@ -1,0 +1,131 @@
+// Surfaces.
+// Lifts the flat card layer without changing any markup: one radius everywhere, a
+// soft shadow instead of a hard outline, and a response when the pointer is over
+// something you can act on. Colour comes from the tokens, so _dark.scss governs how
+// all of it reads in dark mode.
+//
+// Deliberately no transitions. The light/dark ease belongs to .theme-transition and
+// nothing else in the app animates, so hover states here change instantly.
+
+.card {
+  border-radius: var(--app-surface-radius);
+  box-shadow: var(--app-shadow-1);
+}
+
+// A card wrapped in a link is a target, so it answers the pointer.
+a > .card:hover,
+a:focus-visible > .card {
+  border-color: var(--bs-secondary-border-subtle);
+  box-shadow: var(--app-shadow-2);
+}
+
+// Rows read as a list rather than a grid of lines: the tint marks where you are.
+.table > tbody > tr:hover > * {
+  background-color: var(--app-row-hover);
+}
+
+// Pills rather than rounded rectangles — the status column is the liveliest thing
+// on most pages and this is what makes it read that way.
+.badge {
+  border-radius: var(--bs-border-radius-pill);
+}
+
+// Modals and dropdowns share the card radius so nothing looks borrowed.
+.modal-content,
+.dropdown-menu {
+  border-radius: var(--app-surface-radius);
+}
+
+.dropdown-menu {
+  box-shadow: var(--app-shadow-2);
+}
+
+// The P mark. One rule, two themes — _dark.scss swaps the two tokens.
+.app-brand-mark {
+  background: var(--app-brand-bg);
+  color: var(--app-brand-fg);
+  border-radius: 0.4375rem;
+  line-height: 1;
+}
+
+// One size per role. Bootstrap's .small is relative, so nesting it compounded and
+// left tables and cards drifting between pages; these fix the size at the source.
+.table > thead > tr > * {
+  font-size: var(--app-fs-1);
+}
+
+.table > tbody > tr > * {
+  font-size: var(--app-fs-3);
+}
+
+.card-header {
+  font-size: var(--app-fs-4);
+}
+
+// Card bodies read at one size unless a page deliberately sets a figure larger.
+.card-body {
+  font-size: var(--app-fs-3);
+}
+
+// The auth input as one control.
+// The markup asks for .rounded-start-pill / .rounded-end-pill, and neither survives
+// the purge — so the icon box and the field each keep their own rounded box and read
+// as two. Drawing the border once around the group is what makes them one.
+.input-group:has(> .rounded-start-pill) {
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius-pill);
+  background: var(--bs-body-bg);
+  overflow: hidden;
+}
+
+.input-group:has(> .rounded-start-pill) > .input-group-text,
+.input-group:has(> .rounded-start-pill) > .form-control,
+.input-group:has(> .rounded-start-pill) > .btn {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.input-group:has(> .rounded-start-pill) > .form-control:focus {
+  box-shadow: none;
+}
+
+.input-group:has(> .rounded-start-pill):focus-within {
+  border-color: var(--bs-primary);
+  box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.15);
+}
+
+// Room to breathe. Bootstrap's defaults are tuned for dense admin screens; these
+// are one step up so rows and card contents are not shoulder to shoulder.
+.card-body {
+  padding: 1.25rem;
+}
+
+.table > :not(caption) > * > * {
+  padding: 0.8125rem 1rem;
+}
+
+// A link or a button inside a table or a card is still that cell's text, but .btn
+// resets font-size to 1rem, which is where the drift between columns came from.
+.table a,
+.table button,
+.table .btn,
+.card-body a,
+.card-body .btn-link {
+  font-size: inherit;
+}
+
+// Table cells fade in step with everything else, except for box-shadow. Bootstrap
+// paints row striping and hover as an inset shadow the full size of the cell, so
+// fading that is what produced the white-in-dark, black-in-light flash. Everything
+// else keeps the same 0.25s as the rest of the page.
+html.theme-transition .table > :not(caption) > * > * {
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease !important;
+}
+
+// The stat tile's icon carries the brand rather than being a grey outline, which is
+// what made these read as placeholders. _dark.scss inverts the two tokens with it.
+.app-stat-icon {
+  background: rgba(var(--bs-body-color-rgb), 0.05);
+  color: rgba(var(--bs-body-color-rgb), 0.55);
+}

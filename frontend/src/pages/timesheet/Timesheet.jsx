@@ -5,9 +5,9 @@ import { timesheetCoverage, extractionSummary, payPeriods } from "../../assets/d
 import { useTimesheets, resolveEmployee, deploymentState, parsePeriodLabel } from "../../context/TimesheetContext.jsx";
 import { useEmployees } from "../../context/EmployeesContext.jsx";
 import { useClients } from "../../context/ClientsContext.jsx";
-import { TimesheetUpload } from "../../components/timesheet/TimesheetUpload.jsx";
-import { TimesheetFiles } from "../../components/timesheet/TimesheetFiles.jsx";
-import { TimesheetCoverage } from "../../components/timesheet/TimesheetCoverage.jsx";
+import { TimesheetUpload } from "./tabs/TimesheetUpload.jsx";
+import { TimesheetFiles } from "./tabs/TimesheetFiles.jsx";
+import { TimesheetCoverage } from "./tabs/TimesheetCoverage.jsx";
 
 // Pay periods are set by the admin, so they can straddle the 15th.
 const ALL_CLIENTS = "All Clients";
@@ -45,13 +45,13 @@ export default function Timesheet() {
 
   // Upload is the default; returning from a sheet review reopens the tab it came from.
   const [tab, setTab] = useState(location.state?.tab || "upload");
-  const [client, setClient] = useState("Acme Corp");
+  const [client, setClient] = useState(ALL_CLIENTS);
   const selectedClient = clients.find((c) => c.name === client);
 
   // Archived clients are not offered, but the one already chosen stays in the list so
   // archiving a client mid-session cannot leave the filter pointing at a missing option.
   const clientOptions = useMemo(
-    () => [...new Set([...activeClientNames, client].filter(Boolean))],
+    () => [...new Set([ALL_CLIENTS, ...activeClientNames, client].filter(Boolean))],
     [activeClientNames, client],
   );
   const [period, setPeriod] = useState(payPeriods[0].label);
@@ -146,9 +146,9 @@ export default function Timesheet() {
       {showCutOff && (
         <div className={`ts-notice ts-notice-${cutOffTone} d-flex align-items-start gap-3 py-2 px-3 mb-4`}>
           <i className="fas fa-clock ts-notice-icon flex-shrink-0 mt-1"></i>
-          <div style={{ fontSize: "0.8125rem" }}>
+          <div style={{ fontSize: "var(--app-fs-3)" }}>
             <strong>{cutOffHeadline}</strong>
-            <div className="ts-notice-sub" style={{ fontSize: 11.5 }}>
+            <div className="ts-notice-sub" style={{ fontSize: "var(--app-fs-1)" }}>
               {unapproved > 0 && `${unapproved} sheet${unapproved === 1 ? "" : "s"} not yet approved`}
               {unapproved > 0 && gaps > 0 && " · "}
               {gaps > 0 && `${gaps} employee${gaps === 1 ? "" : "s"} with missing days`}
@@ -161,9 +161,9 @@ export default function Timesheet() {
       {tab === "upload" && selectedClient?.uploadInstructions && (
         <div className="ts-notice ts-notice-secondary d-flex align-items-start gap-3 py-2 px-3 mb-4">
           <i className="fas fa-circle-info ts-notice-icon flex-shrink-0 mt-1"></i>
-          <div style={{ fontSize: "0.8125rem" }}>
+          <div style={{ fontSize: "var(--app-fs-3)" }}>
             <strong>Upload instructions — {client}</strong>
-            <div className="ts-notice-sub" style={{ fontSize: 11.5 }}>{selectedClient.uploadInstructions}</div>
+            <div className="ts-notice-sub" style={{ fontSize: "var(--app-fs-1)" }}>{selectedClient.uploadInstructions}</div>
           </div>
         </div>
       )}

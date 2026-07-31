@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Modal as BsModal } from "bootstrap";
-import { DataCard, BtnPrimary, BtnSecondary, BtnDanger, IconBtn, Modal, FormField } from "../ui/index.jsx";
+import { DataCard, BtnPrimary, BtnSecondary, BtnDanger, IconBtn, Modal, FormField } from "../../../components/ui/index.jsx";
 
 const modules = ["Dashboard", "Payroll", "Billing", "Timesheet", "Employees", "Clients", "Settings"];
 
@@ -150,7 +150,7 @@ function RolesList({ roleList, onEditRole, onDeleteRole }) {
                 <div className="d-flex align-items-center gap-3 p-3">
                   <div
                     className="d-flex align-items-center justify-content-center flex-shrink-0 border rounded-3 bg-light text-secondary"
-                    style={{ width: 40, height: 40, fontSize: 15 }}
+                    style={{ width: 40, height: 40, fontSize: "var(--app-fs-4)" }}
                   >
                     <i className="fas fa-shield-halved"></i>
                   </div>
@@ -159,7 +159,7 @@ function RolesList({ roleList, onEditRole, onDeleteRole }) {
                     <div className="fw-semibold" style={{ overflowWrap: "anywhere" }}>
                       {r.name}
                     </div>
-                    <div className="text-muted" style={{ fontSize: 12 }}>
+                    <div className="text-muted" style={{ fontSize: "var(--app-fs-2)" }}>
                       {r.users} user{r.users === 1 ? "" : "s"}
                     </div>
                   </div>
@@ -177,7 +177,7 @@ function RolesList({ roleList, onEditRole, onDeleteRole }) {
                 <p className="text-muted small px-3 mb-3">{r.description}</p>
 
                 <div className="mt-auto border-top px-3 py-3">
-                  <div className="text-uppercase text-muted fw-semibold mb-2" style={{ fontSize: 11, letterSpacing: 0.5 }}>
+                  <div className="text-uppercase text-muted fw-semibold mb-2" style={{ fontSize: "var(--app-fs-1)", letterSpacing: 0.5 }}>
                     Permissions
                   </div>
                   <div className="d-flex flex-wrap gap-1">
@@ -263,7 +263,7 @@ function CreateRoleModal({ modules, roleForm, nameError, onChange, onTogglePermi
               ))}
             </div>
           </div>
-          <div className="text-muted mt-2" style={{ fontSize: 11.5 }}>
+          <div className="text-muted mt-2" style={{ fontSize: "var(--app-fs-1)" }}>
             {roleForm.permissions.length} of {modules.length} modules selected.
           </div>
         </FormField>
@@ -337,7 +337,7 @@ function EditRoleModal({ modules, editRoleForm, nameError, onChange, onTogglePer
                   ))}
                 </div>
               </div>
-              <div className="text-muted mt-2" style={{ fontSize: 11.5 }}>
+              <div className="text-muted mt-2" style={{ fontSize: "var(--app-fs-1)" }}>
                 {editRoleForm.permissions.length} of {modules.length} modules selected.
               </div>
             </FormField>
@@ -368,7 +368,7 @@ function DeleteRoleModal({ target, onConfirm }) {
       <div className="d-flex align-items-start gap-3">
         <div
           className="d-flex align-items-center justify-content-center flex-shrink-0 rounded-3 bg-danger bg-opacity-10 text-danger"
-          style={{ width: 40, height: 40, fontSize: 15 }}
+          style={{ width: 40, height: 40, fontSize: "var(--app-fs-4)" }}
         >
           <i className="fas fa-triangle-exclamation"></i>
         </div>

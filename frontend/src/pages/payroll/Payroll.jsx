@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { Modal as BsModal } from "bootstrap";
 import {
@@ -17,18 +17,18 @@ import {
   Modal,
   FormField,
   PageHeader,
-} from "../components/ui/index.jsx";
-import { payPeriods } from "../assets/data/index.js";
-import { exportToCsv } from "../utils/exportToCsv.js";
-import { formatCurrency } from "../utils/currency.js";
-import { computeDeductions } from "../utils/payslip.js";
-import { buildPayrollRows } from "../utils/payrollRun.js";
-import { useClients } from "../context/ClientsContext.jsx";
-import { useEmployees } from "../context/EmployeesContext.jsx";
-import { useTimesheets } from "../context/TimesheetContext.jsx";
-import { usePayroll } from "../context/PayrollContext.jsx";
-import { useActivity } from "../context/ActivityContext.jsx";
-import { useNotifications } from "../context/NotificationsContext.jsx";
+} from "../../components/ui/index.jsx";
+import { payPeriods } from "../../assets/data/index.js";
+import { exportToCsv } from "../../utils/exportToCsv.js";
+import { formatCurrency } from "../../utils/currency.js";
+import { computeDeductions } from "../../utils/payslip.js";
+import { buildPayrollRows } from "../../utils/payrollRun.js";
+import { useClients } from "../../context/ClientsContext.jsx";
+import { useEmployees } from "../../context/EmployeesContext.jsx";
+import { useTimesheets } from "../../context/TimesheetContext.jsx";
+import { usePayroll } from "../../context/PayrollContext.jsx";
+import { useActivity } from "../../context/ActivityContext.jsx";
+import { useNotifications } from "../../context/NotificationsContext.jsx";
 
 const ALL_CLIENTS = "All Clients";
 const ALL_STATUSES = "All Statuses";
@@ -91,10 +91,10 @@ export default function Payroll() {
   const grossTotal = rows.reduce((sum, r) => sum + r.gross, 0);
   const netTotal = rows.reduce((sum, r) => sum + computeDeductions(r.gross).net, 0);
   const stats = [
-    { label: "Employees In Run", value: String(rows.length), sub: `${rows.filter((r) => r.status === "Pending").length} still pending` },
-    { label: "Total Hours", value: totalHours.toFixed(2) },
-    { label: "Gross Payroll", value: formatCurrency(grossTotal) },
-    { label: "Net Payroll", value: formatCurrency(netTotal) },
+    { label: "Employees In Run", value: String(rows.length), icon: "fa-users", sub: `${rows.filter((r) => r.status === "Pending").length} still pending` },
+    { label: "Total Hours", value: totalHours.toFixed(2), icon: "fa-clock" },
+    { label: "Gross Payroll", value: formatCurrency(grossTotal), icon: "fa-money-bill-wave" },
+    { label: "Net Payroll", value: formatCurrency(netTotal), icon: "fa-sack-dollar" },
   ];
 
   const [selected, setSelected] = useState([]);
@@ -158,16 +158,21 @@ export default function Payroll() {
 
   const [editTarget, setEditTarget] = useState(null);
   const [editValue, setEditValue] = useState("");
-  const editModal = useRef(null);
 
+  // The dialog follows state rather than being poked through a ref: a ref holds no
+  // value the render needs, and reading one while rendering is what React warns about.
   useEffect(() => {
-    editModal.current = new BsModal(document.getElementById("editHoursModal"));
-  }, []);
+    const el = document.getElementById("editHoursModal");
+    if (!el) return undefined;
+    const clear = () => setEditTarget(null);
+    el.addEventListener("hidden.bs.modal", clear);
+    if (editTarget) BsModal.getOrCreateInstance(el).show();
+    return () => el.removeEventListener("hidden.bs.modal", clear);
+  }, [editTarget]);
 
   function openEditHours(row) {
-    setEditTarget(row);
     setEditValue(String(row.hours));
-    editModal.current?.show();
+    setEditTarget(row);
   }
 
   function handleEditHoursSubmit(e) {
@@ -176,7 +181,7 @@ export default function Payroll() {
     if (!Number.isFinite(hours) || hours < 0) return;
     setHours(editTarget.key, hours);
     logActivity({ action: "Adjusted payroll hours", detail: `${editTarget.name} (${editTarget.code}) set to ${hours} hrs`, module: "Payroll" });
-    editModal.current?.hide();
+    BsModal.getOrCreateInstance(document.getElementById("editHoursModal")).hide();
   }
 
   return (
@@ -202,7 +207,7 @@ export default function Payroll() {
         <section>
           <div className="ts-notice ts-notice-success d-flex align-items-start gap-3 py-2 px-3 mb-3">
             <i className="fas fa-circle-check ts-notice-icon flex-shrink-0 mt-1"></i>
-            <div style={{ fontSize: "0.8125rem" }}>{banner}</div>
+            <div style={{ fontSize: "var(--app-fs-3)" }}>{banner}</div>
           </div>
         </section>
       )}
@@ -308,7 +313,7 @@ export default function Payroll() {
                     <button type="button" className="btn btn-link p-0 fw-semibold text-decoration-none" onClick={() => navigate(`/payroll/${row.employeeId}`)}>
                       {row.name}
                     </button>
-                    <div className="text-muted" style={{ fontSize: 11.5 }}>
+                    <div className="text-muted" style={{ fontSize: "var(--app-fs-1)" }}>
                       {row.code}
                     </div>
                   </Td>
@@ -317,7 +322,7 @@ export default function Payroll() {
                   <Td>
                     {row.hours.toFixed(2)}
                     {row.edited && (
-                      <div className="text-muted" style={{ fontSize: 11.5 }}>
+                      <div className="text-muted" style={{ fontSize: "var(--app-fs-1)" }}>
                         adjusted by hand
                       </div>
                     )}
@@ -344,7 +349,7 @@ export default function Payroll() {
           )}
         </DataCard>
         {filtering && (
-          <div className="text-muted mt-2" style={{ fontSize: 11.5 }}>
+          <div className="text-muted mt-2" style={{ fontSize: "var(--app-fs-1)" }}>
             Showing {visibleRows.length} of {rows.length} employees. Export sends what is shown.
           </div>
         )}

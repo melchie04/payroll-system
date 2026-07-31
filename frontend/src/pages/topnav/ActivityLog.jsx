@@ -131,7 +131,7 @@ export default function ActivityLog() {
           title="Activity"
           action={
             <div className="d-flex align-items-center gap-3">
-              <span className="text-muted" style={{ fontSize: 11.5 }}>
+              <span className="text-muted" style={{ fontSize: "var(--app-fs-1)" }}>
                 {filtered ? `${visible.length} of ${entries.length} activities` : `${entries.length} activities`}
               </span>
               <ExportMenu onExportCsv={handleExportAll} />
