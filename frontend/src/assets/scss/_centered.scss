@@ -6,6 +6,76 @@
   position: relative;
   overflow: hidden;
   isolation: isolate;
+  // .bg-body sits on this same element and is declared !important by the
+  // framework utilities, so the mint plane has to match it to win.
+  background-color: var(--app-auth-bg) !important;
+}
+
+// Fields on the centered pages. The pill control itself — its outline, its white
+// fill and its green focus ring — is drawn as one piece in _surfaces.scss, since
+// that block sets border: 0 on the icon box and the field inside it. Only the
+// placeholder is still the field's own to set.
+.centered-bg .form-control::placeholder {
+  color: var(--app-auth-placeholder);
+}
+
+// The primary action stays black, but Obsidian rather than the framework's own
+// near-black, so it matches the headings above it. On a surface this dark a
+// lighter black is invisible, so hover shifts the hue towards the accent and
+// lifts the button, and the press pushes it back down.
+.centered-bg .btn-dark {
+  --bs-btn-bg: var(--app-obsidian);
+  --bs-btn-border-color: var(--app-obsidian);
+  --bs-btn-hover-bg: var(--app-obsidian-hover);
+  --bs-btn-hover-border-color: var(--app-obsidian-hover);
+  --bs-btn-active-bg: var(--app-obsidian-active);
+  --bs-btn-active-border-color: var(--app-obsidian-active);
+  transition: background-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+// .shadow-sm is on the markup and declares !important, so these have to match it.
+.centered-bg .btn-dark:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(10, 15, 13, 0.22) !important;
+}
+
+.centered-bg .btn-dark:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(10, 15, 13, 0.2) !important;
+}
+
+// Keyboard focus gets the same green ring the fields use.
+.centered-bg .btn-dark:focus-visible {
+  box-shadow: 0 0 0 0.2rem var(--app-moss-ring) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .centered-bg .btn-dark,
+  .centered-bg .btn-dark:hover,
+  .centered-bg .btn-dark:active {
+    transition: none;
+    transform: none;
+  }
+}
+
+.centered-bg .app-brand-mark {
+  --app-brand-bg: var(--app-obsidian);
+}
+
+// The password checklist. It reads as a quiet aside rather than a card, so it
+// takes the full mint rather than the near-white the plane uses.
+.centered-bg .auth-requirements {
+  background-color: var(--app-mint);
+}
+
+// The footer bar reads as white paper under the mint plane, not as grey.
+.centered-bg footer.bg-light {
+  background-color: var(--app-auth-footer-bg) !important;
+  border-top-color: var(--app-auth-footer-line) !important;
+}
+
+.centered-bg footer a {
+  color: var(--app-moss);
 }
 
 .centered-bg::before,

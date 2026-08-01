@@ -5,10 +5,36 @@
 // produced by _dark.scss, which retargets components under [data-bs-theme].
 
 :root {
+  // --- Brand palette -------------------------------------------------------
+  // The three colours the redesign is built on, plus the two working shades the
+  // accent needs: a darker ink for text sitting on a green tint, and the tint
+  // itself. Every green in the app resolves back to one of these.
+  --app-mint: #f0fff4;            // Light  — the stated brand mint
+  --app-mint-pale: #fcfffd;       // The same hue, taken almost to white
+  --app-obsidian: #0a0f0d;        // Dark   — headings, primary buttons
+  --app-obsidian-hover: #16321d;  // Obsidian pulled towards the accent on hover
+  --app-obsidian-active: #0f2415; // and pushed back down while pressed
+  --app-moss: #2e7d32;            // Accent — links, active states, focus
+  --app-moss-ink: #1f5e23;        // Moss darkened, for text on a moss tint
+  --app-moss-tint: #e2f0e5;       // Moss at ~12%, for pills and discs
+  --app-moss-ring: rgba(46, 125, 50, 0.25);   // Focus ring around a field
+
+  // --- Centered pages ------------------------------------------------------
+  // The auth and error pages share one plane, so their surface colours live
+  // together here rather than being typed into each page.
+  --app-auth-bg: var(--app-mint-pale);
+  --app-auth-line: #cfe3d5;             // Rules and dividers on the mint plane
+  --app-auth-field-border: #cfe3d5;     // Input outlines, a mint-tinted grey
+  --app-auth-placeholder: #9aa79f;      // Placeholder text inside a field
+  --app-auth-icon-off: #b9c4bc;         // An unmet requirement's empty ring
+  --app-auth-heading: #7b8a81;          // The "SIGN IN" style of heading
+  --app-auth-footer-bg: #ffffff;
+  --app-auth-footer-line: #dceae0;
+
   --app-content-bg: #eef0f3;      // Plane behind cards, a step under the surfaces
   --app-heading-muted: #8a929a;   // Light sidebar section headings
-  --app-blob-cool: #4f8cff;       // Auth/error background wash
-  --app-blob-warm: #ff8a65;
+  --app-blob-cool: #4caf6a;       // Auth/error background wash
+  --app-blob-warm: #a5d6a7;
   --app-dot-rgb: 220, 53, 69;     // Unread notification dot (used as rgba)
   --app-chart-track: #f3f4f6;     // Unfilled part of the dashboard ring
   // Depth. Cards sit on the plane rather than being outlined boxes; the second

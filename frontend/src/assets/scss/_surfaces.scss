@@ -72,7 +72,7 @@ a:focus-visible > .card {
 // the purge — so the icon box and the field each keep their own rounded box and read
 // as two. Drawing the border once around the group is what makes them one.
 .input-group:has(> .rounded-start-pill) {
-  border: var(--bs-border-width) solid var(--bs-border-color);
+  border: var(--bs-border-width) solid var(--app-auth-field-border);
   border-radius: var(--bs-border-radius-pill);
   background: var(--bs-body-bg);
   overflow: hidden;
@@ -90,9 +90,12 @@ a:focus-visible > .card {
   box-shadow: none;
 }
 
+// Focus is the one moment the accent takes over the whole control. The ring is
+// drawn on the group, not the field, because the field's own shadow is switched
+// off above — the two would otherwise sit inside each other.
 .input-group:has(> .rounded-start-pill):focus-within {
-  border-color: var(--bs-primary);
-  box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.15);
+  border-color: var(--app-moss);
+  box-shadow: 0 0 0 0.2rem var(--app-moss-ring);
 }
 
 // Room to breathe. Bootstrap's defaults are tuned for dense admin screens; these

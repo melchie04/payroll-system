@@ -22,7 +22,7 @@ export default function Login() {
         className="text-center fw-normal text-secondary mb-4 tracking-wide text-uppercase"
         style={{
           fontSize: "var(--app-fs-6)",
-          color: "#777777",
+          color: "var(--app-auth-heading)",
           letterSpacing: "0.08em",
         }}
       >
@@ -32,14 +32,15 @@ export default function Login() {
       <form onSubmit={handleSubmit} noValidate>
         <div className="mb-3 position-relative">
           <div className="input-group">
-            <span className="input-group-text bg-white border-end-0 rounded-start-pill text-muted px-3" style={{ borderColor: "#cccccc" }}>
+            <span className="input-group-text bg-white border-end-0 rounded-start-pill text-muted px-3">
               <div
-                className="d-flex align-items-center justify-content-center border rounded-circle text-muted"
+                className="d-flex align-items-center justify-content-center border rounded-circle"
                 style={{
                   width: "24px",
                   height: "24px",
                   fontSize: "var(--app-fs-2)",
-                  borderColor: "#cccccc",
+                  borderColor: "var(--app-moss)",
+                  color: "var(--app-moss)",
                 }}
               >
                 <i className="fas fa-envelope"></i>
@@ -48,7 +49,7 @@ export default function Login() {
             <input
               type="email"
               className="form-control border-start-0 rounded-end-pill py-2.5 fs-6 fw-light"
-              style={{ borderColor: "#cccccc", outline: "none" }}
+              style={{ outline: "none" }}
               id="email"
               placeholder="Username"
               required
@@ -58,14 +59,15 @@ export default function Login() {
 
         <div className="mb-4 position-relative">
           <div className="input-group">
-            <span className="input-group-text bg-white border-end-0 rounded-start-pill text-muted px-3" style={{ borderColor: "#cccccc" }}>
+            <span className="input-group-text bg-white border-end-0 rounded-start-pill text-muted px-3">
               <div
-                className="d-flex align-items-center justify-content-center border rounded-circle text-muted"
+                className="d-flex align-items-center justify-content-center border rounded-circle"
                 style={{
                   width: "24px",
                   height: "24px",
                   fontSize: "var(--app-fs-2)",
-                  borderColor: "#cccccc",
+                  borderColor: "var(--app-moss)",
+                  color: "var(--app-moss)",
                 }}
               >
                 <i className="fas fa-lock"></i>
@@ -74,7 +76,7 @@ export default function Login() {
             <input
               type={showPassword ? "text" : "password"}
               className="form-control border-start-0 border-end-0 py-2.5 fs-6 fw-light"
-              style={{ borderColor: "#cccccc", outline: "none" }}
+              style={{ outline: "none" }}
               id="password"
               placeholder="Password"
               required
@@ -82,8 +84,8 @@ export default function Login() {
             <button
               className="btn btn-outline-secondary border-start-0 rounded-end-pill bg-transparent text-muted px-3"
               type="button"
+              tabIndex={-1}
               onClick={() => setShowPassword((s) => !s)}
-              style={{ borderColor: "#cccccc" }}
             >
               <div
                 className="d-flex align-items-center justify-content-center border rounded-circle text-muted"
@@ -91,7 +93,7 @@ export default function Login() {
                   width: "24px",
                   height: "24px",
                   fontSize: "var(--app-fs-2)",
-                  borderColor: "#cccccc",
+                  borderColor: "var(--app-auth-field-border)",
                 }}
               >
                 <i className={`fas ${showPassword ? "fa-eye-slash" : "fa-eye"}`}></i>
@@ -104,7 +106,7 @@ export default function Login() {
           type="submit"
           className="btn btn-dark rounded-pill w-100 text-white py-2 fw-normal shadow-sm"
           style={{
-            fontSize: "0.95rem",
+            fontSize: "var(--app-fs-5)",
           }}
         >
           Login
