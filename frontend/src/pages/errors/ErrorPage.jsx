@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 
 // ErrorPage — shared shell for the error pages.
-export default function ErrorPage({ code, icon, accent = "#1a1a1a", title, description, children }) {
+export default function ErrorPage({ code, icon, accent = "#0a0f0d", title, description, children }) {
   return (
     <>
       <div
@@ -23,13 +23,15 @@ export default function ErrorPage({ code, icon, accent = "#1a1a1a", title, descr
           fontSize: "var(--app-fs-display)",
           lineHeight: 1,
           letterSpacing: "-0.02em",
-          color: "#1a1a1a",
+          color: "var(--app-obsidian)",
         }}
       >
         {code}
       </div>
 
-      <h1 className="h4 fw-semibold mb-2">{title}</h1>
+      <h1 className="fw-semibold mb-2" style={{ fontSize: "var(--app-fs-7)", lineHeight: 1.2 }}>
+        {title}
+      </h1>
       <p className="text-muted mb-4" style={{ maxWidth: 420, fontSize: "var(--app-fs-4)" }}>
         {description}
       </p>

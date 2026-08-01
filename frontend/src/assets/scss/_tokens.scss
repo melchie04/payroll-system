@@ -10,7 +10,6 @@
   // accent needs: a darker ink for text sitting on a green tint, and the tint
   // itself. Every green in the app resolves back to one of these.
   --app-mint: #f0fff4;            // Light  — the stated brand mint
-  --app-mint-pale: #fcfffd;       // The same hue, taken almost to white
   --app-obsidian: #0a0f0d;        // Dark   — headings, primary buttons
   --app-obsidian-hover: #16321d;  // Obsidian pulled towards the accent on hover
   --app-obsidian-active: #0f2415; // and pushed back down while pressed
@@ -22,7 +21,7 @@
   // --- Centered pages ------------------------------------------------------
   // The auth and error pages share one plane, so their surface colours live
   // together here rather than being typed into each page.
-  --app-auth-bg: var(--app-mint-pale);
+  --app-auth-bg: #ffffff;               // Plain white; the colour comes from the washes
   --app-auth-line: #cfe3d5;             // Rules and dividers on the mint plane
   --app-auth-field-border: #cfe3d5;     // Input outlines, a mint-tinted grey
   --app-auth-placeholder: #9aa79f;      // Placeholder text inside a field

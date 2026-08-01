@@ -8,7 +8,7 @@ export default function AccessDenied() {
       icon="fa-lock"
       accent="#997404"
       title="Access Denied"
-      description="Your role doesn't have permission to view this page. Contact an administrator if you think this is a mistake."
+      description="Your role can't view this page. Contact an administrator if that's wrong."
     >
       <BackToDashboardLink />
     </ErrorPage>
