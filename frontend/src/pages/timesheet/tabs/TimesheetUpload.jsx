@@ -289,7 +289,7 @@ export function TimesheetUpload({ summary, client, canUpload = true, onOpenSheet
                           className={`d-flex align-items-center justify-content-center flex-shrink-0 border rounded-2 bg-light ${
                             q.state === "error" ? "text-danger" : q.state === "done" ? "text-success" : "text-secondary"
                           }`}
-                          style={{ width: 30, height: 30, fontSize: "var(--app-fs-2)" }}
+                          style={{ width: "var(--app-icon-sm)", height: "var(--app-icon-sm)", fontSize: "var(--app-fs-2)" }}
                         >
                           <i className={`fas ${q.type === "pdf" ? "fa-file-pdf" : "fa-file-image"}`}></i>
                         </div>
@@ -325,7 +325,7 @@ export function TimesheetUpload({ summary, client, canUpload = true, onOpenSheet
                     <div className="list-group-item px-3 py-2 d-flex align-items-center gap-3" key={r.id}>
                       <div
                         className="d-flex align-items-center justify-content-center flex-shrink-0 border rounded-2 bg-light text-danger"
-                        style={{ width: 30, height: 30, fontSize: "var(--app-fs-2)" }}
+                        style={{ width: "var(--app-icon-sm)", height: "var(--app-icon-sm)", fontSize: "var(--app-fs-2)" }}
                       >
                         <i className="fas fa-file-circle-xmark"></i>
                       </div>
@@ -374,7 +374,7 @@ export function TimesheetUpload({ summary, client, canUpload = true, onOpenSheet
                 <div className="list-group-item d-flex align-items-center gap-3 px-3 py-2" key={r.title}>
                   <div
                     className={`d-flex align-items-center justify-content-center flex-shrink-0 border rounded-2 bg-light ${LEVEL_TONE[r.level]}`}
-                    style={{ width: 30, height: 30, fontSize: "var(--app-fs-2)" }}
+                    style={{ width: "var(--app-icon-sm)", height: "var(--app-icon-sm)", fontSize: "var(--app-fs-2)" }}
                   >
                     <i className={`fas ${r.icon}`}></i>
                   </div>

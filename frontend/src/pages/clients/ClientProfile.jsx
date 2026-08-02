@@ -432,7 +432,7 @@ export default function ClientProfile() {
               onClick={() => document.getElementById("client-document-file-input").click()}
               className={`text-center rounded-3 py-4 px-3 mb-3 ${dragOver ? "bg-light" : ""}`}
               style={{
-                border: `2px dashed ${dragOver ? "#aaa" : "var(--bs-border-color)"}`,
+                border: `2px dashed ${dragOver ? "var(--bs-secondary)" : "var(--bs-border-color)"}`,
                 cursor: "pointer",
               }}
             >

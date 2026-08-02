@@ -15,7 +15,7 @@ export default function SideNav({ onNavItemSelect }) {
   const { theme } = useTheme();
 
   function navLinkClass({ isActive }) {
-    const baseClasses = "nav-link mx-2 rounded fs-7 fs-md-6 py-2 py-md-3";
+    const baseClasses = "nav-link mx-2 rounded py-2 py-md-3";
     return isActive ? `${baseClasses} active` : `${baseClasses} collapsed`;
   }
 
@@ -23,7 +23,7 @@ export default function SideNav({ onNavItemSelect }) {
     <nav className={`sb-sidenav accordion sb-sidenav-${theme} border-end`} id="sidenavAccordion">
       <div className="sb-sidenav-menu">
         <div className="nav">
-          <div className="sb-sidenav-menu-heading fs-8 fs-md-7 text-uppercase tracking-wider">Menu</div>
+          <div className="sb-sidenav-menu-heading text-uppercase">Menu</div>
           {NAV_ITEMS.map((item) => (
             <NavLink className={navLinkClass} to={item.to} end={item.end} key={item.to} title={item.label} onClick={onNavItemSelect}>
               {() => (
@@ -41,7 +41,7 @@ export default function SideNav({ onNavItemSelect }) {
 
       <div className="sb-sidenav-footer">
         <div
-          className={`d-flex align-items-center w-100 text-decoration-none ${theme === "light" ? "help-footer-btn-light" : "help-footer-btn-dark"} fs-7 fs-md-6`}
+          className={`d-flex align-items-center w-100 text-decoration-none ${theme === "light" ? "help-footer-btn-light" : "help-footer-btn-dark"}`}
           style={{
             cursor: "pointer",
             transition: "color 0.15s ease-in-out",

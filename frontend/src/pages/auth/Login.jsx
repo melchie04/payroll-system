@@ -36,8 +36,8 @@ export default function Login() {
               <div
                 className="d-flex align-items-center justify-content-center border rounded-circle"
                 style={{
-                  width: "24px",
-                  height: "24px",
+                  width: "var(--app-icon-xs)",
+                  height: "var(--app-icon-xs)",
                   fontSize: "var(--app-fs-2)",
                   borderColor: "var(--app-auth-icon)",
                   color: "var(--app-auth-icon)",
@@ -63,8 +63,8 @@ export default function Login() {
               <div
                 className="d-flex align-items-center justify-content-center border rounded-circle"
                 style={{
-                  width: "24px",
-                  height: "24px",
+                  width: "var(--app-icon-xs)",
+                  height: "var(--app-icon-xs)",
                   fontSize: "var(--app-fs-2)",
                   borderColor: "var(--app-auth-icon)",
                   color: "var(--app-auth-icon)",
@@ -90,8 +90,8 @@ export default function Login() {
               <div
                 className="d-flex align-items-center justify-content-center border rounded-circle text-muted"
                 style={{
-                  width: "24px",
-                  height: "24px",
+                  width: "var(--app-icon-xs)",
+                  height: "var(--app-icon-xs)",
                   fontSize: "var(--app-fs-2)",
                   borderColor: "var(--app-auth-field-border)",
                 }}

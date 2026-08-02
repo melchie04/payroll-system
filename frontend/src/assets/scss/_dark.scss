@@ -34,6 +34,13 @@
   // The navigation surface on this plane. The bar, the footer, the bar's dropdowns
   // and the auth canvas all follow it.
   --app-nav-bg: var(--app-obsidian);
+  // The status set, lifted for this plane. The light values sit at roughly 3:1
+  // against charcoal, which is below readable for text and marginal for a dot.
+  --app-status-success: #75b798;
+  --app-status-warning: #ffc107;
+  --app-status-danger: #ff6b6b;
+  --app-status-neutral: #c3cec6;
+
   --app-nav-icon: #b6c2ba;
   --app-nav-heading: #6f7d74;
   --app-nav-link: #d5ddd8;

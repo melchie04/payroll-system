@@ -7,7 +7,7 @@ const defaultUser = {
   name: "Admin",
   email: "admin@payrollsys.com",
   role: "Administrator",
-  avatarColor: "#1a1a1a",
+  avatarColor: "#121212",
   avatarImage: null,
   mustChangePassword: true,
 };

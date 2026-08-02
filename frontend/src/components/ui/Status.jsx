@@ -34,14 +34,14 @@ export function Badge({ status }) {
 // BtnPrimary — dark primary action button.
 
 const statusDotColor = {
-  Active: "#198754",
-  Ready: "#198754",
-  Paid: "#198754",
-  "On Leave": "#997404",
-  "At Risk": "#997404",
-  Pending: "#997404",
-  Inactive: "#6c757d",
-  Overdue: "#dc3545",
+  Active: "var(--app-status-success)",
+  Ready: "var(--app-status-success)",
+  Paid: "var(--app-status-success)",
+  "On Leave": "var(--app-status-warning)",
+  "At Risk": "var(--app-status-warning)",
+  Pending: "var(--app-status-warning)",
+  Inactive: "var(--app-status-neutral)",
+  Overdue: "var(--app-status-danger)",
 };
 
 // ProfileHeader — avatar initials, name, and status dot header.
@@ -59,7 +59,7 @@ export function ProfileHeader({ name, subtitle, subtitleIcon, status }) {
       <div className="position-relative flex-shrink-0">
         <div
           className="d-flex align-items-center justify-content-center rounded-circle bg-dark text-white fw-semibold"
-          style={{ width: 60, height: 60, fontSize: "var(--app-fs-6)" }}
+          style={{ width: "var(--app-icon-lg)", height: "var(--app-icon-lg)", fontSize: "var(--app-fs-6)" }}
         >
           {initials}
         </div>
@@ -68,7 +68,7 @@ export function ProfileHeader({ name, subtitle, subtitleIcon, status }) {
           style={{
             width: 15,
             height: 15,
-            background: statusDotColor[status] || "#6c757d",
+            background: statusDotColor[status] || "var(--app-status-neutral)",
           }}
         ></span>
       </div>

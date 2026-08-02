@@ -193,7 +193,7 @@ export default function Dashboard() {
                     <div className="list-group-item d-flex align-items-start gap-3 py-3 py-md-2" key={entry.id}>
                       <div
                         className="d-flex align-items-center justify-content-center flex-shrink-0 border rounded-2 bg-light text-secondary"
-                        style={{ width: 36, height: 36, fontSize: "var(--app-fs-4)" }}
+                        style={{ width: "var(--app-icon-md)", height: "var(--app-icon-md)", fontSize: "var(--app-fs-4)" }}
                       >
                         {MODULE_ICON[entry.module] || "\ud83d\udcdd"}
                       </div>

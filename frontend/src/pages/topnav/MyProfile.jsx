@@ -4,7 +4,7 @@ import { ChangePasswordCard } from "./ChangePasswordCard.jsx";
 import { useCurrentUser } from "../../context/CurrentUserContext.jsx";
 import { useActivity } from "../../context/ActivityContext.jsx";
 
-const AVATAR_COLORS = ["#1a1a1a", "#0d6efd", "#198754", "#dc3545", "#997404", "#6f42c1"];
+const AVATAR_COLORS = ["#121212", "#0d6efd", "#198754", "#dc3545", "#997404", "#6f42c1"];
 
 // Returns up to two uppercase initials from a full name.
 function initialsOf(name = "") {
@@ -89,11 +89,11 @@ export default function MyProfile() {
             <div className="card-body d-flex align-items-center gap-4 flex-wrap">
               <div className="position-relative flex-shrink-0">
                 {avatarImage ? (
-                  <img src={avatarImage} alt="Profile" className="rounded-circle" style={{ width: 72, height: 72, objectFit: "cover" }} />
+                  <img src={avatarImage} alt="Profile" className="rounded-circle" style={{ width: "var(--app-icon-xl)", height: "var(--app-icon-xl)", objectFit: "cover" }} />
                 ) : (
                   <div
                     className="d-flex align-items-center justify-content-center rounded-circle text-white fw-semibold"
-                    style={{ width: 72, height: 72, fontSize: "var(--app-fs-7)", background: avatarColor }}
+                    style={{ width: "var(--app-icon-xl)", height: "var(--app-icon-xl)", fontSize: "var(--app-fs-7)", background: avatarColor }}
                   >
                     {initialsOf(form.name)}
                   </div>

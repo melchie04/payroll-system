@@ -347,7 +347,7 @@ export function TimesheetFiles({ files = [] }) {
         <div className="d-flex align-items-start gap-3">
           <div
             className="d-flex align-items-center justify-content-center flex-shrink-0 rounded-3 bg-warning bg-opacity-10 text-warning"
-            style={{ width: 40, height: 40, fontSize: "var(--app-fs-4)" }}
+            style={{ width: "var(--app-icon-md)", height: "var(--app-icon-md)", fontSize: "var(--app-fs-4)" }}
           >
             <i className="fas fa-triangle-exclamation"></i>
           </div>
@@ -381,7 +381,7 @@ export function TimesheetFiles({ files = [] }) {
         <div className="d-flex align-items-start gap-3">
           <div
             className="d-flex align-items-center justify-content-center flex-shrink-0 rounded-3 bg-danger bg-opacity-10 text-danger"
-            style={{ width: 40, height: 40, fontSize: "var(--app-fs-4)" }}
+            style={{ width: "var(--app-icon-md)", height: "var(--app-icon-md)", fontSize: "var(--app-fs-4)" }}
           >
             <i className="fas fa-triangle-exclamation"></i>
           </div>

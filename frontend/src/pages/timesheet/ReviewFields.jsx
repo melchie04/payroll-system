@@ -71,7 +71,7 @@ export function TotalItem({ label, value, written }) {
         <div className="text-muted fw-semibold" style={{ fontSize: "var(--app-fs-2)" }}>
           {label}
         </div>
-        <div className="fs-4 fw-bold mt-auto" style={mismatch ? { color: "#d97706" } : undefined}>
+        <div className="fs-4 fw-bold mt-auto" style={mismatch ? { color: "var(--app-status-warning)" } : undefined}>
           {value}
         </div>
         {written != null && (

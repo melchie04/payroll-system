@@ -137,6 +137,10 @@ $sidenav-expanded-width: 225px;
 // tokens: the accent at rest, deepening on hover, with no fill and no nudge.
 .help-footer-btn-light,
 .help-footer-btn-dark {
+  // Same size as the Privacy Policy / Terms pair it sits above, so the two rows
+  // read as one family. It carried no size of its own before — the classes that
+  // looked like they set one were absent from the bundle.
+  font-size: var(--app-fs-3);
   color: var(--app-footer-link) !important;
 }
 

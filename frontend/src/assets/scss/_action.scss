@@ -1,0 +1,45 @@
+// The app's primary button, used on every layout.
+
+// --- Primary action --------------------------------------------------------
+// The app's primary button. Moss is the accent, so the one button the page wants
+// you to press is the only saturated block of colour on it. Lives here rather
+// than with the centered pages because every page will use it.
+.btn-app-primary {
+  --bs-btn-color: #ffffff;
+  --bs-btn-bg: var(--app-moss);
+  --bs-btn-border-color: var(--app-moss);
+  --bs-btn-hover-color: #ffffff;
+  --bs-btn-hover-bg: var(--app-moss-hover);
+  --bs-btn-hover-border-color: var(--app-moss-hover);
+  --bs-btn-active-color: #ffffff;
+  --bs-btn-active-bg: var(--app-moss-active);
+  --bs-btn-active-border-color: var(--app-moss-active);
+  --bs-btn-disabled-color: #ffffff;
+  --bs-btn-disabled-bg: var(--app-moss);
+  --bs-btn-disabled-border-color: var(--app-moss);
+  transition: background-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+// .shadow-sm is on the markup and declares !important, so these have to match it.
+.btn-app-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(46, 125, 50, 0.28) !important;
+}
+
+.btn-app-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(10, 15, 13, 0.2) !important;
+}
+
+.btn-app-primary:focus-visible {
+  box-shadow: 0 0 0 0.2rem var(--app-moss-ring) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-app-primary,
+  .btn-app-primary:hover,
+  .btn-app-primary:active {
+    transition: none;
+    transform: none;
+  }
+}

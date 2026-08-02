@@ -112,11 +112,11 @@ function UserTrigger({ id, user, nameClassName = "d-none d-sm-inline" }) {
       style={{ fontSize: "var(--app-fs-3)" }}
     >
       {user.avatarImage ? (
-        <img src={user.avatarImage} alt={user.name} className="app-avatar rounded-circle" style={{ width: 30, height: 30, objectFit: "cover" }} />
+        <img src={user.avatarImage} alt={user.name} className="app-avatar rounded-circle" style={{ width: "var(--app-icon-sm)", height: "var(--app-icon-sm)", objectFit: "cover" }} />
       ) : (
         <span
           className="app-avatar d-inline-flex align-items-center justify-content-center rounded-circle text-white fw-semibold flex-shrink-0"
-          style={{ width: 30, height: 30, fontSize: "var(--app-fs-2)", background: user.avatarColor }}
+          style={{ width: "var(--app-icon-sm)", height: "var(--app-icon-sm)", fontSize: "var(--app-fs-2)", background: user.avatarColor }}
         >
           {initialsOf(user.name)}
         </span>

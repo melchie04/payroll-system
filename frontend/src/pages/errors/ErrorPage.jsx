@@ -6,7 +6,7 @@ export default function ErrorPage({ code, icon, tone = "neutral", title, descrip
     <>
       <div
         className={`error-mark error-mark--${tone} d-inline-flex align-items-center justify-content-center rounded-circle mb-2`}
-        style={{ width: 72, height: 72, fontSize: "var(--app-fs-8)" }}
+        style={{ width: "var(--app-icon-xl)", height: "var(--app-icon-xl)", fontSize: "var(--app-fs-8)" }}
       >
         <i className={`fas ${icon}`}></i>
       </div>

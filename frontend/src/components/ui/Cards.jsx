@@ -73,7 +73,7 @@ export function DetailRow({ icon, label, children }) {
       <div className="d-flex align-items-center gap-2 text-muted flex-shrink-0" style={{ minWidth: 170 }}>
         <span
           className="d-inline-flex align-items-center justify-content-center rounded-circle bg-light text-secondary flex-shrink-0"
-          style={{ width: 28, height: 28, fontSize: "var(--app-fs-3)" }}
+          style={{ width: "var(--app-icon-sm)", height: "var(--app-icon-sm)", fontSize: "var(--app-fs-3)" }}
         >
           <i className={`fas ${icon} fa-fw`}></i>
         </span>

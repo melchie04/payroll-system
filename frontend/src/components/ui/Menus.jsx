@@ -80,7 +80,7 @@ export function FilterMenu({ children, onReset, onApply }) {
           width: "31px",
           height: "31px",
           borderRadius: "6px",
-          borderColor: "#d1d5db",
+          borderColor: "var(--bs-border-color)",
           fontSize: "var(--app-fs-2)",
         }}
       >

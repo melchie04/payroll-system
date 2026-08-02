@@ -63,7 +63,7 @@ export default function ChangePassword() {
       <div className="w-100 text-center" style={{ maxWidth: 360 }}>
         <div
           className="d-inline-flex align-items-center justify-content-center rounded-circle mb-3"
-          style={{ width: 56, height: 56, fontSize: "var(--app-fs-7)", background: "var(--app-auth-panel)", color: "var(--app-accent-ink)" }}
+          style={{ width: "var(--app-icon-lg)", height: "var(--app-icon-lg)", fontSize: "var(--app-fs-7)", background: "var(--app-auth-panel)", color: "var(--app-accent-ink)" }}
         >
           <i className="fas fa-circle-check"></i>
         </div>
@@ -110,8 +110,8 @@ export default function ChangePassword() {
               <div
                 className="d-flex align-items-center justify-content-center border rounded-circle"
                 style={{
-                  width: "24px",
-                  height: "24px",
+                  width: "var(--app-icon-xs)",
+                  height: "var(--app-icon-xs)",
                   fontSize: "var(--app-fs-2)",
                   borderColor: "var(--app-auth-icon)",
                   color: "var(--app-auth-icon)",
@@ -140,8 +140,8 @@ export default function ChangePassword() {
               <div
                 className="d-flex align-items-center justify-content-center border rounded-circle text-muted"
                 style={{
-                  width: "24px",
-                  height: "24px",
+                  width: "var(--app-icon-xs)",
+                  height: "var(--app-icon-xs)",
                   fontSize: "var(--app-fs-2)",
                   borderColor: "var(--app-auth-field-border)",
                 }}
@@ -158,8 +158,8 @@ export default function ChangePassword() {
               <div
                 className="d-flex align-items-center justify-content-center border rounded-circle"
                 style={{
-                  width: "24px",
-                  height: "24px",
+                  width: "var(--app-icon-xs)",
+                  height: "var(--app-icon-xs)",
                   fontSize: "var(--app-fs-2)",
                   borderColor: "var(--app-auth-icon)",
                   color: "var(--app-auth-icon)",
@@ -188,8 +188,8 @@ export default function ChangePassword() {
               <div
                 className="d-flex align-items-center justify-content-center border rounded-circle text-muted"
                 style={{
-                  width: "24px",
-                  height: "24px",
+                  width: "var(--app-icon-xs)",
+                  height: "var(--app-icon-xs)",
                   fontSize: "var(--app-fs-2)",
                   borderColor: "var(--app-auth-field-border)",
                 }}
@@ -206,8 +206,8 @@ export default function ChangePassword() {
               <div
                 className="d-flex align-items-center justify-content-center border rounded-circle"
                 style={{
-                  width: "24px",
-                  height: "24px",
+                  width: "var(--app-icon-xs)",
+                  height: "var(--app-icon-xs)",
                   fontSize: "var(--app-fs-2)",
                   borderColor: "var(--app-auth-icon)",
                   color: "var(--app-auth-icon)",
@@ -236,8 +236,8 @@ export default function ChangePassword() {
               <div
                 className="d-flex align-items-center justify-content-center border rounded-circle text-muted"
                 style={{
-                  width: "24px",
-                  height: "24px",
+                  width: "var(--app-icon-xs)",
+                  height: "var(--app-icon-xs)",
                   fontSize: "var(--app-fs-2)",
                   borderColor: "var(--app-auth-field-border)",
                 }}

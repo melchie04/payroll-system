@@ -48,7 +48,7 @@ export default function Notifications() {
               <div className={`list-group-item d-flex align-items-start gap-3 px-3 py-3 ${!n.read ? "bg-light" : ""}`} key={n.id}>
                 <div
                   className="d-flex align-items-center justify-content-center flex-shrink-0 border rounded-3 bg-white text-secondary"
-                  style={{ width: 40, height: 40, fontSize: "var(--app-fs-5)" }}
+                  style={{ width: "var(--app-icon-md)", height: "var(--app-icon-md)", fontSize: "var(--app-fs-5)" }}
                 >
                   {n.icon}
                 </div>

@@ -424,7 +424,7 @@ export function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, on
                         <div className="list-group-item d-flex align-items-center gap-3 px-3 py-2" key={a.title}>
                           <div
                             className={`d-flex align-items-center justify-content-center flex-shrink-0 border rounded-2 bg-light ${a.tone}`}
-                            style={{ width: 30, height: 30, fontSize: "var(--app-fs-2)" }}
+                            style={{ width: "var(--app-icon-sm)", height: "var(--app-icon-sm)", fontSize: "var(--app-fs-2)" }}
                           >
                             <i className={`fas ${a.icon}`}></i>
                           </div>
@@ -717,7 +717,7 @@ export function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, on
         <div className="d-flex align-items-start gap-3">
           <div
             className="d-flex align-items-center justify-content-center flex-shrink-0 rounded-3 bg-warning bg-opacity-10 text-warning"
-            style={{ width: 40, height: 40, fontSize: "var(--app-fs-4)" }}
+            style={{ width: "var(--app-icon-md)", height: "var(--app-icon-md)", fontSize: "var(--app-fs-4)" }}
           >
             <i className="fas fa-triangle-exclamation"></i>
           </div>

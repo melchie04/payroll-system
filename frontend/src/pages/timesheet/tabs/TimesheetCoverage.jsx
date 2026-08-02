@@ -15,7 +15,7 @@ export function TimesheetCoverage({ rows = [], period, onUploadFor }) {
   const stats = [
     { label: "Employees", value: rows.length },
     { label: "Sheets Received", value: sheets },
-    { label: "With Gaps", value: gaps, color: gaps > 0 ? "#d97706" : "#16a34a" },
+    { label: "With Gaps", value: gaps, color: gaps > 0 ? "var(--app-status-warning)" : "var(--app-status-success)" },
   ];
 
   return (
