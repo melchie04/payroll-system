@@ -135,6 +135,31 @@
   animation: centeredFadeInUp 0.5s ease-out both;
 }
 
+// On a phone a 420px circle is wider than the screen, so the wash stops being a
+// glow in one corner and becomes the background itself — and the two overlap in
+// the middle. Both scale back, and the blur scales with them so the softness
+// stays in proportion rather than turning the smaller circle into a flat patch.
+@media (max-width: 575.98px) {
+  .centered-bg::before,
+  .centered-bg::after {
+    filter: blur(60px);
+  }
+
+  .centered-bg::before {
+    width: 240px;
+    height: 240px;
+    top: -90px;
+    left: -80px;
+  }
+
+  .centered-bg::after {
+    width: 220px;
+    height: 220px;
+    bottom: -90px;
+    right: -70px;
+  }
+}
+
 // --- (d) Utilities & helpers ---------------------------------------------
 @keyframes centeredFadeInUp {
   from {
