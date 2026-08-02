@@ -19,53 +19,79 @@
   color: var(--app-auth-placeholder);
 }
 
-// The primary action stays black, but Obsidian rather than the framework's own
-// near-black, so it matches the headings above it. On a surface this dark a
-// lighter black is invisible, so hover shifts the hue towards the accent and
-// lifts the button, and the press pushes it back down.
-.centered-bg .btn-dark {
-  --bs-btn-bg: var(--app-obsidian);
-  --bs-btn-border-color: var(--app-obsidian);
-  --bs-btn-hover-bg: var(--app-obsidian-hover);
-  --bs-btn-hover-border-color: var(--app-obsidian-hover);
-  --bs-btn-active-bg: var(--app-obsidian-active);
-  --bs-btn-active-border-color: var(--app-obsidian-active);
-  transition: background-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+.centered-bg .app-brand-mark {
+  --app-brand-bg: var(--app-obsidian);
 }
 
-// .shadow-sm is on the markup and declares !important, so these have to match it.
-.centered-bg .btn-dark:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 14px rgba(10, 15, 13, 0.22) !important;
+// The theme switch, pinned to the top right of the plane rather than placed in
+// the content column, so the form's own layout is untouched. .centered-bg is
+// already position: relative, which is what this anchors to.
+.auth-theme-toggle {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: var(--bs-border-width) solid var(--app-auth-field-border);
+  border-radius: 50%;
+  background-color: var(--app-auth-surface);
+  color: var(--app-accent-ink);
+  font-size: var(--app-fs-3);
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
-.centered-bg .btn-dark:active {
-  transform: translateY(0);
-  box-shadow: 0 1px 2px rgba(10, 15, 13, 0.2) !important;
+.auth-theme-toggle:hover {
+  border-color: var(--app-moss);
+  background-color: var(--app-auth-panel);
 }
 
-// Keyboard focus gets the same green ring the fields use.
-.centered-bg .btn-dark:focus-visible {
-  box-shadow: 0 0 0 0.2rem var(--app-moss-ring) !important;
+.auth-theme-toggle:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 0.2rem var(--app-moss-ring);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .centered-bg .btn-dark,
-  .centered-bg .btn-dark:hover,
-  .centered-bg .btn-dark:active {
+  .auth-theme-toggle {
     transition: none;
-    transform: none;
   }
 }
 
-.centered-bg .app-brand-mark {
-  --app-brand-bg: var(--app-obsidian);
+// The error pages' icon disc. The tone pair it reads comes from _tokens.scss and
+// is swapped wholesale for dark mode in _dark.scss, so nothing here changes.
+.error-mark {
+  background-color: var(--app-error-wash);
+  color: var(--app-error-ink);
+}
+
+.error-mark--neutral {
+  --app-error-wash: var(--app-tone-neutral-wash);
+  --app-error-ink: var(--app-tone-neutral);
+}
+
+.error-mark--warning {
+  --app-error-wash: var(--app-tone-warning-wash);
+  --app-error-ink: var(--app-tone-warning);
+}
+
+.error-mark--danger {
+  --app-error-wash: var(--app-tone-danger-wash);
+  --app-error-ink: var(--app-tone-danger);
+}
+
+// The big 404 / 403 / 500. Set here rather than inline so dark mode can reach it.
+.error-code {
+  color: var(--app-obsidian);
 }
 
 // The password checklist. It reads as a quiet aside rather than a card, so it
 // takes the full mint rather than the near-white the plane uses.
 .centered-bg .auth-requirements {
-  background-color: var(--app-mint);
+  background-color: var(--app-auth-panel);
 }
 
 // The footer bar reads as white paper under the mint plane, not as grey.

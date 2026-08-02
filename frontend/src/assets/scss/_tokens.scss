@@ -10,10 +10,11 @@
   // accent needs: a darker ink for text sitting on a green tint, and the tint
   // itself. Every green in the app resolves back to one of these.
   --app-mint: #f0fff4;            // Light  — the stated brand mint
-  --app-obsidian: #0a0f0d;        // Dark   — headings, primary buttons
-  --app-obsidian-hover: #16321d;  // Obsidian pulled towards the accent on hover
-  --app-obsidian-active: #0f2415; // and pushed back down while pressed
-  --app-moss: #2e7d32;            // Accent — links, active states, focus
+  --app-obsidian: #0a0f0d;        // Dark   — the dark-mode plane; marks on white
+  --app-moss: #2e7d32;            // Accent — primary buttons, links, focus
+  --app-moss-hover: #256428;      // Accent deepened, for hover on a light plane
+  --app-moss-active: #1e5321;     // and deeper still while pressed
+  --app-moss-on-dark: #7fc98d;    // Accent lifted, for text on the dark plane
   --app-moss-ink: #1f5e23;        // Moss darkened, for text on a moss tint
   --app-moss-tint: #e2f0e5;       // Moss at ~12%, for pills and discs
   --app-moss-ring: rgba(46, 125, 50, 0.25);   // Focus ring around a field
@@ -22,10 +23,23 @@
   // The auth and error pages share one plane, so their surface colours live
   // together here rather than being typed into each page.
   --app-auth-bg: #ffffff;               // Plain white; the colour comes from the washes
+  --app-auth-surface: #ffffff;          // Field fill and the theme toggle
+  --app-auth-panel: var(--app-mint);    // Checklist panel and success disc
+  --app-accent-ink: var(--app-moss);    // The accent when it is used as ink
   --app-auth-line: #cfe3d5;             // Rules and dividers on the mint plane
   --app-auth-field-border: #cfe3d5;     // Input outlines, a mint-tinted grey
   --app-auth-placeholder: #9aa79f;      // Placeholder text inside a field
   --app-auth-icon-off: #b9c4bc;         // An unmet requirement's empty ring
+
+  // --- Error page tones ----------------------------------------------------
+  // The status colour each error page carries, plus the 10%-ish wash behind its
+  // icon. Kept as pairs so light and dark can be swapped in one place.
+  --app-tone-neutral: #5f6b62;
+  --app-tone-neutral-wash: #eef0ef;
+  --app-tone-warning: #997404;
+  --app-tone-warning-wash: #f6f0e0;
+  --app-tone-danger: #b02a37;
+  --app-tone-danger-wash: #f8e9ea;
   --app-auth-heading: #7b8a81;          // The "SIGN IN" style of heading
   --app-auth-footer-bg: #ffffff;
   --app-auth-footer-line: #dceae0;

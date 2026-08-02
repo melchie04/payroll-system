@@ -6,7 +6,7 @@ export default function AccessDenied() {
     <ErrorPage
       code="403"
       icon="fa-lock"
-      accent="#997404"
+      tone="warning"
       title="Access Denied"
       description="Your role can't view this page. Contact an administrator if that's wrong."
     >

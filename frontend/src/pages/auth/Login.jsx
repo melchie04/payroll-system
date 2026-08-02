@@ -32,15 +32,15 @@ export default function Login() {
       <form onSubmit={handleSubmit} noValidate>
         <div className="mb-3 position-relative">
           <div className="input-group">
-            <span className="input-group-text bg-white border-end-0 rounded-start-pill text-muted px-3">
+            <span className="input-group-text border-end-0 rounded-start-pill text-muted px-3">
               <div
                 className="d-flex align-items-center justify-content-center border rounded-circle"
                 style={{
                   width: "24px",
                   height: "24px",
                   fontSize: "var(--app-fs-2)",
-                  borderColor: "var(--app-moss)",
-                  color: "var(--app-moss)",
+                  borderColor: "var(--app-accent-ink)",
+                  color: "var(--app-accent-ink)",
                 }}
               >
                 <i className="fas fa-envelope"></i>
@@ -59,15 +59,15 @@ export default function Login() {
 
         <div className="mb-4 position-relative">
           <div className="input-group">
-            <span className="input-group-text bg-white border-end-0 rounded-start-pill text-muted px-3">
+            <span className="input-group-text border-end-0 rounded-start-pill text-muted px-3">
               <div
                 className="d-flex align-items-center justify-content-center border rounded-circle"
                 style={{
                   width: "24px",
                   height: "24px",
                   fontSize: "var(--app-fs-2)",
-                  borderColor: "var(--app-moss)",
-                  color: "var(--app-moss)",
+                  borderColor: "var(--app-accent-ink)",
+                  color: "var(--app-accent-ink)",
                 }}
               >
                 <i className="fas fa-lock"></i>
@@ -104,7 +104,7 @@ export default function Login() {
 
         <button
           type="submit"
-          className="btn btn-dark rounded-pill w-100 text-white py-2 fw-normal shadow-sm"
+          className="btn btn-app-primary rounded-pill w-100 text-white py-2 fw-normal shadow-sm"
           style={{
             fontSize: "var(--app-fs-5)",
           }}

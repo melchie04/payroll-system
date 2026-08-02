@@ -6,7 +6,7 @@ export default function ServerError() {
     <ErrorPage
       code="500"
       icon="fa-triangle-exclamation"
-      accent="#b02a37"
+      tone="danger"
       title="Something Went Wrong"
       description="The problem is on our end. Try again in a moment."
     >

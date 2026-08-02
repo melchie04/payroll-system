@@ -6,7 +6,7 @@ export default function NotFound() {
     <ErrorPage
       code="404"
       icon="fa-magnifying-glass"
-      accent="#5f6b62"
+      tone="neutral"
       title="Page Not Found"
       description="This page doesn't exist or has moved."
     >

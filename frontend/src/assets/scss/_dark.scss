@@ -326,3 +326,76 @@
 [data-bs-theme="dark"] .btn-link {
   color: #7fb1ff !important;
 }
+
+// --- Centered pages (auth + errors) ----------------------------------------
+// Both centered layouts follow the theme. Everything below is done by re-aiming
+// the tokens the light rules already read, so no light rule is duplicated here.
+
+[data-bs-theme="dark"] .centered-bg {
+  --app-auth-bg: var(--app-obsidian);
+  --app-auth-surface: #131a16;
+  --app-auth-panel: rgba(127, 201, 141, 0.1);
+  --app-auth-field-border: #24322a;
+
+  // The rings around the field icons are drawn by the .border utility, which is
+  // !important and so wins over the colour written on the element — meaning they
+  // read this, not the accent. On white it is a quiet grey; left alone it would
+  // be a near-white ring burning a hole in the dark plane.
+  --bs-border-color: #24322a;
+  --app-auth-placeholder: #8a968e;
+  --app-auth-heading: #9aa79f;
+  --app-auth-icon-off: #3a4740;
+  --app-auth-footer-bg: #0f1613;
+  --app-auth-footer-line: #1e2a23;
+
+  // Moss is a button fill here, not ink. As ink on obsidian it fails to read, so
+  // anything drawing the accent as a line or a glyph lifts — but only as far as
+  // it needs to. #7FC98D sat at about 9:1 against the plane and read as neon
+  // beside the light theme's 4.6:1; this lands at roughly 5:1, so the field
+  // icons and ticks carry the same weight in both themes. The paler green is
+  // still used for footer links, where it is competing with body text.
+  --app-accent-ink: #4a8f54;
+
+  // The same three tone pairs, re-aimed for a dark plane. The status hues used
+  // on white go muddy here, so each lifts to its brighter counterpart.
+  --app-tone-neutral: #c3cec6;
+  --app-tone-neutral-wash: rgba(255, 255, 255, 0.06);
+  --app-tone-warning: #ffc107;
+  --app-tone-warning-wash: rgba(255, 193, 7, 0.12);
+  --app-tone-danger: #ff6b6b;
+  --app-tone-danger-wash: rgba(255, 107, 107, 0.14);
+
+  // body sets colour on itself, so descendants inherit its computed value —
+  // repointing the variable alone would not reach them. Both are needed: the
+  // property for .form-control, which declares the colour itself, and the
+  // inherited colour for everything else.
+  --bs-body-color: #eef2ef;
+  color: #eef2ef;
+}
+
+[data-bs-theme="dark"] .centered-bg .error-code {
+  color: #f1f5f2;
+}
+
+[data-bs-theme="dark"] .centered-bg .text-muted {
+  color: #9aa79f !important;
+}
+
+[data-bs-theme="dark"] .centered-bg footer a {
+  color: var(--app-moss-on-dark);
+}
+
+// An obsidian square on an obsidian plane is nothing, so the mark inverts.
+[data-bs-theme="dark"] .centered-bg .app-brand-mark {
+  --app-brand-bg: #ffffff;
+  --app-brand-fg: var(--app-obsidian);
+}
+
+// Deepening the accent on hover works on white and disappears on obsidian, so
+// on the dark plane the button lifts instead.
+[data-bs-theme="dark"] .centered-bg .btn-app-primary {
+  --bs-btn-hover-bg: #3a9440;
+  --bs-btn-hover-border-color: #3a9440;
+  --bs-btn-active-bg: var(--app-moss);
+  --bs-btn-active-border-color: var(--app-moss);
+}
