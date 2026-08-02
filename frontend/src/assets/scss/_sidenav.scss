@@ -34,10 +34,12 @@ $sidenav-expanded-width: 225px;
 .sb-sidenav .sb-sidenav-menu .nav .nav-link {
   display: flex;
   align-items: center;
+  overflow: hidden;
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
   position: relative;
-  transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out, transform 0.15s ease-out;
+  transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out, transform 0.15s ease-out,
+    padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   margin-left: 0.5rem;
   margin-right: 0.5rem;
   margin-bottom: 0.25rem;
@@ -59,121 +61,126 @@ $sidenav-expanded-width: 225px;
   border-top: 1px solid var(--bs-border-color);
 }
 
+// The rail is the navigation surface — the same token the top bar, the footer and
+// the bar's dropdown panels read. The sb-sidenav-light / -dark classes are still
+// applied from JS, but both now resolve to one value, so the rail cannot drift
+// from the bar the way it did before. Everything else here is a token pair too.
+.sb-sidenav {
+  --bs-border-color: var(--app-nav-line);
+}
+
+.sb-sidenav-light,
 .sb-sidenav-dark {
-  background-color: var(--bs-dark);
-  color: rgba(255, 255, 255, 0.5);
+  background-color: var(--app-nav-bg);
+  color: var(--app-nav-link);
 }
 
-// Heading lifted for contrast on the dark rail.
+.sb-sidenav-light .sb-sidenav-menu .sb-sidenav-menu-heading,
 .sb-sidenav-dark .sb-sidenav-menu .sb-sidenav-menu-heading {
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--app-nav-heading);
 }
 
-// Rest colour lifted for legibility.
+.sb-sidenav-light .sb-sidenav-menu .nav-link,
 .sb-sidenav-dark .sb-sidenav-menu .nav-link {
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--app-nav-link);
 }
 
-// Icon lifted to match its link.
+.sb-sidenav-light .sb-sidenav-menu .nav-link .sb-nav-link-icon,
 .sb-sidenav-dark .sb-sidenav-menu .nav-link .sb-nav-link-icon {
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--app-nav-link-icon);
 }
 
+// The current page: a faint fill plus a moss keyline down the left edge — the same
+// mark the top bar's dropdown rows use. Drawn as an inset shadow rather than a
+// border so the label does not shift by 3px when a row becomes active.
+.sb-sidenav-light .sb-sidenav-menu .nav-link.active,
 .sb-sidenav-dark .sb-sidenav-menu .nav-link.active {
-  color: var(--bs-white);
-  background-color: rgba(255, 255, 255, 0.2);
+  color: var(--app-nav-active-color);
+  background-color: var(--app-nav-active-bg);
+  box-shadow: inset 3px 0 0 var(--app-menu-keyline);
 }
 
+.sb-sidenav-light .sb-sidenav-menu .nav-link.active .sb-nav-link-icon,
 .sb-sidenav-dark .sb-sidenav-menu .nav-link.active .sb-nav-link-icon {
-  color: var(--bs-white);
+  color: var(--app-menu-keyline);
 }
 
-// Footer matches the topnav's bg-dark, not SB Admin's #343a40.
-.sb-sidenav-dark .sb-sidenav-footer {
-  background-color: var(--bs-dark);
-  border-top-color: var(--bs-gray-800);
-}
-
-// Sidebar matches the topnav's white surface, not SB Admin's #f8f9fa.
-.sb-sidenav-light {
-  background-color: var(--bs-white);
-  color: var(--bs-dark);
-}
-
-// Heading tone for the light rail.
-.sb-sidenav-light .sb-sidenav-menu .sb-sidenav-menu-heading {
-  color: var(--app-heading-muted);
-}
-
-.sb-sidenav-light .sb-sidenav-menu .nav-link {
-  color: var(--bs-dark);
-}
-
-.sb-sidenav-light .sb-sidenav-menu .nav-link .sb-nav-link-icon {
-  color: var(--bs-gray-500);
-}
-
-.sb-sidenav-light .sb-sidenav-menu .nav-link.active {
-  color: var(--bs-dark);
-  background-color: rgba(0, 0, 0, 0.12);
-}
-
-.sb-sidenav-light .sb-sidenav-menu .nav-link.active .sb-nav-link-icon {
-  color: var(--bs-dark);
-}
-
-// Footer sits on the same white surface as the sidebar.
-.sb-sidenav-light .sb-sidenav-footer {
-  background-color: var(--bs-white);
-  border-top-color: var(--bs-gray-300);
-}
-
-.help-footer-btn-light:hover {
-  color: var(--bs-primary) !important;
-}
-
-.help-footer-btn-dark:hover {
-  color: var(--bs-white) !important;
-}
-
+// Hover is the same neutral grey the top bar uses, and nothing else moves.
+// .nav-link is an <a>, so Bootstrap's own hover colour would take over unless the
+// resting colour is restated here — leaving the line out is not the same as
+// leaving the colour alone.
+.sb-sidenav-light .sb-sidenav-menu .nav-link:hover,
+.sb-sidenav-light .sb-sidenav-menu .nav-link:focus-visible,
 .sb-sidenav-dark .sb-sidenav-menu .nav-link:hover,
 .sb-sidenav-dark .sb-sidenav-menu .nav-link:focus-visible {
-  color: rgba(255, 255, 255, 0.85);
-  background-color: rgba(255, 255, 255, 0.14);
+  color: var(--app-nav-link);
+  background-color: var(--app-nav-btn-hover-bg);
 }
 
-.sb-sidenav-light .sb-sidenav-menu .nav-link:hover,
-.sb-sidenav-light .sb-sidenav-menu .nav-link:focus-visible {
-  color: var(--bs-dark);
-  background-color: rgba(0, 0, 0, 0.08);
+// Hovering the current page must not undo its mark.
+.sb-sidenav-light .sb-sidenav-menu .nav-link.active:hover,
+.sb-sidenav-light .sb-sidenav-menu .nav-link.active:focus-visible,
+.sb-sidenav-dark .sb-sidenav-menu .nav-link.active:hover,
+.sb-sidenav-dark .sb-sidenav-menu .nav-link.active:focus-visible {
+  color: var(--app-nav-active-color);
+  background-color: var(--app-nav-active-bg);
+}
+
+.sb-sidenav-light .sb-sidenav-footer,
+.sb-sidenav-dark .sb-sidenav-footer {
+  background-color: var(--app-nav-bg);
+  border-top-color: var(--app-nav-line);
+}
+
+// The Help row is a link, not a menu item — it reads and behaves like the
+// Privacy Policy / Terms pair in the page footer, so it takes the same two
+// tokens: the accent at rest, deepening on hover, with no fill and no nudge.
+.help-footer-btn-light,
+.help-footer-btn-dark {
+  color: var(--app-footer-link) !important;
+}
+
+.help-footer-btn-light:hover,
+.help-footer-btn-dark:hover {
+  color: var(--app-footer-link-hover) !important;
 }
 
 // Keyboard focus ring, matching each theme's hover tint.
-.sb-sidenav-light .sb-sidenav-menu .nav-link:focus-visible,
-.sb-sidenav-light .sb-sidenav-footer > div:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.14);
-}
-
-.sb-sidenav-dark .sb-sidenav-menu .nav-link:focus-visible,
+.sb-sidenav-light .sb-sidenav-footer > div:focus-visible,
 .sb-sidenav-dark .sb-sidenav-footer > div:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.28);
+  box-shadow: 0 0 0 0.2rem var(--app-moss-ring);
 }
 
-// The Help row picks up the same hover motion as the links.
+// The active link already carries an inset keyline, so its focus ring is drawn
+// alongside it rather than replacing it.
+.sb-sidenav-light .sb-sidenav-menu .nav-link:focus-visible,
+.sb-sidenav-dark .sb-sidenav-menu .nav-link:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 0.2rem var(--app-moss-ring);
+}
+
+.sb-sidenav-light .sb-sidenav-menu .nav-link.active:focus-visible,
+.sb-sidenav-dark .sb-sidenav-menu .nav-link.active:focus-visible {
+  box-shadow: inset 3px 0 0 var(--app-menu-keyline), 0 0 0 0.2rem var(--app-moss-ring);
+}
+
 .help-footer-btn-light,
 .help-footer-btn-dark {
-  transition: color 0.15s ease-in-out, transform 0.15s ease-out;
+  transition: color 0.15s ease-in-out;
 }
 
 // --- (d) Utilities & helpers ---------------------------------------------
 @media (min-width: 992px) {
+  // Measured off the reference: the rail takes about 0.3s and eases OUT — it
+  // covers most of the distance early and settles into place. The labels fade on
+  // half that, with no delay, so the text is gone before the rail is, but the two
+  // OVERLAP rather than running as separate beats.
   #layoutSidenav #layoutSidenav_nav {
-    transition: transform 0.15s ease-in-out, width 0.15s ease-in-out;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   #layoutSidenav #layoutSidenav_content {
-    transition: margin 0.15s ease-in-out, padding-left 0.15s ease-in-out;
+    transition: margin 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .sb-sidenav-toggled #layoutSidenav #layoutSidenav_nav {
@@ -193,11 +200,18 @@ $sidenav-expanded-width: 225px;
     display: none;
   }
 
-  .sb-sidenav-toggled .sb-sidenav-menu-heading {
-    display: none;
+  // The heading KEEPS ITS BOX when the rail collapses — only its text fades. This
+  // is the whole point: removing the heading's height made every link below it
+  // jump upwards, and a vertical jump is far more noticeable than a horizontal
+  // slide. Nothing moves up or down during the toggle now; only width changes.
+  .sb-sidenav-menu .nav .sb-sidenav-menu-heading {
+    overflow: hidden;
+    white-space: nowrap;
+    opacity: 1;
+    transition: opacity 0.15s linear;
   }
-  .sb-sidenav-toggled .sb-sidenav-menu .nav {
-    padding-top: 1rem;
+  .sb-sidenav-toggled .sb-sidenav-menu .nav .sb-sidenav-menu-heading {
+    opacity: 0;
   }
   .sb-sidenav-toggled .sb-sidenav .nav .nav-link {
     justify-content: center;
@@ -206,30 +220,39 @@ $sidenav-expanded-width: 225px;
   }
   .sb-sidenav .nav .nav-link .sb-nav-link-icon {
     flex-shrink: 0;
-    transition: margin-right 0.15s ease-in-out;
+    transition: margin-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .sb-sidenav-toggled .sb-sidenav .nav .nav-link .sb-nav-link-icon {
     margin-right: 0 !important;
   }
+  // The label fades and its width closes, but NOT at the same time. Running both
+  // together is what made this look wrong: the text stayed visible while the box
+  // narrowed, so it was squeezed through an ellipsis on the way out.
+  // Collapsing, the text is gone before the width moves; expanding, the room is
+  // made before the text arrives.
+  // No fade. The label keeps full opacity and is simply clipped as its box closes,
+  // so the rail appears to slide shut over the text rather than the text
+  // dissolving in place. Everything below runs on the same 0.2s linear as the
+  // rail itself, with no delays, so the panel moves as one object.
   .sb-sidenav .nav .nav-link .text-wrap {
     display: inline-block;
     white-space: nowrap !important;
     overflow: hidden;
-    text-overflow: ellipsis;
+    text-overflow: clip;
     max-width: 160px;
     opacity: 1;
-    transition: opacity 0.15s ease-in-out, max-width 0.15s ease-in-out;
+    transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.15s linear;
   }
   .sb-sidenav-toggled .sb-sidenav .nav .nav-link .text-wrap {
-    opacity: 0;
     max-width: 0;
+    opacity: 0;
   }
   .sb-sidenav-toggled .sb-sidenav-footer > div {
     justify-content: center;
   }
   .sb-sidenav-footer .sb-nav-link-icon {
     flex-shrink: 0;
-    transition: margin-right 0.15s ease-in-out;
+    transition: margin-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .sb-sidenav-toggled .sb-sidenav-footer .sb-nav-link-icon {
     margin-right: 0 !important;
@@ -240,11 +263,11 @@ $sidenav-expanded-width: 225px;
     overflow: hidden;
     max-width: 100px;
     opacity: 1;
-    transition: opacity 0.15s ease-in-out, max-width 0.15s ease-in-out;
+    transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.15s linear;
   }
   .sb-sidenav-toggled .sb-sidenav-footer > div > span {
-    opacity: 0;
     max-width: 0;
+    opacity: 0;
   }
 
   #layoutSidenav #layoutSidenav_content > main > .container-fluid {
@@ -307,21 +330,12 @@ $sidenav-expanded-width: 225px;
 
 // Touch devices get press feedback in place of hover.
 @media (hover: none) {
-  .sb-sidenav-light .sb-sidenav-menu .nav-link:active {
-    background-color: rgba(0, 0, 0, 0.12);
-  }
+  .sb-sidenav-light .sb-sidenav-menu .nav-link:active,
   .sb-sidenav-dark .sb-sidenav-menu .nav-link:active {
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: var(--app-nav-btn-hover-bg);
   }
   .sb-sidenav-footer > div:active {
     opacity: 0.7;
-  }
-}
-
-@media (hover: hover) {
-  .help-footer-btn-light:hover,
-  .help-footer-btn-dark:hover {
-    transform: translateX(2px);
   }
 }
 
@@ -334,9 +348,7 @@ $sidenav-expanded-width: 225px;
   .sb-sidenav-menu .nav .nav-link {
     animation: none;
   }
-  .sb-sidenav .sb-sidenav-menu .nav .nav-link:hover:not(.active),
-  .help-footer-btn-light:hover,
-  .help-footer-btn-dark:hover {
+  .sb-sidenav .sb-sidenav-menu .nav .nav-link:hover:not(.active) {
     transform: none;
   }
 }
@@ -377,7 +389,14 @@ $sidenav-expanded-width: 225px;
 
 @media (prefers-reduced-motion: reduce) {
   #layoutSidenav #layoutSidenav_nav,
-  #layoutSidenav #layoutSidenav_content:before {
+  #layoutSidenav #layoutSidenav_content,
+  #layoutSidenav #layoutSidenav_content:before,
+  .sb-sidenav .sb-sidenav-menu .nav .nav-link,
+  .sb-sidenav .nav .nav-link .text-wrap,
+  .sb-sidenav .nav .nav-link .sb-nav-link-icon,
+  .sb-sidenav-menu .nav .sb-sidenav-menu-heading,
+  .sb-sidenav-footer > div > span,
+  .sb-sidenav-footer .sb-nav-link-icon {
     transition: none;
   }
 }

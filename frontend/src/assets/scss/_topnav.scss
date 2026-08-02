@@ -5,10 +5,10 @@
 .nav-icon-btn,
 .nav-user-btn,
 #sidebarToggle {
-  --topnav-icon-color: var(--bs-dark);
+  --topnav-icon-color: var(--app-nav-icon);
   --topnav-icon-color-muted: var(--bs-gray-600);
-  --topnav-btn-hover-bg: rgba(0, 0, 0, 0.08);
-  --topnav-btn-focus-ring: rgba(0, 0, 0, 0.14);
+  --topnav-btn-hover-bg: var(--app-nav-btn-hover-bg);
+  --topnav-btn-focus-ring: var(--app-moss-ring);
 }
 
 // --- (b) Layout ----------------------------------------------------------
@@ -22,7 +22,18 @@
 
 // --- (c) Components ------------------------------------------------------
 // Bar height is dynamic (auto, min 56px); settles in on first paint.
+// bg-white and bg-dark are on the markup and both are !important, so the bar has
+// to be repainted rather than re-pointed. One rule for both, so light and dark
+// are the same token with different values, not two different mechanisms.
+.sb-topnav.bg-white,
+.sb-topnav.bg-dark {
+  background-color: var(--app-nav-bg) !important;
+}
+
 .sb-topnav {
+  // The .border-bottom utility on the markup reads this, so pointing the variable
+  // is enough — no need to fight its !important.
+  --bs-border-color: var(--app-nav-line);
   padding-left: 0;
   height: auto !important;
   z-index: 1039;
@@ -53,15 +64,15 @@
   padding: 0;
   margin: 0;
   cursor: pointer;
-  width: 40px;
-  height: 40px;
+  width: 34px;
+  height: 34px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   border-radius: 50%;
   color: var(--topnav-icon-color);
-  font-size: var(--app-fs-6);
+  font-size: var(--app-fs-5);
   line-height: 1;
   text-decoration: none;
   transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out, transform 0.15s ease-out;
@@ -72,6 +83,10 @@
 #sidebarToggle:hover,
 #sidebarToggle:focus-visible {
   background-color: var(--topnav-btn-hover-bg);
+  // The bell and the user button are <a> elements, so Bootstrap's a:hover — an
+  // element plus a pseudo-class — outranks the .nav-icon-btn class and turns the
+  // glyph link-blue. Restating the RESTING colour here is what stops hover
+  // changing it; leaving the line out is not the same as leaving the colour alone.
   color: var(--topnav-icon-color);
 }
 
@@ -80,7 +95,7 @@
 }
 
 .nav-user-btn {
-  padding: 0.3rem 0.5rem;
+  padding: 0.25rem 0.4rem;
   border-radius: 0.5rem;
   color: var(--topnav-icon-color);
   transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out, transform 0.15s ease-out;
@@ -88,6 +103,7 @@
 
 .nav-user-btn:hover {
   background-color: var(--topnav-btn-hover-bg);
+  color: var(--topnav-icon-color);
 }
 
 .nav-user-btn .fa-chevron-down {
@@ -114,6 +130,38 @@
 #sidebarToggle:focus-visible {
   outline: none;
   box-shadow: 0 0 0 0.2rem var(--topnav-btn-focus-ring);
+}
+
+// The bar's dropdowns take the bar's own colour, so a panel reads as part of the
+// bar rather than as a card floating over the page. Qualified this deeply on
+// purpose: the dark layer sets --bs-dropdown-bg on .dropdown-menu with two
+// selectors' worth of specificity and loads after this file, so a shorter
+// selector here would lose in dark mode.
+.sb-topnav .dropdown .topnav-dropdown-menu {
+  --bs-dropdown-bg: var(--app-menu-bg);
+  --bs-dropdown-border-color: var(--app-nav-line);
+  --bs-dropdown-divider-bg: var(--app-menu-divider);
+  --bs-dropdown-link-hover-bg: var(--app-menu-hover-bg);
+  --bs-dropdown-link-active-bg: var(--app-menu-hover-bg);
+  // The label does not change colour on hover — the fill and the keyline carry it.
+  --bs-dropdown-link-hover-color: var(--bs-dropdown-link-color);
+  --bs-dropdown-link-active-color: var(--bs-dropdown-link-color);
+  // .shadow-sm is on the markup and is !important, so this has to match it.
+  box-shadow: 0 6px 16px rgba(10, 15, 13, 0.1) !important;
+}
+
+// The hovered row is marked by a keyline down its left edge rather than a
+// full-width fill. Drawn as an inset shadow, not a border, so the row's text
+// does not shift by 3px on hover.
+.sb-topnav .topnav-dropdown-menu .dropdown-item:hover,
+.sb-topnav .topnav-dropdown-menu .dropdown-item:focus {
+  box-shadow: inset 3px 0 0 var(--app-menu-keyline);
+}
+
+// The menu's footer link. Bootstrap's .text-primary is blue and !important, and
+// the dark layer restates it, so this is qualified by the bar to outrank both.
+.sb-topnav .topnav-dropdown-menu .text-primary {
+  color: var(--app-accent-ink) !important;
 }
 
 .nav-badge-dot {
@@ -256,10 +304,10 @@
 [data-bs-theme="dark"] .nav-icon-btn,
 [data-bs-theme="dark"] .nav-user-btn,
 [data-bs-theme="dark"] #sidebarToggle {
-  --topnav-icon-color: var(--bs-white);
-  --topnav-icon-color-muted: var(--bs-gray-400);
-  --topnav-btn-hover-bg: rgba(255, 255, 255, 0.14);
-  --topnav-btn-focus-ring: rgba(255, 255, 255, 0.28);
+  --topnav-icon-color: var(--app-nav-icon);
+  --topnav-icon-color-muted: #9aa79f;
+  --topnav-btn-hover-bg: var(--app-nav-btn-hover-bg);
+  --topnav-btn-focus-ring: rgba(127, 201, 141, 0.25);
 }
 
 [data-bs-theme="dark"] .nav-user-btn .text-body {

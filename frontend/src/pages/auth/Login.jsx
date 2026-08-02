@@ -39,8 +39,8 @@ export default function Login() {
                   width: "24px",
                   height: "24px",
                   fontSize: "var(--app-fs-2)",
-                  borderColor: "var(--app-accent-ink)",
-                  color: "var(--app-accent-ink)",
+                  borderColor: "var(--app-auth-icon)",
+                  color: "var(--app-auth-icon)",
                 }}
               >
                 <i className="fas fa-envelope"></i>
@@ -66,8 +66,8 @@ export default function Login() {
                   width: "24px",
                   height: "24px",
                   fontSize: "var(--app-fs-2)",
-                  borderColor: "var(--app-accent-ink)",
-                  color: "var(--app-accent-ink)",
+                  borderColor: "var(--app-auth-icon)",
+                  color: "var(--app-auth-icon)",
                 }}
               >
                 <i className="fas fa-lock"></i>

@@ -5,7 +5,7 @@ const NAV_ITEMS = [
   { to: "/", label: "Dashboard", icon: "fa-table-cells-large", end: true },
   { to: "/payroll", label: "Payroll", icon: "fa-sack-dollar" },
   { to: "/billing", label: "Billing", icon: "fa-receipt" },
-  { to: "/timesheet", label: "Timesheet Upload", icon: "fa-cloud-arrow-up" },
+  { to: "/timesheet", label: "Timesheet", icon: "fa-cloud-arrow-up" },
   { to: "/employees", label: "Employees", icon: "fa-users" },
   { to: "/clients", label: "Clients", icon: "fa-building" },
 ];
@@ -41,7 +41,7 @@ export default function SideNav({ onNavItemSelect }) {
 
       <div className="sb-sidenav-footer">
         <div
-          className={`d-flex align-items-center w-100 text-reset text-decoration-none ${theme === "light" ? "help-footer-btn-light" : "help-footer-btn-dark"} fs-7 fs-md-6`}
+          className={`d-flex align-items-center w-100 text-decoration-none ${theme === "light" ? "help-footer-btn-light" : "help-footer-btn-dark"} fs-7 fs-md-6`}
           style={{
             cursor: "pointer",
             transition: "color 0.15s ease-in-out",

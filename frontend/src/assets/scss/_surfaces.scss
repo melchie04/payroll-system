@@ -41,6 +41,12 @@ a:focus-visible > .card {
 }
 
 // The P mark. One rule, two themes — _dark.scss swaps the two tokens.
+// The wordmark beside the mark. Named so the top bar and the auth pages colour it
+// from one place rather than each inheriting whatever body text happens to be.
+.app-brand-name {
+  color: var(--app-brand-name);
+}
+
 .app-brand-mark {
   background: var(--app-brand-bg);
   color: var(--app-brand-fg);
@@ -175,4 +181,27 @@ html.theme-transition .table > :not(caption) > * > * {
     transition: none;
     transform: none;
   }
+}
+
+// --- Footer ----------------------------------------------------------------
+// One bar for every layout. It used to be styled twice — once in _shell.scss for
+// the dashboard and once in _centered.scss for the auth pages — which is how the
+// two drifted apart. Both of those rule sets are gone; this is the only one.
+footer.bg-light {
+  background-color: var(--app-footer-bg) !important;
+  border-top-color: var(--app-footer-line) !important;
+}
+
+footer.bg-light .text-muted {
+  color: var(--app-footer-text) !important;
+}
+
+footer.bg-light a {
+  color: var(--app-footer-link);
+  transition: color 0.15s ease-in-out;
+}
+
+footer.bg-light a:hover,
+footer.bg-light a:focus-visible {
+  color: var(--app-footer-link-hover);
 }

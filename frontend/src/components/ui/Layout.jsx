@@ -82,7 +82,7 @@ export function BrandLockup({ className = "" }) {
   return (
     <div className={`d-flex align-items-center justify-content-center gap-2 ${className}`}>
       <BrandMark size={26} />
-      <span className="fw-semibold" style={{ fontSize: "var(--app-fs-5)", letterSpacing: "0.12em" }}>
+      <span className="app-brand-name fw-semibold" style={{ fontSize: "var(--app-fs-5)", letterSpacing: "0.12em" }}>
         PAYROLL
       </span>
     </div>

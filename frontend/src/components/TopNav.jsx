@@ -109,14 +109,14 @@ function UserTrigger({ id, user, nameClassName = "d-none d-sm-inline" }) {
       role="button"
       data-bs-toggle="dropdown"
       aria-expanded="false"
-      style={{ fontSize: "var(--app-fs-4)" }}
+      style={{ fontSize: "var(--app-fs-3)" }}
     >
       {user.avatarImage ? (
-        <img src={user.avatarImage} alt={user.name} className="app-avatar rounded-circle" style={{ width: 36, height: 36, objectFit: "cover" }} />
+        <img src={user.avatarImage} alt={user.name} className="app-avatar rounded-circle" style={{ width: 30, height: 30, objectFit: "cover" }} />
       ) : (
         <span
           className="app-avatar d-inline-flex align-items-center justify-content-center rounded-circle text-white fw-semibold flex-shrink-0"
-          style={{ width: 36, height: 36, fontSize: "var(--app-fs-3)", background: user.avatarColor }}
+          style={{ width: 30, height: 30, fontSize: "var(--app-fs-2)", background: user.avatarColor }}
         >
           {initialsOf(user.name)}
         </span>
@@ -221,14 +221,14 @@ export default function TopNav({ onToggleSidebar }) {
           to="/"
         >
           <BrandMark size={26} />
-          <span className="fs-6 fw-semibold tracking-wider">PAYROLL</span>
+          <span className="app-brand-name fs-6 fw-semibold tracking-wider">PAYROLL</span>
         </Link>
 
         <button className="nav-icon-btn me-1 me-lg-0 ms-0 ms-md-3 ms-lg-4" id="sidebarToggle" onClick={onToggleSidebar}>
           <i className="fas fa-bars"></i>
         </button>
 
-        <div className="d-none d-md-flex align-items-center ms-auto gap-1 gap-md-2">
+        <div className="d-none d-md-flex align-items-center ms-auto gap-2 gap-md-3">
           <button type="button" className="nav-icon-btn" onClick={toggleTheme} aria-label="Toggle theme">
             <i className={`fas ${isDark ? "fa-moon" : "fa-sun"}`}></i>
           </button>
@@ -265,7 +265,7 @@ export default function TopNav({ onToggleSidebar }) {
           id="topnavMobileControls"
           className="nav-mobile-controls d-flex d-md-none align-items-center justify-content-between w-100 mt-2 pt-2 gap-2"
         >
-          <div className="d-flex align-items-center gap-2">
+          <div className="d-flex align-items-center gap-3">
             <button type="button" className="nav-icon-btn" onClick={toggleTheme} aria-label="Toggle theme">
               <i className={`fas ${isDark ? "fa-moon" : "fa-sun"}`}></i>
             </button>

@@ -2,10 +2,10 @@
 // Loaded last so it can retarget any component above. Layers the app's dark palette over Bootstrap 5.3.8's data-bs-theme dark mode by repointing each component's own CSS variables here rather than editing markup.
 
 [data-bs-theme="dark"] {
-  --app-dark-bg: #16181b;
+  --app-dark-bg: var(--app-obsidian);
   --app-dark-surface: var(--bs-dark);
   --app-dark-surface-2: #2a2f35;
-  --app-dark-border: var(--bs-gray-800);
+  --app-dark-border: #262e29;
   --app-dark-text: var(--bs-gray-200);
   --app-dark-text-muted: #9aa4ae;
 
@@ -18,13 +18,35 @@
   --app-shadow-2: 0 4px 6px -2px rgba(0, 0, 0, 0.45), 0 12px 16px -4px rgba(0, 0, 0, 0.5);
   --app-row-hover: rgba(255, 255, 255, 0.04);
 
-  // The mark inverts so it stays the strongest thing in the top bar.
-  --app-brand-bg: #ffffff;
-  --app-brand-fg: #1a1a1a;
+  // The mark does NOT invert any more — a Moss square with a white letter reads on
+  // both planes. Only the wordmark shifts: Moss as text on obsidian is about
+  // 2.6:1, so it steps up to the accent-as-ink value at roughly 5:1.
+  --app-brand-name: var(--app-accent-ink);
 
   // Danger red is mixed for white paper and goes muddy on the dark bar, so the
   // unread marker lifts to a red that still reads as red at 8px.
   --app-dot-color: #ff6b6b;
+
+  // Moss is a button fill. As ink on a dark plane it fails to read, so anything
+  // drawing the accent as a line, a glyph or a link lifts to this instead.
+  --app-accent-ink: #4a8f54;
+
+  // The navigation surface on this plane. The bar, the footer, the bar's dropdowns
+  // and the auth canvas all follow it.
+  --app-nav-bg: var(--app-obsidian);
+  --app-nav-icon: #b6c2ba;
+  --app-nav-heading: #6f7d74;
+  --app-nav-link: #d5ddd8;
+  --app-nav-link-icon: #6f7d74;
+  --app-nav-active-bg: #1e241f;
+  --app-nav-active-color: #7fc98d;
+  --app-nav-btn-hover-bg: rgba(255, 255, 255, 0.06);
+  --app-nav-line: #262e29;
+  --app-footer-text: #9aa79f;
+  --app-footer-link: var(--app-accent-ink);
+  --app-footer-link-hover: #7fc98d;
+  --app-menu-divider: #262e29;
+  --app-menu-keyline: var(--app-accent-ink);
 
   // The unread dot was a pale peach that vanished on white; danger red is the
   // convention for an unread count and holds up on both planes.
@@ -115,6 +137,19 @@
 [data-bs-theme="dark"] .modal-content .bg-white,
 [data-bs-theme="dark"] .modal-content .bg-light {
   background-color: var(--app-dark-surface-2) !important;
+}
+
+// The footer is a .bg-light living inside the content plane, so the rule above
+// catches it and paints it as a raised inset. It is not an inset — it is the
+// navigation surface, the same as the top bar. This restates the shared value
+// with an ID in the selector so it outranks that rule; without it the shared
+// footer rule in _surfaces.scss cannot win here, whatever its !important says.
+[data-bs-theme="dark"] #layoutSidenav_content > footer.bg-light {
+  background-color: var(--app-footer-bg) !important;
+}
+
+[data-bs-theme="dark"] #layoutSidenav_content > footer.bg-light .text-muted {
+  color: var(--app-footer-text) !important;
 }
 
 [data-bs-theme="dark"] #layoutSidenav_content .text-dark,
@@ -271,29 +306,6 @@
   --bs-alert-border-color: rgba(var(--bs-danger-rgb), 0.35);
 }
 
-// --- Footer ----------------------------------------------------------------
-// Sits on the navigation surface, matching the sidebar footer set in
-// _layout.scss. The bg-light override above would otherwise make it an inset.
-
-// Qualified with .bg-light so it outranks the utility override above, which
-// would otherwise leave this bar a step lighter than the sidebar footer.
-[data-bs-theme="dark"] #layoutSidenav_content > footer.bg-light {
-  background-color: var(--app-dark-surface) !important;
-}
-
-// The Help row inherits rgba(255, 255, 255, 0.5) from .sb-sidenav-dark.
-[data-bs-theme="dark"] #layoutSidenav_content > footer,
-[data-bs-theme="dark"] #layoutSidenav_content > footer .text-muted,
-[data-bs-theme="dark"] #layoutSidenav_content > footer a {
-  color: rgba(255, 255, 255, 0.5) !important;
-}
-
-// Matches .help-footer-btn-dark, which brightens to white rather than blue.
-[data-bs-theme="dark"] #layoutSidenav_content > footer a:hover,
-[data-bs-theme="dark"] #layoutSidenav_content > footer a:focus-visible {
-  color: var(--bs-white) !important;
-}
-
 // --- Topnav details --------------------------------------------------------
 // The unread dot's ring is drawn with --bs-body-bg inline; point it at the
 // bar's own colour so the ring disappears into it rather than flashing white.
@@ -304,7 +316,15 @@
 }
 
 [data-bs-theme="dark"] .sb-topnav {
-  --bs-body-bg: var(--app-dark-surface);
+  // The unread dot draws its rim from this, so it has to match the bar, not the
+  // raised surfaces.
+  --bs-body-bg: var(--app-obsidian);
+}
+
+// A panel the same colour as the plane behind it needs the shadow to do the
+// separating, so it goes deeper here than on white.
+[data-bs-theme="dark"] .sb-topnav .dropdown .topnav-dropdown-menu {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.55) !important;
 }
 
 // --- Readability fixes for the dark plane ------------------------------------
@@ -332,29 +352,19 @@
 // the tokens the light rules already read, so no light rule is duplicated here.
 
 [data-bs-theme="dark"] .centered-bg {
-  --app-auth-bg: var(--app-obsidian);
-  --app-auth-surface: #131a16;
+  --app-auth-surface: #1c221e;
   --app-auth-panel: rgba(127, 201, 141, 0.1);
-  --app-auth-field-border: #24322a;
+  --app-auth-field-border: #2c3330;
+  --app-auth-icon: var(--app-nav-icon);
 
   // The rings around the field icons are drawn by the .border utility, which is
   // !important and so wins over the colour written on the element — meaning they
-  // read this, not the accent. On white it is a quiet grey; left alone it would
-  // be a near-white ring burning a hole in the dark plane.
-  --bs-border-color: #24322a;
+  // read this, not the colour on the element. Left alone it would be a near-white
+  // ring burning a hole in the dark plane.
+  --bs-border-color: #2c3330;
   --app-auth-placeholder: #8a968e;
   --app-auth-heading: #9aa79f;
   --app-auth-icon-off: #3a4740;
-  --app-auth-footer-bg: #0f1613;
-  --app-auth-footer-line: #1e2a23;
-
-  // Moss is a button fill here, not ink. As ink on obsidian it fails to read, so
-  // anything drawing the accent as a line or a glyph lifts — but only as far as
-  // it needs to. #7FC98D sat at about 9:1 against the plane and read as neon
-  // beside the light theme's 4.6:1; this lands at roughly 5:1, so the field
-  // icons and ticks carry the same weight in both themes. The paler green is
-  // still used for footer links, where it is competing with body text.
-  --app-accent-ink: #4a8f54;
 
   // The same three tone pairs, re-aimed for a dark plane. The status hues used
   // on white go muddy here, so each lifts to its brighter counterpart.
@@ -379,16 +389,6 @@
 
 [data-bs-theme="dark"] .centered-bg .text-muted {
   color: #9aa79f !important;
-}
-
-[data-bs-theme="dark"] .centered-bg footer a {
-  color: var(--app-moss-on-dark);
-}
-
-// An obsidian square on an obsidian plane is nothing, so the mark inverts.
-[data-bs-theme="dark"] .centered-bg .app-brand-mark {
-  --app-brand-bg: #ffffff;
-  --app-brand-fg: var(--app-obsidian);
 }
 
 // Deepening the accent on hover works on white and disappears on obsidian, so

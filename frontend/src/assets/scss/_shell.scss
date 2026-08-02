@@ -129,28 +129,11 @@ body {
 #layoutSidenav_content > footer.bg-light {
   padding-top: 0.25rem !important;
   padding-bottom: 0.25rem !important;
-  background-color: var(--bs-white) !important;
 }
 
 // The footer is a flex container now, so its row needs to claim the width.
 #layoutSidenav_content > footer > .container-fluid {
   width: 100%;
-}
-
-// Footer text and links take the Help row's treatment: the sidebar's own text
-// colour at rest, brightening to blue on hover. Without this the copyright and
-// separator keep Bootstrap's muted grey and the links keep default link blue,
-// so the two footers read as different bars.
-#layoutSidenav_content > footer,
-#layoutSidenav_content > footer .text-muted,
-#layoutSidenav_content > footer a {
-  color: var(--bs-dark) !important;
-  transition: color 0.15s ease-in-out;
-}
-
-#layoutSidenav_content > footer a:hover,
-#layoutSidenav_content > footer a:focus-visible {
-  color: var(--bs-primary) !important;
 }
 
 // In dark mode the sidebar already matches the topnav's bg-dark (#212529).
