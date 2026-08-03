@@ -1,4 +1,4 @@
-import ErrorPage, { BackToDashboardLink } from "./ErrorPage.jsx";
+import ErrorPage, { BackToDashboardLink } from "./shell/ErrorPage.jsx";
 
 // ServerError — 500 page.
 export default function ServerError() {

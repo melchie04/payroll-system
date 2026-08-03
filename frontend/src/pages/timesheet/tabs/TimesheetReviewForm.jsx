@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { DataCard, Table, Tr, Td, Badge, BtnPrimary, BtnSecondary, BtnDanger, Modal, PageHeader, TabsNav } from "../../components/ui/index.jsx";
+import { DataCard, Table, Tr, Td, Badge, BtnPrimary, BtnSecondary, BtnDanger, Modal, PageHeader, TabsNav } from "../../../components/ui/index.jsx";
 import {
   checkPeriodHalf,
   findDuplicateSheets,
@@ -11,10 +11,10 @@ import {
   resolveEmployee,
   deploymentState,
   parsePeriodLabel,
-} from "../../context/TimesheetContext.jsx";
-import { sheetPeriods } from "../../assets/data/index.js";
-import { useEmployees } from "../../context/EmployeesContext.jsx";
-import { useClients } from "../../context/ClientsContext.jsx";
+} from "../../../context/TimesheetContext.jsx";
+import { sheetPeriods } from "../../../assets/data/index.js";
+import { useEmployees } from "../../../context/EmployeesContext.jsx";
+import { useClients } from "../../../context/ClientsContext.jsx";
 import { SuggestField, SignatureItem, TotalItem } from "./ReviewFields.jsx";
 
 // Suggestions for the sheet fields, taken from the same lists the rest of the app

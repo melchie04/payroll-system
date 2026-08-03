@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { PageHeader, TabsNav } from "../../components/ui/index.jsx";
 import { systemUsers, roles as initialRoles } from "../../assets/data/index.js";
 
-import { GeneralTab } from "./settings-tabs/GeneralTab.jsx";
-import { UsersTab } from "./settings-tabs/UsersTab.jsx";
-import { RolesTab } from "./settings-tabs/RolesTab.jsx";
+import { GeneralTab } from "./tabs/GeneralTab.jsx";
+import { UsersTab } from "./tabs/UsersTab.jsx";
+import { RolesTab } from "./tabs/RolesTab.jsx";
 
 const TABS = [
   { key: "general", label: "General", icon: "fa-building" },

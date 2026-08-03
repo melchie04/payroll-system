@@ -1,4 +1,4 @@
-import ErrorPage, { BackToDashboardLink } from "./ErrorPage.jsx";
+import ErrorPage, { BackToDashboardLink } from "./shell/ErrorPage.jsx";
 
 // AccessDenied — 403 page.
 export default function AccessDenied() {
