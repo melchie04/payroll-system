@@ -56,7 +56,12 @@ export default function Billing() {
       { label: "Total Invoiced", value: formatCurrency(sum(invoices)), icon: "fa-file-invoice" },
       { label: "Paid Amount", value: formatCurrency(sum(invoices.filter((inv) => inv.status === "Paid"))), icon: "fa-circle-check" },
       { label: "Outstanding", value: formatCurrency(sum(invoices.filter((inv) => inv.status !== "Paid"))), icon: "fa-hourglass-half" },
-      { label: "Overdue", value: formatCurrency(sum(invoices.filter((inv) => inv.status === "Overdue"))), valueColor: "var(--bs-danger)", icon: "fa-triangle-exclamation" },
+      {
+        label: "Overdue",
+        value: formatCurrency(sum(invoices.filter((inv) => inv.status === "Overdue"))),
+        valueColor: "var(--bs-danger)",
+        icon: "fa-triangle-exclamation",
+      },
     ];
   }, [invoices]);
 
@@ -133,7 +138,14 @@ export default function Billing() {
   }
 
   function handleExportSelected() {
-    exportToCsv("invoices-selected", CSV_HEADERS, toCsvRows(invoices.filter((inv) => selected.includes(inv.id)), nameFor));
+    exportToCsv(
+      "invoices-selected",
+      CSV_HEADERS,
+      toCsvRows(
+        invoices.filter((inv) => selected.includes(inv.id)),
+        nameFor,
+      ),
+    );
   }
 
   const emptyInvoice = {
@@ -324,7 +336,11 @@ export default function Billing() {
                       <input className="form-check-input" type="checkbox" checked={selected.includes(inv.id)} onChange={() => toggleOne(inv.id)} />
                     </Td>
                     <Td bold>
-                      <button type="button" className="btn btn-link p-0 fw-semibold text-decoration-none" onClick={() => navigate(`/billing/${inv.id}`)}>
+                      <button
+                        type="button"
+                        className="btn btn-link p-0 fw-semibold text-decoration-none"
+                        onClick={() => navigate(`/billing/${inv.id}`)}
+                      >
                         {inv.id}
                       </button>
                     </Td>

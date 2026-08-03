@@ -1,6 +1,19 @@
 import { useEffect, useRef, useState } from "react";
 import { Modal as BsModal } from "bootstrap";
-import { DataCard, Table, Tr, Td, Badge, BtnPrimary, BtnSecondary, BtnDanger, ActionsMenu, Modal, FormField, RequirementRow } from "../../../components/ui/index.jsx";
+import {
+  DataCard,
+  Table,
+  Tr,
+  Td,
+  Badge,
+  BtnPrimary,
+  BtnSecondary,
+  BtnDanger,
+  ActionsMenu,
+  Modal,
+  FormField,
+  RequirementRow,
+} from "../../../components/ui/index.jsx";
 
 const emptyResetForm = { password: "", confirmPassword: "" };
 

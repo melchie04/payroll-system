@@ -153,7 +153,7 @@ export default function ActivityLog() {
                   <Td>{log.action}</Td>
                   <Td className="text-muted">{log.detail}</Td>
                   <Td>
-                    <span className="badge rounded-pill bg-secondary bg-opacity-10 text-secondary fw-normal py-1">{log.module}</span>
+                    <span className="app-chip badge rounded-pill py-1">{log.module}</span>
                   </Td>
                   <Td className="text-nowrap">{log.timestamp}</Td>
                 </Tr>

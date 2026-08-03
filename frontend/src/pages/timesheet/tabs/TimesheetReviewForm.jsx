@@ -438,7 +438,7 @@ export function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, on
                             </div>
                           </div>
 
-                          <span className="badge rounded-pill bg-secondary bg-opacity-10 text-secondary fw-normal py-1 flex-shrink-0">
+                          <span className="app-chip badge rounded-pill py-1 flex-shrink-0">
                             {a.level}
                           </span>
                         </div>

@@ -61,7 +61,12 @@ export function TimesheetCoverage({ rows = [], period, onUploadFor }) {
         {rows.length === 0 ? (
           <div className="text-center text-muted py-5 small">No employees to show for this client and pay period.</div>
         ) : (
-          <Table headers={["Employee", "Client", "Sheets", "Days Covered", "Status", "Actions"]} itemLabel="employees" pageSize={10} mobilePageSize={4}>
+          <Table
+            headers={["Employee", "Client", "Sheets", "Days Covered", "Status", "Actions"]}
+            itemLabel="employees"
+            pageSize={10}
+            mobilePageSize={4}
+          >
             {rows.map((r) => (
               <Tr key={r.id}>
                 <Td bold>{r.employee}</Td>

@@ -1,6 +1,18 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router";
-import { DataCard, Table, Tr, Td, Badge, BtnSecondary, BtnDanger, Modal, ActionsMenu, FilterSelect, SearchInput } from "../../../components/ui/index.jsx";
+import {
+  DataCard,
+  Table,
+  Tr,
+  Td,
+  Badge,
+  BtnSecondary,
+  BtnDanger,
+  Modal,
+  ActionsMenu,
+  FilterSelect,
+  SearchInput,
+} from "../../../components/ui/index.jsx";
 import { useTimesheets, findDuplicateSheets, isSheetClean, sheetTotals } from "../../../context/TimesheetContext.jsx";
 import { useEmployees } from "../../../context/EmployeesContext.jsx";
 import { useClients } from "../../../context/ClientsContext.jsx";
@@ -110,12 +122,7 @@ export function TimesheetFiles({ files = [] }) {
             </FilterSelect>
           </div>
           <div className="col-12 col-md-4">
-            <SearchInput
-              label="Search Sheets"
-              placeholder="Search file or employee"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
+            <SearchInput label="Search Sheets" placeholder="Search file or employee" value={search} onChange={(e) => setSearch(e.target.value)} />
           </div>
         </div>
       </section>
@@ -169,7 +176,12 @@ export function TimesheetFiles({ files = [] }) {
                 </div>
               )}
 
-              <Table headers={["Sheet", "Uploaded", "Employee", "Sheet Period", "Status", "Actions"]} itemLabel="sheets" pageSize={10} mobilePageSize={4}>
+              <Table
+                headers={["Sheet", "Uploaded", "Employee", "Sheet Period", "Status", "Actions"]}
+                itemLabel="sheets"
+                pageSize={10}
+                mobilePageSize={4}
+              >
                 {visible.map((f) => (
                   <Tr key={f.id}>
                     <Td>
@@ -291,8 +303,8 @@ export function TimesheetFiles({ files = [] }) {
         }
       >
         <p className="text-muted small mb-3">
-          Nothing was flagged on these sheets. Check the period on each one against the paper before approving — it is the only line that says
-          which month the days belong to.
+          Nothing was flagged on these sheets. Check the period on each one against the paper before approving — it is the only line that says which
+          month the days belong to.
         </p>
 
         <div className="border rounded-3 overflow-hidden mb-3">
@@ -389,9 +401,7 @@ export function TimesheetFiles({ files = [] }) {
             <p className="mb-1" style={{ overflowWrap: "anywhere" }}>
               Discard <strong>{discardTarget?.name}</strong>?
             </p>
-            <p className="text-muted small mb-0">
-              The uploaded document and anything read from it will be removed. This action cannot be undone.
-            </p>
+            <p className="text-muted small mb-0">The uploaded document and anything read from it will be removed. This action cannot be undone.</p>
           </div>
         </div>
       </Modal>

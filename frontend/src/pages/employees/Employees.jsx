@@ -68,8 +68,7 @@ export default function Employees() {
     setSelected(allSelected ? selected.filter((id) => !visibleIds.includes(id)) : [...new Set([...selected, ...visibleIds])]);
   }
 
-  const toggleStatusDraft = (opt) =>
-    setStatusDraft((prev) => (prev.includes(opt) ? prev.filter((s) => s !== opt) : [...prev, opt]));
+  const toggleStatusDraft = (opt) => setStatusDraft((prev) => (prev.includes(opt) ? prev.filter((s) => s !== opt) : [...prev, opt]));
 
   const [target, setTarget] = useState(null);
 
@@ -221,75 +220,75 @@ export default function Employees() {
               </BtnSecondary>
             </div>
           ) : (
-          <Table
-            headers={[
-              <span key="select-all">
-                <input type="checkbox" className="form-check-input" checked={allSelected} onChange={toggleAll} />
-              </span>,
-              "Name",
-              "Client",
-              "Position",
-              "Email",
-              "Rate (₱/hr)",
-              "Status",
-              "Actions",
-            ]}
-            itemLabel="employees"
-          >
-            {visibleEmployees.map((emp) => (
-              <Tr key={emp.id}>
-                <Td>
-                  <input className="form-check-input" type="checkbox" checked={selected.includes(emp.id)} onChange={() => toggleOne(emp.id)} />
-                </Td>
-                <Td bold>
-                  <Link to={`/employees/${emp.id}`} className="text-decoration-none">
-                    {emp.name}
-                  </Link>
-                  <div className="text-muted small">{emp.code}</div>
-                </Td>
-                <Td>{clientNameByCode(emp.client)}</Td>
-                <Td>{emp.position}</Td>
-                <Td>{emp.email}</Td>
-                <Td>{emp.rate}</Td>
-                <Td>
-                  <Badge status={emp.status} />
-                </Td>
-                <Td>
-                  <ActionsMenu
-                    items={[
-                      { label: "View profile", icon: "fa-eye", onClick: () => navigate(`/employees/${emp.id}`) },
-                      { label: "Edit employee", icon: "fa-pen", onClick: () => navigate(`/employees/${emp.id}/edit`) },
-                      { divider: true },
-                      emp.status === "Inactive" && {
-                        label: "Restore employee",
-                        icon: "fa-rotate-left",
-                        onClick: () => {
-                          logActivity({ action: "Restored employee", detail: `Restored ${emp.name} (${emp.code})`, module: "Employees" });
-                          restoreEmployee(emp.id);
+            <Table
+              headers={[
+                <span key="select-all">
+                  <input type="checkbox" className="form-check-input" checked={allSelected} onChange={toggleAll} />
+                </span>,
+                "Name",
+                "Client",
+                "Position",
+                "Email",
+                "Rate (₱/hr)",
+                "Status",
+                "Actions",
+              ]}
+              itemLabel="employees"
+            >
+              {visibleEmployees.map((emp) => (
+                <Tr key={emp.id}>
+                  <Td>
+                    <input className="form-check-input" type="checkbox" checked={selected.includes(emp.id)} onChange={() => toggleOne(emp.id)} />
+                  </Td>
+                  <Td bold>
+                    <Link to={`/employees/${emp.id}`} className="text-decoration-none">
+                      {emp.name}
+                    </Link>
+                    <div className="text-muted small">{emp.code}</div>
+                  </Td>
+                  <Td>{clientNameByCode(emp.client)}</Td>
+                  <Td>{emp.position}</Td>
+                  <Td>{emp.email}</Td>
+                  <Td>{emp.rate}</Td>
+                  <Td>
+                    <Badge status={emp.status} />
+                  </Td>
+                  <Td>
+                    <ActionsMenu
+                      items={[
+                        { label: "View profile", icon: "fa-eye", onClick: () => navigate(`/employees/${emp.id}`) },
+                        { label: "Edit employee", icon: "fa-pen", onClick: () => navigate(`/employees/${emp.id}/edit`) },
+                        { divider: true },
+                        emp.status === "Inactive" && {
+                          label: "Restore employee",
+                          icon: "fa-rotate-left",
+                          onClick: () => {
+                            logActivity({ action: "Restored employee", detail: `Restored ${emp.name} (${emp.code})`, module: "Employees" });
+                            restoreEmployee(emp.id);
+                          },
                         },
-                      },
-                      emp.status !== "Inactive" &&
-                        hasHistory(emp) && {
-                          label: "Archive employee",
-                          icon: "fa-box-archive",
-                          title: "Keeps the record so their timesheets still resolve",
-                          modalTarget: "employeeArchiveModal",
-                          onClick: () => setTarget(emp),
-                        },
-                      emp.status !== "Inactive" &&
-                        !hasHistory(emp) && {
-                          label: "Delete employee",
-                          icon: "fa-trash",
-                          danger: true,
-                          modalTarget: "employeeDeleteModal",
-                          onClick: () => setTarget(emp),
-                        },
-                    ].filter(Boolean)}
-                  />
-                </Td>
-              </Tr>
-            ))}
-          </Table>
+                        emp.status !== "Inactive" &&
+                          hasHistory(emp) && {
+                            label: "Archive employee",
+                            icon: "fa-box-archive",
+                            title: "Keeps the record so their timesheets still resolve",
+                            modalTarget: "employeeArchiveModal",
+                            onClick: () => setTarget(emp),
+                          },
+                        emp.status !== "Inactive" &&
+                          !hasHistory(emp) && {
+                            label: "Delete employee",
+                            icon: "fa-trash",
+                            danger: true,
+                            modalTarget: "employeeDeleteModal",
+                            onClick: () => setTarget(emp),
+                          },
+                      ].filter(Boolean)}
+                    />
+                  </Td>
+                </Tr>
+              ))}
+            </Table>
           )}
         </DataCard>
       </section>
@@ -328,9 +327,8 @@ export default function Employees() {
         }
       >
         <p className="mb-0">
-          <strong>{target?.name}</strong> has timesheets on record, so the profile is kept and marked Inactive
-          instead of deleted. Those sheets keep resolving, and Coverage stops expecting paperwork. You can restore
-          them from the roster at any time.
+          <strong>{target?.name}</strong> has timesheets on record, so the profile is kept and marked Inactive instead of deleted. Those sheets keep
+          resolving, and Coverage stops expecting paperwork. You can restore them from the roster at any time.
         </p>
       </Modal>
 

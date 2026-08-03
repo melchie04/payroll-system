@@ -3,9 +3,7 @@ import { createContext, useContext, useEffect, useRef, useState } from "react";
 
 // ThemeProvider — light/dark theme state, persisted to localStorage.
 export function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState(
-    () => localStorage.getItem("theme") || "light",
-  );
+  const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "light");
   const firstRender = useRef(true);
 
   useEffect(() => {
@@ -26,18 +24,11 @@ export function ThemeProvider({ children }) {
     void root.offsetWidth;
     root.setAttribute("data-bs-theme", theme);
 
-    const id = window.setTimeout(
-      () => root.classList.remove("theme-transition"),
-      300,
-    );
+    const id = window.setTimeout(() => root.classList.remove("theme-transition"), 300);
     return () => window.clearTimeout(id);
   }, [theme]);
 
-  return (
-    <ThemeContext.Provider value={{ theme, setTheme }}>
-      {children}
-    </ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={{ theme, setTheme }}>{children}</ThemeContext.Provider>;
 }
 
 const ThemeContext = createContext(null);

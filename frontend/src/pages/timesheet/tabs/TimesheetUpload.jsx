@@ -89,7 +89,7 @@ function screen(file, taken) {
 
 // TimesheetUpload — the dropzone, the queue of files being taken in, what a good
 // file looks like, and recent throughput.
-export function TimesheetUpload({ summary, client, canUpload = true, onOpenSheets }) {
+export function TimesheetUpload({ summary, client, clientCode, canUpload = true, onOpenSheets }) {
   const { addSheets } = useTimesheets();
 
   const [drag, setDrag] = useState(false);
@@ -331,7 +331,11 @@ export function TimesheetUpload({ summary, client, canUpload = true, onOpenSheet
                       </div>
 
                       <div className="flex-grow-1" style={{ minWidth: 0 }}>
-                        <div className="fw-semibold text-truncate text-decoration-line-through" style={{ fontSize: "var(--app-fs-3)" }} title={r.name}>
+                        <div
+                          className="fw-semibold text-truncate text-decoration-line-through"
+                          style={{ fontSize: "var(--app-fs-3)" }}
+                          title={r.name}
+                        >
                           {r.name}
                         </div>
                         <div className="text-danger" style={{ fontSize: "var(--app-fs-1)" }}>
@@ -388,9 +392,7 @@ export function TimesheetUpload({ summary, client, canUpload = true, onOpenSheet
                     </div>
                   </div>
 
-                  <span className="badge rounded-pill bg-secondary bg-opacity-10 text-secondary fw-normal py-1 flex-shrink-0">
-                    {r.level}
-                  </span>
+                  <span className="app-chip badge rounded-pill py-1 flex-shrink-0">{r.level}</span>
                 </div>
               ))}
             </div>

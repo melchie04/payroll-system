@@ -299,11 +299,7 @@ export function TimesheetProvider({ children }) {
     const wanted = new Set(ids.map(String));
     const at = new Date().toISOString();
     setFiles((prev) =>
-      prev.map((f) =>
-        wanted.has(String(f.id))
-          ? { ...f, status: "Approved", period: { ...f.period, confirmed: true }, savedAt: at }
-          : f,
-      ),
+      prev.map((f) => (wanted.has(String(f.id)) ? { ...f, status: "Approved", period: { ...f.period, confirmed: true }, savedAt: at } : f)),
     );
   }
 

@@ -66,7 +66,11 @@ export default function Payslip() {
               description={`${employee.code} · ${employee.position} · ${row?.client || "—"}`}
               actions={
                 <>
-                  <button type="button" className="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2" onClick={() => window.print()}>
+                  <button
+                    type="button"
+                    className="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2"
+                    onClick={() => window.print()}
+                  >
                     <i className="fas fa-file-pdf"></i> Download PDF
                   </button>
                   {row && row.status !== "Paid" && (

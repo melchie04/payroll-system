@@ -11,9 +11,7 @@ function RequirementRow({ met, label }) {
         className={met ? "fas fa-circle-check" : "far fa-circle"}
         style={{ fontSize: "var(--app-fs-1)", color: met ? "var(--app-accent-ink)" : "var(--app-auth-icon-off)" }}
       ></i>
-      <span style={{ fontSize: "var(--app-fs-3)", color: met ? "var(--bs-body-color)" : "var(--app-auth-placeholder)" }}>
-        {label}
-      </span>
+      <span style={{ fontSize: "var(--app-fs-3)", color: met ? "var(--bs-body-color)" : "var(--app-auth-placeholder)" }}>{label}</span>
     </div>
   );
 }
@@ -63,7 +61,13 @@ export default function ChangePassword() {
       <div className="w-100 text-center" style={{ maxWidth: 360 }}>
         <div
           className="d-inline-flex align-items-center justify-content-center rounded-circle mb-3"
-          style={{ width: "var(--app-icon-lg)", height: "var(--app-icon-lg)", fontSize: "var(--app-fs-7)", background: "var(--app-auth-panel)", color: "var(--app-accent-ink)" }}
+          style={{
+            width: "var(--app-icon-lg)",
+            height: "var(--app-icon-lg)",
+            fontSize: "var(--app-fs-7)",
+            background: "var(--app-auth-panel)",
+            color: "var(--app-accent-ink)",
+          }}
         >
           <i className="fas fa-circle-check"></i>
         </div>
@@ -262,7 +266,11 @@ export default function ChangePassword() {
           </div>
         )}
 
-        <button type="submit" className="btn btn-app-primary rounded-pill w-100 text-white py-2 fw-normal shadow-sm" style={{ fontSize: "var(--app-fs-5)" }}>
+        <button
+          type="submit"
+          className="btn btn-app-primary rounded-pill w-100 text-white py-2 fw-normal shadow-sm"
+          style={{ fontSize: "var(--app-fs-5)" }}
+        >
           Set New Password
         </button>
       </form>

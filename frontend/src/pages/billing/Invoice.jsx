@@ -70,7 +70,11 @@ export default function Invoice() {
               description={`${clientName} · ${invoice.period || "No period recorded"}`}
               actions={
                 <>
-                  <button type="button" className="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2" onClick={() => window.print()}>
+                  <button
+                    type="button"
+                    className="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2"
+                    onClick={() => window.print()}
+                  >
                     <i className="fas fa-file-pdf"></i> Download PDF
                   </button>
                   {invoice.status !== "Paid" && (
@@ -137,9 +141,7 @@ export default function Invoice() {
               </div>
             ) : (
               <div className="card-body">
-                <p className="text-muted small mb-0">
-                  This invoice points at client {invoice.clientCode}, which is no longer on file.
-                </p>
+                <p className="text-muted small mb-0">This invoice points at client {invoice.clientCode}, which is no longer on file.</p>
               </div>
             )}
           </DataCard>

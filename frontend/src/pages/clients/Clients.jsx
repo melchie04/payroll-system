@@ -219,78 +219,78 @@ export default function Clients() {
               </BtnSecondary>
             </div>
           ) : (
-          <Table
-            headers={[
-              <span key="select-all">
-                <input type="checkbox" className="form-check-input" checked={allSelected} onChange={toggleAll} />
-              </span>,
-              "Client",
-              "Contact Person",
-              "Email",
-              "Phone",
-              "Industry",
-              "Employees",
-              "Outstanding (₱)",
-              "Status",
-              "Actions",
-            ]}
-            itemLabel="clients"
-          >
-            {visibleClients.map((c) => (
-              <Tr key={c.id}>
-                <Td>
-                  <input className="form-check-input" type="checkbox" checked={selected.includes(c.id)} onChange={() => toggleOne(c.id)} />
-                </Td>
-                <Td bold>
-                  <Link to={`/clients/${c.id}`} className="text-decoration-none">
-                    {c.name}
-                  </Link>
-                </Td>
-                <Td>{c.contact}</Td>
-                <Td>{c.email}</Td>
-                <Td>{c.phone}</Td>
-                <Td>{c.industry}</Td>
-                <Td>{countForClient(c.code)}</Td>
-                <Td>{formatCurrency(outstandingFor(c.code))}</Td>
-                <Td>
-                  <Badge status={c.status} />
-                </Td>
-                <Td>
-                  <ActionsMenu
-                    items={[
-                      { label: "View details", icon: "fa-eye", onClick: () => navigate(`/clients/${c.id}`) },
-                      { label: "Edit client", icon: "fa-pen", onClick: () => navigate(`/clients/${c.id}/edit`) },
-                      { divider: true },
-                      c.status === "Inactive" && {
-                        label: "Restore client",
-                        icon: "fa-rotate-left",
-                        onClick: () => {
-                          logActivity({ action: "Restored client", detail: `Restored ${c.name} (${c.code})`, module: "Clients" });
-                          restoreClient(c.id);
+            <Table
+              headers={[
+                <span key="select-all">
+                  <input type="checkbox" className="form-check-input" checked={allSelected} onChange={toggleAll} />
+                </span>,
+                "Client",
+                "Contact Person",
+                "Email",
+                "Phone",
+                "Industry",
+                "Employees",
+                "Outstanding (₱)",
+                "Status",
+                "Actions",
+              ]}
+              itemLabel="clients"
+            >
+              {visibleClients.map((c) => (
+                <Tr key={c.id}>
+                  <Td>
+                    <input className="form-check-input" type="checkbox" checked={selected.includes(c.id)} onChange={() => toggleOne(c.id)} />
+                  </Td>
+                  <Td bold>
+                    <Link to={`/clients/${c.id}`} className="text-decoration-none">
+                      {c.name}
+                    </Link>
+                  </Td>
+                  <Td>{c.contact}</Td>
+                  <Td>{c.email}</Td>
+                  <Td>{c.phone}</Td>
+                  <Td>{c.industry}</Td>
+                  <Td>{countForClient(c.code)}</Td>
+                  <Td>{formatCurrency(outstandingFor(c.code))}</Td>
+                  <Td>
+                    <Badge status={c.status} />
+                  </Td>
+                  <Td>
+                    <ActionsMenu
+                      items={[
+                        { label: "View details", icon: "fa-eye", onClick: () => navigate(`/clients/${c.id}`) },
+                        { label: "Edit client", icon: "fa-pen", onClick: () => navigate(`/clients/${c.id}/edit`) },
+                        { divider: true },
+                        c.status === "Inactive" && {
+                          label: "Restore client",
+                          icon: "fa-rotate-left",
+                          onClick: () => {
+                            logActivity({ action: "Restored client", detail: `Restored ${c.name} (${c.code})`, module: "Clients" });
+                            restoreClient(c.id);
+                          },
                         },
-                      },
-                      c.status !== "Inactive" &&
-                        hasHistory(c) && {
-                          label: "Archive client",
-                          icon: "fa-box-archive",
-                          title: "Keeps the record so its invoices and staff still resolve",
-                          modalTarget: "clientArchiveModal",
-                          onClick: () => setTarget(c),
-                        },
-                      c.status !== "Inactive" &&
-                        !hasHistory(c) && {
-                          label: "Delete client",
-                          icon: "fa-trash",
-                          danger: true,
-                          modalTarget: "clientDeleteModal",
-                          onClick: () => setTarget(c),
-                        },
-                    ].filter(Boolean)}
-                  />
-                </Td>
-              </Tr>
-            ))}
-          </Table>
+                        c.status !== "Inactive" &&
+                          hasHistory(c) && {
+                            label: "Archive client",
+                            icon: "fa-box-archive",
+                            title: "Keeps the record so its invoices and staff still resolve",
+                            modalTarget: "clientArchiveModal",
+                            onClick: () => setTarget(c),
+                          },
+                        c.status !== "Inactive" &&
+                          !hasHistory(c) && {
+                            label: "Delete client",
+                            icon: "fa-trash",
+                            danger: true,
+                            modalTarget: "clientDeleteModal",
+                            onClick: () => setTarget(c),
+                          },
+                      ].filter(Boolean)}
+                    />
+                  </Td>
+                </Tr>
+              ))}
+            </Table>
           )}
         </DataCard>
       </section>
@@ -329,9 +329,8 @@ export default function Clients() {
         }
       >
         <p className="mb-0">
-          <strong>{target?.name}</strong> has invoices or staff on record, so the record is kept and marked
-          Inactive instead of deleted. Those invoices and employees still resolve to this client. You can restore
-          it from the list at any time.
+          <strong>{target?.name}</strong> has invoices or staff on record, so the record is kept and marked Inactive instead of deleted. Those
+          invoices and employees still resolve to this client. You can restore it from the list at any time.
         </p>
       </Modal>
 

@@ -68,7 +68,13 @@ export default function Dashboard() {
       value: formatCurrency(pendingPayroll),
       sub: `For ${rows.filter((r) => r.status !== "Paid").length} employees`,
     },
-    { to: "/billing", label: "Unbilled Amount", value: formatCurrency(unbilled), icon: "fa-file-invoice-dollar", sub: "Approved work not yet invoiced" },
+    {
+      to: "/billing",
+      label: "Unbilled Amount",
+      value: formatCurrency(unbilled),
+      icon: "fa-file-invoice-dollar",
+      sub: "Approved work not yet invoiced",
+    },
     {
       to: "/billing",
       label: "Overdue Invoices",

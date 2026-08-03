@@ -55,7 +55,7 @@
 
   --app-notice-success-bg: rgba(117, 183, 152, 0.1);
   --app-notice-danger-bg: rgba(255, 107, 107, 0.1);
-  --app-input-bg: var(--app-dark-bg);
+  --app-input-bg: var(--app-surface);
   --app-input-fg: var(--app-dark-text);
   --app-notice-success-border: #2c5138;
   --app-notice-success-ink: #75b798;
@@ -209,7 +209,11 @@
 [data-bs-theme="dark"] #layoutSidenav_content .form-select,
 [data-bs-theme="dark"] .modal-content .form-control,
 [data-bs-theme="dark"] .modal-content .form-select {
-  background-color: var(--app-dark-bg);
+  // The surface, not the plane. A field painted with the plane colour is darker
+  // than the card holding it, which is the opposite of light mode, where a white
+  // field sits on a white card. On the filter toolbar, where fields sit directly
+  // on the plane, this is also what lifts them off it.
+  background-color: var(--app-input-bg);
   border-color: var(--app-dark-border);
   color: var(--app-dark-text);
 }

@@ -66,7 +66,7 @@ export default function Notifications() {
                   </div>
 
                   <div className="d-flex align-items-center flex-wrap gap-2">
-                    <span className="notif-type badge rounded-pill py-1">{n.type}</span>
+                    <span className="app-chip badge rounded-pill py-1">{n.type}</span>
                     <span className="text-muted text-nowrap" style={{ fontSize: "var(--app-fs-2)" }}>
                       {n.time}
                     </span>

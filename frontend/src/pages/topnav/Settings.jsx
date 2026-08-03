@@ -55,7 +55,6 @@ export default function Settings() {
       {tab === "users" && <UsersTab users={users} setUsers={setUsers} roleList={roleList} />}
 
       {tab === "roles" && <RolesTab roleList={roleList} setRoleList={setRoleList} />}
-
     </>
   );
 }

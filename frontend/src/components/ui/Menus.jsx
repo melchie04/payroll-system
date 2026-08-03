@@ -72,7 +72,7 @@ export function FilterMenu({ children, onReset, onApply }) {
     <div className="dropdown">
       <button
         type="button"
-        className="btn btn-outline-secondary bg-white text-muted d-flex align-items-center justify-content-center flex-shrink-0"
+        className="btn btn-outline-secondary text-muted d-flex align-items-center justify-content-center flex-shrink-0"
         title="Filter Options"
         data-bs-toggle="dropdown"
         aria-expanded="false"

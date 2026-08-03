@@ -126,7 +126,10 @@ export default function EmployeeForm() {
       position: form.position.trim(),
       email: form.email.trim(),
       rate: form.rate.startsWith("₱") ? form.rate : `₱${form.rate}`,
-      aliases: form.aliases.split(",").map((a) => a.trim()).filter(Boolean),
+      aliases: form.aliases
+        .split(",")
+        .map((a) => a.trim())
+        .filter(Boolean),
     };
 
     if (isEdit) {
@@ -152,7 +155,14 @@ export default function EmployeeForm() {
     <>
       <section>
         <div className="mt-4 d-flex align-items-start gap-2">
-          <button type="button" onClick={handleBack} className="nav-icon-btn flex-shrink-0" style={{ marginTop: -6 }} aria-label={backLabel} title={backLabel}>
+          <button
+            type="button"
+            onClick={handleBack}
+            className="nav-icon-btn flex-shrink-0"
+            style={{ marginTop: -6 }}
+            aria-label={backLabel}
+            title={backLabel}
+          >
             <i className="fas fa-arrow-left"></i>
           </button>
           <div className="flex-grow-1">

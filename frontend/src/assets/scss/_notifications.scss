@@ -18,13 +18,6 @@
   box-shadow: inset 3px 0 0 var(--app-menu-keyline);
 }
 
-// The module pill. Neutral in both themes — the module is a label, not a status.
-.notif-type {
-  background-color: var(--app-chip-bg);
-  color: var(--app-chip-fg);
-  font-weight: 400;
-}
-
 // The unread dot. It is rendered on EVERY row and simply has no colour when the
 // row is read, so the timestamps above it line up down the whole list — before,
 // read rows had no dot at all and their timestamps sat 8px further right.

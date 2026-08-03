@@ -50,10 +50,7 @@ export default function Timesheet() {
 
   // Archived clients are not offered, but the one already chosen stays in the list so
   // archiving a client mid-session cannot leave the filter pointing at a missing option.
-  const clientOptions = useMemo(
-    () => [...new Set([ALL_CLIENTS, ...activeClientNames, client].filter(Boolean))],
-    [activeClientNames, client],
-  );
+  const clientOptions = useMemo(() => [...new Set([ALL_CLIENTS, ...activeClientNames, client].filter(Boolean))], [activeClientNames, client]);
   const [period, setPeriod] = useState(payPeriods[0].label);
 
   const activePeriod = useMemo(() => payPeriods.find((p) => p.label === period) || payPeriods[0], [period]);
@@ -111,10 +108,7 @@ export default function Timesheet() {
     <>
       <section>
         <div className="mt-4">
-          <PageHeader
-            title="Timesheet Upload"
-            description="OCR-scan uploaded sheets, confirm what was read, and file the hours per employee."
-          />
+          <PageHeader title="Timesheet Upload" description="OCR-scan uploaded sheets, confirm what was read, and file the hours per employee." />
         </div>
       </section>
 
@@ -163,7 +157,9 @@ export default function Timesheet() {
           <i className="fas fa-circle-info ts-notice-icon flex-shrink-0 mt-1"></i>
           <div style={{ fontSize: "var(--app-fs-3)" }}>
             <strong>Upload instructions — {client}</strong>
-            <div className="ts-notice-sub" style={{ fontSize: "var(--app-fs-1)" }}>{selectedClient.uploadInstructions}</div>
+            <div className="ts-notice-sub" style={{ fontSize: "var(--app-fs-1)" }}>
+              {selectedClient.uploadInstructions}
+            </div>
           </div>
         </div>
       )}

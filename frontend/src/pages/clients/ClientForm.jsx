@@ -89,12 +89,18 @@ export default function ClientForm() {
   }
 
   function handleFormCodes(e) {
-    const list = e.target.value.split(",").map((s) => s.trim()).filter(Boolean);
+    const list = e.target.value
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
     setForm((f) => ({ ...f, approvedFormCodes: list }));
   }
 
   function handleSites(e) {
-    const list = e.target.value.split(",").map((s) => s.trim()).filter(Boolean);
+    const list = e.target.value
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
     setForm((f) => ({ ...f, sites: list }));
   }
 
@@ -144,7 +150,14 @@ export default function ClientForm() {
     <>
       <section>
         <div className="mt-4 d-flex align-items-start gap-2">
-          <button type="button" onClick={handleBack} className="nav-icon-btn flex-shrink-0" style={{ marginTop: -6 }} aria-label={backLabel} title={backLabel}>
+          <button
+            type="button"
+            onClick={handleBack}
+            className="nav-icon-btn flex-shrink-0"
+            style={{ marginTop: -6 }}
+            aria-label={backLabel}
+            title={backLabel}
+          >
             <i className="fas fa-arrow-left"></i>
           </button>
           <div className="flex-grow-1">
@@ -162,114 +175,113 @@ export default function ClientForm() {
         <section className="mb-3">
           <DataCard title="Client Details">
             <div className="card-body row g-3">
-            <div className="col-12 col-md-6">
-              <FormField label="Client / Company Name">
-                <input
-                  type="text"
-                  className="form-control"
-                  name="name"
-                  value={form.name}
-                  onChange={handleChange}
-                  placeholder="e.g. Acme Corp"
-                  required
-                />
-              </FormField>
-            </div>
-            <div className="col-12 col-md-6">
-              <FormField label="Client Code">
-                <input
-                  type="text"
-                  className={`form-control ${errors.code ? "is-invalid" : ""}`}
-                  name="code"
-                  value={form.code}
-                  onChange={handleChange}
-                  placeholder="e.g. CLI-001"
-                  required
-                />
-                {errors.code && <div className="invalid-feedback d-block">{errors.code}</div>}
-              </FormField>
-            </div>
-            <div className="col-12 col-md-6">
-              <FormField label="Contact Person">
-                <input
-                  type="text"
-                  className="form-control"
-                  name="contact"
-                  value={form.contact}
-                  onChange={handleChange}
-                  placeholder="e.g. Juan Dela Cruz"
-                  required
-                />
-              </FormField>
-            </div>
+              <div className="col-12 col-md-6">
+                <FormField label="Client / Company Name">
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="name"
+                    value={form.name}
+                    onChange={handleChange}
+                    placeholder="e.g. Acme Corp"
+                    required
+                  />
+                </FormField>
+              </div>
+              <div className="col-12 col-md-6">
+                <FormField label="Client Code">
+                  <input
+                    type="text"
+                    className={`form-control ${errors.code ? "is-invalid" : ""}`}
+                    name="code"
+                    value={form.code}
+                    onChange={handleChange}
+                    placeholder="e.g. CLI-001"
+                    required
+                  />
+                  {errors.code && <div className="invalid-feedback d-block">{errors.code}</div>}
+                </FormField>
+              </div>
+              <div className="col-12 col-md-6">
+                <FormField label="Contact Person">
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="contact"
+                    value={form.contact}
+                    onChange={handleChange}
+                    placeholder="e.g. Juan Dela Cruz"
+                    required
+                  />
+                </FormField>
+              </div>
 
-            <div className="col-12 col-md-6">
-              <FormField label="Email">
-                <input
-                  type="email"
-                  className="form-control"
-                  name="email"
-                  value={form.email}
-                  onChange={handleChange}
-                  placeholder="name@company.com"
-                  required
-                />
-              </FormField>
-            </div>
-            <div className="col-12 col-md-6">
-              <FormField label="Phone">
-                <input type="tel" className="form-control" name="phone" value={form.phone} onChange={handleChange} placeholder="+63 900 000 0000" />
-              </FormField>
-            </div>
+              <div className="col-12 col-md-6">
+                <FormField label="Email">
+                  <input
+                    type="email"
+                    className="form-control"
+                    name="email"
+                    value={form.email}
+                    onChange={handleChange}
+                    placeholder="name@company.com"
+                    required
+                  />
+                </FormField>
+              </div>
+              <div className="col-12 col-md-6">
+                <FormField label="Phone">
+                  <input type="tel" className="form-control" name="phone" value={form.phone} onChange={handleChange} placeholder="+63 900 000 0000" />
+                </FormField>
+              </div>
 
-            <div className="col-12 col-md-6">
-              <FormField label="Industry">
-                <select className="form-select" name="industry" value={form.industry} onChange={handleChange}>
-                  <option>Manufacturing</option>
-                  <option>Technology</option>
-                  <option>Finance</option>
-                  <option>Food &amp; Beverage</option>
-                  <option>Logistics</option>
-                  <option>Retail</option>
-                  <option>Construction</option>
-                </select>
-              </FormField>
-            </div>
-            <div className="col-12 col-md-6">
-              <FormField label="Status">
-                <select className="form-select" name="status" value={form.status} onChange={handleChange}>
-                  <option>Active</option>
-                  <option>At Risk</option>
-                  <option>Inactive</option>
-                </select>
-              </FormField>
-            </div>
+              <div className="col-12 col-md-6">
+                <FormField label="Industry">
+                  <select className="form-select" name="industry" value={form.industry} onChange={handleChange}>
+                    <option>Manufacturing</option>
+                    <option>Technology</option>
+                    <option>Finance</option>
+                    <option>Food &amp; Beverage</option>
+                    <option>Logistics</option>
+                    <option>Retail</option>
+                    <option>Construction</option>
+                  </select>
+                </FormField>
+              </div>
+              <div className="col-12 col-md-6">
+                <FormField label="Status">
+                  <select className="form-select" name="status" value={form.status} onChange={handleChange}>
+                    <option>Active</option>
+                    <option>At Risk</option>
+                    <option>Inactive</option>
+                  </select>
+                </FormField>
+              </div>
 
-            <div className="col-12 col-md-6">
-              <FormField label="Client Since">
-                <input
-                  type="text"
-                  className="form-control"
-                  name="clientSince"
-                  value={form.clientSince}
-                  onChange={handleChange}
-                  placeholder="e.g. Feb 10, 2022"
-                />
-              </FormField>
-            </div>
-            <div className="col-12 col-md-6">
-              <FormField label="Address">
-                <input
-                  type="text"
-                  className="form-control"
-                  name="address"
-                  value={form.address}
-                  onChange={handleChange}
-                  placeholder="Street, City, Province"
-                />
-              </FormField>
-            </div>
-
+              <div className="col-12 col-md-6">
+                <FormField label="Client Since">
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="clientSince"
+                    value={form.clientSince}
+                    onChange={handleChange}
+                    placeholder="e.g. Feb 10, 2022"
+                  />
+                </FormField>
+              </div>
+              <div className="col-12 col-md-6">
+                <FormField label="Address">
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="address"
+                    value={form.address}
+                    onChange={handleChange}
+                    placeholder="Street, City, Province"
+                  />
+                </FormField>
+              </div>
             </div>
           </DataCard>
         </section>
@@ -277,58 +289,56 @@ export default function ClientForm() {
         <section className="mb-3">
           <DataCard title="Timesheet Settings">
             <div className="card-body row g-3">
-
-            <div className="col-12 col-md-6">
-              <FormField label="Approving Representative">
-                <input
-                  type="text"
-                  className="form-control"
-                  name="approvingRep"
-                  value={form.approvingRep}
-                  onChange={handleChange}
-                  placeholder="Who signs the client box, e.g. Robert Cruz"
-                />
-              </FormField>
-            </div>
-            <div className="col-12 col-md-6">
-              <FormField label="Approved Form Codes">
-                <input
-                  type="text"
-                  className="form-control"
-                  name="approvedFormCodes"
-                  value={form.approvedFormCodes.join(", ")}
-                  onChange={handleFormCodes}
-                  placeholder="Comma-separated, e.g. SSI.17-014, SSI.17-015"
-                />
-              </FormField>
-            </div>
-            <div className="col-12">
-              <FormField label="Upload Instructions">
-                <textarea
-                  className="form-control"
-                  name="uploadInstructions"
-                  value={form.uploadInstructions}
-                  onChange={handleChange}
-                  rows={2}
-                  placeholder="Shown on the upload screen when this client is selected"
-                />
-              </FormField>
-            </div>
-            <div className="col-12">
-              <div className="form-check">
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  id="requiresClientSignature"
-                  checked={form.requiresClientSignature}
-                  onChange={(e) => setForm((f) => ({ ...f, requiresClientSignature: e.target.checked }))}
-                />
-                <label className="form-check-label" htmlFor="requiresClientSignature">
-                  This client signs timesheets (flag sheets missing the client signature)
-                </label>
+              <div className="col-12 col-md-6">
+                <FormField label="Approving Representative">
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="approvingRep"
+                    value={form.approvingRep}
+                    onChange={handleChange}
+                    placeholder="Who signs the client box, e.g. Robert Cruz"
+                  />
+                </FormField>
               </div>
-            </div>
-
+              <div className="col-12 col-md-6">
+                <FormField label="Approved Form Codes">
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="approvedFormCodes"
+                    value={form.approvedFormCodes.join(", ")}
+                    onChange={handleFormCodes}
+                    placeholder="Comma-separated, e.g. SSI.17-014, SSI.17-015"
+                  />
+                </FormField>
+              </div>
+              <div className="col-12">
+                <FormField label="Upload Instructions">
+                  <textarea
+                    className="form-control"
+                    name="uploadInstructions"
+                    value={form.uploadInstructions}
+                    onChange={handleChange}
+                    rows={2}
+                    placeholder="Shown on the upload screen when this client is selected"
+                  />
+                </FormField>
+              </div>
+              <div className="col-12">
+                <div className="form-check">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    id="requiresClientSignature"
+                    checked={form.requiresClientSignature}
+                    onChange={(e) => setForm((f) => ({ ...f, requiresClientSignature: e.target.checked }))}
+                  />
+                  <label className="form-check-label" htmlFor="requiresClientSignature">
+                    This client signs timesheets (flag sheets missing the client signature)
+                  </label>
+                </div>
+              </div>
             </div>
           </DataCard>
         </section>
@@ -336,43 +346,92 @@ export default function ClientForm() {
         <section className="mb-3">
           <DataCard title="Billing & Contract">
             <div className="card-body row g-3">
-
-            <div className="col-12 col-md-6">
-              <FormField label="Billing Rate (charged to client)">
-                <input type="text" className="form-control" name="billingRate" value={form.billingRate} onChange={handleChange} placeholder="e.g. ₱1,100.00" />
-              </FormField>
-            </div>
-            <div className="col-6 col-md-3">
-              <FormField label="Overtime ×">
-                <input type="number" step="0.01" className="form-control" name="overtimeMultiplier" value={form.overtimeMultiplier} onChange={handleNumber} placeholder="1.25" />
-              </FormField>
-            </div>
-            <div className="col-6 col-md-3">
-              <FormField label="Night Diff ×">
-                <input type="number" step="0.01" className="form-control" name="nightDiffMultiplier" value={form.nightDiffMultiplier} onChange={handleNumber} placeholder="1.10" />
-              </FormField>
-            </div>
-            <div className="col-12">
-              <FormField label="Sites / Locations">
-                <input type="text" className="form-control" name="sites" value={form.sites.join(", ")} onChange={handleSites} placeholder="Comma-separated, e.g. Makati Office, Parañaque Plant" />
-              </FormField>
-            </div>
-            <div className="col-12 col-md-4">
-              <FormField label="Contract Start">
-                <input type="text" className="form-control" name="contractStart" value={form.contractStart} onChange={handleChange} placeholder="e.g. Feb 10, 2022" />
-              </FormField>
-            </div>
-            <div className="col-12 col-md-4">
-              <FormField label="Contract End">
-                <input type="text" className="form-control" name="contractEnd" value={form.contractEnd} onChange={handleChange} placeholder="e.g. Feb 9, 2025" />
-              </FormField>
-            </div>
-            <div className="col-12 col-md-4">
-              <FormField label="Rate Effective Date">
-                <input type="text" className="form-control" name="rateEffectiveDate" value={form.rateEffectiveDate} onChange={handleChange} placeholder="e.g. Jan 1, 2024" />
-              </FormField>
-            </div>
-
+              <div className="col-12 col-md-6">
+                <FormField label="Billing Rate (charged to client)">
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="billingRate"
+                    value={form.billingRate}
+                    onChange={handleChange}
+                    placeholder="e.g. ₱1,100.00"
+                  />
+                </FormField>
+              </div>
+              <div className="col-6 col-md-3">
+                <FormField label="Overtime ×">
+                  <input
+                    type="number"
+                    step="0.01"
+                    className="form-control"
+                    name="overtimeMultiplier"
+                    value={form.overtimeMultiplier}
+                    onChange={handleNumber}
+                    placeholder="1.25"
+                  />
+                </FormField>
+              </div>
+              <div className="col-6 col-md-3">
+                <FormField label="Night Diff ×">
+                  <input
+                    type="number"
+                    step="0.01"
+                    className="form-control"
+                    name="nightDiffMultiplier"
+                    value={form.nightDiffMultiplier}
+                    onChange={handleNumber}
+                    placeholder="1.10"
+                  />
+                </FormField>
+              </div>
+              <div className="col-12">
+                <FormField label="Sites / Locations">
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="sites"
+                    value={form.sites.join(", ")}
+                    onChange={handleSites}
+                    placeholder="Comma-separated, e.g. Makati Office, Parañaque Plant"
+                  />
+                </FormField>
+              </div>
+              <div className="col-12 col-md-4">
+                <FormField label="Contract Start">
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="contractStart"
+                    value={form.contractStart}
+                    onChange={handleChange}
+                    placeholder="e.g. Feb 10, 2022"
+                  />
+                </FormField>
+              </div>
+              <div className="col-12 col-md-4">
+                <FormField label="Contract End">
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="contractEnd"
+                    value={form.contractEnd}
+                    onChange={handleChange}
+                    placeholder="e.g. Feb 9, 2025"
+                  />
+                </FormField>
+              </div>
+              <div className="col-12 col-md-4">
+                <FormField label="Rate Effective Date">
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="rateEffectiveDate"
+                    value={form.rateEffectiveDate}
+                    onChange={handleChange}
+                    placeholder="e.g. Jan 1, 2024"
+                  />
+                </FormField>
+              </div>
             </div>
           </DataCard>
         </section>
@@ -380,44 +439,42 @@ export default function ClientForm() {
         <section className="mb-3">
           <DataCard title="Secondary Contact">
             <div className="card-body row g-3">
-
-            <div className="col-12 col-md-4">
-              <FormField label="Contact Name">
-                <input
-                  type="text"
-                  className="form-control"
-                  name="name"
-                  value={form.secondaryContact.name}
-                  onChange={handleSecondaryChange}
-                  placeholder="e.g. Liza Fernandez"
-                />
-              </FormField>
-            </div>
-            <div className="col-12 col-md-4">
-              <FormField label="Role">
-                <input
-                  type="text"
-                  className="form-control"
-                  name="role"
-                  value={form.secondaryContact.role}
-                  onChange={handleSecondaryChange}
-                  placeholder="e.g. Finance Manager"
-                />
-              </FormField>
-            </div>
-            <div className="col-12 col-md-4">
-              <FormField label="Contact Phone">
-                <input
-                  type="tel"
-                  className="form-control"
-                  name="phone"
-                  value={form.secondaryContact.phone}
-                  onChange={handleSecondaryChange}
-                  placeholder="+63 900 000 0000"
-                />
-              </FormField>
-            </div>
-
+              <div className="col-12 col-md-4">
+                <FormField label="Contact Name">
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="name"
+                    value={form.secondaryContact.name}
+                    onChange={handleSecondaryChange}
+                    placeholder="e.g. Liza Fernandez"
+                  />
+                </FormField>
+              </div>
+              <div className="col-12 col-md-4">
+                <FormField label="Role">
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="role"
+                    value={form.secondaryContact.role}
+                    onChange={handleSecondaryChange}
+                    placeholder="e.g. Finance Manager"
+                  />
+                </FormField>
+              </div>
+              <div className="col-12 col-md-4">
+                <FormField label="Contact Phone">
+                  <input
+                    type="tel"
+                    className="form-control"
+                    name="phone"
+                    value={form.secondaryContact.phone}
+                    onChange={handleSecondaryChange}
+                    placeholder="+63 900 000 0000"
+                  />
+                </FormField>
+              </div>
             </div>
           </DataCard>
         </section>

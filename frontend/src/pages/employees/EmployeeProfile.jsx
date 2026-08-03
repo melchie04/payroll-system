@@ -224,14 +224,10 @@ export default function EmployeeProfile() {
                 <div className="card-body">
                   <DetailList>
                     <DetailRow icon="fa-user-clock" label="Assignment">
-                      {employee.assignmentStart
-                        ? `${employee.assignmentStart} → ${employee.assignmentEnd || "open-ended"}`
-                        : "—"}
+                      {employee.assignmentStart ? `${employee.assignmentStart} → ${employee.assignmentEnd || "open-ended"}` : "—"}
                     </DetailRow>
                     <DetailRow icon="fa-clock" label="Schedule">
-                      {employee.schedule?.in && employee.schedule?.out
-                        ? `${employee.schedule.in} – ${employee.schedule.out}`
-                        : "—"}
+                      {employee.schedule?.in && employee.schedule?.out ? `${employee.schedule.in} – ${employee.schedule.out}` : "—"}
                     </DetailRow>
                   </DetailList>
                 </div>

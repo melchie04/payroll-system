@@ -91,7 +91,12 @@ export default function Payroll() {
   const grossTotal = rows.reduce((sum, r) => sum + r.gross, 0);
   const netTotal = rows.reduce((sum, r) => sum + computeDeductions(r.gross).net, 0);
   const stats = [
-    { label: "Employees In Run", value: String(rows.length), icon: "fa-users", sub: `${rows.filter((r) => r.status === "Pending").length} still pending` },
+    {
+      label: "Employees In Run",
+      value: String(rows.length),
+      icon: "fa-users",
+      sub: `${rows.filter((r) => r.status === "Pending").length} still pending`,
+    },
     { label: "Total Hours", value: totalHours.toFixed(2), icon: "fa-clock" },
     { label: "Gross Payroll", value: formatCurrency(grossTotal), icon: "fa-money-bill-wave" },
     { label: "Net Payroll", value: formatCurrency(netTotal), icon: "fa-sack-dollar" },
@@ -126,7 +131,10 @@ export default function Payroll() {
   function markSelectedPaid() {
     const targets = rows.filter((r) => selected.includes(r.key) && r.status !== "Paid");
     if (targets.length === 0) return;
-    setStatusMany(targets.map((r) => r.key), "Paid");
+    setStatusMany(
+      targets.map((r) => r.key),
+      "Paid",
+    );
     logActivity({ action: "Marked payroll paid", detail: `${targets.length} employee(s) for ${period.label}`, module: "Payroll" });
     setSelected([]);
   }
@@ -135,7 +143,10 @@ export default function Payroll() {
 
   function handleRunPayroll() {
     if (readyRows.length === 0) return;
-    setStatusMany(readyRows.map((r) => r.key), "Paid");
+    setStatusMany(
+      readyRows.map((r) => r.key),
+      "Paid",
+    );
     logActivity({ action: "Ran payroll", detail: `Processed ${readyRows.length} employee(s) for ${period.label}`, module: "Payroll" });
     addNotification({
       icon: "\ud83d\udcb3",
@@ -310,7 +321,11 @@ export default function Payroll() {
                     <input className="form-check-input" type="checkbox" checked={selected.includes(row.key)} onChange={() => toggleOne(row.key)} />
                   </Td>
                   <Td bold>
-                    <button type="button" className="btn btn-link p-0 fw-semibold text-decoration-none" onClick={() => navigate(`/payroll/${row.employeeId}`)}>
+                    <button
+                      type="button"
+                      className="btn btn-link p-0 fw-semibold text-decoration-none"
+                      onClick={() => navigate(`/payroll/${row.employeeId}`)}
+                    >
                       {row.name}
                     </button>
                     <div className="text-muted" style={{ fontSize: "var(--app-fs-1)" }}>
@@ -408,7 +423,15 @@ export default function Payroll() {
                 {editTarget.sheets === 1 ? "" : "s"}.
               </p>
               <FormField label="Hours">
-                <input type="number" min="0" step="0.25" className="form-control" value={editValue} onChange={(e) => setEditValue(e.target.value)} required />
+                <input
+                  type="number"
+                  min="0"
+                  step="0.25"
+                  className="form-control"
+                  value={editValue}
+                  onChange={(e) => setEditValue(e.target.value)}
+                  required
+                />
               </FormField>
             </>
           )}

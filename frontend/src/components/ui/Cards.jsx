@@ -90,7 +90,9 @@ export function PayslipDetails({ employeeName, subtitle, status, period, summary
   return (
     <div>
       <ProfileHeader name={employeeName} subtitle={subtitle} subtitleIcon="fa-briefcase" status={status} />
-      <div className="text-muted mb-2" style={{ fontSize: "var(--app-fs-2)" }}>Pay Period: {period}</div>
+      <div className="text-muted mb-2" style={{ fontSize: "var(--app-fs-2)" }}>
+        Pay Period: {period}
+      </div>
       <DetailList>
         {summaryRows.map((r) => (
           <DetailRow key={r.label} icon={r.icon} label={r.label}>
@@ -110,7 +112,9 @@ export function PayslipDetails({ employeeName, subtitle, status, period, summary
       </DetailList>
       <div className="d-flex justify-content-between align-items-center border-top pt-3 mt-3">
         <span className="fw-semibold">Net Pay</span>
-        <span className="fw-bold" style={{ fontSize: "var(--app-fs-6)" }}>{netPay}</span>
+        <span className="fw-bold" style={{ fontSize: "var(--app-fs-6)" }}>
+          {netPay}
+        </span>
       </div>
     </div>
   );

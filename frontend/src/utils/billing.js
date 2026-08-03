@@ -11,9 +11,7 @@ function money(value) {
 // approved sheets count: anything still under review could still change.
 export function approvedSheetsFor(files = [], client, periodLabel, clients = []) {
   if (!client?.code || !periodLabel) return [];
-  return files.filter(
-    (f) => f.status === "Approved" && f.period?.label === periodLabel && resolveClient(f, clients)?.code === client.code,
-  );
+  return files.filter((f) => f.status === "Approved" && f.period?.label === periodLabel && resolveClient(f, clients)?.code === client.code);
 }
 
 // billableFor — what a client owes for one period, worked out from their approved

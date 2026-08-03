@@ -183,7 +183,7 @@ function RolesList({ roleList, onEditRole, onDeleteRole }) {
                   <div className="d-flex flex-wrap gap-1">
                     {r.permissions.length === 0 && <span className="text-muted small">No modules assigned.</span>}
                     {r.permissions.map((p) => (
-                      <span key={p} className="badge rounded-pill bg-secondary bg-opacity-10 text-secondary fw-normal py-1">
+                      <span key={p} className="app-chip badge rounded-pill py-1">
                         {p}
                       </span>
                     ))}

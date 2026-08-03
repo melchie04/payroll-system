@@ -1,7 +1,5 @@
 import { Link, useLocation, useNavigate, useParams } from "react-router";
-import {
-  useTimesheets,
-} from "../../context/TimesheetContext.jsx";
+import { useTimesheets } from "../../context/TimesheetContext.jsx";
 import { useActivity } from "../../context/ActivityContext.jsx";
 import { TimesheetReviewForm } from "./tabs/TimesheetReviewForm.jsx";
 
@@ -28,8 +26,7 @@ export default function TimesheetReview() {
 
   // Return to wherever the sheet was opened from (e.g. an employee profile), falling
   // back to the Uploaded Sheets tab when the review was loaded directly.
-  const backToSheets = () =>
-    location.key !== "default" ? navigate(-1) : navigate("/timesheet", { state: { tab: "sheets" } });
+  const backToSheets = () => (location.key !== "default" ? navigate(-1) : navigate("/timesheet", { state: { tab: "sheets" } }));
 
   // Approving is what turns a sheet into money, so each outcome is recorded. The name
   // is read from the draft, since a reviewer may have corrected it on this screen.

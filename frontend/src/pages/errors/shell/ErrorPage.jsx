@@ -11,10 +11,7 @@ export default function ErrorPage({ code, icon, tone = "neutral", title, descrip
         <i className={`fas ${icon}`}></i>
       </div>
 
-      <div
-        className="error-code fw-bold mb-2"
-        style={{ fontSize: "var(--app-fs-display)", lineHeight: 1, letterSpacing: "-0.02em" }}
-      >
+      <div className="error-code fw-bold mb-2" style={{ fontSize: "var(--app-fs-display)", lineHeight: 1, letterSpacing: "-0.02em" }}>
         {code}
       </div>
 

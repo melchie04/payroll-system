@@ -276,3 +276,11 @@ input:-webkit-autofill:focus {
   --bs-modal-header-border-color: var(--app-table-head-line);
   --bs-modal-footer-border-color: var(--app-table-head-line);
 }
+
+// A neutral label pill — a module, a category, a type. Never a status: a status
+// carries its own tone through .status-badge-*.
+.app-chip {
+  background-color: var(--app-chip-bg);
+  color: var(--app-chip-fg);
+  font-weight: 400;
+}

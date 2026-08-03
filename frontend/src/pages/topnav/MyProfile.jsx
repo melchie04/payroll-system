@@ -243,7 +243,12 @@ export default function MyProfile() {
             <div className="card-body d-flex align-items-center gap-4 flex-wrap">
               <div className="position-relative flex-shrink-0">
                 {avatarImage ? (
-                  <img src={avatarImage} alt="Profile" className="rounded-circle" style={{ width: "var(--app-icon-lg)", height: "var(--app-icon-lg)", objectFit: "cover" }} />
+                  <img
+                    src={avatarImage}
+                    alt="Profile"
+                    className="rounded-circle"
+                    style={{ width: "var(--app-icon-lg)", height: "var(--app-icon-lg)", objectFit: "cover" }}
+                  />
                 ) : (
                   <div
                     className="d-flex align-items-center justify-content-center rounded-circle text-white fw-semibold"
