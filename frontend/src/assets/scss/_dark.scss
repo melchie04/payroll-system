@@ -50,6 +50,15 @@
 
   --app-surface: var(--app-obsidian);
 
+  --app-notice-success-bg: rgba(117, 183, 152, 0.1);
+  --app-notice-danger-bg: rgba(255, 107, 107, 0.1);
+  --app-input-bg: var(--app-dark-bg);
+  --app-input-fg: var(--app-dark-text);
+  --app-notice-success-border: #2c5138;
+  --app-notice-success-ink: #75b798;
+  --app-notice-danger-border: #5a2a2f;
+  --app-notice-danger-ink: #ff6b6b;
+
   --app-btn-outline-border: #4d5651;
   --app-btn-outline-border-hover: #616c66;
 
@@ -86,7 +95,7 @@
   --bs-card-bg: var(--app-dark-surface);
   --bs-card-color: var(--app-dark-text);
   --bs-card-border-color: var(--app-dark-border);
-  --bs-card-cap-bg: var(--app-dark-surface-2);
+  --bs-card-cap-bg: transparent;
   --bs-card-cap-color: var(--app-dark-text);
 }
 

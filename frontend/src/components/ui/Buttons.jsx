@@ -2,7 +2,7 @@
 
 export function BtnPrimary({ children, onClick, type = "button", className = "", ...rest }) {
   return (
-    <button type={type} className={`btn btn-dark btn-sm d-inline-flex align-items-center gap-2 ${className}`} onClick={onClick} {...rest}>
+    <button type={type} className={`btn btn-app-primary btn-sm d-inline-flex align-items-center gap-2 ${className}`} onClick={onClick} {...rest}>
       {children}
     </button>
   );

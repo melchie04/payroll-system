@@ -15,6 +15,12 @@
 // fill and its green focus ring — is drawn as one piece in _surfaces.scss, since
 // that block sets border: 0 on the icon box and the field inside it. Only the
 // placeholder is still the field's own to set.
+// The pill is its own surface, so an autofill inset painted with the dashboard's
+// input colour would show as a block inside it.
+.centered-bg {
+  --app-input-bg: var(--app-auth-surface);
+}
+
 .centered-bg .form-control::placeholder {
   color: var(--app-auth-placeholder);
 }

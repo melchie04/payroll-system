@@ -50,7 +50,7 @@ a:focus-visible > .card {
 }
 
 .card-header {
-  font-size: var(--app-fs-4);
+  font-size: var(--app-fs-5);
 }
 
 // Card bodies read at one size unless a page deliberately sets a figure larger.
@@ -163,4 +163,70 @@ html.theme-transition .table > :not(caption) > * > * {
   color: var(--app-chip-fg);
   font-size: var(--app-fs-1);
   font-weight: 500;
+}
+
+// The card title sits ON the card, separated by a hairline — the framework gives
+// it a tinted cap by default, which made every card look like it had a toolbar.
+.card {
+  --bs-card-cap-bg: transparent;
+}
+
+// Focus. Every field in the dashboard focused to Bootstrap blue; only the auth
+// pill had been given the accent. One rule covers text inputs, selects and
+// checkboxes. The auth pill is untouched — its own rule outranks this.
+.form-control:focus,
+.form-select:focus,
+.form-check-input:focus {
+  border-color: var(--app-moss);
+  box-shadow: 0 0 0 0.2rem var(--app-moss-ring);
+}
+
+// A ticked box is a choice the person made, so it carries the accent too.
+.form-check-input:checked {
+  background-color: var(--app-moss);
+  border-color: var(--app-moss);
+}
+
+// Notices. Border, icon and text carry the tone; the fill stays on the card
+// surface so a message never turns a whole page one colour.
+// The fill is a tint of the tone, not the surface colour. On the surface it was
+// invisible on a card and visible on the plane, so the same notice looked like two
+// different components depending on where a page happened to put it.
+.alert-success,
+.alert-danger {
+  border-width: 1px;
+  border-style: solid;
+}
+
+.alert-success {
+  background-color: var(--app-notice-success-bg);
+  border-color: var(--app-notice-success-border);
+  color: var(--app-notice-success-ink);
+}
+
+.alert-danger {
+  background-color: var(--app-notice-danger-bg);
+  border-color: var(--app-notice-danger-border);
+  color: var(--app-notice-danger-ink);
+}
+
+// Autofill. Chrome paints an autofilled field — and a field whose autocomplete
+// suggestion is being hovered — with its own pale blue, and no background-color
+// will override it. The only lever is an inset shadow big enough to cover the
+// field, with -webkit-text-fill-color for the text. Without this a dark input
+// flashes white the moment a suggestion is hovered.
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:active,
+select:-webkit-autofill {
+  -webkit-text-fill-color: var(--app-input-fg);
+  box-shadow: 0 0 0 100px var(--app-input-bg) inset;
+  // The colour is animated in, so an absurd delay is the usual way to hold it.
+  transition: background-color 600000s 0s;
+}
+
+// Focus has to restate the inset, or the ring rule below replaces it outright.
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--app-input-fg);
+  box-shadow: 0 0 0 100px var(--app-input-bg) inset, 0 0 0 0.2rem var(--app-moss-ring);
 }
