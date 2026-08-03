@@ -230,3 +230,49 @@ input:-webkit-autofill:focus {
   -webkit-text-fill-color: var(--app-input-fg);
   box-shadow: 0 0 0 100px var(--app-input-bg) inset, 0 0 0 0.2rem var(--app-moss-ring);
 }
+
+// --- Tables ----------------------------------------------------------------
+// The header belongs to the card, not to a band drawn on it. It used to carry
+// .table-light, which is the utility a blanket dark rule turns into a raised
+// inset — so on the dark plane the header sat two steps above its own card.
+.table > thead.table-head > tr > * {
+  background-color: transparent;
+  border-bottom: 1px solid var(--app-table-head-line);
+  color: var(--app-table-head-color);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+// One hairline between rows, lighter than the header's, and none under the last
+// row — the card's own edge closes the list.
+.table > tbody > tr > * {
+  border-bottom: 1px solid var(--app-table-row-line);
+}
+
+.table > tbody > tr:last-child > * {
+  border-bottom: 0;
+}
+
+// The active page is the one primary-coloured thing in a pager; everything else
+// stays neutral so the control does not compete with the table above it.
+.pagination {
+  --bs-pagination-color: var(--bs-body-color);
+  --bs-pagination-border-color: var(--app-btn-outline-border);
+  --bs-pagination-hover-color: var(--bs-body-color);
+  --bs-pagination-hover-bg: var(--app-nav-btn-hover-bg);
+  --bs-pagination-hover-border-color: var(--app-btn-outline-border);
+  --bs-pagination-focus-color: var(--bs-body-color);
+  --bs-pagination-focus-bg: var(--app-nav-btn-hover-bg);
+  --bs-pagination-focus-box-shadow: 0 0 0 0.2rem var(--app-moss-ring);
+  --bs-pagination-active-bg: var(--app-moss);
+  --bs-pagination-active-border-color: var(--app-moss);
+  --bs-pagination-active-color: #ffffff;
+}
+
+// Modals take the card's treatment: a plain surface, hairline header and footer,
+// and no tinted caps.
+.modal-content {
+  --bs-modal-header-border-color: var(--app-table-head-line);
+  --bs-modal-footer-border-color: var(--app-table-head-line);
+}

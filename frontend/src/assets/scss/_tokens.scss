@@ -57,6 +57,9 @@
   --app-shadow-1: 0 1px 2px rgba(16, 24, 40, 0.04), 0 1px 3px rgba(16, 24, 40, 0.06);
   --app-shadow-2: 0 4px 6px -2px rgba(16, 24, 40, 0.05), 0 12px 16px -4px rgba(16, 24, 40, 0.1);
   --app-row-hover: rgba(16, 24, 40, 0.028);   // Table row under the pointer
+  --app-table-head-color: #6c757d;           // Column labels
+  --app-table-head-line: #e3e7ea;            // Under the header row
+  --app-table-row-line: #edeff1;             // Between rows
   --app-surface-radius: 0.625rem;             // 10px — one radius for every card
 
   // The P mark, used in the top bar, on the auth pages and as the favicon.

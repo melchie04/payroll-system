@@ -19,7 +19,10 @@
   // tighter shadow and a lighter row tint instead.
   --app-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
   --app-shadow-2: 0 4px 6px -2px rgba(0, 0, 0, 0.45), 0 12px 16px -4px rgba(0, 0, 0, 0.5);
-  --app-row-hover: rgba(255, 255, 255, 0.04);
+  --app-row-hover: rgba(255, 255, 255, 0.045);
+  --app-table-head-color: #9aa79f;
+  --app-table-head-line: #262e29;
+  --app-table-row-line: #1e211f;
 
   // The mark does NOT invert any more — a Moss square with a white letter reads on
   // both planes. Only the wordmark shifts: Moss as text on obsidian is about
@@ -139,6 +142,9 @@
   --bs-table-hover-bg: rgba(255, 255, 255, 0.06);
 }
 
+// .table-light is no longer used on the header — it was the utility that made the
+// header render as a raised inset on the dark plane. Kept for any table that still
+// asks for it directly.
 [data-bs-theme="dark"] #layoutSidenav_content .table-light {
   --bs-table-color: var(--app-dark-text-muted);
   --bs-table-bg: var(--app-dark-surface-2);

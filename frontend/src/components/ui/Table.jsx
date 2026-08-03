@@ -39,7 +39,7 @@ export function Table({ headers, children, pageSize = 20, mobilePageSize = 5, it
     <TableHeadersContext.Provider value={headers}>
       <div className="table-responsive">
         <table className="table table-hover table-stack mb-0 align-middle">
-          <thead className="table-light">
+          <thead className="table-head">
             <tr>
               {headers.map((h, i) => (
                 <th
