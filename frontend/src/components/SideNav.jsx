@@ -1,5 +1,5 @@
 import { NavLink } from "react-router";
-import { useTheme } from "../context/ThemeContext";
+import { useTheme } from "../context/ThemeContext.jsx";
 
 const NAV_ITEMS = [
   { to: "/", label: "Dashboard", icon: "fa-table-cells-large", end: true },
