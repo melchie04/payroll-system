@@ -20,7 +20,9 @@ a:focus-visible > .card {
 }
 
 // Rows read as a list rather than a grid of lines: the tint marks where you are.
-.table > tbody > tr:hover > * {
+// Opt-out, via <Table hover={false} />, for a table whose rows hold no link and no
+// action — a hover there promises something the row cannot do.
+.table-hover > tbody > tr:hover > * {
   background-color: var(--app-row-hover);
 }
 
@@ -128,6 +130,12 @@ html.theme-transition .table > :not(caption) > * > * {
 // only re-tones them. The active pill takes the same tint-and-ink pair as the
 // sidebar's current page, so "you are here" looks the same wherever it appears.
 .tabs-nav {
+  // _nav.scss gives the tray its own margin-bottom: 1.5rem. Its section already
+  // provides the page's gap, so the two stacked and the space after a tab tray
+  // came out at double everything else. The gap belongs to the page, not to the
+  // component.
+  margin-bottom: 0;
+
   --tabs-nav-color: var(--app-nav-icon);
   --tabs-nav-hover-bg: var(--app-nav-btn-hover-bg);
   --tabs-nav-active-bg: transparent;
@@ -257,12 +265,12 @@ input:-webkit-autofill:focus {
 // The active page is the one primary-coloured thing in a pager; everything else
 // stays neutral so the control does not compete with the table above it.
 .pagination {
-  --bs-pagination-color: var(--bs-body-color);
+  --bs-pagination-color: var(--app-text);
   --bs-pagination-border-color: var(--app-btn-outline-border);
-  --bs-pagination-hover-color: var(--bs-body-color);
+  --bs-pagination-hover-color: var(--app-text);
   --bs-pagination-hover-bg: var(--app-nav-btn-hover-bg);
   --bs-pagination-hover-border-color: var(--app-btn-outline-border);
-  --bs-pagination-focus-color: var(--bs-body-color);
+  --bs-pagination-focus-color: var(--app-text);
   --bs-pagination-focus-bg: var(--app-nav-btn-hover-bg);
   --bs-pagination-focus-box-shadow: 0 0 0 0.2rem var(--app-moss-ring);
   --bs-pagination-active-bg: var(--app-moss);
@@ -283,4 +291,125 @@ input:-webkit-autofill:focus {
   background-color: var(--app-chip-bg);
   color: var(--app-chip-fg);
   font-weight: 400;
+}
+
+// --- Select ----------------------------------------------------------------
+// The themed replacement for a native <select>. Built on .dropdown, so Bootstrap
+// supplies click-outside, Escape and arrow-key movement between the options.
+.app-select-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 100%;
+  min-height: 31px;
+  padding: 0.25rem 0.75rem;
+  border: 1px solid var(--bs-border-color);
+  border-radius: 0.375rem;
+  background-color: var(--app-input-bg);
+  color: var(--app-text);
+  font-size: var(--app-fs-3);
+  text-align: left;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.app-select-toggle:hover {
+  border-color: var(--app-btn-outline-border-hover);
+}
+
+// Open counts as focused: the field keeps its ring while its list is showing.
+.app-select-toggle:focus-visible,
+.app-select.show .app-select-toggle {
+  outline: none;
+  border-color: var(--app-moss);
+  box-shadow: 0 0 0 0.2rem var(--app-moss-ring);
+}
+
+.app-select-value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-select-caret {
+  flex-shrink: 0;
+  color: var(--app-nav-icon);
+  font-size: var(--app-fs-1);
+  transition: transform 0.15s ease-in-out;
+}
+
+.app-select.show .app-select-caret {
+  transform: rotate(180deg);
+}
+
+.app-select-menu {
+  width: 100%;
+  min-width: 0;
+  max-height: var(--app-select-max-height);
+  padding: 0.25rem;
+  overflow-y: auto;
+  background-color: var(--app-surface);
+  border: 1px solid var(--bs-border-color);
+  border-radius: 0.5rem;
+  box-shadow: var(--app-shadow-2);
+}
+
+.app-select-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  border-radius: 0.375rem;
+  color: var(--app-text);
+  font-size: var(--app-fs-3);
+}
+
+// The same mark the top bar's menus use, so a highlighted row means one thing
+// wherever it appears. Arrow-key movement lands on :focus, not :hover.
+.app-select-option:hover,
+.app-select-option:focus {
+  background-color: var(--app-nav-btn-hover-bg);
+  color: var(--app-text);
+  box-shadow: inset 3px 0 0 var(--app-menu-keyline);
+}
+
+.app-select-option.is-selected {
+  color: var(--app-accent-ink);
+  font-weight: 500;
+}
+
+.app-select-option .fa-check {
+  flex-shrink: 0;
+  color: var(--app-accent-ink);
+  font-size: var(--app-fs-1);
+}
+
+// Thumbs need more room than pointers do.
+@media (max-width: 575.98px) {
+  .app-select-option {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+}
+
+// The Activity Log's action verb. Colour is the whole signal here — no chip — so
+// each tone uses its readable ink rather than the fill-strength status colour.
+.app-action-success {
+  color: var(--app-action-success);
+}
+
+.app-action-info {
+  color: var(--app-action-info);
+}
+
+.app-action-warning {
+  color: var(--app-action-warning);
+}
+
+.app-action-danger {
+  color: var(--app-action-danger);
+}
+
+.app-action-neutral {
+  color: var(--app-action-neutral);
 }

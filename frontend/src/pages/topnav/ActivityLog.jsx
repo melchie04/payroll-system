@@ -33,6 +33,26 @@ function withinRange(stamp, range) {
   return logged >= start.getTime() - (RANGE_DAYS[range] - 1) * 86400000;
 }
 
+// The verb an entry opens with decides its colour. There is no type field on the
+// log, so it is read from the action text; anything unrecognised stays neutral.
+const ACTION_TONES = {
+  approved: "success",
+  created: "info",
+  added: "info",
+  uploaded: "info",
+  updated: "warning",
+  edited: "warning",
+  changed: "warning",
+  deleted: "danger",
+  removed: "danger",
+  rejected: "danger",
+};
+
+function actionTone(action) {
+  const verb = String(action).trim().split(" ")[0].toLowerCase();
+  return ACTION_TONES[verb] ?? "neutral";
+}
+
 // ActivityLog — filterable, exportable audit log table.
 export default function ActivityLog() {
   // The log is shared state now, so an action taken elsewhere in the app shows up here
@@ -146,11 +166,11 @@ export default function ActivityLog() {
               </BtnSecondary>
             </div>
           ) : (
-            <Table headers={["User", "Action", "Details", "Module", "Timestamp"]} itemLabel="activities">
+            <Table headers={["User", "Action", "Details", "Module", "Timestamp"]} itemLabel="activities" hover={false}>
               {visible.map((log) => (
                 <Tr key={log.id}>
                   <Td bold>{log.user}</Td>
-                  <Td>{log.action}</Td>
+                  <Td className={`app-action-${actionTone(log.action)}`}>{log.action}</Td>
                   <Td className="text-muted">{log.detail}</Td>
                   <Td>
                     <span className="app-chip badge rounded-pill py-1">{log.module}</span>

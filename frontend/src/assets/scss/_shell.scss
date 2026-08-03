@@ -153,9 +153,33 @@ body {
   }
 }
 
-// Pages open with a mt-4 by convention. The wrapper owns that space now, so the
-// first block does not push the page down twice.
-.app-page > *:first-child {
+// Pages open with a mt-4 by convention, and it sits on a div INSIDE the first
+// section rather than on the section itself — so zeroing only the section left
+// 1.5rem of space above the page title that no other block had. Both levels.
+.app-page > *:first-child,
+.app-page > *:first-child > *:first-child {
+  margin-top: 0 !important;
+}
+
+// ONE gap between every top-level block on a dashboard page — the header, the rule
+// under it, a tab tray, a filter toolbar, a card, a table. The pages set this in
+// markup and they disagree: 38 blocks use mb-3, 16 use mb-4, and the rules use
+// my-3, which is why the rhythm changed from page to page. This overrides all of
+// them with one value, so the gap is set here and nowhere else.
+//
+// !important because the mb-* utilities are themselves !important. Direct children
+// only — nothing inside a card is touched.
+.app-page > * {
+  margin-bottom: 1.5rem !important;
+}
+
+.app-page > *:last-child {
+  margin-bottom: 0 !important;
+}
+
+// The rule's own top margin would sit on top of the gap the block above already
+// provides. Its bottom margin is the shared one, like everything else.
+.app-page > hr {
   margin-top: 0 !important;
 }
 

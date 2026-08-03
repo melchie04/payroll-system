@@ -55,6 +55,14 @@
 
   --app-notice-success-bg: rgba(117, 183, 152, 0.1);
   --app-notice-danger-bg: rgba(255, 107, 107, 0.1);
+  --app-text: var(--app-dark-text);
+
+  --app-action-success: #75b798;
+  --app-action-info: #7db1ff;
+  --app-action-warning: #ffc107;
+  --app-action-danger: #ff6b6b;
+  --app-action-neutral: #c3cec6;
+
   --app-input-bg: var(--app-surface);
   --app-input-fg: var(--app-dark-text);
   --app-notice-success-border: #2c5138;
@@ -295,20 +303,9 @@
   --bs-btn-active-border-color: #5c636a;
 }
 
-[data-bs-theme="dark"] #layoutSidenav_content .btn-outline-secondary,
-[data-bs-theme="dark"] .modal-content .btn-outline-secondary {
-  --bs-btn-color: var(--app-dark-text);
-  --bs-btn-border-color: var(--app-dark-border);
-  --bs-btn-hover-bg: rgba(255, 255, 255, 0.1);
-  --bs-btn-hover-border-color: var(--bs-gray-700);
-  --bs-btn-hover-color: var(--app-dark-text);
-}
-
-// FilterMenu sets its border colour inline, which only !important can beat.
-[data-bs-theme="dark"] #layoutSidenav_content .btn-outline-secondary.bg-white {
-  border-color: var(--app-dark-border) !important;
-  color: var(--app-dark-text-muted) !important;
-}
+// .btn-outline-secondary is NOT restated here. _action.scss builds it from tokens
+// that already carry both themes, and an ID-level rule here would outrank it —
+// which is what left the Export toggle's label unreadable while its menu was open.
 
 [data-bs-theme="dark"] .modal-content .btn-close {
   filter: invert(1) grayscale(100%) brightness(200%);

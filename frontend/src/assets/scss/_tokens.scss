@@ -104,6 +104,20 @@
   // much colour, which is the same reason the timesheet notices are built this way.
   --app-notice-success-bg: rgba(25, 135, 84, 0.06);
   --app-notice-danger-bg: rgba(220, 53, 69, 0.06);
+  // The body ink, as a token. --bs-body-color is only repointed inside
+  // .centered-bg, so anything on the dark plane that reads it gets the LIGHT
+  // value — which is what made the dropdown's options near-black on charcoal.
+  --app-text: #212529;
+
+  // Action verbs in the Activity Log, and anywhere else a word carries a tone.
+  --app-action-success: #146c43;
+  --app-action-info: #0a58ca;
+  --app-action-warning: #7a5b00;
+  --app-action-danger: #b02a37;
+  --app-action-neutral: #5f6b62;
+
+  --app-select-max-height: 15rem;
+
   --app-input-bg: #ffffff;
   --app-input-fg: #212529;
   --app-notice-success-border: #beddc8;
@@ -133,14 +147,17 @@
 
   // Type scale — one ladder for the whole app: 11/12/13/14/16/20/24/32px. Every
   // size in the UI is one of these; nothing sets a raw px or rem font-size.
-  --app-fs-1: 0.6875rem;          // 11px — micro labels, badges, table meta
-  --app-fs-2: 0.75rem;            // 12px — hints and captions
-  --app-fs-3: 0.8125rem;          // 13px — dense table and cell text
-  --app-fs-4: 0.875rem;           // 14px — small body
-  --app-fs-5: 1rem;               // 16px — base
-  --app-fs-6: 1.25rem;            // 20px — card and section titles
-  --app-fs-7: 1.5rem;             // 24px — page titles and stat values
-  --app-fs-8: 2rem;               // 32px — the largest figure on a page
+  // The dashboard's default is fs-3: .card-body sets it, so anything inside a card
+  // inherits 13px without asking. Reach for a token only to go deliberately
+  // smaller (labels, chips) or larger (titles, figures).
+  --app-fs-1: 0.6875rem;          // 11px — column headers, filter labels, chips, counts
+  --app-fs-2: 0.75rem;            // 12px — field hints, timestamps, captions
+  --app-fs-3: 0.8125rem;          // 13px — CARD BODY DEFAULT; table cells, page description
+  --app-fs-4: 0.875rem;           // 14px — small body where 13px is too tight
+  --app-fs-5: 1rem;               // 16px — card titles, button labels, the wordmark
+  --app-fs-6: 1.25rem;            // 20px — page titles
+  --app-fs-7: 1.5rem;             // 24px — stat figures
+  --app-fs-8: 2rem;               // 32px — the single largest figure on a page
   --app-fs-display: 4.5rem;       // Error-page glyphs only
 }
 

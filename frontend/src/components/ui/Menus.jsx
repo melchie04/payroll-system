@@ -80,7 +80,6 @@ export function FilterMenu({ children, onReset, onApply }) {
           width: "31px",
           height: "31px",
           borderRadius: "6px",
-          borderColor: "var(--bs-border-color)",
           fontSize: "var(--app-fs-2)",
         }}
       >
@@ -101,7 +100,7 @@ export function FilterMenu({ children, onReset, onApply }) {
           <button type="button" className="btn btn-sm btn-outline-secondary w-50" onClick={onReset}>
             Reset
           </button>
-          <button type="button" className="btn btn-sm btn-dark w-50" onClick={onApply}>
+          <button type="button" className="btn btn-sm btn-app-primary w-50" onClick={onApply}>
             Apply
           </button>
         </div>

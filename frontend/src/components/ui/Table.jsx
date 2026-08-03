@@ -22,7 +22,7 @@ const TableHeadersContext = createContext([]);
 
 // Table — responsive table that stacks into cards on mobile and paginates itself.
 
-export function Table({ headers, children, pageSize = 20, mobilePageSize = 5, itemLabel = "records" }) {
+export function Table({ headers, children, pageSize = 20, mobilePageSize = 5, itemLabel = "records", hover = true }) {
   const rows = Children.toArray(children);
   const stacked = useStackedTable();
   const [page, setPage] = useState(1);
@@ -38,7 +38,7 @@ export function Table({ headers, children, pageSize = 20, mobilePageSize = 5, it
   return (
     <TableHeadersContext.Provider value={headers}>
       <div className="table-responsive">
-        <table className="table table-hover table-stack mb-0 align-middle">
+        <table className={`table ${hover ? "table-hover" : ""} table-stack mb-0 align-middle`}>
           <thead className="table-head">
             <tr>
               {headers.map((h, i) => (

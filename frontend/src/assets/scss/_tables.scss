@@ -276,11 +276,13 @@
     border-top: 1px dotted var(--bs-border-color);
   }
 
+  // Below 768px each row becomes a card and this pseudo-element is the column
+  // label, so it takes the same colour and size as a real column header.
   .table-stack > tbody > tr > td::before {
     content: attr(data-label);
     flex-shrink: 0;
-    color: #6c757d;
-    font-size: 11px;
+    color: var(--app-table-head-color);
+    font-size: var(--app-fs-1);
     font-weight: 600;
     letter-spacing: 0.5px;
     text-align: left;

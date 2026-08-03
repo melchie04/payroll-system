@@ -239,7 +239,10 @@ export default function MyProfile() {
         )}
 
         <section className="mb-3">
-          <DataCard title="Profile Photo">
+          <DataCard title="Personal Information">
+            {/* The photo and the details are one topic, so they share a card. Two
+                card bodies with a hairline between them keeps each block's own
+                padding without needing a second card around it. */}
             <div className="card-body d-flex align-items-center gap-4 flex-wrap">
               <div className="position-relative flex-shrink-0">
                 {avatarImage ? (
@@ -281,7 +284,10 @@ export default function MyProfile() {
                     <div className="text-uppercase text-muted fw-semibold mb-2" style={{ fontSize: "var(--app-fs-1)", letterSpacing: 0.5 }}>
                       Or pick a color for your initials
                     </div>
-                    <div className="d-flex gap-2">
+                    {/* The swatches are the last thing in this block, so they sit
+                        against the hairline below with only the card body's own
+                        padding between. This is the breathing room under them. */}
+                    <div className="d-flex gap-2 mb-2">
                       {AVATAR_COLORS.map((color) => (
                         <button
                           key={color}
@@ -302,12 +308,7 @@ export default function MyProfile() {
                 )}
               </div>
             </div>
-          </DataCard>
-        </section>
-
-        <section className="mb-3">
-          <DataCard title="Personal Information">
-            <div className="card-body row g-3">
+            <div className="card-body row g-3 border-top">
               <div className="col-12 col-md-6">
                 <FormField label="Full Name">
                   <input type="text" className="form-control" name="name" value={form.name} onChange={handleChange} required />

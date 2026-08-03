@@ -54,13 +54,13 @@
   // it, so it read as a hairline drawn on the background rather than as a
   // control. It sits on the surface colour now, with a hairline dark enough to
   // hold its own against the plane.
-  --bs-btn-color: var(--bs-body-color);
+  --bs-btn-color: var(--app-text);
   --bs-btn-bg: var(--app-surface);
   --bs-btn-border-color: var(--app-btn-outline-border);
-  --bs-btn-hover-color: var(--bs-body-color);
+  --bs-btn-hover-color: var(--app-text);
   --bs-btn-hover-bg: var(--app-nav-btn-hover-bg);
   --bs-btn-hover-border-color: var(--app-btn-outline-border-hover);
-  --bs-btn-active-color: var(--bs-body-color);
+  --bs-btn-active-color: var(--app-text);
   --bs-btn-active-bg: var(--app-nav-btn-hover-bg);
   --bs-btn-active-border-color: var(--app-btn-outline-border-hover);
   --bs-btn-disabled-color: var(--bs-secondary);
