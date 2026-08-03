@@ -1,5 +1,6 @@
 // Dark mode.
-// Loaded last so it can retarget any component above. Layers the app's dark palette over Bootstrap 5.3.8's data-bs-theme dark mode by repointing each component's own CSS variables here rather than editing markup.
+// Loaded last so it can retarget any component above. Layers the app's dark palette over Bootstrap 5.3.8's data-bs-theme dark mode by repointing each
+// component's own CSS variables here rather than editing markup.
 
 [data-bs-theme="dark"] {
   // The plane sits BELOW the surfaces here, the same way it does in light: cards,
@@ -148,15 +149,6 @@
   --bs-table-striped-bg: rgba(255, 255, 255, 0.04);
   --bs-table-hover-color: var(--app-dark-text);
   --bs-table-hover-bg: rgba(255, 255, 255, 0.06);
-}
-
-// .table-light is no longer used on the header — it was the utility that made the
-// header render as a raised inset on the dark plane. Kept for any table that still
-// asks for it directly.
-[data-bs-theme="dark"] #layoutSidenav_content .table-light {
-  --bs-table-color: var(--app-dark-text-muted);
-  --bs-table-bg: var(--app-dark-surface-2);
-  --bs-table-border-color: var(--app-dark-border);
 }
 
 [data-bs-theme="dark"] #layoutSidenav_content .pagination {
@@ -318,20 +310,6 @@
   --bs-alert-bg: rgba(var(--bs-success-rgb), 0.16);
   --bs-alert-color: #75b798;
   --bs-alert-border-color: rgba(var(--bs-success-rgb), 0.35);
-}
-
-[data-bs-theme="dark"] #layoutSidenav_content .alert-warning,
-[data-bs-theme="dark"] .modal-content .alert-warning {
-  --bs-alert-bg: rgba(var(--bs-warning-rgb), 0.16);
-  --bs-alert-color: #ffda6a;
-  --bs-alert-border-color: rgba(var(--bs-warning-rgb), 0.35);
-}
-
-[data-bs-theme="dark"] #layoutSidenav_content .alert-secondary,
-[data-bs-theme="dark"] .modal-content .alert-secondary {
-  --bs-alert-bg: rgba(255, 255, 255, 0.06);
-  --bs-alert-color: var(--app-dark-text-muted);
-  --bs-alert-border-color: var(--app-dark-border);
 }
 
 [data-bs-theme="dark"] #layoutSidenav_content .alert-danger,
