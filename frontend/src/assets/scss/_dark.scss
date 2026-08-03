@@ -2,9 +2,12 @@
 // Loaded last so it can retarget any component above. Layers the app's dark palette over Bootstrap 5.3.8's data-bs-theme dark mode by repointing each component's own CSS variables here rather than editing markup.
 
 [data-bs-theme="dark"] {
-  --app-dark-bg: var(--app-obsidian);
-  --app-dark-surface: var(--bs-dark);
-  --app-dark-surface-2: #2a2f35;
+  // The plane sits BELOW the surfaces here, the same way it does in light: cards,
+  // the bar, the footer and the sidebar are all charcoal, and the page behind
+  // them is a step darker.
+  --app-dark-bg: #0b0b0b;
+  --app-dark-surface: var(--app-obsidian);
+  --app-dark-surface-2: #1e211f;
   --app-dark-border: #262e29;
   --app-dark-text: var(--bs-gray-200);
   --app-dark-text-muted: #9aa4ae;
@@ -40,6 +43,15 @@
   --app-status-warning: #ffc107;
   --app-status-danger: #ff6b6b;
   --app-status-neutral: #c3cec6;
+
+  --app-notif-more-bg: rgba(255, 255, 255, 0.03);
+  --app-chip-bg: rgba(255, 255, 255, 0.08);
+  --app-chip-fg: #b6c2ba;
+
+  --app-surface: var(--app-obsidian);
+
+  --app-btn-outline-border: #4d5651;
+  --app-btn-outline-border-hover: #616c66;
 
   --app-nav-icon: #b6c2ba;
   --app-nav-heading: #6f7d74;
@@ -349,8 +361,10 @@
   --bs-link-color-rgb: 127, 177, 255;
 }
 
-[data-bs-theme="dark"] .text-primary,
-[data-bs-theme="dark"] .btn-link {
+// .btn-link is deliberately NOT in this rule: text links carry the accent, and
+// _action.scss sets that for both themes. Listing it here would win on
+// !important and paint every link in the app blue on the dark plane.
+[data-bs-theme="dark"] .text-primary {
   color: #7fb1ff !important;
 }
 

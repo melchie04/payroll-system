@@ -4,8 +4,14 @@ export function PageHeader({ title, description, actions }) {
   return (
     <div className="d-flex flex-wrap justify-content-between align-items-start mb-4 gap-2">
       <div>
-        <h1 className="h4 fw-bold mb-1">{title}</h1>
-        {description && <p className="text-muted small mb-0">{description}</p>}
+        <h1 className="fw-bold mb-1" style={{ fontSize: "var(--app-fs-6)" }}>
+          {title}
+        </h1>
+        {description && (
+          <p className="text-muted mb-0" style={{ fontSize: "var(--app-fs-3)" }}>
+            {description}
+          </p>
+        )}
       </div>
       {actions && <div className="d-flex gap-2">{actions}</div>}
     </div>
@@ -29,7 +35,7 @@ export function TabsNav({ tabs, active, onChange }) {
           >
             {t.icon && <i className={`fas ${t.icon} opacity-75`}></i>}
             <span>{t.label}</span>
-            {t.badge ? <span className="badge rounded-pill bg-danger">{t.badge}</span> : null}
+            {t.badge ? <span className="tabs-nav-badge badge rounded-pill">{t.badge}</span> : null}
           </button>
         );
       })}

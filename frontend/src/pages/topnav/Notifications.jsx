@@ -2,12 +2,25 @@ import { useState } from "react";
 import { DataCard, BtnSecondary, PageHeader, TabsNav } from "../../components/ui/index.jsx";
 import { useNotifications } from "../../context/NotificationsContext.jsx";
 
+// How many rows the list starts with, and how many each press of Load more adds.
+const PAGE_SIZE = 10;
+
 // Notifications — notification list with all/unread filters and mark-as-read actions.
 export default function Notifications() {
   const { notifications, unreadCount, markAllRead, markOneRead } = useNotifications();
   const [filter, setFilter] = useState("All");
+  const [shownCount, setShownCount] = useState(PAGE_SIZE);
 
-  const visible = filter === "All" ? notifications : notifications.filter((n) => !n.read);
+  const matching = filter === "All" ? notifications : notifications.filter((n) => !n.read);
+  const visible = matching.slice(0, shownCount);
+  const remaining = matching.length - visible.length;
+
+  // Switching tab starts the list from the top again, so the count under the card
+  // never describes a longer list than the one being shown.
+  function changeFilter(next) {
+    setFilter(next);
+    setShownCount(PAGE_SIZE);
+  }
 
   return (
     <>
@@ -36,7 +49,7 @@ export default function Notifications() {
             { key: "Unread", label: "Unread", badge: unreadCount > 0 ? unreadCount : null },
           ]}
           active={filter}
-          onChange={setFilter}
+          onChange={changeFilter}
         />
       </section>
 
@@ -45,27 +58,18 @@ export default function Notifications() {
           <div className="list-group list-group-flush">
             {visible.length === 0 && <div className="text-center text-muted py-5 small">You're all caught up!</div>}
             {visible.map((n) => (
-              <div className={`list-group-item d-flex align-items-start gap-3 px-3 py-3 ${!n.read ? "bg-light" : ""}`} key={n.id}>
-                <div
-                  className="d-flex align-items-center justify-content-center flex-shrink-0 border rounded-3 bg-white text-secondary"
-                  style={{ width: "var(--app-icon-md)", height: "var(--app-icon-md)", fontSize: "var(--app-fs-5)" }}
-                >
-                  {n.icon}
-                </div>
-
+              <div className={`notif-row list-group-item d-flex align-items-start gap-3 px-3 ${!n.read ? "notif-row-unread" : ""}`} key={n.id}>
                 <div className="flex-grow-1" style={{ minWidth: 0 }}>
-                  <div className="d-flex flex-column flex-sm-row justify-content-between align-items-start gap-1 gap-sm-4 mb-2">
-                    <div className="text-dark lh-base" style={{ fontSize: "var(--app-fs-4)", overflowWrap: "anywhere" }}>
-                      <span>{n.title} </span>
-                      <strong className="fw-semibold">{n.bold}</strong> <span>{n.sub}</span>
-                    </div>
-                    <div className="text-muted text-nowrap" style={{ fontSize: "var(--app-fs-2)" }}>
-                      {n.time}
-                    </div>
+                  <div className="text-dark lh-base mb-2" style={{ fontSize: "var(--app-fs-4)", overflowWrap: "anywhere" }}>
+                    <span>{n.title} </span>
+                    <strong className="fw-semibold">{n.bold}</strong> <span>{n.sub}</span>
                   </div>
 
                   <div className="d-flex align-items-center flex-wrap gap-2">
-                    <span className="badge rounded-pill bg-secondary bg-opacity-10 text-secondary fw-normal py-1">{n.type}</span>
+                    <span className="notif-type badge rounded-pill py-1">{n.type}</span>
+                    <span className="text-muted text-nowrap" style={{ fontSize: "var(--app-fs-2)" }}>
+                      {n.time}
+                    </span>
                     {!n.read && (
                       <>
                         <span className="text-muted" style={{ fontSize: "var(--app-fs-2)" }}>
@@ -84,15 +88,26 @@ export default function Notifications() {
                   </div>
                 </div>
 
-                {!n.read && (
-                  <span className="rounded-circle flex-shrink-0 mt-2" style={{ width: 8, height: 8, background: "var(--app-dot-color)" }}>
-                    <span className="visually-hidden">Unread</span>
-                  </span>
-                )}
+                <span className={`notif-dot flex-shrink-0 ${n.read ? "is-read" : ""}`}>
+                  {!n.read && <span className="visually-hidden">Unread</span>}
+                </span>
               </div>
             ))}
+
+            {remaining > 0 && (
+              <button type="button" className="notif-more list-group-item" onClick={() => setShownCount((c) => c + PAGE_SIZE)}>
+                Load more
+                <i className="fas fa-chevron-down ms-2"></i>
+              </button>
+            )}
           </div>
         </DataCard>
+
+        {matching.length > 0 && (
+          <div className="text-muted mt-2" style={{ fontSize: "var(--app-fs-2)" }}>
+            Showing {visible.length} of {matching.length} notification{matching.length === 1 ? "" : "s"}
+          </div>
+        )}
       </section>
     </>
   );

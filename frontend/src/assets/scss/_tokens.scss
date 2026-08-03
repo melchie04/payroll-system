@@ -46,7 +46,8 @@
   --app-footer-link: var(--app-moss);
   --app-footer-link-hover: var(--app-moss-active);
 
-  --app-content-bg: #eef0f3;      // Plane behind cards, a step under the surfaces
+  --app-content-bg: #f4f6f4;      // Plane behind the cards — one step under white
+  --app-surface: #ffffff;         // Cards, the tab tray — everything above the plane
   --app-blob-cool: #4caf6a;       // Auth/error background wash
   --app-blob-warm: #a5d6a7;
   --app-dot-rgb: 220, 53, 69;     // Unread notification dot (used as rgba)
@@ -89,6 +90,14 @@
   --app-icon-md: 40px;
   --app-icon-lg: 56px;
   --app-icon-xl: 72px;
+
+  // Notifications list
+  --app-notif-more-bg: #fcfdfc;   // The Load more row, a whisper off the card
+  --app-chip-bg: #e7e9ec;
+  --app-chip-fg: #6c757d;
+
+  --app-btn-outline-border: #adb5bd;       // Secondary button hairline
+  --app-btn-outline-border-hover: #8f979d;
 
   --app-nav-icon: #5f6b62;              // Icon buttons at rest, everywhere
   --app-nav-heading: #8a929a;           // The sidebar's "MENU" label

@@ -124,6 +124,41 @@ body {
   background-color: var(--app-content-bg);
 }
 
+// The content wrapper. It used to carry only horizontal padding — px-4, rising to
+// 3rem at xl — which left the page flush against the top bar and the footer and
+// very wide at big sizes. One value on all four sides instead, and the container's
+// own gutter is zeroed so it does not add a second, unequal inset.
+.app-page {
+  --bs-gutter-x: 0;
+  padding: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .app-page {
+    padding: 1.75rem;
+  }
+}
+
+@media (min-width: 992px) {
+  .app-page {
+    padding: 2.25rem;
+  }
+}
+
+// On a wide monitor the content otherwise runs the full width of the screen and
+// stops feeling like a page at all.
+@media (min-width: 1400px) {
+  .app-page {
+    padding: 2.25rem 3rem;
+  }
+}
+
+// Pages open with a mt-4 by convention. The wrapper owns that space now, so the
+// first block does not push the page down twice.
+.app-page > *:first-child {
+  margin-top: 0 !important;
+}
+
 // py-3 and bg-light carry !important, so these must too. The .bg-light
 // qualifier is what outranks the utility overrides in _dark.scss.
 #layoutSidenav_content > footer.bg-light {

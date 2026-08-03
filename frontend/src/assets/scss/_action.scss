@@ -1,4 +1,5 @@
-// The app's primary button, used on every layout.
+// The app's action treatments: the primary button, the secondary button and
+// text links. All three are shared by every layout.
 
 // --- Primary action --------------------------------------------------------
 // The app's primary button. Moss is the accent, so the one button the page wants
@@ -42,4 +43,41 @@
     transition: none;
     transform: none;
   }
+}
+
+// The secondary button. Bootstrap's own outline-secondary is grey text on a grey
+// hairline and matches nothing else here; this pairs it with the green primary —
+// body-coloured label, quiet hairline, and the same neutral hover fill the top
+// bar and the sidebar use.
+.btn-outline-secondary {
+  // A transparent fill left this button the same colour as the page plane behind
+  // it, so it read as a hairline drawn on the background rather than as a
+  // control. It sits on the surface colour now, with a hairline dark enough to
+  // hold its own against the plane.
+  --bs-btn-color: var(--bs-body-color);
+  --bs-btn-bg: var(--app-surface);
+  --bs-btn-border-color: var(--app-btn-outline-border);
+  --bs-btn-hover-color: var(--bs-body-color);
+  --bs-btn-hover-bg: var(--app-nav-btn-hover-bg);
+  --bs-btn-hover-border-color: var(--app-btn-outline-border-hover);
+  --bs-btn-active-color: var(--bs-body-color);
+  --bs-btn-active-bg: var(--app-nav-btn-hover-bg);
+  --bs-btn-active-border-color: var(--app-btn-outline-border-hover);
+  --bs-btn-disabled-color: var(--bs-secondary);
+  --bs-btn-disabled-border-color: var(--app-btn-outline-border);
+  --bs-btn-focus-shadow-rgb: 46, 125, 50;
+}
+
+// Text links inside the app carry the accent, not Bootstrap's blue.
+.btn-link {
+  --bs-btn-color: var(--app-accent-ink);
+  --bs-btn-hover-color: var(--app-moss-active);
+  --bs-btn-active-color: var(--app-moss-active);
+}
+
+// A touch of lift, but only inside the content area — the auth pages put this
+// same class inside the password pill, where a shadow would sit on top of the
+// field's own outline.
+.app-page .btn-outline-secondary {
+  box-shadow: 0 1px 2px rgba(10, 15, 13, 0.06);
 }
