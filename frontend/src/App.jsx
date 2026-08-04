@@ -1,3 +1,5 @@
+// Route table for the whole application.
+
 import { Routes, Route } from "react-router";
 
 import DashboardLayout from "./layouts/DashboardLayout.jsx";
@@ -35,7 +37,7 @@ import NotFound from "./pages/errors/NotFound.jsx";
 import AccessDenied from "./pages/errors/AccessDenied.jsx";
 import ServerError from "./pages/errors/ServerError.jsx";
 
-// App — route table mapping auth, dashboard, and error pages to their layouts.
+// Declares every route and which layout wraps it.
 export default function App() {
   return (
     <Routes>

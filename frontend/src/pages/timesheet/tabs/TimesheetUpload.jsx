@@ -1,9 +1,9 @@
+// Upload tab: drop files in, watch them extract, then file them.
+
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { DataCard, BtnPrimary, BtnSecondary, IconBtn } from "../../../components/ui/index.jsx";
 import { useTimesheets } from "../../../context/TimesheetContext.jsx";
 
-// Icon tone follows the level, so a row can never contradict its own label. Red is
-// reserved for something that actually goes wrong, which is why "Preferred" is not it.
 const LEVEL_TONE = { Required: "text-secondary", Preferred: "text-secondary", Avoid: "text-warning" };
 
 const REQUIREMENTS = [
@@ -45,7 +45,6 @@ const REQUIREMENTS = [
   },
 ];
 
-// The three rules a browser can actually check before a file leaves the machine.
 const MAX_BYTES = 10 * 1024 * 1024;
 const ACCEPTED = {
   "application/pdf": { type: "pdf", source: "Scan" },
@@ -54,14 +53,14 @@ const ACCEPTED = {
 };
 const ACCEPTED_EXTENSIONS = { pdf: "application/pdf", jpg: "image/jpeg", jpeg: "image/jpeg", png: "image/png" };
 
+// Turns a byte count into a readable size.
 function formatSize(bytes) {
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`;
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
-// Browsers leave the MIME type blank often enough that the extension has to be
-// the fallback, not the other way round.
+// Works out whether a file is a PDF or an image.
 function kindOf(file) {
   if (ACCEPTED[file.type]) return ACCEPTED[file.type];
   const ext = file.name.split(".").pop()?.toLowerCase();
@@ -69,8 +68,7 @@ function kindOf(file) {
   return mapped ? ACCEPTED[mapped] : null;
 }
 
-// Everything that can be judged without a server. A rejected file never enters
-// the queue, so the reason is given where the file was dropped.
+// Rejects files that are the wrong type or too large before they queue.
 function screen(file, taken) {
   if (taken.has(file.name.toLowerCase())) {
     return { reason: "Already in this batch", hint: "A sheet with this filename has already been added." };
@@ -87,8 +85,7 @@ function screen(file, taken) {
   return null;
 }
 
-// TimesheetUpload — the dropzone, the queue of files being taken in, what a good
-// file looks like, and recent throughput.
+// Takes dropped files, runs them through extraction and files the results.
 export function TimesheetUpload({ summary, client, clientCode, canUpload = true, onOpenSheets }) {
   const { addSheets } = useTimesheets();
 
@@ -97,8 +94,6 @@ export function TimesheetUpload({ summary, client, clientCode, canUpload = true,
   const [rejected, setRejected] = useState([]);
   const readers = useRef(new Map());
 
-  // A reader per queued file. Progress is the browser reading the file off disk,
-  // which is the only part of an upload that exists until there is a server.
   useEffect(() => {
     const pending = queue.filter((q) => q.state === "reading" && !readers.current.has(q.id));
 
@@ -125,7 +120,6 @@ export function TimesheetUpload({ summary, client, clientCode, canUpload = true,
     }
   }, [queue]);
 
-  // Abort anything still reading if the operator leaves the tab.
   useEffect(() => {
     const running = readers.current;
     return () => {
@@ -172,23 +166,26 @@ export function TimesheetUpload({ summary, client, clientCode, canUpload = true,
     [queue],
   );
 
+  // Opens the file picker.
   function openPicker() {
     if (!canUpload) return;
     document.getElementById("timesheet-file-input").click();
   }
 
+  // Queues the files chosen through the picker.
   function handleInput(e) {
     accept(e.target.files);
     e.target.value = "";
   }
 
+  // Drops one file back out of the queue.
   function removeQueued(id) {
     readers.current.get(id)?.abort();
     readers.current.delete(id);
     setQueue((prev) => prev.filter((q) => q.id !== id));
   }
 
-  // Hands the finished files to the sheets list, where extraction picks them up.
+  // Files every extracted sheet and clears them from the queue.
   function fileThem() {
     if (done.length === 0) return;
     addSheets(

@@ -1,4 +1,6 @@
-// Footer — copyright and legal links shown on every layout.
+// The footer bar shown at the bottom of every layout.
+
+// Renders the copyright line and the policy links.
 export default function Footer() {
   return (
     <footer className="py-3 bg-light mt-auto border-top">

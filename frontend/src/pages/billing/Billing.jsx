@@ -1,3 +1,5 @@
+// Billing page: what each client owes and where invoices are raised.
+
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 import {
@@ -34,11 +36,12 @@ const ALL_PERIODS = "All Periods";
 const STATUSES = ["Sent", "Paid", "Partially Paid", "Overdue"];
 const CSV_HEADERS = ["Invoice #", "Client", "Period", "Invoice Date", "Due Date", "Amount", "Status"];
 
+// Flattens the billing rows into the columns the CSV needs.
 function toCsvRows(list, nameFor) {
   return list.map((inv) => [inv.id, nameFor(inv.clientCode), inv.period || "", inv.invoiceDate, inv.dueDate, inv.amount, inv.status]);
 }
 
-// Billing — invoice list with filters, bulk actions, and a create-invoice modal.
+// Shows what each client owes for the period and where invoices are raised.
 export default function Billing() {
   const navigate = useNavigate();
   const { clients, activeClients } = useClients();
@@ -48,8 +51,6 @@ export default function Billing() {
   const { logActivity } = useActivity();
   const { addNotification } = useNotifications();
 
-  // Every figure on this page is added up from the invoice list, so a card and the
-  // table beneath it can never disagree.
   const stats = useMemo(() => {
     const sum = (list) => list.reduce((total, inv) => total + parseCurrency(inv.amount), 0);
     return [
@@ -65,7 +66,6 @@ export default function Billing() {
     ];
   }, [invoices]);
 
-  // One lookup from code to display name, rebuilt only when the client list changes.
   const nameFor = useMemo(() => {
     const byCode = new Map(clients.map((c) => [c.code, c.name]));
     return (code) => byCode.get(code) || code || "";
@@ -76,8 +76,6 @@ export default function Billing() {
   const [periodFilter, setPeriodFilter] = useState(ALL_PERIODS);
   const [search, setSearch] = useState("");
 
-  // The filter offers every client, archived ones included: their old invoices are
-  // still on file and still need finding. Only the create form hides them.
   const visibleInvoices = useMemo(() => {
     const query = search.trim().toLowerCase();
     return invoices.filter((inv) => {
@@ -91,6 +89,7 @@ export default function Billing() {
 
   const filtering = visibleInvoices.length !== invoices.length;
 
+  // Returns every filter to its default.
   function clearFilters() {
     setClientFilter(ALL_CLIENTS);
     setStatusFilter(ALL_STATUSES);
@@ -100,6 +99,7 @@ export default function Billing() {
 
   const [hidden, setHidden] = useState([]);
 
+  // Shows or hides the clients with nothing to bill.
   function toggleHidden(id) {
     setHidden((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
   }
@@ -107,17 +107,15 @@ export default function Billing() {
   const [selected, setSelected] = useState([]);
   const toggleOne = (id) => setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
 
-  // Select-all acts on the rows currently shown, so filtering then ticking the header
-  // never selects invoices the operator cannot see.
   const visibleIds = visibleInvoices.map((inv) => inv.id);
   const allSelected = visibleInvoices.length > 0 && visibleIds.every((id) => selected.includes(id));
 
+  // Selects or clears every row currently visible.
   function toggleAll() {
     setSelected(allSelected ? selected.filter((id) => !visibleIds.includes(id)) : [...new Set([...selected, ...visibleIds])]);
   }
 
-  // changeStatus — the one place a status moves, so the audit entry and the alert are
-  // raised the same way whether the change came from a row or from the selection bar.
+  // Moves one invoice to a new status.
   function changeStatus(invoice, status) {
     if (!invoice || invoice.status === status) return;
     setInvoiceStatus(invoice.id, status);
@@ -128,15 +126,18 @@ export default function Billing() {
     }
   }
 
+  // Marks every selected invoice paid in one step.
   function markSelectedPaid() {
     invoices.filter((inv) => selected.includes(inv.id)).forEach((inv) => changeStatus(inv, "Paid"));
     setSelected([]);
   }
 
+  // Exports every row matching the current filters.
   function handleExportAll() {
     exportToCsv("invoices", CSV_HEADERS, toCsvRows(visibleInvoices, nameFor));
   }
 
+  // Exports only the selected rows.
   function handleExportSelected() {
     exportToCsv(
       "invoices-selected",
@@ -160,14 +161,13 @@ export default function Billing() {
   const [form, setForm] = useState(emptyInvoice);
   const [errors, setErrors] = useState({});
 
+  // Keeps the invoice form in step with what is typed.
   function handleChange(e) {
     const { name, value } = e.target;
     setForm((f) => ({ ...f, [name]: value }));
     setErrors((prev) => (prev[name] ? { ...prev, [name]: "" } : prev));
   }
 
-  // What the chosen client and period are actually worth, worked out from their
-  // approved sheets. Offered as a suggestion; the operator can still type their own.
   const calculated = useMemo(
     () =>
       billableFor({
@@ -180,11 +180,13 @@ export default function Billing() {
     [files, clients, employees, form.clientCode, form.period],
   );
 
+  // Recalculates the invoice total whenever its inputs change.
   function useCalculatedAmount() {
     setForm((f) => ({ ...f, amount: String(calculated.total) }));
     setErrors((prev) => (prev.amount ? { ...prev, amount: "" } : prev));
   }
 
+  // Raises the invoice and records it in the activity feed.
   function handleCreateInvoice(e) {
     e.preventDefault();
     const found = {};
@@ -196,8 +198,6 @@ export default function Billing() {
     setErrors(found);
     if (Object.keys(found).length > 0) return;
 
-    // A typed figure that matches the calculation keeps the per-employee breakdown
-    // behind it, so the invoice can print what it was built from.
     const matchesCalculation = calculated.ready && Number(form.amount) === calculated.total;
     const created = addInvoice({
       clientCode: form.clientCode,
@@ -428,7 +428,7 @@ export default function Billing() {
                 </select>
               </FormField>
             </div>
-            <div className="col-6">
+            <div className="col-12 col-sm-6">
               <FormField label="Invoice Date">
                 <input
                   type="date"
@@ -441,7 +441,7 @@ export default function Billing() {
                 {errors.invoiceDate && <div className="invalid-feedback d-block">{errors.invoiceDate}</div>}
               </FormField>
             </div>
-            <div className="col-6">
+            <div className="col-12 col-sm-6">
               <FormField label="Due Date">
                 <input
                   type="date"

@@ -1,3 +1,5 @@
+// Uploaded Sheets tab: every sheet filed so far and its status.
+
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 import {
@@ -22,9 +24,7 @@ const ALL_SOURCES = "All Sources";
 const STATUS_OPTIONS = ["Needs Review", "Approved", "Processing", "Rejected", "Failed"];
 const SOURCE_OPTIONS = ["Scan", "Photo"];
 
-// TimesheetFiles — uploaded sheets tab; owns its table and its own modals.
-// The list arrives already scoped to the client and pay period chosen on the page,
-// and is narrowed further by the three filters below.
+// Lists every filed sheet with its status and the actions open to it.
 export function TimesheetFiles({ files = [] }) {
   const navigate = useNavigate();
   const { files: allFiles, retryFile, discardFile, approveMany } = useTimesheets();
@@ -51,12 +51,9 @@ export function TimesheetFiles({ files = [] }) {
 
   const filtered = visible.length !== files.length;
 
-  // Sheets awaiting review with nothing flagged on them at all. Opening each one
-  // would show an empty Needs Attention card, so the reviewer is offered the batch.
   const clean = useMemo(() => visible.filter((f) => isSheetClean(f, allFiles, employees, clients)), [visible, allFiles, employees, clients]);
 
-  // The stored preview is the uploaded file itself, so the download is the original
-  // document rather than anything regenerated from it.
+  // Downloads the scan a sheet was extracted from.
   function downloadOriginal(f) {
     if (!f.previewUrl) return;
     const link = document.createElement("a");
@@ -67,15 +64,13 @@ export function TimesheetFiles({ files = [] }) {
     link.remove();
   }
 
+  // Approves every selected sheet that raises no findings.
   function handleBulkApprove() {
     approveMany(clean.map((f) => f.id));
     setBulkConfirmed(false);
     document.getElementById("timesheetBulkClose")?.click();
   }
 
-  // Sheets that carry days already covered elsewhere for the same person. Checked
-  // against every sheet on file, not just the ones the filters are showing, so
-  // narrowing the list cannot hide a clash.
   const duplicates = useMemo(() => {
     const map = new Map();
     for (const f of files) {
@@ -85,6 +80,7 @@ export function TimesheetFiles({ files = [] }) {
     return map;
   }, [files, allFiles, employees]);
 
+  // Sends a failed sheet back through extraction.
   function handleRetry() {
     if (retryTarget) {
       retryFile(retryTarget.id);
@@ -93,6 +89,7 @@ export function TimesheetFiles({ files = [] }) {
     document.getElementById("timesheetRetryClose")?.click();
   }
 
+  // Removes a sheet once the dialog is confirmed.
   function handleDiscard() {
     if (discardTarget) {
       discardFile(discardTarget.id);

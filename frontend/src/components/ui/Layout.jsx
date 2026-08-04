@@ -1,14 +1,15 @@
-// Page furniture: the page header, tab strip and modal shell.
+// Page-level building blocks: header, tabs, modal and the brand lockup.
 
+// The page title, its description and any action buttons.
 export function PageHeader({ title, description, actions }) {
   return (
     <div className="d-flex flex-wrap justify-content-between align-items-start mb-4 gap-2">
       <div>
-        <h1 className="fw-bold mb-1" style={{ fontSize: "var(--app-fs-6)" }}>
+        <h1 className="page-title fw-bold mb-1">
           {title}
         </h1>
         {description && (
-          <p className="text-muted mb-0" style={{ fontSize: "var(--app-fs-3)" }}>
+          <p className="page-description text-muted mb-0">
             {description}
           </p>
         )}
@@ -18,8 +19,7 @@ export function PageHeader({ title, description, actions }) {
   );
 }
 
-// TabsNav — page tab navigation; styling and states live in _tabs.scss.
-
+// The tab tray; reports the chosen tab back through onChange.
 export function TabsNav({ tabs, active, onChange }) {
   return (
     <div className="tabs-nav">
@@ -43,8 +43,7 @@ export function TabsNav({ tabs, active, onChange }) {
   );
 }
 
-// ActionsMenu — per-row "..." dropdown menu.
-
+// A dialog driven by Bootstrap's own modal behaviour.
 export function Modal({ id, title, children, footer, size = "" }) {
   return (
     <div className="modal fade" id={id} tabIndex="-1" aria-labelledby={`${id}Label`} aria-hidden="true">
@@ -64,11 +63,7 @@ export function Modal({ id, title, children, footer, size = "" }) {
   );
 }
 
-// SectionHeading — groups a set of form fields. Deliberately outranks the
-// FormField label, which is uppercase, muted and 11px.
-
-// BrandMark — the P square used in the top bar, on the auth pages and as the favicon.
-// Colour comes from tokens so it inverts with the theme without any JS.
+// The rounded square holding the brand letter.
 export function BrandMark({ size = 40, className = "" }) {
   return (
     <span
@@ -81,14 +76,12 @@ export function BrandMark({ size = 40, className = "" }) {
   );
 }
 
-// BrandLockup — the mark and the wordmark on one line, the same pairing the top bar
-// uses. Pairing them anchors the mark to something instead of leaving it floating on
-// its own above a heading.
+// The brand mark and wordmark side by side.
 export function BrandLockup({ className = "" }) {
   return (
     <div className={`d-flex align-items-center justify-content-center gap-2 ${className}`}>
       <BrandMark size={26} />
-      <span className="app-brand-name fw-semibold" style={{ fontSize: "var(--app-fs-5)", letterSpacing: "0.12em" }}>
+      <span className="app-brand-name">
         PAYROLL
       </span>
     </div>

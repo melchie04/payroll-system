@@ -1,9 +1,11 @@
+// First-run page that forces a password change before entering the app.
+
 import { useState } from "react";
 import { BrandLockup } from "../../components/ui/index.jsx";
 import { useNavigate } from "react-router";
 import { useCurrentUser } from "../../context/CurrentUserContext.jsx";
 
-// RequirementRow — password requirement checklist row.
+// One password rule, ticked once it is satisfied.
 function RequirementRow({ met, label }) {
   return (
     <div className="d-flex align-items-center gap-2 mb-1">
@@ -16,13 +18,11 @@ function RequirementRow({ met, label }) {
   );
 }
 
-// ChangePassword — forced password change form with live requirement checks.
+// Forces a new password before the app can be entered.
 export default function ChangePassword() {
   const navigate = useNavigate();
   const { updateUser } = useCurrentUser();
 
-  // One flag per field, keyed by the same names the form uses, so revealing one
-  // password never reveals the others.
   const [shown, setShown] = useState({
     tempPassword: false,
     newPassword: false,
@@ -44,10 +44,12 @@ export default function ChangePassword() {
   const matches = form.newPassword.length > 0 && form.newPassword === form.confirmPassword;
   const canSubmit = form.tempPassword.length > 0 && hasLength && hasCase && hasNumber && hasSpecial && matches;
 
+  // Keeps the form state in step with what is typed.
   function handleChange(e) {
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
   }
 
+  // Accepts the new password once every rule passes.
   function handleSubmit(e) {
     e.preventDefault();
     setTouched(true);
@@ -71,9 +73,7 @@ export default function ChangePassword() {
         >
           <i className="fas fa-circle-check"></i>
         </div>
-        <h1 className="fw-normal text-secondary mb-2" style={{ fontSize: "var(--app-fs-6)", color: "var(--app-auth-heading)" }}>
-          Password set
-        </h1>
+        <h1 className="auth-heading mb-2">Password set</h1>
         <p className="text-muted mb-4" style={{ fontSize: "var(--app-fs-4)" }}>
           Your password has been updated. You're all set to continue.
         </p>
@@ -93,16 +93,7 @@ export default function ChangePassword() {
     <div className="w-100" style={{ maxWidth: 360 }}>
       <BrandLockup className="mb-2" />
       <hr className="mx-auto mb-3 opacity-25" style={{ maxWidth: 200 }} />
-      <h1
-        className="text-center fw-normal text-secondary mb-2 tracking-wide text-uppercase"
-        style={{
-          fontSize: "var(--app-fs-6)",
-          color: "var(--app-auth-heading)",
-          letterSpacing: "0.08em",
-        }}
-      >
-        Change Password
-      </h1>
+      <h1 className="auth-heading text-center mb-2 text-uppercase">Change Password</h1>
       <p className="text-center text-muted mb-4" style={{ fontSize: "var(--app-fs-3)" }}>
         Enter the temporary password from your administrator, then choose a new one.
       </p>
@@ -126,7 +117,7 @@ export default function ChangePassword() {
             </span>
             <input
               type={shown.tempPassword ? "text" : "password"}
-              className="form-control border-start-0 border-end-0 py-2.5 fs-6 fw-light"
+              className="form-control border-start-0 border-end-0 py-2.5 fw-light"
               style={{ outline: "none" }}
               id="tempPassword"
               name="tempPassword"
@@ -174,7 +165,7 @@ export default function ChangePassword() {
             </span>
             <input
               type={shown.newPassword ? "text" : "password"}
-              className="form-control border-start-0 border-end-0 py-2.5 fs-6 fw-light"
+              className="form-control border-start-0 border-end-0 py-2.5 fw-light"
               style={{ outline: "none" }}
               id="newPassword"
               name="newPassword"
@@ -222,7 +213,7 @@ export default function ChangePassword() {
             </span>
             <input
               type={shown.confirmPassword ? "text" : "password"}
-              className="form-control border-start-0 border-end-0 py-2.5 fs-6 fw-light"
+              className="form-control border-start-0 border-end-0 py-2.5 fw-light"
               style={{ outline: "none" }}
               id="confirmPassword"
               name="confirmPassword"

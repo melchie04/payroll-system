@@ -1,3 +1,5 @@
+// Employee roster with filters, bulk actions and export.
+
 import { Link, useNavigate } from "react-router";
 import { useMemo, useState } from "react";
 import {
@@ -24,11 +26,12 @@ import { exportToCsv } from "../../utils/exportToCsv.js";
 
 const CSV_HEADERS = ["Code", "Name", "Client", "Position", "Email", "Rate", "Status"];
 
+// Flattens the roster into the columns the CSV needs.
 function toCsvRows(list, clientName) {
   return list.map((e) => [e.code || "", e.name, clientName(e.client), e.position, e.email, e.rate, e.status]);
 }
 
-// Employees — employee list with selection, bulk actions, filters, and export.
+// Lists employees with filters, bulk actions and export.
 export default function Employees() {
   const navigate = useNavigate();
   const { employees, deleteEmployee, archiveEmployee, restoreEmployee } = useEmployees();
@@ -43,7 +46,6 @@ export default function Employees() {
   const [statusDraft, setStatusDraft] = useState([]);
   const [status, setStatus] = useState([]);
 
-  // Position options track the roster, so a new position shows up in the filter on its own.
   const positions = useMemo(() => [...new Set(employees.map((e) => e.position))], [employees]);
 
   const visibleEmployees = useMemo(() => {
@@ -59,11 +61,10 @@ export default function Employees() {
 
   const toggleOne = (id) => setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
 
-  // Select-all acts on the rows currently shown, so filtering then ticking the header
-  // never selects people the operator cannot see.
   const visibleIds = visibleEmployees.map((e) => e.id);
   const allSelected = visibleEmployees.length > 0 && visibleIds.every((id) => selected.includes(id));
 
+  // Selects or clears every row currently visible.
   function toggleAll() {
     setSelected(allSelected ? selected.filter((id) => !visibleIds.includes(id)) : [...new Set([...selected, ...visibleIds])]);
   }
@@ -72,8 +73,6 @@ export default function Employees() {
 
   const [target, setTarget] = useState(null);
 
-  // Anyone a sheet resolves to is kept rather than deleted, so no sheet is left
-  // pointing at a person who no longer exists.
   const sheetOwnerIds = useMemo(
     () => new Set(files.map((f) => resolveEmployee(f.employee, employees)?.id).filter((id) => id != null)),
     [files, employees],
@@ -84,6 +83,7 @@ export default function Employees() {
   const toArchive = selectedEmployees.filter((e) => hasHistory(e) && e.status !== "Inactive");
   const toDelete = selectedEmployees.filter((e) => !hasHistory(e));
 
+  // Deletes one employee once the dialog is confirmed.
   function confirmDelete() {
     if (target) {
       logActivity({ action: "Deleted employee", detail: `Deleted ${target.name} (${target.code})`, module: "Employees" });
@@ -93,6 +93,7 @@ export default function Employees() {
     document.getElementById("employeeDeleteModalClose")?.click();
   }
 
+  // Archives one employee once the dialog is confirmed.
   function confirmArchive() {
     if (target) {
       logActivity({ action: "Archived employee", detail: `Archived ${target.name} (${target.code})`, module: "Employees" });
@@ -102,6 +103,7 @@ export default function Employees() {
     document.getElementById("employeeArchiveModalClose")?.click();
   }
 
+  // Deletes every selected employee once confirmed.
   function confirmBulkDelete() {
     toArchive.forEach((e) => {
       logActivity({ action: "Archived employee", detail: `Archived ${e.name} (${e.code})`, module: "Employees" });
@@ -115,10 +117,12 @@ export default function Employees() {
     document.getElementById("bulkDeleteModalClose")?.click();
   }
 
+  // Exports every row matching the current filters.
   function handleExportAll() {
     exportToCsv("employees", CSV_HEADERS, toCsvRows(employees, clientNameByCode));
   }
 
+  // Exports only the selected rows.
   function handleExportSelected() {
     const rows = employees.filter((e) => selected.includes(e.id));
     exportToCsv("employees-selected", CSV_HEADERS, toCsvRows(rows, clientNameByCode));

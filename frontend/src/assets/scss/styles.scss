@@ -1,6 +1,4 @@
-// Framework layer — Bootstrap 5.3.8 (purged of unused components), split by
-// the element each file targets. Order matters: utilities carry !important and
-// must load after the components they override.
+// The framework layer: compiled Bootstrap, loaded before anything this app writes.
 
 @use "variables";
 @use "reboot";

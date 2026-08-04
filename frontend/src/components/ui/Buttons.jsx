@@ -1,5 +1,6 @@
-// Primary, danger, secondary and icon buttons.
+// The app's button components in their four roles.
 
+// The page's main action, filled in the accent colour.
 export function BtnPrimary({ children, onClick, type = "button", className = "", ...rest }) {
   return (
     <button type={type} className={`btn btn-app-primary btn-sm d-inline-flex align-items-center gap-2 ${className}`} onClick={onClick} {...rest}>
@@ -8,8 +9,7 @@ export function BtnPrimary({ children, onClick, type = "button", className = "",
   );
 }
 
-// BtnDanger — destructive action button.
-
+// A destructive action, filled red.
 export function BtnDanger({ children, onClick, type = "button", className = "", ...rest }) {
   return (
     <button type={type} className={`btn btn-danger btn-sm d-inline-flex align-items-center gap-2 ${className}`} onClick={onClick} {...rest}>
@@ -18,8 +18,7 @@ export function BtnDanger({ children, onClick, type = "button", className = "", 
   );
 }
 
-// BtnSecondary — outlined secondary action button.
-
+// A supporting action, outlined rather than filled.
 export function BtnSecondary({ children, onClick, type = "button", className = "", ...rest }) {
   return (
     <button
@@ -33,14 +32,11 @@ export function BtnSecondary({ children, onClick, type = "button", className = "
   );
 }
 
-// IconBtn — small icon-only button.
-
+// A button carrying only an icon, used inside rows and menus.
 export function IconBtn({ children, title, onClick, className = "", ...rest }) {
   return (
-    <button type="button" className={`btn btn-sm btn-link text-muted p-1 ${className}`} title={title} onClick={onClick} {...rest}>
+    <button type="button" className={`app-icon-btn btn btn-sm btn-link text-muted p-1 ${className}`} title={title} onClick={onClick} {...rest}>
       {children}
     </button>
   );
 }
-
-// StatCard — summary metric card.

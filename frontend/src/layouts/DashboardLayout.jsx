@@ -1,10 +1,12 @@
+// The signed-in shell: top bar, sidebar, page content and footer.
+
 import { useEffect, useState } from "react";
 import { Outlet } from "react-router";
 import TopNav from "../components/TopNav.jsx";
 import SideNav from "../components/SideNav.jsx";
 import Footer from "../components/Footer.jsx";
 
-// DashboardLayout — main app shell with top nav, sidebar, content area, and footer.
+// Assembles the signed-in shell and tracks whether the sidebar is collapsed.
 export default function DashboardLayout({ fixed = true }) {
   const [toggled, setToggled] = useState(false);
 
@@ -17,6 +19,7 @@ export default function DashboardLayout({ fixed = true }) {
     document.body.classList.toggle("sb-sidenav-toggled", toggled);
   }, [toggled]);
 
+  // Closes the sidebar after a tap, but only on small screens.
   function handleNavItemSelect() {
     if (window.innerWidth < 992) {
       setToggled(false);

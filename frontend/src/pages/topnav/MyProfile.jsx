@@ -1,3 +1,5 @@
+// My Profile page: personal details, avatar and password change.
+
 import { useEffect, useState } from "react";
 import { DataCard, BtnPrimary, FormField, PageHeader, RequirementRow, SectionHeading } from "../../components/ui/index.jsx";
 import { useCurrentUser } from "../../context/CurrentUserContext.jsx";
@@ -5,7 +7,7 @@ import { useActivity } from "../../context/ActivityContext.jsx";
 
 const AVATAR_COLORS = ["#121212", "#0d6efd", "#198754", "#dc3545", "#997404", "#6f42c1"];
 
-// Returns up to two uppercase initials from a full name.
+// Takes the first letter of the first two words of a name.
 function initialsOf(name = "") {
   return name
     .split(" ")
@@ -15,8 +17,7 @@ function initialsOf(name = "") {
     .join("");
 }
 
-// ChangePasswordCard — the page's second half. It keeps its own state rather than
-// sharing MyProfile's, because the two forms submit separately.
+// The password change form, which keeps its own state.
 function ChangePasswordCard() {
   const [form, setForm] = useState({ currentPassword: "", newPassword: "", confirmPassword: "" });
   const [touched, setTouched] = useState(false);
@@ -36,15 +37,18 @@ function ChangePasswordCard() {
     return () => clearTimeout(timer);
   }, [success]);
 
+  // Keeps the password form in step with what is typed.
   function onChange(e) {
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
     setSuccess(false);
   }
 
+  // Shows or hides the characters in one password field.
   function onToggleShowPassword() {
     setShowPassword((v) => !v);
   }
 
+  // Accepts the new password once every rule passes.
   function onSubmit(e) {
     e.preventDefault();
     setTouched(true);
@@ -128,7 +132,7 @@ function ChangePasswordCard() {
 
                 <div className="col-12">
                   <div className="bg-light rounded-3 px-3 py-3">
-                    <div className="text-uppercase text-muted fw-semibold mb-2" style={{ fontSize: "var(--app-fs-1)", letterSpacing: 0.5 }}>
+                    <div className="app-label mb-2">
                       Password Requirements
                     </div>
                     <div className="row row-cols-1 row-cols-md-2 g-2">
@@ -170,7 +174,7 @@ function ChangePasswordCard() {
   );
 }
 
-// MyProfile — edit the current user's profile details and avatar.
+// The signed-in user's own details, avatar and password.
 export default function MyProfile() {
   const { user, updateUser } = useCurrentUser();
   const { logActivity } = useActivity();
@@ -194,10 +198,12 @@ export default function MyProfile() {
     return () => clearTimeout(timer);
   }, [saved]);
 
+  // Keeps the profile form in step with what is typed.
   function handleChange(e) {
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
   }
 
+  // Reads the chosen image and uses it as the avatar.
   function handlePhotoChange(e) {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -206,10 +212,12 @@ export default function MyProfile() {
     reader.readAsDataURL(file);
   }
 
+  // Drops the photo and returns to coloured initials.
   function handleRemovePhoto() {
     setAvatarImage(null);
   }
 
+  // Saves the profile and shows the confirmation.
   function handleSave(e) {
     e.preventDefault();
     if (!form.name || !form.email) return;
@@ -240,9 +248,7 @@ export default function MyProfile() {
 
         <section className="mb-3">
           <DataCard title="Personal Information">
-            {/* The photo and the details are one topic, so they share a card. Two
-                card bodies with a hairline between them keeps each block's own
-                padding without needing a second card around it. */}
+            
             <div className="card-body d-flex align-items-center gap-4 flex-wrap">
               <div className="position-relative flex-shrink-0">
                 {avatarImage ? (
@@ -281,12 +287,10 @@ export default function MyProfile() {
 
                 {!avatarImage && (
                   <div>
-                    <div className="text-uppercase text-muted fw-semibold mb-2" style={{ fontSize: "var(--app-fs-1)", letterSpacing: 0.5 }}>
+                    <div className="app-label mb-2">
                       Or pick a color for your initials
                     </div>
-                    {/* The swatches are the last thing in this block, so they sit
-                        against the hairline below with only the card body's own
-                        padding between. This is the breathing room under them. */}
+                    
                     <div className="d-flex gap-2 mb-2">
                       {AVATAR_COLORS.map((color) => (
                         <button

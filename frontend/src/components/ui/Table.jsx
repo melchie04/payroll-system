@@ -1,9 +1,10 @@
-import { Children, cloneElement, createContext, isValidElement, useContext, useEffect, useState } from "react";
+// The shared table, which paginates and restructures into cards on small screens.
 
-// Paginated table that stacks into cards on narrow screens.
+import { Children, cloneElement, createContext, isValidElement, useContext, useEffect, useState } from "react";
 
 const STACKED_TABLE_QUERY = "(max-width: 767.98px)";
 
+// Watches the viewport and reports whether the table should stack into cards.
 function useStackedTable() {
   const [stacked, setStacked] = useState(() => window.matchMedia(STACKED_TABLE_QUERY).matches);
 
@@ -17,11 +18,9 @@ function useStackedTable() {
   return stacked;
 }
 
-// Column headers, shared with Tr so each cell can label itself on mobile.
 const TableHeadersContext = createContext([]);
 
-// Table — responsive table that stacks into cards on mobile and paginates itself.
-
+// Renders the rows for the current page and the pager beneath them.
 export function Table({ headers, children, pageSize = 20, mobilePageSize = 5, itemLabel = "records", hover = true }) {
   const rows = Children.toArray(children);
   const stacked = useStackedTable();
@@ -44,8 +43,7 @@ export function Table({ headers, children, pageSize = 20, mobilePageSize = 5, it
               {headers.map((h, i) => (
                 <th
                   key={i}
-                  className={`text-uppercase text-muted small fw-semibold text-nowrap ${h.props?.className || ""}`}
-                  style={{ fontSize: "var(--app-fs-1)", letterSpacing: 0.5 }}
+                  className={`app-label text-nowrap ${h.props?.className || ""}`}
                 >
                   {h}
                 </th>
@@ -67,8 +65,7 @@ export function Table({ headers, children, pageSize = 20, mobilePageSize = 5, it
   );
 }
 
-// Tr — table row; passes each column header down to its cells.
-
+// A row that passes each column's header down so stacked cells can be labelled.
 export function Tr({ children }) {
   const headers = useContext(TableHeadersContext);
 
@@ -81,8 +78,7 @@ export function Tr({ children }) {
   );
 }
 
-// Td — table cell.
-
+// A cell, which shows its column label once the table has stacked.
 export function Td({ children, bold, className = "", label }) {
   return (
     <td className={`${bold ? "fw-semibold" : ""} py-md-2 ${className}`} data-label={label}>
@@ -91,7 +87,7 @@ export function Td({ children, bold, className = "", label }) {
   );
 }
 
-// Pagination — table footer pager, rendered by Table when the rows overflow one page.
+// Page buttons, shown only when there is more than one page.
 function Pagination({ page, totalPages, onChange, label }) {
   const windowSize = 5;
   let first = Math.max(1, page - Math.floor(windowSize / 2));
@@ -126,5 +122,3 @@ function Pagination({ page, totalPages, onChange, label }) {
     </div>
   );
 }
-
-// FilterSelect — labeled select dropdown for filters.

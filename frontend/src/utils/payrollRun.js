@@ -1,27 +1,25 @@
+// Builds the payroll rows for a pay period from approved timesheets.
+
 import { parseCurrency } from "./currency.js";
 import { sheetTotals, resolveEmployee, resolveClient } from "../context/TimesheetContext.jsx";
 
-// A pay period can straddle the 15th, so it is fed by more than one sheet and never by
-// a whole one. Days are therefore counted individually rather than by taking a sheet's
-// own total, which would pull in days that belong to the period either side.
+// Says whether a date falls inside the given pay period.
 function withinPeriod(dayRow, from, to) {
   const when = Date.parse(dayRow?.date);
   return Number.isFinite(when) && when >= from && when <= to;
 }
 
+// Rounds a figure to two decimal places.
 function money(value) {
   return Math.round(value * 100) / 100;
 }
 
-// rowKey — one payroll line is one person in one pay period, so overrides such as a
-// corrected hour count or a Paid mark survive a re-read of the timesheets.
+// Builds the key that identifies one employee's row in a period.
 export function rowKey(periodLabel, employeeId) {
   return `${periodLabel}|${employeeId}`;
 }
 
-// hoursForEmployee — the hours an employee actually worked inside a pay period,
-// re-added from the approved sheets covering it. Sheets still under review are
-// ignored: nothing unapproved may reach a payslip.
+// Adds up an employee's approved hours across the period.
 export function hoursForEmployee(employee, period, files = [], roster = []) {
   const from = Date.parse(period?.from);
   const to = Date.parse(period?.to);
@@ -47,9 +45,7 @@ export function hoursForEmployee(employee, period, files = [], roster = []) {
   return { regular: money(regular), overtime: money(overtime), days, sheets };
 }
 
-// buildPayrollRows — the payroll run for one period: every deployed employee, with the
-// hours their approved sheets support. Someone with no approved sheet still appears,
-// as Pending, because a missing person is the thing a payroll clerk most needs to see.
+// Turns approved timesheets into one payroll row per employee.
 export function buildPayrollRows({ period, employees = [], files = [], clients = [], overrides = {} }) {
   return employees
     .filter((e) => e.status !== "Inactive")
@@ -60,7 +56,6 @@ export function buildPayrollRows({ period, employees = [], files = [], clients =
       const rate = parseCurrency(employee.rate);
       const client = clients.find((c) => c.code === employee.client);
 
-      // Ready means the paperwork is in. Pending means it is not, whatever the hours say.
       const derived = worked.sheets > 0 ? "Ready" : "Pending";
 
       return {
@@ -86,8 +81,7 @@ export function buildPayrollRows({ period, employees = [], files = [], clients =
     });
 }
 
-// sheetsForEmployee — the approved sheets behind one payroll line, so a payslip can
-// show its workings and link back to the sheets it was built from.
+// Finds the sheets belonging to one employee in a period.
 export function sheetsForEmployee(employee, period, files = [], roster = [], clients = []) {
   const from = Date.parse(period?.from);
   const to = Date.parse(period?.to);

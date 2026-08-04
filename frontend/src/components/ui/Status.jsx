@@ -1,4 +1,4 @@
-// Status displays: the pill badge and the profile header, each with its own colour lookup.
+// Status badges and the avatar header used on profile pages.
 
 const statusVariant = {
   Ready: "success",
@@ -24,14 +24,11 @@ const statusVariant = {
   Completed: "secondary",
 };
 
-// Badge — status pill colored by status value.
-
+// Shows a status word tinted by what that status means.
 export function Badge({ status }) {
   const variant = statusVariant[status] || "secondary";
   return <span className={`badge rounded-pill status-badge status-badge-${variant}`}>{status}</span>;
 }
-
-// BtnPrimary — dark primary action button.
 
 const statusDotColor = {
   Active: "var(--app-status-success)",
@@ -44,8 +41,7 @@ const statusDotColor = {
   Overdue: "var(--app-status-danger)",
 };
 
-// ProfileHeader — avatar initials, name, and status dot header.
-
+// The avatar, name and subtitle at the top of a profile.
 export function ProfileHeader({ name, subtitle, subtitleIcon, status }) {
   const initials = name
     .split(" ")
@@ -84,5 +80,3 @@ export function ProfileHeader({ name, subtitle, subtitleIcon, status }) {
     </div>
   );
 }
-
-// PayslipDetails — payslip breakdown with summary, deductions, and net pay.

@@ -1,18 +1,19 @@
-/* eslint-disable react-refresh/only-export-components */
+// Holds payroll run statuses and any manually edited hours.
+
 import { createContext, useContext, useState } from "react";
 
 const PayrollContext = createContext(null);
 
-// PayrollProvider — what a payroll clerk has changed by hand, kept apart from the
-// figures the timesheets produce. The run itself is always recalculated from the
-// sheets; only the decisions a person made are stored here, keyed by period + employee.
+// Holds payroll statuses and any hours edited by hand.
 export function PayrollProvider({ children }) {
   const [overrides, setOverrides] = useState({});
 
+  // Sets the status of one payroll row.
   function setStatus(key, status) {
     setOverrides((prev) => ({ ...prev, [key]: { ...prev[key], status } }));
   }
 
+  // Sets the same status on several rows at once.
   function setStatusMany(keys, status) {
     setOverrides((prev) => {
       const next = { ...prev };
@@ -23,13 +24,12 @@ export function PayrollProvider({ children }) {
     });
   }
 
-  // A corrected hour count is remembered rather than written back onto the sheet, so
-  // the timesheet stays the record of what was submitted.
+  // Overrides an employee's hours for a period.
   function setHours(key, hours) {
     setOverrides((prev) => ({ ...prev, [key]: { ...prev[key], hours } }));
   }
 
-  // Clearing an override hands the line back to the timesheets.
+  // Drops one manual hours edit, returning the row to its timesheet total.
   function clearOverride(key) {
     setOverrides((prev) => {
       const next = { ...prev };
@@ -38,6 +38,7 @@ export function PayrollProvider({ children }) {
     });
   }
 
+  // Drops several manual hours edits at once.
   function clearMany(keys) {
     setOverrides((prev) => {
       const next = { ...prev };
@@ -51,6 +52,7 @@ export function PayrollProvider({ children }) {
   return <PayrollContext.Provider value={value}>{children}</PayrollContext.Provider>;
 }
 
+// Reads payroll state from context.
 export function usePayroll() {
   const ctx = useContext(PayrollContext);
   if (!ctx) {

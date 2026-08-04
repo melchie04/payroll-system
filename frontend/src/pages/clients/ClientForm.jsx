@@ -1,3 +1,5 @@
+// Form for adding and editing a client.
+
 import { useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router";
 import { DataCard, BtnPrimary, FormField, PageHeader } from "../../components/ui/index.jsx";
@@ -28,7 +30,7 @@ const emptyForm = {
   secondaryContact: { name: "", role: "", phone: "" },
 };
 
-// ClientForm — add/edit client form shared by /clients/new and /clients/:id/edit.
+// Adds a new client, or edits the one named in the URL.
 export default function ClientForm() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -84,10 +86,12 @@ export default function ClientForm() {
     );
   }
 
+  // Keeps the form state in step with what is typed.
   function handleChange(e) {
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
   }
 
+  // Keeps the client code uppercase and free of spaces.
   function handleFormCodes(e) {
     const list = e.target.value
       .split(",")
@@ -96,6 +100,7 @@ export default function ClientForm() {
     setForm((f) => ({ ...f, approvedFormCodes: list }));
   }
 
+  // Updates the list of sites this client covers.
   function handleSites(e) {
     const list = e.target.value
       .split(",")
@@ -104,10 +109,12 @@ export default function ClientForm() {
     setForm((f) => ({ ...f, sites: list }));
   }
 
+  // Accepts digits only, so rates stay numeric.
   function handleNumber(e) {
     setForm((f) => ({ ...f, [e.target.name]: e.target.value === "" ? "" : Number(e.target.value) }));
   }
 
+  // Updates the secondary contact block.
   function handleSecondaryChange(e) {
     setForm((f) => ({
       ...f,
@@ -115,6 +122,7 @@ export default function ClientForm() {
     }));
   }
 
+  // Saves the client, then returns to the list.
   function handleSubmit(e) {
     e.preventDefault();
     if (!form.name || !form.email) return;
@@ -141,6 +149,7 @@ export default function ClientForm() {
   const backLabel = isEdit ? "Back to Profile" : "Back to Clients";
   const fallbackPath = isEdit ? `/clients/${existing.id}` : "/clients";
   const hasHistory = location.key !== "default";
+  // Returns to the client list without saving.
   function handleBack() {
     if (hasHistory) navigate(-1);
     else navigate(fallbackPath);

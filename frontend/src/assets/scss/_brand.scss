@@ -1,9 +1,10 @@
-// Brand — the mark and the wordmark, shared by the top bar and the auth pages.
+// The brand mark and wordmark.
 
-// The wordmark beside the mark. Named so the top bar and the auth pages colour it
-// from one place rather than each inheriting whatever body text happens to be.
 .app-brand-name {
   color: var(--app-brand-name);
+  font-size: var(--app-fs-5);
+  font-weight: 600;
+  letter-spacing: 0.12em;
 }
 
 .app-brand-mark {
@@ -12,6 +13,3 @@
   border-radius: 0.4375rem;
   line-height: 1;
 }
-
-// One size per role. Bootstrap's .small is relative, so nesting it compounded and
-// left tables and cards drifting between pages; these fix the size at the source.

@@ -1,22 +1,20 @@
+// Works out what a client should be billed for a period.
+
 import { parseCurrency } from "./currency.js";
 import { sheetTotals, resolveEmployee, resolveClient } from "../context/TimesheetContext.jsx";
 
-// Money is rounded once, at the point it becomes an amount, so a total is always the
-// sum of the figures shown beside it rather than a separately rounded number.
+// Rounds a figure to two decimal places.
 function money(value) {
   return Math.round(value * 100) / 100;
 }
 
-// approvedSheetsFor — the sheets that may be billed for a client and period. Only
-// approved sheets count: anything still under review could still change.
+// Picks out the approved sheets belonging to one client and period.
 export function approvedSheetsFor(files = [], client, periodLabel, clients = []) {
   if (!client?.code || !periodLabel) return [];
   return files.filter((f) => f.status === "Approved" && f.period?.label === periodLabel && resolveClient(f, clients)?.code === client.code);
 }
 
-// billableFor — what a client owes for one period, worked out from their approved
-// sheets and the rates on their own record. Hours come from sheetTotals, the same
-// arithmetic the review screen uses, so an invoice and a timesheet can never disagree.
+// Totals the hours and amount a client owes for a period.
 export function billableFor({ files = [], client, periodLabel, roster = [], clients = [] }) {
   const sheets = approvedSheetsFor(files, client, periodLabel, clients);
   const rate = parseCurrency(client?.billingRate);
@@ -41,8 +39,6 @@ export function billableFor({ files = [], client, periodLabel, roster = [], clie
   const total = money(lines.reduce((sum, l) => sum + l.amount, 0));
 
   return {
-    // A rate of zero means the client record has no Billing Rate filled in, so the
-    // figure below is not a real quote and the caller should say so rather than show ₱0.
     ready: rate > 0 && sheets.length > 0,
     reason: rate > 0 ? (sheets.length > 0 ? null : "No approved sheets for this period") : "This client has no billing rate set",
     sheetCount: sheets.length,
@@ -55,9 +51,7 @@ export function billableFor({ files = [], client, periodLabel, roster = [], clie
   };
 }
 
-// invoiceLines — the rows printed on an invoice. A calculated invoice keeps the
-// per-employee breakdown it was built from; anything entered by hand falls back to a
-// single service line so an older invoice still prints.
+// Turns each employee's approved hours into a line on the invoice.
 export function invoiceLines(invoice, clientName) {
   if (invoice?.lines?.length) {
     return invoice.lines.map((l) => ({

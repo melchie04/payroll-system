@@ -1,3 +1,5 @@
+// Payroll page: the current run, its filters and its bulk actions.
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { Modal as BsModal } from "bootstrap";
@@ -35,6 +37,7 @@ const ALL_STATUSES = "All Statuses";
 const STATUSES = ["Ready", "Pending", "Paid"];
 const CSV_HEADERS = ["Employee Code", "Employee", "Client", "Position", "Pay Period", "Hours", "Rate", "Gross Pay", "Net Pay", "Status"];
 
+// Flattens the payroll rows into the columns the CSV needs.
 function toCsvRows(list) {
   return list.map((r) => [
     r.code,
@@ -50,7 +53,7 @@ function toCsvRows(list) {
   ]);
 }
 
-// Payroll — the run for one pay period, recalculated from approved timesheets.
+// Builds the current run from approved timesheets and lets it be worked through.
 export default function Payroll() {
   const navigate = useNavigate();
   const { clients } = useClients();
@@ -63,8 +66,6 @@ export default function Payroll() {
   const [periodLabel, setPeriodLabel] = useState(payPeriods[0].label);
   const period = payPeriods.find((p) => p.label === periodLabel) || payPeriods[0];
 
-  // Rebuilt from the sheets on every render rather than stored, so approving a sheet
-  // on the Timesheet page changes this run without anything needing to be re-imported.
   const rows = buildPayrollRows({ period, employees, files, clients, overrides });
 
   const [clientFilter, setClientFilter] = useState(ALL_CLIENTS);
@@ -81,6 +82,7 @@ export default function Payroll() {
 
   const filtering = visibleRows.length !== rows.length;
 
+  // Returns every filter to its default.
   function clearFilters() {
     setClientFilter(ALL_CLIENTS);
     setStatusFilter(ALL_STATUSES);
@@ -105,11 +107,10 @@ export default function Payroll() {
   const [selected, setSelected] = useState([]);
   const toggleOne = (key) => setSelected((prev) => (prev.includes(key) ? prev.filter((x) => x !== key) : [...prev, key]));
 
-  // Select-all acts on the rows currently shown, so filtering then ticking the header
-  // never selects people the operator cannot see.
   const visibleKeys = visibleRows.map((r) => r.key);
   const allSelected = visibleRows.length > 0 && visibleKeys.every((k) => selected.includes(k));
 
+  // Selects or clears every row currently visible.
   function toggleAll() {
     setSelected(allSelected ? selected.filter((k) => !visibleKeys.includes(k)) : [...new Set([...selected, ...visibleKeys])]);
   }
@@ -122,12 +123,14 @@ export default function Payroll() {
     return () => clearTimeout(timer);
   }, [banner]);
 
+  // Marks one row paid and records it in the activity feed.
   function markPaid(row) {
     if (row.status === "Paid") return;
     setStatus(row.key, "Paid");
     logActivity({ action: "Marked payroll paid", detail: `${row.name} (${row.code}) for ${row.period}`, module: "Payroll" });
   }
 
+  // Marks every selected row paid in one step.
   function markSelectedPaid() {
     const targets = rows.filter((r) => selected.includes(r.key) && r.status !== "Paid");
     if (targets.length === 0) return;
@@ -141,6 +144,7 @@ export default function Payroll() {
 
   const readyRows = rows.filter((r) => r.status === "Ready");
 
+  // Moves the whole period from draft to processed.
   function handleRunPayroll() {
     if (readyRows.length === 0) return;
     setStatusMany(
@@ -159,10 +163,12 @@ export default function Payroll() {
     document.getElementById("runPayrollModalClose")?.click();
   }
 
+  // Exports every row matching the current filters.
   function handleExportAll() {
     exportToCsv("payroll", CSV_HEADERS, toCsvRows(visibleRows));
   }
 
+  // Exports only the selected rows.
   function handleExportSelected() {
     exportToCsv("payroll-selected", CSV_HEADERS, toCsvRows(rows.filter((r) => selected.includes(r.key))));
   }
@@ -170,8 +176,6 @@ export default function Payroll() {
   const [editTarget, setEditTarget] = useState(null);
   const [editValue, setEditValue] = useState("");
 
-  // The dialog follows state rather than being poked through a ref: a ref holds no
-  // value the render needs, and reading one while rendering is what React warns about.
   useEffect(() => {
     const el = document.getElementById("editHoursModal");
     if (!el) return undefined;
@@ -181,11 +185,13 @@ export default function Payroll() {
     return () => el.removeEventListener("hidden.bs.modal", clear);
   }, [editTarget]);
 
+  // Opens the dialog for correcting one employee's hours.
   function openEditHours(row) {
     setEditValue(String(row.hours));
     setEditTarget(row);
   }
 
+  // Saves the corrected hours as an override on the row.
   function handleEditHoursSubmit(e) {
     e.preventDefault();
     const hours = Number(editValue);

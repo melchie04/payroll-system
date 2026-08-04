@@ -1,3 +1,5 @@
+// The fixed top bar: brand, sidebar toggle, theme switch, notifications and the user menu.
+
 import { useEffect, useRef, useState } from "react";
 import { BrandMark } from "./ui/index.jsx";
 import { Link } from "react-router";
@@ -5,7 +7,7 @@ import { useTheme } from "../context/ThemeContext.jsx";
 import { useCurrentUser } from "../context/CurrentUserContext.jsx";
 import { useNotifications } from "../context/NotificationsContext.jsx";
 
-// Returns up to two uppercase initials from a full name.
+// Takes the first letter of the first two words of a name.
 function initialsOf(name = "") {
   return name
     .split(" ")
@@ -15,7 +17,7 @@ function initialsOf(name = "") {
     .join("");
 }
 
-// NotificationsMenu — notifications dropdown shared by the desktop and mobile triggers.
+// Lists the five most recent notifications with a link to the full page.
 function NotificationsMenu({ id, align = "end" }) {
   const { notifications } = useNotifications();
   const recent = notifications.slice(0, 3);
@@ -78,7 +80,7 @@ function NotificationsMenu({ id, align = "end" }) {
   );
 }
 
-// NotificationsTrigger — notification bell icon button.
+// The bell, showing a dot while anything is unread.
 function NotificationsTrigger({ id }) {
   const { unreadCount } = useNotifications();
 
@@ -99,7 +101,7 @@ function NotificationsTrigger({ id }) {
   );
 }
 
-// UserTrigger — user avatar + name dropdown trigger.
+// The avatar and name that open the user menu.
 function UserTrigger({ id, user, nameClassName = "d-none d-sm-inline" }) {
   return (
     <a
@@ -132,7 +134,7 @@ function UserTrigger({ id, user, nameClassName = "d-none d-sm-inline" }) {
   );
 }
 
-// UserMenu — user dropdown with profile, settings, activity log, and logout.
+// Links to profile, settings and activity, plus sign out.
 function UserMenu({ id, user }) {
   return (
     <ul
@@ -183,7 +185,7 @@ function UserMenu({ id, user }) {
   );
 }
 
-// TopNav — fixed top navbar with brand, sidebar toggle, theme switch, notifications, and user menu.
+// Assembles the bar and swaps to a second row of controls on small screens.
 export default function TopNav({ onToggleSidebar }) {
   const { theme, setTheme } = useTheme();
   const { user } = useCurrentUser();
@@ -226,7 +228,7 @@ export default function TopNav({ onToggleSidebar }) {
           to="/"
         >
           <BrandMark size={26} />
-          <span className="app-brand-name fs-6 fw-semibold tracking-wider">PAYROLL</span>
+          <span className="app-brand-name">PAYROLL</span>
         </Link>
 
         <button className="nav-icon-btn me-1 me-lg-0 ms-0 ms-md-3 ms-lg-4" id="sidebarToggle" onClick={onToggleSidebar}>

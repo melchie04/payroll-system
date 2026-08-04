@@ -1,13 +1,13 @@
+// Card containers and the label/value rows shown inside them.
+
 import { ProfileHeader } from "./Status.jsx";
 
-// Card surfaces: stat tiles, titled panels, detail lists and the payslip block.
-
+// Shows one headline figure with its label and a supporting line.
 export function StatCard({ label, value, sub, valueColor, subColor, icon }) {
   return (
     <div className="card h-100">
       <div className="card-body">
-        {/* Icon sits with the label rather than floating opposite it, so the figure
-            below is the only thing competing for attention. */}
+        
         <div className="d-flex align-items-center gap-2 mb-3">
           {icon && (
             <span
@@ -18,7 +18,7 @@ export function StatCard({ label, value, sub, valueColor, subColor, icon }) {
               <i className={`fas ${icon}`}></i>
             </span>
           )}
-          <span className="text-uppercase text-muted fw-semibold" style={{ fontSize: "var(--app-fs-1)", letterSpacing: 0.6 }}>
+          <span className="app-label">
             {label}
           </span>
         </div>
@@ -35,8 +35,7 @@ export function StatCard({ label, value, sub, valueColor, subColor, icon }) {
   );
 }
 
-// DataCard — card with an optional header title and action.
-
+// A titled card; anything passed as children becomes its body.
 export function DataCard({ title, action, children }) {
   return (
     <div className="card h-100">
@@ -51,8 +50,7 @@ export function DataCard({ title, action, children }) {
   );
 }
 
-// Tracks the breakpoint where tables switch to their stacked layout (see _table.scss).
-
+// Groups DetailRows and draws the hairlines between them.
 export function DetailList({ children }) {
   return (
     <div className="border rounded-3 overflow-hidden">
@@ -61,16 +59,14 @@ export function DetailList({ children }) {
   );
 }
 
-// DetailRow — icon + label + value detail row. The row wraps so a value too long
-// for the space left drops onto its own full-width line instead of being squeezed.
-
+// One label and value, stacking on top of each other on small screens.
 export function DetailRow({ icon, label, children }) {
   return (
     <div
       className="list-group-item d-flex flex-column flex-sm-row flex-wrap align-items-sm-center gap-1 gap-sm-3 py-2 px-3"
       style={{ rowGap: "0.25rem" }}
     >
-      <div className="d-flex align-items-center gap-2 text-muted flex-shrink-0" style={{ minWidth: 170 }}>
+      <div className="detail-row-label d-flex align-items-center gap-2 text-muted flex-shrink-0">
         <span
           className="d-inline-flex align-items-center justify-content-center rounded-circle bg-light text-secondary flex-shrink-0"
           style={{ width: "var(--app-icon-sm)", height: "var(--app-icon-sm)", fontSize: "var(--app-fs-3)" }}
@@ -86,6 +82,7 @@ export function DetailRow({ icon, label, children }) {
   );
 }
 
+// Lays out the earnings and deductions of a payslip.
 export function PayslipDetails({ employeeName, subtitle, status, period, summaryRows, deductionRows, netPay }) {
   return (
     <div>
@@ -100,7 +97,7 @@ export function PayslipDetails({ employeeName, subtitle, status, period, summary
           </DetailRow>
         ))}
       </DetailList>
-      <div className="text-uppercase text-muted fw-semibold mt-3 mb-2" style={{ fontSize: "var(--app-fs-1)", letterSpacing: 0.5 }}>
+      <div className="app-label mt-3 mb-2">
         Deductions
       </div>
       <DetailList>

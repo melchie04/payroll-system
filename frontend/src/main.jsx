@@ -1,8 +1,11 @@
+// Application entry point: mounts React and wraps it in every context provider.
+
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router";
 
 import "bootstrap";
+import "@fontsource-variable/inter";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 import "./assets/scss/styles.scss";
@@ -19,7 +22,6 @@ import { InvoicesProvider } from "./context/InvoicesContext.jsx";
 import { PayrollProvider } from "./context/PayrollContext.jsx";
 import App from "./App.jsx";
 
-// App entry point — mounts the router, global providers, and styles.
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>

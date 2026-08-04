@@ -1,22 +1,12 @@
-// Centered layouts.
-// Background blobs and entrance shared by the auth and error pages.
+// The auth and error pages: their plane, washes and shared controls.
 
-// --- (c) Components ------------------------------------------------------
 .centered-bg {
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  // .bg-body sits on this same element and is declared !important by the
-  // framework utilities, so the mint plane has to match it to win.
   background-color: var(--app-auth-bg) !important;
 }
 
-// Fields on the centered pages. The pill control itself — its outline, its white
-// fill and its green focus ring — is drawn as one piece in _surfaces.scss, since
-// that block sets border: 0 on the icon box and the field inside it. Only the
-// placeholder is still the field's own to set.
-// The pill is its own surface, so an autofill inset painted with the dashboard's
-// input colour would show as a block inside it.
 .centered-bg {
   --app-input-bg: var(--app-auth-surface);
 }
@@ -25,9 +15,6 @@
   color: var(--app-auth-placeholder);
 }
 
-// The theme switch, pinned to the top right of the plane rather than placed in
-// the content column, so the form's own layout is untouched. .centered-bg is
-// already position: relative, which is what this anchors to.
 .auth-theme-toggle {
   position: absolute;
   top: 1.25rem;
@@ -36,8 +23,6 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  // Built to match .nav-icon-btn in the top bar: same 34px disc, same grey glyph,
-  // same grey hover, so the switch is one control wherever it appears.
   appearance: none;
   -webkit-appearance: none;
   border: none;
@@ -74,8 +59,6 @@
   }
 }
 
-// The error pages' icon disc. The tone pair it reads comes from _tokens.scss and
-// is swapped wholesale for dark mode in _dark.scss, so nothing here changes.
 .error-mark {
   background-color: var(--app-error-wash);
   color: var(--app-error-ink);
@@ -96,13 +79,17 @@
   --app-error-ink: var(--app-tone-danger);
 }
 
-// The big 404 / 403 / 500. Set here rather than inline so dark mode can reach it.
 .error-code {
   color: var(--app-obsidian);
 }
 
-// The password checklist. It reads as a quiet aside rather than a card, so it
-// takes the full mint rather than the near-white the plane uses.
+.auth-heading {
+  color: var(--app-auth-heading);
+  font-size: var(--app-fs-6);
+  font-weight: 400;
+  letter-spacing: 0.08em;
+}
+
 .centered-bg .auth-requirements {
   background-color: var(--app-auth-panel);
 }
@@ -138,10 +125,6 @@
   animation: centeredFadeInUp 0.5s ease-out both;
 }
 
-// On a phone a 420px circle is wider than the screen, so the wash stops being a
-// glow in one corner and becomes the background itself — and the two overlap in
-// the middle. Both scale back, and the blur scales with them so the softness
-// stays in proportion rather than turning the smaller circle into a flat patch.
 @media (max-width: 575.98px) {
   .centered-bg::before,
   .centered-bg::after {
@@ -163,7 +146,6 @@
   }
 }
 
-// --- (d) Utilities & helpers ---------------------------------------------
 @keyframes centeredFadeInUp {
   from {
     opacity: 0;
@@ -178,5 +160,12 @@
 @media (prefers-reduced-motion: reduce) {
   .centered-animate {
     animation: none;
+  }
+}
+
+@media (pointer: coarse) {
+  .auth-theme-toggle {
+    width: 44px;
+    height: 44px;
   }
 }

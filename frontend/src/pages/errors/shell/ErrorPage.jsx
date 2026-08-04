@@ -1,6 +1,8 @@
+// Shared shell the three error pages are built from.
+
 import { Link } from "react-router";
 
-// ErrorPage — shared shell for the error pages.
+// Lays out the disc, code, title and action shared by all three error pages.
 export default function ErrorPage({ code, icon, tone = "neutral", title, description, children }) {
   return (
     <>
@@ -27,7 +29,7 @@ export default function ErrorPage({ code, icon, tone = "neutral", title, descrip
   );
 }
 
-// BackToDashboardLink — link back to the dashboard.
+// The link back to the dashboard shown under an error.
 export function BackToDashboardLink() {
   return (
     <Link to="/" className="btn btn-app-primary rounded-pill px-4 py-2 fw-normal shadow-sm">

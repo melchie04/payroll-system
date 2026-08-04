@@ -1,10 +1,5 @@
-// The app's action treatments: the primary button, the secondary button and
-// text links. All three are shared by every layout.
+// The app's buttons and text links.
 
-// --- Primary action --------------------------------------------------------
-// The app's primary button. Moss is the accent, so the one button the page wants
-// you to press is the only saturated block of colour on it. Lives here rather
-// than with the centered pages because every page will use it.
 .btn-app-primary {
   --bs-btn-color: #ffffff;
   --bs-btn-bg: var(--app-moss);
@@ -21,7 +16,6 @@
   transition: background-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
 }
 
-// .shadow-sm is on the markup and declares !important, so these have to match it.
 .btn-app-primary:hover {
   transform: translateY(-1px);
   box-shadow: 0 6px 14px rgba(46, 125, 50, 0.28) !important;
@@ -45,15 +39,7 @@
   }
 }
 
-// The secondary button. Bootstrap's own outline-secondary is grey text on a grey
-// hairline and matches nothing else here; this pairs it with the green primary —
-// body-coloured label, quiet hairline, and the same neutral hover fill the top
-// bar and the sidebar use.
 .btn-outline-secondary {
-  // A transparent fill left this button the same colour as the page plane behind
-  // it, so it read as a hairline drawn on the background rather than as a
-  // control. It sits on the surface colour now, with a hairline dark enough to
-  // hold its own against the plane.
   --bs-btn-color: var(--app-text);
   --bs-btn-bg: var(--app-surface);
   --bs-btn-border-color: var(--app-btn-outline-border);
@@ -68,22 +54,16 @@
   --bs-btn-focus-shadow-rgb: 46, 125, 50;
 }
 
-// Text links inside the app carry the accent, not Bootstrap's blue.
 .btn-link {
   --bs-btn-color: var(--app-accent-ink);
   --bs-btn-hover-color: var(--app-moss-active);
   --bs-btn-active-color: var(--app-moss-active);
 }
 
-// A touch of lift, but only inside the content area — the auth pages put this
-// same class inside the password pill, where a shadow would sit on top of the
-// field's own outline.
 .app-page .btn-outline-secondary {
   box-shadow: 0 1px 2px rgba(10, 15, 13, 0.06);
 }
 
-// The destructive secondary. Same shape and hairline as the neutral one, with the
-// label carrying the tone — it only fills with red once you are on it.
 .btn-outline-danger {
   --bs-btn-color: var(--app-status-danger);
   --bs-btn-bg: var(--app-surface);
@@ -95,4 +75,12 @@
   --bs-btn-active-bg: var(--app-status-danger);
   --bs-btn-active-border-color: var(--app-status-danger);
   --bs-btn-focus-shadow-rgb: 220, 53, 69;
+}
+
+.btn {
+  --bs-btn-font-size: var(--app-fs-5);
+}
+
+.btn-sm {
+  --bs-btn-font-size: var(--app-fs-3);
 }

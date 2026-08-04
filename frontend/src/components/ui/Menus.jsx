@@ -1,14 +1,15 @@
+// The three dropdown menus: row actions, export and the filter funnel.
+
 import { IconBtn } from "./Buttons.jsx";
 
-// Dropdown menus: row actions, export, and the filter funnel.
-
+// The row kebab menu; falsy items are dropped so callers can use conditionals.
 export function ActionsMenu({ items }) {
   return (
     <div className="dropdown">
       <IconBtn title="More" data-bs-toggle="dropdown" aria-expanded="false">
         <i className="fas fa-ellipsis-vertical"></i>
       </IconBtn>
-      <ul className="dropdown-menu dropdown-menu-end shadow-sm py-2" style={{ fontSize: "var(--app-fs-3)", minWidth: 190 }}>
+      <ul className="dropdown-menu dropdown-menu-end shadow-sm py-2" style={{ minWidth: 190, maxWidth: "calc(100vw - 2rem)" }}>
         {items.map((item, i) =>
           item.divider ? (
             <li key={`divider-${i}`}>
@@ -36,8 +37,7 @@ export function ActionsMenu({ items }) {
   );
 }
 
-// ExportMenu — CSV export / print dropdown.
-
+// Offers the current list as CSV or as a printed PDF.
 export function ExportMenu({ onExportCsv, label = "Export" }) {
   return (
     <div className="dropdown">
@@ -65,8 +65,7 @@ export function ExportMenu({ onExportCsv, label = "Export" }) {
   );
 }
 
-// FilterMenu — filter options dropdown panel with reset/apply.
-
+// A dropdown of extra filters, applied only when Apply is pressed.
 export function FilterMenu({ children, onReset, onApply }) {
   return (
     <div className="dropdown">
@@ -85,12 +84,10 @@ export function FilterMenu({ children, onReset, onApply }) {
       >
         <i className="fas fa-filter"></i>
       </button>
-      <div className="dropdown-menu dropdown-menu-end shadow-sm p-3" style={{ minWidth: 240 }}>
-        {/* Bootstrap only spares a menu click when it lands on the input itself, so a click on an
-            option's label would close the menu mid-edit and make Apply meaningless. Reset and Apply
-            sit outside this guard so they still close the menu as before. */}
+      <div className="dropdown-menu dropdown-menu-end shadow-sm p-3" style={{ minWidth: 240, maxWidth: "calc(100vw - 2rem)" }}>
+        
         <div onClick={(e) => e.stopPropagation()}>
-          <div className="text-uppercase text-muted fw-semibold mb-2 small" style={{ fontSize: "var(--app-fs-1)", letterSpacing: 0.5 }}>
+          <div className="app-label mb-2 small">
             Filter Options
           </div>
           <div className="d-flex flex-column gap-3">{children}</div>
@@ -109,16 +106,13 @@ export function FilterMenu({ children, onReset, onApply }) {
   );
 }
 
-// FilterCheckGroup — labeled checkbox group inside FilterMenu. Pass selected + onToggle
-// to make it filter; left out, it stays uncontrolled and renders exactly as before.
-// Pass single for a one-of-many choice: it renders radios, so picking one clears the rest.
-
+// A group of filter options, as checkboxes or as radios when single is set.
 export function FilterCheckGroup({ label, options, selected, onToggle, single }) {
   const controlled = typeof onToggle === "function";
   const chosen = Array.isArray(selected) ? selected : selected ? [selected] : [];
   return (
     <div>
-      <div className="text-uppercase text-muted fw-semibold mb-1" style={{ fontSize: "var(--app-fs-1)", letterSpacing: 0.5 }}>
+      <div className="app-label mb-1">
         {label}
       </div>
       {options.map((opt) => (
@@ -138,5 +132,3 @@ export function FilterCheckGroup({ label, options, selected, onToggle, single })
     </div>
   );
 }
-
-// RequirementRow — password requirement checklist row.

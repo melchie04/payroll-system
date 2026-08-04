@@ -1,115 +1,74 @@
-// App theme.
-// The app's design tokens in one place: the colours it owns (framework colours
-// are read straight from Bootstrap's --bs-* tokens at each use site), the type
-// scale, and the transition that smooths the light/dark swap. Dark values are
-// produced by _dark.scss, which retargets components under [data-bs-theme].
+// This app's design tokens: colour, type scale, icon sizes and spacing.
 
 :root {
-  // --- Brand palette -------------------------------------------------------
-  // The three colours the redesign is built on, plus the two working shades the
-  // accent needs: a darker ink for text sitting on a green tint, and the tint
-  // itself. Every green in the app resolves back to one of these.
-  --app-mint: #f0fff4;            // Light  — the stated brand mint
-  --app-obsidian: #121212;        // Dark   — charcoal; the dark plane, and marks on white
-  --app-moss: #2e7d32;            // Accent — primary buttons, links, focus
-  --app-moss-hover: #256428;      // Accent deepened, for hover on a light plane
-  --app-moss-active: #1e5321;     // and deeper still while pressed
-  --app-moss-ring: rgba(46, 125, 50, 0.25);   // Focus ring around a field
+  --app-mint: #f0fff4;
+  --app-obsidian: #121212;
+  --app-moss: #2e7d32;
+  --app-moss-hover: #256428;
+  --app-moss-active: #1e5321;
+  --app-moss-ring: rgba(46, 125, 50, 0.25);
 
-  // --- Centered pages ------------------------------------------------------
-  // The auth and error pages share one plane, so their surface colours live
-  // together here rather than being typed into each page.
-  --app-auth-bg: var(--app-nav-bg);     // The auth canvas is the navigation surface
-  --app-auth-surface: #ffffff;          // Field fill and the theme toggle
-  --app-auth-panel: var(--app-mint);    // Checklist panel and success disc
-  --app-accent-ink: var(--app-moss);    // The accent when it is used as ink
-  --app-auth-field-border: #dee2e6;     // Input outlines — neutral grey
-  --app-auth-icon: var(--app-nav-icon);  // Field icons and their circles
-  --app-auth-placeholder: #9aa79f;      // Placeholder text inside a field
-  --app-auth-icon-off: #b9c4bc;         // An unmet requirement's empty ring
+  --app-auth-bg: var(--app-nav-bg);
+  --app-auth-surface: #ffffff;
+  --app-auth-panel: var(--app-mint);
+  --app-accent-ink: var(--app-moss);
+  --app-auth-field-border: #dee2e6;
+  --app-auth-icon: var(--app-nav-icon);
+  --app-auth-placeholder: #9aa79f;
+  --app-auth-icon-off: #b9c4bc;
 
-  // --- Error page tones ----------------------------------------------------
-  // The status colour each error page carries, plus the 10%-ish wash behind its
-  // icon. Kept as pairs so light and dark can be swapped in one place.
   --app-tone-neutral: #5f6b62;
   --app-tone-neutral-wash: #eef0ef;
   --app-tone-warning: #997404;
   --app-tone-warning-wash: #f6f0e0;
   --app-tone-danger: #b02a37;
   --app-tone-danger-wash: #f8e9ea;
-  --app-auth-heading: #7b8a81;          // The "SIGN IN" style of heading
+  --app-auth-heading: #7b8a81;
 
-  // The footer bar, shared by the auth, error and dashboard layouts.
   --app-footer-bg: var(--app-nav-bg);
   --app-footer-line: var(--app-nav-line);
   --app-footer-text: #6c757d;
   --app-footer-link: var(--app-moss);
   --app-footer-link-hover: var(--app-moss-active);
 
-  --app-content-bg: #f4f6f4;      // Plane behind the cards — one step under white
-  --app-surface: #ffffff;         // Cards, the tab tray — everything above the plane
-  --app-blob-cool: #4caf6a;       // Auth/error background wash
+  --app-content-bg: #f4f6f4;
+  --app-surface: #ffffff;
+  --app-blob-cool: #4caf6a;
   --app-blob-warm: #a5d6a7;
-  --app-dot-rgb: 220, 53, 69;     // Unread notification dot (used as rgba)
-  --app-chart-track: #f3f4f6;     // Unfilled part of the dashboard ring
-  // Depth. Cards sit on the plane rather than being outlined boxes; the second
-  // step is what a pointer-responsive surface lifts to.
+  --app-dot-rgb: 220, 53, 69;
+  --app-chart-track: #f3f4f6;
   --app-shadow-1: 0 1px 2px rgba(16, 24, 40, 0.04), 0 1px 3px rgba(16, 24, 40, 0.06);
   --app-shadow-2: 0 4px 6px -2px rgba(16, 24, 40, 0.05), 0 12px 16px -4px rgba(16, 24, 40, 0.1);
-  --app-row-hover: rgba(16, 24, 40, 0.028);   // Table row under the pointer
-  --app-table-head-color: #6c757d;           // Column labels
-  --app-table-head-line: #e3e7ea;            // Under the header row
-  --app-table-row-line: #edeff1;             // Between rows
-  --app-surface-radius: 0.625rem;             // 10px — one radius for every card
+  --app-row-hover: rgba(16, 24, 40, 0.028);
+  --app-table-head-color: #6c757d;
+  --app-table-head-line: #e3e7ea;
+  --app-table-row-line: #edeff1;
+  --app-surface-radius: 0.625rem;
 
-  // The P mark, used in the top bar, on the auth pages and as the favicon.
-  // The logo is Moss in both themes: a green square with a white letter, and the
-  // wordmark beside it in the same green.
   --app-brand-bg: var(--app-moss);
   --app-brand-fg: #ffffff;
   --app-brand-name: var(--app-moss);
 
-  // Unread marker. One value for the bell and the notifications list.
-  // The navigation surface. The top bar, the footer, the bar's dropdown panels and
-  // the auth canvas all read this one value, so they can never drift apart. It is
-  // deliberately NOT the dashboard content plane, which is its own decision.
   --app-nav-bg: #ffffff;
-  // --- Status ---------------------------------------------------------------
-  // The one set of colours that is NOT brand. Kept as tokens rather than
-  // literals so the dark layer can lift them; on a dark plane the light-mode
-  // values go muddy.
   --app-status-success: #198754;
   --app-status-warning: #997404;
   --app-status-danger: #dc3545;
   --app-status-neutral: #6c757d;
 
-  // --- Icon containers ------------------------------------------------------
-  // Circles and rounded squares that hold a glyph. One scale, so a disc on one
-  // page is the same size as a disc on another. Deliberate exceptions, all
-  // documented where they are set: the 8/10px status dots, the 26px brand mark,
-  // the 34px top-bar buttons and the 140px dashboard ring.
   --app-icon-xs: 24px;
   --app-icon-sm: 30px;
   --app-icon-md: 40px;
   --app-icon-lg: 56px;
   --app-icon-xl: 72px;
 
-  // Notifications list
-  --app-notif-more-bg: #fcfdfc;   // The Load more row, a whisper off the card
+  --app-notif-more-bg: #fcfdfc;
   --app-chip-bg: #e7e9ec;
   --app-chip-fg: #6c757d;
 
-  // Notices. The fill stays on the card surface and the tone is carried by the
-  // border, the icon and the text — a filled banner across a whole page is too
-  // much colour, which is the same reason the timesheet notices are built this way.
   --app-notice-success-bg: rgba(25, 135, 84, 0.06);
   --app-notice-danger-bg: rgba(220, 53, 69, 0.06);
-  // The body ink, as a token. --bs-body-color is only repointed inside
-  // .centered-bg, so anything on the dark plane that reads it gets the LIGHT
-  // value — which is what made the dropdown's options near-black on charcoal.
   --app-text: #212529;
 
-  // Action verbs in the Activity Log, and anywhere else a word carries a tone.
   --app-action-success: #146c43;
   --app-action-info: #0a58ca;
   --app-action-warning: #7a5b00;
@@ -125,45 +84,35 @@
   --app-notice-danger-border: #f1b0b7;
   --app-notice-danger-ink: #b02a37;
 
-  --app-btn-outline-border: #adb5bd;       // Secondary button hairline
+  --app-btn-outline-border: #adb5bd;
   --app-btn-outline-border-hover: #8f979d;
 
-  --app-nav-icon: #5f6b62;              // Icon buttons at rest, everywhere
-  --app-nav-heading: #8a929a;           // The sidebar's "MENU" label
-  --app-nav-link: #212529;              // Sidebar link labels
-  --app-nav-link-icon: #adb5bd;         // and their icons
-  --app-nav-active-bg: #f1f8f2;         // The current page's row
+  --app-nav-icon: #5f6b62;
+  --app-nav-heading: #8a929a;
+  --app-nav-link: #212529;
+  --app-nav-link-icon: #adb5bd;
+  --app-nav-active-bg: #f1f8f2;
   --app-nav-active-color: #1f5e23;
-  --app-nav-btn-hover-bg: rgba(0, 0, 0, 0.045);  // and the disc behind them on hover
-  --app-nav-line: #e5e9e6;              // The hairline under the top bar
+  --app-nav-btn-hover-bg: rgba(0, 0, 0, 0.045);
+  --app-nav-line: #e5e9e6;
 
-  // The top bar's dropdown panels. They take the bar's own colour, so these swap
-  // with the theme alongside it.
   --app-menu-bg: var(--app-nav-bg);
   --app-menu-divider: #edefee;
   --app-menu-hover-bg: var(--app-nav-btn-hover-bg);
   --app-menu-keyline: var(--app-moss);
   --app-dot-color: #d92d3f;
 
-  // Type scale — one ladder for the whole app: 11/12/13/14/16/20/24/32px. Every
-  // size in the UI is one of these; nothing sets a raw px or rem font-size.
-  // The dashboard's default is fs-3: .card-body sets it, so anything inside a card
-  // inherits 13px without asking. Reach for a token only to go deliberately
-  // smaller (labels, chips) or larger (titles, figures).
-  --app-fs-1: 0.6875rem;          // 11px — column headers, filter labels, chips, counts
-  --app-fs-2: 0.75rem;            // 12px — field hints, timestamps, captions
-  --app-fs-3: 0.8125rem;          // 13px — CARD BODY DEFAULT; table cells, page description
-  --app-fs-4: 0.875rem;           // 14px — small body where 13px is too tight
-  --app-fs-5: 1rem;               // 16px — card titles, button labels, the wordmark
-  --app-fs-6: 1.25rem;            // 20px — page titles
-  --app-fs-7: 1.5rem;             // 24px — stat figures
-  --app-fs-8: 2rem;               // 32px — the single largest figure on a page
-  --app-fs-display: 4.5rem;       // Error-page glyphs only
+  --app-fs-1: 0.6875rem;
+  --app-fs-2: 0.75rem;
+  --app-fs-3: 0.8125rem;
+  --app-fs-4: 0.875rem;
+  --app-fs-5: 1rem;
+  --app-fs-6: 1.25rem;
+  --app-fs-7: 1.5rem;
+  --app-fs-8: 2rem;
+  --app-fs-display: 4.5rem;
 }
 
-// Smooth the colour swap when the theme flips. ThemeContext adds .theme-transition
-// to <html> only for the length of the switch, so this never touches hover, focus
-// or first paint — just the light/dark handover, and it reaches every element.
 html.theme-transition,
 html.theme-transition *,
 html.theme-transition *::before,

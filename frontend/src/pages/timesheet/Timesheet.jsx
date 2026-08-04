@@ -1,3 +1,5 @@
+// Timesheet page, holding the upload, uploaded sheets and coverage tabs.
+
 import { useMemo, useState } from "react";
 import { useLocation } from "react-router";
 import { PageHeader, TabsNav, FilterSelect } from "../../components/ui/index.jsx";
@@ -9,15 +11,15 @@ import { TimesheetUpload } from "./tabs/TimesheetUpload.jsx";
 import { TimesheetFiles } from "./tabs/TimesheetFiles.jsx";
 import { TimesheetCoverage } from "./tabs/TimesheetCoverage.jsx";
 
-// Pay periods are set by the admin, so they can straddle the 15th.
 const ALL_CLIENTS = "All Clients";
 
+// Turns a date into a sortable timestamp.
 function toTime(value) {
   const parsed = value ? Date.parse(value) : NaN;
   return Number.isNaN(parsed) ? null : parsed;
 }
 
-// Whole days between today and a date, negative once it has passed.
+// Counts the days between now and a deadline.
 function daysUntil(dateText) {
   const target = toTime(dateText);
   if (target === null) return null;
@@ -26,9 +28,7 @@ function daysUntil(dateText) {
   return Math.round((target - today.getTime()) / 86400000);
 }
 
-// A sheet belongs to a pay period when the days it covers overlap that period.
-// A sheet whose period has not been read yet stays visible, because hiding it
-// would bury work that still has to be reviewed.
+// Says whether a sheet belongs to the selected period.
 function inPeriod(file, period) {
   const from = toTime(file.period?.from);
   const to = toTime(file.period?.to);
@@ -36,34 +36,27 @@ function inPeriod(file, period) {
   return from <= toTime(period.to) && to >= toTime(period.from);
 }
 
-// Timesheet — intake for scanned timesheets. Payroll collects approved days from here.
+// Holds the upload, uploaded sheets and coverage tabs, and the client picker above them.
 export default function Timesheet() {
   const { files } = useTimesheets();
   const { employees } = useEmployees();
   const { activeClientNames, clients } = useClients();
   const location = useLocation();
 
-  // Upload is the default; returning from a sheet review reopens the tab it came from.
   const [tab, setTab] = useState(location.state?.tab || "upload");
   const [client, setClient] = useState(ALL_CLIENTS);
   const selectedClient = clients.find((c) => c.name === client);
 
-  // Archived clients are not offered, but the one already chosen stays in the list so
-  // archiving a client mid-session cannot leave the filter pointing at a missing option.
   const clientOptions = useMemo(() => [...new Set([ALL_CLIENTS, ...activeClientNames, client].filter(Boolean))], [activeClientNames, client]);
   const [period, setPeriod] = useState(payPeriods[0].label);
 
   const activePeriod = useMemo(() => payPeriods.find((p) => p.label === period) || payPeriods[0], [period]);
 
-  // The Client and Pay Period filters scope both tabs below, so the counts on
-  // the tabs always describe what the user is actually looking at.
   const visibleFiles = useMemo(
     () => files.filter((f) => (client === ALL_CLIENTS || f.client === client) && inPeriod(f, activePeriod)),
     [files, client, activePeriod],
   );
 
-  // Coverage rows carry whether the roster still expects paperwork from that person,
-  // so someone inactive or off-assignment stops counting as a permanent gap.
   const visibleCoverage = useMemo(
     () =>
       timesheetCoverage
@@ -78,8 +71,6 @@ export default function Timesheet() {
   const needsReview = visibleFiles.filter((f) => f.status === "Needs Review").length;
   const gaps = visibleCoverage.filter((r) => r.gap && r.expected !== false).length;
 
-  // The cut-off only matters while something could still miss the run, so the
-  // notice appears when sheets are unapproved or an employee has a gap.
   const unapproved = visibleFiles.filter((f) => f.status !== "Approved").length;
   const daysToCutOff = daysUntil(activePeriod.cutOff);
   const showCutOff = daysToCutOff !== null && (unapproved > 0 || gaps > 0);
@@ -91,8 +82,7 @@ export default function Timesheet() {
         ? `Cut-off is today, ${activePeriod.cutOff}`
         : `Cut-off in ${daysToCutOff} day${daysToCutOff === 1 ? "" : "s"}, on ${activePeriod.cutOff}`;
 
-  // Uploading for a named employee starts on their client, so the sheet is filed
-  // against the right one without the operator changing the filter first.
+  // Counts what has been uploaded for one client this period.
   function uploadFor(row) {
     if (row?.client) setClient(row.client);
     setTab("upload");

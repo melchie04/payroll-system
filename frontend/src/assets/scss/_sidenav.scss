@@ -1,12 +1,9 @@
-// Side navigation.
-// SB Admin's sidenav and its light/dark themes, then the app's surfaces, collapse rail, motion and mobile drawer.
+// The sidebar, its active state and its collapse animation.
 
-// --- (a) Tokens & variables ----------------------------------------------
 $sidenav-collapsed-width: 72px;
 
 $sidenav-expanded-width: 225px;
 
-// --- (c) Components ------------------------------------------------------
 .sb-sidenav {
   display: flex;
   flex-direction: column;
@@ -30,11 +27,11 @@ $sidenav-expanded-width: 225px;
   text-transform: uppercase;
 }
 
-// Nav links: base layout, then the pill shape and hover transition.
 .sb-sidenav .sb-sidenav-menu .nav .nav-link {
   display: flex;
   align-items: center;
   overflow: hidden;
+  font-size: var(--app-fs-5);
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
   position: relative;
@@ -51,7 +48,6 @@ $sidenav-expanded-width: 225px;
   font-size: var(--app-fs-5);
 }
 
-// Shares the page footer's height (--app-footer-height) so the two line up.
 .sb-sidenav .sb-sidenav-footer {
   padding: 0.25rem 0.75rem;
   flex-shrink: 0;
@@ -61,10 +57,6 @@ $sidenav-expanded-width: 225px;
   border-top: 1px solid var(--bs-border-color);
 }
 
-// The rail is the navigation surface — the same token the top bar, the footer and
-// the bar's dropdown panels read. The sb-sidenav-light / -dark classes are still
-// applied from JS, but both now resolve to one value, so the rail cannot drift
-// from the bar the way it did before. Everything else here is a token pair too.
 .sb-sidenav {
   --bs-border-color: var(--app-nav-line);
 }
@@ -90,9 +82,6 @@ $sidenav-expanded-width: 225px;
   color: var(--app-nav-link-icon);
 }
 
-// The current page: a faint fill plus a moss keyline down the left edge — the same
-// mark the top bar's dropdown rows use. Drawn as an inset shadow rather than a
-// border so the label does not shift by 3px when a row becomes active.
 .sb-sidenav-light .sb-sidenav-menu .nav-link.active,
 .sb-sidenav-dark .sb-sidenav-menu .nav-link.active {
   color: var(--app-nav-active-color);
@@ -105,10 +94,6 @@ $sidenav-expanded-width: 225px;
   color: var(--app-menu-keyline);
 }
 
-// Hover is the same neutral grey the top bar uses, and nothing else moves.
-// .nav-link is an <a>, so Bootstrap's own hover colour would take over unless the
-// resting colour is restated here — leaving the line out is not the same as
-// leaving the colour alone.
 .sb-sidenav-light .sb-sidenav-menu .nav-link:hover,
 .sb-sidenav-light .sb-sidenav-menu .nav-link:focus-visible,
 .sb-sidenav-dark .sb-sidenav-menu .nav-link:hover,
@@ -117,7 +102,6 @@ $sidenav-expanded-width: 225px;
   background-color: var(--app-nav-btn-hover-bg);
 }
 
-// Hovering the current page must not undo its mark.
 .sb-sidenav-light .sb-sidenav-menu .nav-link.active:hover,
 .sb-sidenav-light .sb-sidenav-menu .nav-link.active:focus-visible,
 .sb-sidenav-dark .sb-sidenav-menu .nav-link.active:hover,
@@ -132,14 +116,8 @@ $sidenav-expanded-width: 225px;
   border-top-color: var(--app-nav-line);
 }
 
-// The Help row is a link, not a menu item — it reads and behaves like the
-// Privacy Policy / Terms pair in the page footer, so it takes the same two
-// tokens: the accent at rest, deepening on hover, with no fill and no nudge.
 .help-footer-btn-light,
 .help-footer-btn-dark {
-  // Same size as the Privacy Policy / Terms pair it sits above, so the two rows
-  // read as one family. It carried no size of its own before — the classes that
-  // looked like they set one were absent from the bundle.
   font-size: var(--app-fs-3);
   color: var(--app-footer-link) !important;
 }
@@ -149,15 +127,12 @@ $sidenav-expanded-width: 225px;
   color: var(--app-footer-link-hover) !important;
 }
 
-// Keyboard focus ring, matching each theme's hover tint.
 .sb-sidenav-light .sb-sidenav-footer > div:focus-visible,
 .sb-sidenav-dark .sb-sidenav-footer > div:focus-visible {
   outline: none;
   box-shadow: 0 0 0 0.2rem var(--app-moss-ring);
 }
 
-// The active link already carries an inset keyline, so its focus ring is drawn
-// alongside it rather than replacing it.
 .sb-sidenav-light .sb-sidenav-menu .nav-link:focus-visible,
 .sb-sidenav-dark .sb-sidenav-menu .nav-link:focus-visible {
   outline: none;
@@ -174,12 +149,7 @@ $sidenav-expanded-width: 225px;
   transition: color 0.15s ease-in-out;
 }
 
-// --- (d) Utilities & helpers ---------------------------------------------
 @media (min-width: 992px) {
-  // Measured off the reference: the rail takes about 0.3s and eases OUT — it
-  // covers most of the distance early and settles into place. The labels fade on
-  // half that, with no delay, so the text is gone before the rail is, but the two
-  // OVERLAP rather than running as separate beats.
   #layoutSidenav #layoutSidenav_nav {
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
@@ -204,10 +174,6 @@ $sidenav-expanded-width: 225px;
     display: none;
   }
 
-  // The heading KEEPS ITS BOX when the rail collapses — only its text fades. This
-  // is the whole point: removing the heading's height made every link below it
-  // jump upwards, and a vertical jump is far more noticeable than a horizontal
-  // slide. Nothing moves up or down during the toggle now; only width changes.
   .sb-sidenav-menu .nav .sb-sidenav-menu-heading {
     overflow: hidden;
     white-space: nowrap;
@@ -229,15 +195,6 @@ $sidenav-expanded-width: 225px;
   .sb-sidenav-toggled .sb-sidenav .nav .nav-link .sb-nav-link-icon {
     margin-right: 0 !important;
   }
-  // The label fades and its width closes, but NOT at the same time. Running both
-  // together is what made this look wrong: the text stayed visible while the box
-  // narrowed, so it was squeezed through an ellipsis on the way out.
-  // Collapsing, the text is gone before the width moves; expanding, the room is
-  // made before the text arrives.
-  // No fade. The label keeps full opacity and is simply clipped as its box closes,
-  // so the rail appears to slide shut over the text rather than the text
-  // dissolving in place. Everything below runs on the same 0.2s linear as the
-  // rail itself, with no delays, so the panel moves as one object.
   .sb-sidenav .nav .nav-link .text-wrap {
     display: inline-block;
     white-space: nowrap !important;
@@ -282,11 +239,6 @@ $sidenav-expanded-width: 225px;
   }
 }
 
-// --- Motion & interaction polish -------------------------------------------
-// Static appearance is unchanged; these only affect entrance and interaction.
-
-// Links ease in one after another. `backwards` (not `both`) so no transform
-// lingers afterwards to fight the hover nudge below.
 @keyframes sidenavItemIn {
   from {
     opacity: 0;
@@ -301,7 +253,6 @@ $sidenav-expanded-width: 225px;
 @mixin sidenav-item-stagger {
   animation: sidenavItemIn 0.3s ease-out backwards;
 
-  // Child 1 is the "Menu" heading, so links start at 2.
   @for $i from 2 through 9 {
     &:nth-child(#{$i}) {
       animation-delay: ($i - 1) * 0.03s;
@@ -309,30 +260,24 @@ $sidenav-expanded-width: 225px;
   }
 }
 
-// On desktop the rail is always visible, so the stagger plays on mount.
 @media (min-width: 992px) {
   .sb-sidenav-menu .nav .nav-link {
     @include sidenav-item-stagger;
   }
 }
 
-// On mobile the drawer starts off-screen — a mount animation would play
-// unseen. Run it when the drawer opens instead.
 @media (max-width: 991.98px) {
   .sb-sidenav-toggled .sb-sidenav-menu .nav .nav-link {
     @include sidenav-item-stagger;
   }
 }
 
-// Hover nudges the link toward the content, active sits put. Guarded so a tap
-// on a touch device does not leave a link stuck in its hovered position.
 @media (hover: hover) {
   .sb-sidenav .sb-sidenav-menu .nav .nav-link:hover:not(.active) {
     transform: translateX(2px);
   }
 }
 
-// Touch devices get press feedback in place of hover.
 @media (hover: none) {
   .sb-sidenav-light .sb-sidenav-menu .nav-link:active,
   .sb-sidenav-dark .sb-sidenav-menu .nav-link:active {
@@ -343,7 +288,6 @@ $sidenav-expanded-width: 225px;
   }
 }
 
-// Icons settle with their link rather than snapping.
 .sb-sidenav .nav .nav-link .sb-nav-link-icon {
   transition: margin-right 0.15s ease-in-out, color 0.15s ease-in-out, transform 0.15s ease-out;
 }
@@ -357,18 +301,11 @@ $sidenav-expanded-width: 225px;
   }
 }
 
-// --- Mobile drawer ---------------------------------------------------------
-
 @media (max-width: 991.98px) {
-  // Eases the slide instead of the stock linear-feeling 0.15s.
   #layoutSidenav #layoutSidenav_nav {
     transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  // The stock backdrop only exists while toggled, so its transition never
-  // fires and it snaps in and out. Declaring it always — transparent and
-  // inert when closed — lets it fade both ways. Appearance when open is
-  // unchanged: the same black at 0.5.
   #layoutSidenav #layoutSidenav_content:before {
     content: "";
     display: block;

@@ -1,4 +1,5 @@
-// Static mock data used across the app.
+// Seed data for the whole app, standing in for a backend.
+
 export const invoices = [
   {
     id: "INV-1023",
@@ -236,10 +237,7 @@ export const invoices = [
   },
 ];
 
-// Timesheet intake. One sheet covers one employee and one half-month, so a pay
-// period that straddles the 15th is fed by more than one sheet.
-// clean produces a sheet the OCR read without hesitation, used for the sheets that
-// come through with nothing flagged at all.
+// Builds the daily rows of one timesheet, leaving rest days empty.
 function sheetRows(half, month, year, pattern, clean = false, start = "07:30") {
   const first = half === "1-15" ? 1 : 16;
   const count = half === "1-15" ? 15 : 16;
@@ -269,11 +267,8 @@ function sheetRows(half, month, year, pattern, clean = false, start = "07:30") {
 }
 
 const weekdays = [1, 1, 1, 1, 1, 0, 0];
-// Six-day rosters are common on plant and site work, so some sheets use this instead.
 const sixDays = [1, 1, 1, 1, 1, 1, 0];
 
-// cutOff is the last day a sheet can be approved and still reach the run. Sheets
-// approved after it are simply missing from that payroll.
 export const payPeriods = [
   { label: "Jul 26 – Aug 10, 2026", from: "Jul 26, 2026", to: "Aug 10, 2026", cutOff: "Aug 12, 2026" },
   { label: "Jul 11 – Jul 25, 2026", from: "Jul 11, 2026", to: "Jul 25, 2026", cutOff: "Jul 27, 2026" },
@@ -282,8 +277,6 @@ export const payPeriods = [
   { label: "May 26 – Jun 11, 2026", from: "May 26, 2026", to: "Jun 11, 2026", cutOff: "Jun 13, 2026" },
 ];
 
-// Period Covered as it is written on a sheet. A sheet always covers one half of a
-// month, so these are not the same list as the pay periods above.
 export const sheetPeriods = [
   "May 16 – May 31, 2026",
   "Jun 1 – Jun 15, 2026",
@@ -962,9 +955,6 @@ export const timesheetFiles = [
   },
 ];
 
-// Coverage for the selected pay period. Payroll collects approved days, so a
-// gap here means hours are missing rather than the person did not work.
-// Rows carry their pay period so the Coverage tab can follow the page filters.
 export const timesheetCoverage = [
   { id: 1, period: "Jul 11 – Jul 25, 2026", employee: "John Doe", client: "Acme Corp", sheets: 2, covered: "Jul 11 – Jul 25", gap: null },
   { id: 2, period: "Jul 11 – Jul 25, 2026", employee: "Chris Wilson", client: "Acme Corp", sheets: 2, covered: "Jul 11 – Jul 25", gap: null },
@@ -3386,7 +3376,4 @@ export const employeeDocuments = [
   { id: 17, employeeId: 16, name: "Employment Contract.pdf", type: "pdf", uploaded: "Jun 2, 2025" },
 ];
 
-// Single source of truth for the employee names offered in dropdowns.
-// Client names now come from ClientsContext so add / rename / remove is
-// reflected app-wide without a page refresh.
 export const employeeNames = employees.map((e) => e.name);

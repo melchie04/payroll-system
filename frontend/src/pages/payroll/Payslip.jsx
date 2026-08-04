@@ -1,3 +1,5 @@
+// A single employee's payslip for one pay period.
+
 import { useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router";
 import { DataCard, Table, Tr, Td, BtnPrimary, FilterSelect, PayslipDetails, PageHeader } from "../../components/ui/index.jsx";
@@ -11,9 +13,8 @@ import { useTimesheets } from "../../context/TimesheetContext.jsx";
 import { usePayroll } from "../../context/PayrollContext.jsx";
 import { useActivity } from "../../context/ActivityContext.jsx";
 
-// Payslip — one employee's pay for one period, and the approved sheets behind it.
+// Renders one payslip, ready to print.
 export default function Payslip() {
-  // Every hook stays above the not-found return below, so the order never changes.
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -27,6 +28,7 @@ export default function Payslip() {
   const employee = employees.find((e) => String(e.id) === String(id));
   const period = payPeriods.find((p) => p.label === periodLabel) || payPeriods[0];
 
+  // Returns to the payroll list.
   function handleBack() {
     if (location.key !== "default") navigate(-1);
     else navigate("/payroll");
@@ -47,6 +49,7 @@ export default function Payslip() {
   const sheets = sheetsForEmployee(employee, period, files, employees, clients);
   const deductions = computeDeductions(row?.gross || 0);
 
+  // Marks this payslip's row paid.
   function markPaid() {
     if (!row || row.status === "Paid") return;
     setStatus(row.key, "Paid");

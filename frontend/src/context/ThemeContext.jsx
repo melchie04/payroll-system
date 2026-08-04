@@ -1,7 +1,8 @@
-/* eslint-disable react-refresh/only-export-components */
+// Holds the light/dark choice and applies it to the document.
+
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 
-// ThemeProvider — light/dark theme state, persisted to localStorage.
+// Holds the light/dark choice and writes it onto the document element.
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "light");
   const firstRender = useRef(true);
@@ -10,16 +11,12 @@ export function ThemeProvider({ children }) {
     const root = document.documentElement;
     localStorage.setItem("theme", theme);
 
-    // Skip the first run so the theme doesn't animate on initial load.
     if (firstRender.current) {
       firstRender.current = false;
       root.setAttribute("data-bs-theme", theme);
       return;
     }
 
-    // Animate the swap for every element, but only for its duration, so hover,
-    // focus and normal interactions are never affected. The reflow registers the
-    // transition before the colours change, so the swap eases instead of snapping.
     root.classList.add("theme-transition");
     void root.offsetWidth;
     root.setAttribute("data-bs-theme", theme);
@@ -33,6 +30,7 @@ export function ThemeProvider({ children }) {
 
 const ThemeContext = createContext(null);
 
+// Reads the current theme from context.
 export function useTheme() {
   const ctx = useContext(ThemeContext);
   if (!ctx) throw new Error("useTheme must be used inside a ThemeProvider");

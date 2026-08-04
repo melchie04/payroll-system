@@ -1,6 +1,8 @@
+// Works out the statutory deductions on a payslip.
+
 import { parseCurrency } from "./currency.js";
 
-// Computes approximate PH payroll deductions (SSS, PhilHealth, Pag-IBIG, tax) from gross pay.
+// Works out each statutory deduction and what is left as net pay.
 export function computeDeductions(grossInput) {
   const gross = typeof grossInput === "number" ? grossInput : parseCurrency(grossInput);
   const sss = gross * 0.045;

@@ -1,3 +1,5 @@
+// One client's profile, coverage and documents.
+
 import { useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router";
 import {
@@ -36,18 +38,20 @@ const TABS = [
   { key: "documents", label: "Documents", icon: "fa-folder-open" },
 ];
 
+// Guesses a document's type from its file extension.
 function inferDocType(filename) {
   const ext = filename.split(".").pop().toLowerCase();
   return ["jpg", "jpeg", "png", "gif", "webp"].includes(ext) ? "img" : "pdf";
 }
 
+// Turns a byte count into a readable size.
 function formatFileSize(bytes) {
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
-// ClientProfile — client detail page with Overview, Billing History, Assigned Employees, and Documents tabs.
+// Shows one client's details, coverage and documents.
 export default function ClientProfile() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -78,6 +82,7 @@ export default function ClientProfile() {
       return { ...r, expected: state.expected, notExpectedReason: state.reason };
     });
 
+  // Clears the upload dialog back to empty.
   function resetUploadForm() {
     setDocFile(null);
     setDocName("");
@@ -85,6 +90,7 @@ export default function ClientProfile() {
     setDragOver(false);
   }
 
+  // Opens the file picker.
   function pickFile(file) {
     if (!file) return;
     setDocFile(file);
@@ -92,16 +98,19 @@ export default function ClientProfile() {
     setDocType(inferDocType(file.name));
   }
 
+  // Takes the file chosen through the picker.
   function handleFileInputChange(e) {
     pickFile(e.target.files?.[0]);
   }
 
+  // Takes a file dropped onto the upload area.
   function handleDrop(e) {
     e.preventDefault();
     setDragOver(false);
     pickFile(e.dataTransfer.files?.[0]);
   }
 
+  // Files the chosen document against this client.
   function handleUploadDocument(e) {
     e.preventDefault();
     if (!docFile || !docName) return;
@@ -117,6 +126,7 @@ export default function ClientProfile() {
 
   const [deleteDocTarget, setDeleteDocTarget] = useState(null);
 
+  // Removes a filed document once confirmed.
   function confirmDeleteDocument() {
     if (deleteDocTarget) {
       deleteDocument(deleteDocTarget.id);
@@ -126,6 +136,7 @@ export default function ClientProfile() {
   }
 
   const hasHistory = location.key !== "default";
+  // Returns to the client list.
   function handleBack() {
     if (hasHistory) navigate(-1);
     else navigate("/clients");

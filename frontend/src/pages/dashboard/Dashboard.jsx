@@ -1,3 +1,5 @@
+// Dashboard: headline figures, payroll status and recent activity.
+
 import { Link } from "react-router";
 import { StatCard, DataCard, Table, Tr, Td, Badge, PageHeader } from "../../components/ui/index.jsx";
 import { payPeriods, sheetPeriods } from "../../assets/data/index.js";
@@ -12,8 +14,6 @@ import { useInvoices } from "../../context/InvoicesContext.jsx";
 import { usePayroll } from "../../context/PayrollContext.jsx";
 import { useActivity } from "../../context/ActivityContext.jsx";
 
-// One colour per payroll status, taken from the framework tokens so the ring follows
-// the theme instead of freezing a light-mode palette into the markup.
 const SEGMENTS = [
   { label: "Ready", colour: "var(--bs-success)" },
   { label: "Pending", colour: "var(--bs-warning)" },
@@ -30,7 +30,7 @@ const MODULE_ICON = {
   Auth: "\ud83d\udd10",
 };
 
-// Dashboard — a live read of the payroll run, the billing position and recent activity.
+// Pulls figures from every context into one overview.
 export default function Dashboard() {
   const { clients } = useClients();
   const { employees } = useEmployees();
@@ -42,7 +42,6 @@ export default function Dashboard() {
   const period = payPeriods[0];
   const rows = buildPayrollRows({ period, employees, files, clients, overrides });
 
-  // Unbilled = work that is approved and priced but has no invoice raised against it.
   const unbilled = clients.reduce((total, client) => {
     return (
       total +
@@ -84,17 +83,12 @@ export default function Dashboard() {
     },
   ];
 
-  // The ring, its legend and the total in the middle all read the same counts, so the
-  // three can never drift apart the way three hand-typed sets of numbers did.
   const total = rows.length;
   const slices = SEGMENTS.map((segment) => {
     const count = rows.filter((r) => r.status === segment.label).length;
     return { ...segment, count, pct: total > 0 ? (count / total) * 100 : 0 };
   });
 
-  // Each arc starts where the ones before it finished. That running total is summed
-  // from the slices rather than accumulated in a variable, so nothing is reassigned
-  // while the component renders.
   const ring = slices.map((slice, i) => ({
     ...slice,
     dash: `${slice.pct} ${100 - slice.pct}`,
@@ -151,7 +145,7 @@ export default function Dashboard() {
                     <div className="lh-1 fw-bold text-body" style={{ fontSize: "var(--app-fs-7)", letterSpacing: "-0.5px" }}>
                       {total}
                     </div>
-                    <div className="text-uppercase text-muted fw-bold mt-1" style={{ fontSize: "var(--app-fs-1)", letterSpacing: "0.5px" }}>
+                    <div className="app-label fw-bold mt-1">
                       Total
                     </div>
                   </div>

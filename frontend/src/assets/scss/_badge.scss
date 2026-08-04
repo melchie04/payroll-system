@@ -1,5 +1,4 @@
-// Badges.
-// Bootstrap's badge, then the app's tinted status chips (Badge in components/ui).
+// Bootstrap's badge, plus this app's status badges.
 
 .badge {
   --bs-badge-padding-x: 0.65em;
@@ -28,16 +27,6 @@
   position: relative;
   top: -1px;
 }
-
-// Status badge (Badge in components/ui).
-//
-// Solid fills only work in one theme at a time: on the light shell the
-// saturated chips shout, and on the dark shell they glare. Tinted chips carry
-// the same meaning in both, and match the tinted tag badges already used for
-// notification types and role permissions.
-//
-// Text tones follow Bootstrap 5.3's emphasis scale — the darker shade on
-// light, the lighter shade on dark — so contrast holds either way.
 
 .status-badge {
   background-color: var(--status-badge-bg);

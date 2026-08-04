@@ -1,4 +1,5 @@
-/* eslint-disable react-refresh/only-export-components */
+// Holds uploaded timesheets and everything derived from them.
+
 import { createContext, useContext, useState } from "react";
 import { timesheetFiles as initialFiles } from "../assets/data/index.js";
 
@@ -6,9 +7,7 @@ const TimesheetContext = createContext(null);
 
 const MONTH_INDEX = { jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5, jul: 6, aug: 7, sep: 8, oct: 9, nov: 10, dec: 11 };
 
-// Reads a written Period Covered such as "Jun 1 - Jun 15, 2026" into real dates.
-// The reviewer can type this field, so the days are read back from the text rather
-// than from whatever the OCR first stored alongside it.
+// Reads a period label such as 1-15 Jul into its start and end dates.
 export function parsePeriodLabel(label) {
   if (!label) return null;
   const [left, right] = String(label).split(/\s*[–—-]\s*/);
@@ -17,8 +16,6 @@ export function parsePeriodLabel(label) {
   const year = (right.match(/\b(\d{4})\b/) || left.match(/\b(\d{4})\b/) || [])[1];
   if (!year) return null;
 
-  // Either side may leave the month out, as in "Jun 1 - 15, 2026", so each side
-  // falls back to the month written on the other.
   const monthOf = (part) => {
     const name = part.match(/([A-Za-z]{3,})/);
     const index = name ? MONTH_INDEX[name[1].slice(0, 3).toLowerCase()] : undefined;
@@ -43,8 +40,7 @@ export function parsePeriodLabel(label) {
   return { from, to };
 }
 
-// A sheet covers one half of a month. Anything else means the wrong form was used,
-// or the dates were written on the wrong version of it.
+// Works out whether a period is the first or second half of the month.
 export function halfFromPeriod(label) {
   const range = parsePeriodLabel(label);
   if (!range) return null;
@@ -55,7 +51,7 @@ export function halfFromPeriod(label) {
   return null;
 }
 
-// checkPeriodHalf — does Period Covered agree with Sheet Half?
+// Flags a sheet whose dates fall outside the half it claims to cover.
 export function checkPeriodHalf(label, half) {
   if (!label || !half) return { status: "unknown" };
   const range = parsePeriodLabel(label);
@@ -66,12 +62,8 @@ export function checkPeriodHalf(label, half) {
   return { status: "ok", range };
 }
 
-// findDuplicateSheets — other sheets that already carry some of the same days for
-// the same person. Those days would otherwise be paid twice. Sheets that have not
-// been read yet cannot conflict, because nothing is known about their dates.
+// Finds other sheets already filed for the same employee and period.
 export function findDuplicateSheets(files, target, draft, roster = []) {
-  // Identity key prefers the resolved roster id so two sheets for the same person still
-  // clash when the scanned names differ; a live edit (draft) resolves by its typed name.
   const self = draft ? { name: draft.employee } : target?.employee;
   const selfResolved = resolveEmployee(self, roster);
   const key = selfResolved ? `id:${selfResolved.id}` : (self?.name || "").trim().toLowerCase();
@@ -90,7 +82,7 @@ export function findDuplicateSheets(files, target, draft, roster = []) {
   });
 }
 
-// Minutes between two "HH:MM" strings, or 0 when either is blank.
+// Measures the hours between two times, allowing for an overnight shift.
 function span(from, to) {
   if (!from || !to) return 0;
   const [fh, fm] = from.split(":").map(Number);
@@ -99,19 +91,19 @@ function span(from, to) {
   return mins > 0 ? mins : 0;
 }
 
+// Totals one day's worked hours, less the break.
 function hours(mins) {
   return Math.round((mins / 60) * 100) / 100;
 }
 
-// Recomputes a row from its times rather than reading the handwritten totals.
+// Totals one row's regular, overtime and night-differential hours.
 export function rowTotals(row) {
   const regular = span(row.amIn, row.amOut) + span(row.pmIn, row.pmOut);
   const overtime = span(row.otIn, row.otOut);
   return { regular: hours(regular), overtime: hours(overtime), worked: regular > 0 };
 }
 
-// resolveEmployee — the roster record a sheet points at. Prefers the stable id link the
-// scan resolved, falling back to the name so a hand-typed correction still lands.
+// Matches a sheet to an employee on the roster by name.
 export function resolveEmployee(employee, roster = []) {
   if (!employee) return null;
   if (employee.employeeId != null) {
@@ -120,7 +112,6 @@ export function resolveEmployee(employee, roster = []) {
   }
   const name = (employee.name || "").trim().toLowerCase();
   if (!name) return null;
-  // fall back to name, then to any known alias the scan may have read instead
   return (
     roster.find((e) => e.name.trim().toLowerCase() === name) ||
     roster.find((e) => (e.aliases || []).some((a) => a.trim().toLowerCase() === name)) ||
@@ -128,9 +119,7 @@ export function resolveEmployee(employee, roster = []) {
   );
 }
 
-// resolveClient — the client record a sheet belongs to. Prefers the stable code the
-// upload stored, falling back to the written name so a sheet filed before codes were
-// recorded still resolves. A renamed client keeps its sheets either way.
+// Matches a sheet to a client by code, falling back to the name.
 export function resolveClient(file, clients = []) {
   if (!file) return null;
   if (file.clientCode) {
@@ -140,16 +129,13 @@ export function resolveClient(file, clients = []) {
   return clients.find((c) => c.name === file.client) || null;
 }
 
-// parseIsoDate — "YYYY-MM-DD" as a local date, so an assignment window compares
-// cleanly against the local dates parsePeriodLabel returns.
+// Parses an ISO date string, returning null rather than an invalid date.
 function parseIsoDate(value) {
   const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value || "").trim());
   return m ? new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3])) : null;
 }
 
-// deploymentState — whether an employee owes paperwork for a date range. Answers only
-// on positive evidence (a non-active status, or a window that excludes the range), so a
-// record with no window set still counts as expected rather than silently disappearing.
+// Says whether an employee was posted to that client on that date.
 export function deploymentState(employee, range) {
   if (!employee) return { expected: true, reason: null };
   if (employee.status && employee.status !== "Active") return { expected: false, reason: employee.status };
@@ -161,31 +147,24 @@ export function deploymentState(employee, range) {
   return { expected: true, reason: null };
 }
 
-// scheduleFor — the standard start and end time on an employee's record. Resolved
-// against the live roster passed in, so an edit on the Employees page immediately
-// changes which schedule a sheet is measured against rather than reading stale seed data.
+// Finds the shift an employee was rostered to work that day.
 export function scheduleFor(employeeName, roster = []) {
-  // delegate so name + alias resolution lives in one place (see resolveEmployee)
   return resolveEmployee({ name: employeeName }, roster)?.schedule || null;
 }
 
-// Minutes late, worked out from the written IN time against the expected start.
-// Arriving early is not negative late: it is simply on time.
+// Measures how many minutes after the rostered start the employee clocked in.
 export function lateMinutes(row, schedule) {
   if (!schedule?.in || !row?.amIn) return null;
   return span(schedule.in, row.amIn);
 }
 
-// The Late figure to use for a row: calculated where a schedule is known, and the
-// figure written in the Late column where it is not.
+// Reports lateness for one row, using its own schedule if it has one.
 export function rowLate(row, schedule) {
   const derived = lateMinutes(row, schedule);
   return derived === null ? row.late || 0 : derived;
 }
 
-// sheetTotals — the sheet re-added from its daily times. One implementation, so a
-// sheet approved from the list and one approved from the review screen are judged
-// by exactly the same arithmetic.
+// Adds every row of a sheet into one set of totals.
 export function sheetTotals(rows = [], schedule = null) {
   return rows.reduce(
     (acc, r) => {
@@ -201,7 +180,7 @@ export function sheetTotals(rows = [], schedule = null) {
   );
 }
 
-// Where the recomputed totals disagree with what was written on the form.
+// Compares the computed totals against the ones printed on the sheet.
 export function sheetMismatches(rows = [], handwritten, schedule = null) {
   const computed = sheetTotals(rows, schedule);
   const hw = handwritten || {};
@@ -212,10 +191,7 @@ export function sheetMismatches(rows = [], handwritten, schedule = null) {
   ].filter(Boolean);
 }
 
-// sheetFindings — everything the review screen would raise about a sheet, without
-// opening it. The one thing left out is the Period Covered tick, because that is a
-// person's confirmation rather than something read off the page; approving in bulk
-// asks for it once, over the whole batch.
+// Collects everything the review screen would raise about a sheet.
 export function sheetFindings(file, allFiles = [], roster = [], clients = []) {
   if (!file) return ["Sheet not found"];
   const client = resolveClient(file, clients);
@@ -250,14 +226,12 @@ export function sheetFindings(file, allFiles = [], roster = [], clients = []) {
   return findings;
 }
 
-// A clean sheet is one with nothing flagged at all, not merely nothing blocking.
+// A sheet is clean when it raises no findings at all.
 export function isSheetClean(file, allFiles = [], roster = [], clients = []) {
   return sheetFindings(file, allFiles, roster, clients).length === 0;
 }
 
-// Folds what the review screen holds in its fields back onto the stored sheet.
-// The screen works with flat values; a sheet keeps the employee and the period
-// as objects, so the confidence the OCR reported survives an operator's edit.
+// Folds a reviewer's edits back into the stored sheet.
 function applyDraft(file, draft) {
   if (!draft) return file;
   return {
@@ -268,7 +242,6 @@ function applyDraft(file, draft) {
     employee: {
       ...file.employee,
       name: draft.employee || null,
-      // a name correction drops the scan's id link so resolution follows the typed name
       employeeId: draft.employee && draft.employee === file.employee?.name ? file.employee?.employeeId : null,
     },
     period: { ...file.period, label: draft.period || null, confirmed: Boolean(draft.periodConfirmed) },
@@ -276,25 +249,26 @@ function applyDraft(file, draft) {
   };
 }
 
-// TimesheetProvider — uploaded sheets shared across the timesheet routes.
+// Holds every uploaded sheet and the helpers derived from them.
 export function TimesheetProvider({ children }) {
   const [files, setFiles] = useState(initialFiles);
 
+  // Finds one uploaded sheet by id.
   function getFileById(id) {
     return files.find((f) => String(f.id) === String(id));
   }
 
+  // Merges changes into one sheet.
   function updateFile(id, data) {
     setFiles((prev) => prev.map((f) => (String(f.id) === String(id) ? { ...f, ...data } : f)));
   }
 
-  // saveFile — keeps a reviewer's corrections without approving the sheet.
+  // Saves a reviewer's draft without approving the sheet.
   function saveFile(id, draft) {
     setFiles((prev) => prev.map((f) => (String(f.id) === String(id) ? applyDraft(f, draft) : f)));
   }
 
-  // approveMany — files a batch of sheets that had nothing flagged. Period Covered
-  // is marked confirmed because the operator confirmed the batch on screen.
+  // Approves several sheets at once, skipping any that still have findings.
   function approveMany(ids) {
     const wanted = new Set(ids.map(String));
     const at = new Date().toISOString();
@@ -303,14 +277,12 @@ export function TimesheetProvider({ children }) {
     );
   }
 
-  // approveFile — saves the same corrections, then files the sheet.
+  // Saves the draft and moves the sheet to approved.
   function approveFile(id, draft) {
     setFiles((prev) => prev.map((f) => (String(f.id) === String(id) ? { ...applyDraft(f, draft), status: "Approved" } : f)));
   }
 
-  // addSheets — files accepted by the upload queue enter the list as unread sheets,
-  // exactly as a sheet arriving from the scanner would. Nothing is known about them
-  // yet beyond the client they were uploaded under.
+  // Files newly uploaded sheets and extracts their rows.
   function addSheets(accepted) {
     const created = accepted.map((item, i) => ({
       id: `u${Date.now()}-${i}`,
@@ -335,8 +307,7 @@ export function TimesheetProvider({ children }) {
     return created;
   }
 
-  // rejectFile — sends the sheet back with the reasons the sender has to act on.
-  // Nothing is deleted: the document stays on file so the reason can be read later.
+  // Rejects a sheet, recording the reasons given.
   function rejectFile(id, rejection) {
     updateFile(id, {
       status: "Rejected",
@@ -348,13 +319,12 @@ export function TimesheetProvider({ children }) {
     });
   }
 
-  // Reading the sheet again supersedes whatever it was rejected for.
+  // Sends a failed sheet back through extraction.
   function retryFile(id) {
     updateFile(id, { status: "Processing", rejection: null });
   }
 
-  // The preview is a handle on a file the browser is holding in memory, so it has
-  // to be released explicitly when the sheet goes.
+  // Removes a sheet from the list entirely.
   function discardFile(id) {
     setFiles((prev) => {
       const going = prev.find((f) => String(f.id) === String(id));
@@ -368,6 +338,7 @@ export function TimesheetProvider({ children }) {
   return <TimesheetContext.Provider value={value}>{children}</TimesheetContext.Provider>;
 }
 
+// Reads timesheet state from context.
 export function useTimesheets() {
   const ctx = useContext(TimesheetContext);
   if (!ctx) throw new Error("useTimesheets must be used within a TimesheetProvider");

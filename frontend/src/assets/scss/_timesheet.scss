@@ -1,8 +1,5 @@
-// Timesheet review.
-// The grid on the review screen mirrors the paper form, so its cells are inputs
-// rather than text. Flagged cells are the ones OCR read with low confidence.
+// The timesheet upload and review screens.
 
-// --- (c) Components ------------------------------------------------------
 .ts-cell {
   width: 100%;
   min-width: 68px;
@@ -28,15 +25,11 @@
   cursor: not-allowed;
 }
 
-// Low-confidence reads. Amber rather than red: the value may well be right,
-// it just has not been checked by a person yet.
 .ts-cell-flagged {
   border-color: rgba(var(--bs-warning-rgb), 0.7);
   background-color: rgba(var(--bs-warning-rgb), 0.12);
 }
 
-// Daily Entries pairs each session's in and out box in one cell, mirroring the
-// in–out columns on the paper form.
 .ts-pair {
   display: flex;
   align-items: center;
@@ -54,22 +47,14 @@
   line-height: 1;
 }
 
-// The lone number box in the Late column reads better sized like a time box
-// than stretched across its column.
 .ts-cell-late {
   max-width: 84px;
 }
 
-// The tab strip shares a row with the filter selects, so its standing bottom
-// margin would lift it out of line with them.
 .ts-toolbar .tabs-nav {
   margin-bottom: 0;
 }
 
-// Cut-off notice. A filled panel this wide turns the whole page red, so the tone
-// is carried by the border, the icon and the headline instead, and the fill stays
-// on the same surface the cards use. Weight comes from the border and the bold
-// first line rather than from the area of colour.
 .ts-notice {
   border: 1px solid var(--bs-border-color);
   border-radius: 0.5rem;
@@ -77,20 +62,14 @@
   color: var(--bs-body-color);
 }
 
-// The icon is the one place the tone runs at full strength: it is small enough to
-// stay a marker rather than a wash.
 .ts-notice-icon {
   font-size: var(--app-fs-4);
 }
 
-// Inside a card the white fill would match the card exactly and leave the border
-// floating, so a notice nested in one takes the faintest tint of its own hue.
 .card .ts-notice {
   background-color: rgba(0, 0, 0, 0.015);
 }
 
-// The supporting line is the same hue held back, so the two lines read as one
-// notice rather than a heading with unrelated grey text beneath it.
 .ts-notice-sub {
   opacity: 0.75;
 }
@@ -115,17 +94,10 @@
   color: #146c43;
 }
 
-// Amber body text. Bootstrap's warning is a fill colour, and at the 11.5px these
-// notes are set in it drops well under the contrast floor on a white row. Text
-// carrying a warning takes the darker amber instead; the fill keeps the bright one.
 .ts-warn {
   color: #b45309;
 }
 
-// Dropzone. Sits on the card surface rather than the page plane, so it reads as
-// a target rather than a hole in the layout. Only border-color is transitioned:
-// background-color is the property the theme swap changes, and animating it made
-// the box fade behind the instant light/dark switch everywhere else.
 .ts-dropzone {
   min-height: 240px;
   border: 2px dashed var(--bs-border-color);
@@ -156,8 +128,6 @@
   border-top: 1px solid var(--bs-border-color);
 }
 
-// Upload queue. The bar is a plain two-div meter rather than a component, since
-// the framework layer is purged down to what the app actually uses.
 .ts-progress {
   height: 4px;
   overflow: hidden;
@@ -175,7 +145,6 @@
   background-color: var(--bs-danger, #dc3545);
 }
 
-// Uploading is off until a client is chosen, so the target stops inviting a drop.
 .ts-dropzone.is-disabled {
   cursor: not-allowed;
   opacity: 0.75;
@@ -185,8 +154,6 @@
   border-color: var(--bs-border-color);
 }
 
-// Sheet Details fields. Label, control and note are one block with a fixed rhythm,
-// so a two-line note in one column cannot push its neighbour out of alignment.
 .ts-field {
   height: 100%;
 }
@@ -197,8 +164,6 @@
   line-height: 1.4;
 }
 
-// Suggest field. The caret sits inside the box so the control reads as one field
-// rather than an input with a button bolted to it, matching .form-select.
 .ts-suggest .form-control {
   padding-right: 2.25rem;
 }
@@ -237,22 +202,17 @@
 }
 
 .ts-doc {
-  // Same base height as the upload dropzone, so the Sheet Details tab sits at
-  // the same footprint as the Upload tab; it still grows with the right column.
   min-height: 240px;
   border: 1px dashed var(--bs-border-color);
   background-color: rgba(0, 0, 0, 0.02);
 }
 
-// Holding a real document, the dashed edge would still read as an empty slot.
 .ts-doc.has-document {
   overflow: hidden;
   border-style: solid;
   background-color: rgba(0, 0, 0, 0.04);
 }
 
-// The page is scrolled rather than shrunk: a zoomed sheet is being read, and
-// fitting it back into the panel would undo the zoom.
 .ts-doc-viewport {
   display: flex;
   flex-grow: 1;
@@ -262,9 +222,6 @@
   padding: 0.5rem;
 }
 
-// Centred with auto margins rather than justify-content: a flex line centred by
-// the parent clips its start edge when it overflows, so the top and left of a
-// zoomed sheet would be unreachable. Auto margins stay scrollable both ways.
 .ts-doc-media {
   display: block;
   max-width: 100%;
@@ -275,7 +232,6 @@
   transition: transform 0.15s ease-in-out;
 }
 
-// The browser's PDF viewer brings its own toolbar, so the frame is left plain.
 .ts-doc-frame {
   flex-grow: 1;
   width: 100%;
@@ -283,17 +239,11 @@
   border: 0;
 }
 
-// --- (d) Utilities & helpers ---------------------------------------------
-// Stacked rows on mobile give each cell a full-width line already, so the
-// minimum cell width would only force horizontal overflow.
 @media (max-width: 767.98px) {
-  // Stacked cards below this width, so the tall target is wasted height.
   .ts-dropzone {
     min-height: 0;
   }
 
-  // A phone-width panel cannot show a full sheet usefully at any zoom, so the
-  // viewer keeps a readable window instead of stretching the card.
   .ts-doc-viewport,
   .ts-doc-frame {
     min-height: 260px;
@@ -305,15 +255,12 @@
     text-align: right;
   }
 
-  // Paired boxes already split the line between them, so the single-cell cap
-  // and right alignment would misplace their text.
   .ts-pair .ts-cell {
     max-width: none;
     text-align: center;
   }
 }
 
-// --- (e) Theme overrides -------------------------------------------------
 [data-bs-theme="dark"] .ts-cell:disabled {
   background-color: rgba(255, 255, 255, 0.05);
   color: #9aa4ae;
@@ -366,8 +313,6 @@
   color: var(--bs-gray-500);
 }
 
-// On the dark surface the same hues would sit too close to the background, so
-// each tone steps up to the lighter member of its pair.
 [data-bs-theme="dark"] .ts-notice {
   background-color: var(--app-dark-surface);
   border-color: var(--app-dark-border);
@@ -398,8 +343,6 @@
   color: #75b798;
 }
 
-// The problem inverts on the dark surface: the darker amber disappears into it,
-// so the tone lifts rather than deepens.
 [data-bs-theme="dark"] .ts-warn {
   color: #ffda6a;
 }

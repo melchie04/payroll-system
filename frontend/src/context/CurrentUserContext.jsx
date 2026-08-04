@@ -1,4 +1,5 @@
-/* eslint-disable react-refresh/only-export-components */
+// Holds the signed-in user's own profile.
+
 import { createContext, useContext, useState } from "react";
 
 const CurrentUserContext = createContext(null);
@@ -12,10 +13,11 @@ const defaultUser = {
   mustChangePassword: true,
 };
 
-// CurrentUserProvider — current signed-in user state, editable from My Profile.
+// Holds the signed-in user's profile.
 export function CurrentUserProvider({ children }) {
   const [user, setUser] = useState(defaultUser);
 
+  // Merges changes into the signed-in user.
   function updateUser(data) {
     setUser((prev) => ({ ...prev, ...data }));
   }
@@ -23,6 +25,7 @@ export function CurrentUserProvider({ children }) {
   return <CurrentUserContext.Provider value={{ user, updateUser }}>{children}</CurrentUserContext.Provider>;
 }
 
+// Reads the signed-in user from context.
 export function useCurrentUser() {
   const ctx = useContext(CurrentUserContext);
   if (!ctx) {

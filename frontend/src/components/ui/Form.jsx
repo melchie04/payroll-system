@@ -1,13 +1,8 @@
-// Form and filter inputs, plus the headings and requirement rows that sit beside them.
+// Form and filter inputs, plus the labels and headings that sit beside them.
 
 import { Children, isValidElement } from "react";
 
-// FilterSelect — a dropdown built from markup rather than a native <select>, so it
-// can be themed. A native select's option list is drawn by the browser and its
-// highlight uses the operating system's accent colour, which no CSS can reach.
-//
-// The props are unchanged on purpose: callers still pass <option> children and an
-// onChange, and still read e.target.value. Only the rendering differs.
+// A dropdown built from markup rather than a native select, so it can be themed.
 export function FilterSelect({ label, value, onChange, children, id, ...rest }) {
   const options = Children.toArray(children)
     .filter(isValidElement)
@@ -21,12 +16,12 @@ export function FilterSelect({ label, value, onChange, children, id, ...rest }) 
   return (
     <div>
       {label && (
-        <label className="form-label text-uppercase text-muted fw-semibold mb-1 d-block" style={{ fontSize: "var(--app-fs-1)", letterSpacing: 0.5 }}>
+        <label className="app-label form-label mb-1 d-block">
           {label}
         </label>
       )}
 
-      {/* .dropdown gives click-outside, Escape and arrow-key movement between items. */}
+      
       <div className="dropdown app-select">
         <button
           type="button"
@@ -63,14 +58,12 @@ export function FilterSelect({ label, value, onChange, children, id, ...rest }) 
   );
 }
 
-// SearchInput — search box with a leading icon. Pass value and onChange to filter
-// with it; left out, it behaves exactly as before.
-
+// A text field with a magnifier, used to filter a list.
 export function SearchInput({ label, placeholder, value, onChange, ...rest }) {
   return (
     <div className="w-100">
       {label && (
-        <label className="form-label text-uppercase text-muted fw-semibold mb-1 d-block" style={{ fontSize: "var(--app-fs-1)", letterSpacing: 0.5 }}>
+        <label className="app-label form-label mb-1 d-block">
           {label}
         </label>
       )}
@@ -84,8 +77,7 @@ export function SearchInput({ label, placeholder, value, onChange, ...rest }) {
   );
 }
 
-// PageHeader — page title, description, and action buttons.
-
+// One password rule, ticked once it is satisfied.
 export function RequirementRow({ met, label }) {
   return (
     <div className="d-flex align-items-center gap-2">
@@ -100,8 +92,7 @@ export function RequirementRow({ met, label }) {
   );
 }
 
-// Modal — Bootstrap modal wrapper with title, body, and footer.
-
+// A small heading that divides a form into groups.
 export function SectionHeading({ children }) {
   return (
     <div className="fw-semibold text-body mb-3 pb-2 border-bottom" style={{ fontSize: "var(--app-fs-3)" }}>
@@ -110,17 +101,14 @@ export function SectionHeading({ children }) {
   );
 }
 
-// FormField — labeled form field wrapper.
-
+// Pairs a label with whatever control is passed as children.
 export function FormField({ label, children }) {
   return (
     <div className="mb-3">
-      <label className="form-label text-uppercase text-muted fw-semibold mb-1 d-block" style={{ fontSize: "var(--app-fs-1)", letterSpacing: 0.5 }}>
+      <label className="app-label form-label mb-1 d-block">
         {label}
       </label>
       {children}
     </div>
   );
 }
-
-// DetailList — bordered list of detail rows.

@@ -1,3 +1,5 @@
+// The review screen for one scanned sheet: details, daily entries and totals.
+
 import { useEffect, useMemo, useState } from "react";
 import { DataCard, Table, Tr, Td, Badge, BtnPrimary, BtnSecondary, BtnDanger, Modal, PageHeader, TabsNav } from "../../../components/ui/index.jsx";
 import {
@@ -17,20 +19,11 @@ import { useEmployees } from "../../../context/EmployeesContext.jsx";
 import { useClients } from "../../../context/ClientsContext.jsx";
 import { SuggestField, SignatureItem, TotalItem } from "./ReviewFields.jsx";
 
-// Suggestions for the sheet fields, taken from the same lists the rest of the app
-// filters against. Each field stays typeable: OCR can read a name or a period that
-// is not on the list yet, and the operator should be able to keep it. Employee names
-// come from the live roster (resolved in the form below), so a newly added or renamed
-// employee shows up here without a refresh.
 const PERIOD_OPTIONS = sheetPeriods;
 const HALF_OPTIONS = ["1-15", "16-31"];
 
-// Zoom cycles rather than stepping in and out, so the viewer keeps the two buttons
-// the toolbar already had instead of growing a control strip.
 const ZOOM_STEPS = [1, 1.5, 2, 3];
 
-// The rejection list from the upload requirements, in the words the sender needs
-// to act on. Whatever is ticked here is what goes back to them.
 const REJECT_REASONS = [
   "Not the standard STRON'L form",
   "Part of the sheet is outside the frame",
@@ -41,15 +34,12 @@ const REJECT_REASONS = [
   "Handwriting cannot be read reliably",
 ];
 
+// The review screen: sheet details, daily entries and the totals check.
 export function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, onReject }) {
-  // Employee suggestions and the schedule that drives Late both read the live roster,
-  // so an edit on the Employees page reaches this screen without a reload.
   const { employees } = useEmployees();
   const { activeClientNames, clients } = useClients();
   const employeeOptions = employees.map((e) => e.name);
 
-  // The sheet's own client stays selectable even if that client has since been
-  // archived, so a correction screen can never lose the value it is showing.
   const clientOptions = [...new Set([...activeClientNames, file.client].filter(Boolean))];
 
   const [rows, setRows] = useState(file.rows);
@@ -62,8 +52,6 @@ export function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, on
 
   const readOnly = file.status === "Approved" || file.status === "Rejected";
 
-  // Document viewer. Rotate and zoom act on the image the browser is holding; a PDF
-  // is handed to the browser's own viewer, which brings its own controls.
   const [rotation, setRotation] = useState(0);
   const [zoomStep, setZoomStep] = useState(0);
   const [docError, setDocError] = useState(false);
@@ -77,12 +65,11 @@ export function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, on
   const [rejectNote, setRejectNote] = useState("");
   const canReject = rejectReasons.length > 0 || rejectNote.trim().length > 0;
 
+  // Adds or removes one reason for rejecting the sheet.
   function toggleReason(reason) {
     setRejectReasons((prev) => (prev.includes(reason) ? prev.filter((r) => r !== reason) : [...prev, reason]));
   }
 
-  // What is on screen versus what was last written to the sheet. Comparing the two
-  // is what tells the reviewer whether anything would be lost by leaving.
   const draft = { rows, employee, client, period, half, periodConfirmed };
   const savedState = useMemo(
     () => ({
@@ -108,8 +95,6 @@ export function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, on
   const isDirty = !readOnly && changed.length > 0;
   const savedAt = file.savedAt ? new Date(file.savedAt).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : null;
 
-  // The browser's own prompt is the only thing that can cover a refresh or a
-  // closed tab, so it is armed only while there is unsaved work.
   useEffect(() => {
     if (!isDirty) return undefined;
     const warn = (e) => {
@@ -120,8 +105,7 @@ export function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, on
     return () => window.removeEventListener("beforeunload", warn);
   }, [isDirty]);
 
-  // Leaves the sheet. When the prompt is open it is dismissed first and the page
-  // waits for Bootstrap to finish hiding it, so navigating never strands a backdrop.
+  // Leaves the screen by the given route, saving or discarding first.
   function leaveVia(modalId, closeId) {
     const modal = document.getElementById(modalId);
     if (modal?.classList.contains("show")) {
@@ -132,27 +116,29 @@ export function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, on
     onBack();
   }
 
+  // Returns to the sheet list.
   function leave() {
     leaveVia("timesheetUnsavedModal", "timesheetUnsavedClose");
   }
 
-  // Rejecting supersedes any unsaved corrections, so it does not go through the
-  // unsaved prompt: the sheet is going back either way.
+  // Rejects the sheet with the reasons chosen.
   function handleReject() {
     onReject(file.id, { reasons: rejectReasons, note: rejectNote });
     leaveVia("timesheetRejectModal", "timesheetRejectClose");
   }
 
+  // Saves the draft and closes the screen.
   function handleSaveAndClose() {
     onSave(file.id, draft);
     leave();
   }
 
+  // Throws the edits away and closes the screen.
   function handleDiscardAndClose() {
     leave();
   }
 
-  // Leaving is only interrupted when there is something to lose.
+  // Leaves the screen, prompting first if there are unsaved edits.
   function handleBack() {
     if (!isDirty) {
       onBack();
@@ -161,8 +147,6 @@ export function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, on
     document.getElementById("timesheetUnsavedTrigger")?.click();
   }
 
-  // Late follows the employee currently named in the field, not the one the OCR
-  // first guessed, so correcting a misread name recalculates the column at once.
   const schedule = scheduleFor(employee, employees);
 
   const computed = sheetTotals(rows, schedule);
@@ -171,19 +155,13 @@ export function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, on
 
   const lowConfidenceCells = rows.reduce((n, r) => n + (r.lowConfidence ? r.lowConfidence.length : 0), 0);
 
-  // Period Covered and Sheet Half describe the same thing twice. When they disagree,
-  // the days would be filed against the wrong half of the month.
   const periodCheck = checkPeriodHalf(period, half);
   const periodConflict = periodCheck.status === "mismatch" || periodCheck.status === "not-a-half";
 
-  // Days already carried by another sheet for the same person would be paid twice.
-  // A clash with an approved sheet blocks; a clash with one still under review is a
-  // warning, because the reviewer is the one who decides which of the two to keep.
   const duplicates = findDuplicateSheets(files || [], file, draft, employees);
   const approvedDuplicates = duplicates.filter((d) => d.status === "Approved");
   const pendingDuplicates = duplicates.filter((d) => d.status !== "Approved");
 
-  // Checked against the edited name and period, so correcting either re-runs the test.
   const deployment = deploymentState(resolveEmployee({ name: employee }, employees), parsePeriodLabel(period));
 
   const blockers = [
@@ -218,13 +196,9 @@ export function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, on
       },
   ].filter(Boolean);
 
-  // The scanned sheet holds the left column; the attention card and the details
-  // stack in the right one, so their widths no longer depend on each other.
   const hasAttention = Boolean(file.rejection) || blockers.length > 0 || mismatches.length > 0 || lowConfidenceCells > 0;
   const attentionCount = (file.rejection ? 1 : 0) + blockers.length + mismatches.length + (lowConfidenceCells > 0 ? 1 : 0);
 
-  // Mirrors File Requirements on the Upload tab: every finding is one list row
-  // with an icon, what it is, and a pill saying what kind of finding it is.
   const rejection = file.rejection;
   const attentionItems = [
     ...(rejection
@@ -281,18 +255,18 @@ export function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, on
       : []),
   ];
 
-  // Mirrors the toolbar on the Timesheet page: tabs on the left, and the page's
-  // actions on the right where its filters sit.
   const [tab, setTab] = useState("sheet");
   const TABS = [
     { key: "sheet", label: "Sheet Details", icon: "fa-file-lines", badge: attentionCount || null },
     { key: "entries", label: "Daily Entries", icon: "fa-table-list", badge: lowConfidenceCells || null },
   ];
 
+  // Writes one edited cell back into the draft.
   function updateCell(day, field, value) {
     setRows((prev) => prev.map((r) => (r.day === day ? { ...r, [field]: value } : r)));
   }
 
+  // Tints a cell when its value disagrees with the scan.
   function cellClass(row, field) {
     return `ts-cell ${row.lowConfidence && row.lowConfidence.includes(field) ? "ts-cell-flagged" : ""}`;
   }
@@ -515,7 +489,7 @@ export function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, on
                     </div>
 
                     <div className="mt-3">
-                      <div className="form-label text-uppercase text-muted fw-semibold mb-1" style={{ fontSize: "var(--app-fs-1)", letterSpacing: 0.5 }}>
+                      <div className="app-label form-label mb-1">
                         Signatures
                       </div>
                       <div className="row g-2">
@@ -683,7 +657,7 @@ export function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, on
           </div>
         </div>
 
-        <label className="form-label text-uppercase text-muted fw-semibold mb-1 d-block" style={{ fontSize: "var(--app-fs-1)", letterSpacing: 0.5 }}>
+        <label className="app-label form-label mb-1 d-block">
           Note (optional)
         </label>
         <textarea
@@ -735,7 +709,3 @@ export function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, on
     </>
   );
 }
-
-// SuggestField — a typeable field that reads as one control: the caret sits inside
-// the box like a select's, and opens the app's own dropdown rather than the
-// browser's native list.

@@ -1,7 +1,9 @@
+// Centred layout for the 404, 403 and 500 pages.
+
 import { Outlet } from "react-router";
 import Footer from "../components/Footer.jsx";
 
-// ErrorLayout — centered layout for the error pages.
+// Centres an error page on its plane and adds the footer.
 export default function ErrorLayout() {
   return (
     <div id="layoutError" className="bg-body centered-bg d-flex flex-column" style={{ minHeight: "100vh" }}>

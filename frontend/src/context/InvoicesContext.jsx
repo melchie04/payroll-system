@@ -1,12 +1,12 @@
-/* eslint-disable react-refresh/only-export-components */
+// Holds invoices and what each client still owes.
+
 import { createContext, useContext, useState } from "react";
 import { invoices as initialInvoices } from "../assets/data/index.js";
 import { parseCurrency } from "../utils/currency.js";
 
 const InvoicesContext = createContext(null);
 
-// nextInvoiceId — one past the highest number already issued, so deleting an invoice
-// can never make the next one reuse a number that has been sent to a client.
+// Builds the next invoice number from the highest one already used.
 function nextInvoiceId(list) {
   const highest = list.reduce((max, inv) => {
     const n = Number(String(inv.id).replace(/\D/g, ""));
@@ -15,39 +15,40 @@ function nextInvoiceId(list) {
   return `INV-${highest + 1}`;
 }
 
-// InvoicesProvider — invoices shared across Billing, the invoice page, the client list
-// and a client's profile, so an invoice raised on one screen is visible on all of them.
+// Holds every invoice raised so far.
 export function InvoicesProvider({ children }) {
   const [invoices, setInvoices] = useState(initialInvoices);
 
+  // Finds one invoice by id.
   function getInvoiceById(id) {
     return invoices.find((inv) => String(inv.id) === String(id));
   }
 
-  // Invoices link to a client by its stable code, so renaming a client leaves every
-  // invoice, outstanding total and billing history pointing at the right account.
+  // Lists the invoices belonging to one client.
   function invoicesForClient(clientCode) {
     return invoices.filter((inv) => inv.clientCode === clientCode);
   }
 
+  // Totals what a client still owes across unpaid invoices.
   function outstandingForClient(clientCode) {
     return invoicesForClient(clientCode)
       .filter((inv) => inv.status !== "Paid")
       .reduce((sum, inv) => sum + parseCurrency(inv.amount), 0);
   }
 
+  // Says whether a client has been invoiced for a period yet.
   function hasInvoices(clientCode) {
     return invoices.some((inv) => inv.clientCode === clientCode);
   }
 
+  // Raises a new invoice and returns it.
   function addInvoice(data) {
-    // Numbered once, so the record stored and the number handed back to the caller
-    // for the audit entry are always the same one.
     const created = { id: nextInvoiceId(invoices), ...data };
     setInvoices((prev) => [created, ...prev]);
     return created;
   }
 
+  // Moves one invoice to a new status.
   function setInvoiceStatus(id, status) {
     setInvoices((prev) => prev.map((inv) => (String(inv.id) === String(id) ? { ...inv, status } : inv)));
   }
@@ -57,6 +58,7 @@ export function InvoicesProvider({ children }) {
   return <InvoicesContext.Provider value={value}>{children}</InvoicesContext.Provider>;
 }
 
+// Reads the invoice list from context.
 export function useInvoices() {
   const ctx = useContext(InvoicesContext);
   if (!ctx) {

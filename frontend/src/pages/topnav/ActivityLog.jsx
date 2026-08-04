@@ -1,3 +1,5 @@
+// Activity Log: a filterable record of every action taken in the app.
+
 import { useMemo, useState } from "react";
 import {
   DataCard,
@@ -21,9 +23,7 @@ const ALL_TIME = "All Time";
 const RANGE_DAYS = { Today: 1, "Last 7 Days": 7, "Last 30 Days": 30 };
 const DATE_RANGES = [ALL_TIME, ...Object.keys(RANGE_DAYS)];
 
-// Timestamps are stored as display text ("Jul 4, 2026 9:42 AM"), so a range check has
-// to read them back as dates. One that cannot be read stays visible rather than
-// disappearing from an audit trail.
+// Says whether an entry falls inside the chosen date range.
 function withinRange(stamp, range) {
   if (range === ALL_TIME) return true;
   const logged = Date.parse(stamp);
@@ -33,8 +33,6 @@ function withinRange(stamp, range) {
   return logged >= start.getTime() - (RANGE_DAYS[range] - 1) * 86400000;
 }
 
-// The verb an entry opens with decides its colour. There is no type field on the
-// log, so it is read from the action text; anything unrecognised stays neutral.
 const ACTION_TONES = {
   approved: "success",
   created: "info",
@@ -48,25 +46,21 @@ const ACTION_TONES = {
   rejected: "danger",
 };
 
+// Maps the verb an entry starts with to the colour it is shown in.
 function actionTone(action) {
   const verb = String(action).trim().split(" ")[0].toLowerCase();
   return ACTION_TONES[verb] ?? "neutral";
 }
 
-// ActivityLog — filterable, exportable audit log table.
+// Lists every recorded action, filtered by module, user, search and date.
 export default function ActivityLog() {
-  // The log is shared state now, so an action taken elsewhere in the app shows up here
-  // without a reload rather than only the seeded history being visible.
   const { entries } = useActivity();
   const [module, setModule] = useState(ALL_MODULES);
   const [user, setUser] = useState(ALL_USERS);
   const [search, setSearch] = useState("");
-  // the menu edits a draft and only commits it on Apply, matching the roster filter menu
   const [range, setRange] = useState(ALL_TIME);
   const [rangeDraft, setRangeDraft] = useState(ALL_TIME);
 
-  // Both option lists are read from the log, so an entry from a new module or a new
-  // person can never end up unfilterable.
   const modules = useMemo(() => [...new Set(entries.map((log) => log.module))], [entries]);
   const userNames = useMemo(() => [...new Set(entries.map((log) => log.user))], [entries]);
 
@@ -83,6 +77,7 @@ export default function ActivityLog() {
 
   const filtered = visible.length !== entries.length;
 
+  // Returns every filter to its default.
   function clearFilters() {
     setModule(ALL_MODULES);
     setUser(ALL_USERS);
@@ -91,7 +86,7 @@ export default function ActivityLog() {
     setRange(ALL_TIME);
   }
 
-  // Exports the rows currently shown, so a filtered view and its export agree.
+  // Exports every entry matching the current filters.
   function handleExportAll() {
     exportToCsv(
       "activity-log",
@@ -129,7 +124,7 @@ export default function ActivityLog() {
             </FilterSelect>
           </div>
           <div className="col-12 col-md-4">
-            {/* the search label makes this block taller than the 31px filter button, so the two align on their bottom edge */}
+            
             <div className="d-flex gap-2 align-items-end w-100">
               <SearchInput label="Search Log" placeholder="Search activity" value={search} onChange={(e) => setSearch(e.target.value)} />
               <FilterMenu

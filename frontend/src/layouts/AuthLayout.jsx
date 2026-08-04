@@ -1,8 +1,10 @@
+// Centred layout for the sign-in and password pages.
+
 import { Outlet } from "react-router";
 import Footer from "../components/Footer.jsx";
 import { useTheme } from "../context/ThemeContext.jsx";
 
-// AuthThemeToggle — light/dark switch for the auth pages.
+// The light/dark switch pinned to the corner of the auth pages.
 function AuthThemeToggle() {
   const { theme, setTheme } = useTheme();
   const isDark = theme === "dark";
@@ -15,7 +17,7 @@ function AuthThemeToggle() {
   );
 }
 
-// AuthLayout — centered layout for the auth pages.
+// Centres the auth page on its plane and adds the footer.
 export default function AuthLayout() {
   return (
     <div id="layoutAuthentication" className="bg-body centered-bg d-flex flex-column" style={{ minHeight: "100vh" }}>

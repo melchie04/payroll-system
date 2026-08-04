@@ -1,26 +1,14 @@
-// Notifications — the list on the Notifications page.
+// The notification list rows.
 
-// The row's own vertical rhythm. Bootstrap's spacing scale jumps straight from
-// 0.5rem to 1rem, and the row wanted the step in between — 0.5rem was cramped
-// around two lines of text, 1rem made the list feel loose.
 .notif-row {
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
 }
 
-// An unread row is marked by a keyline at its left edge and the dot — never by a
-// fill. Every row inside a card is the card's own colour, read or unread, so the
-// list reads as one continuous surface and the marks sit on top of it.
-//
-// Inset rather than a real border, so an unread row is not 3px wider than a read
-// one and nothing shifts when it is marked as read.
 .notif-row-unread {
   box-shadow: inset 3px 0 0 var(--app-menu-keyline);
 }
 
-// The unread dot. It is rendered on EVERY row and simply has no colour when the
-// row is read, so the timestamps above it line up down the whole list — before,
-// read rows had no dot at all and their timestamps sat 8px further right.
 .notif-dot {
   width: 8px;
   height: 8px;
@@ -33,9 +21,6 @@
   background-color: transparent;
 }
 
-// Load more. It is the last row of the list rather than a button below the card,
-// so it sits where the eye already is when it runs out of notifications. It keeps
-// .list-group-item so it inherits the same divider every other row has.
 .notif-more {
   display: block;
   width: 100%;
@@ -57,8 +42,6 @@
   color: var(--app-accent-ink);
 }
 
-// Inset, because the row runs the full width of the card and an outer ring would
-// be clipped by the card's own rounded corner.
 .notif-more:focus-visible {
   outline: none;
   box-shadow: inset 0 0 0 0.2rem var(--app-moss-ring);

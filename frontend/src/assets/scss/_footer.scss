@@ -1,9 +1,5 @@
-// The footer bar, shared by the auth, error and dashboard layouts.
+// The footer bar, shared by every layout.
 
-// --- Footer ----------------------------------------------------------------
-// One bar for every layout. It used to be styled twice — once in _shell.scss for
-// the dashboard and once in _centered.scss for the auth pages — which is how the
-// two drifted apart. Both of those rule sets are gone; this is the only one.
 footer.bg-light {
   background-color: var(--app-footer-bg) !important;
   border-top-color: var(--app-footer-line) !important;

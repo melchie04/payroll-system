@@ -1,11 +1,9 @@
+// Coverage tab: which employees are still missing a sheet this period.
+
 import { DataCard, Table, Tr, Td, Badge, BtnSecondary } from "../../../components/ui/index.jsx";
 
-// TimesheetCoverage — which employees have approved days for the selected period.
-// A gap means paperwork is missing, not that the person did not work.
-// Rows arrive already scoped to the client and pay period chosen on the page.
+// Lists the employees still missing a sheet for the period.
 export function TimesheetCoverage({ rows = [], period, onUploadFor }) {
-  // Someone not deployed for this period owes no paperwork, so they stay listed but
-  // sit outside the covered and gap tallies.
   const expected = rows.filter((r) => r.expected !== false);
   const covered = expected.filter((r) => !r.gap).length;
   const gaps = expected.length - covered;

@@ -1,5 +1,4 @@
-// Tables.
-// Bootstrap's table component, then the app's stacked mobile layout (Table in components/ui).
+// Bootstrap's table styles, plus this app's below-768px card restructure.
 
 .table {
   --bs-table-color: var(--bs-body-color);
@@ -234,8 +233,6 @@
     }
 }
 
-// Data table — shared table (Table in components/ui).
-// Below md each row stacks into a card and every cell is labelled by its column header.
 @media (max-width: 767.98px) {
   .table-stack,
   .table-stack > tbody {
@@ -271,13 +268,10 @@
     text-align: right;
   }
 
-  // Hairline between each label/value pair so they read as one line.
   .table-stack > tbody > tr > td + td {
     border-top: 1px dotted var(--bs-border-color);
   }
 
-  // Below 768px each row becomes a card and this pseudo-element is the column
-  // label, so it takes the same colour and size as a real column header.
   .table-stack > tbody > tr > td::before {
     content: attr(data-label);
     flex-shrink: 0;
@@ -303,7 +297,6 @@
   }
 }
 
-/* General app overrides */
 @media (min-width: 768px) {
   .table-responsive {
     overflow: visible;

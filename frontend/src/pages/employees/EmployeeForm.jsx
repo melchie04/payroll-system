@@ -1,3 +1,5 @@
+// Form for adding and editing an employee.
+
 import { useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router";
 import { DataCard, BtnPrimary, FormField, PageHeader } from "../../components/ui/index.jsx";
@@ -23,7 +25,7 @@ const emptyForm = {
   emergencyContact: { name: "", relationship: "", phone: "" },
 };
 
-// EmployeeForm — add/edit employee form shared by /employees/new and /employees/:id/edit.
+// Adds a new employee, or edits the one named in the URL.
 export default function EmployeeForm() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -74,12 +76,14 @@ export default function EmployeeForm() {
     );
   }
 
+  // Keeps the form state in step with what is typed.
   function handleChange(e) {
     const { name, value } = e.target;
     setForm((f) => ({ ...f, [name]: value }));
     setErrors((prev) => (prev[name] ? { ...prev, [name]: "" } : prev));
   }
 
+  // Updates the emergency contact block.
   function handleEmergencyChange(e) {
     setForm((f) => ({
       ...f,
@@ -87,6 +91,7 @@ export default function EmployeeForm() {
     }));
   }
 
+  // Updates one day of the working schedule.
   function handleScheduleChange(e) {
     const { name, value } = e.target;
     setForm((f) => ({ ...f, schedule: { ...f.schedule, [name]: value } }));
@@ -94,8 +99,7 @@ export default function EmployeeForm() {
     setErrors((prev) => (prev[key] ? { ...prev, [key]: "" } : prev));
   }
 
-  // code and schedule are validated because the timesheet resolves sheets by code and
-  // measures Late against the schedule; a blank or reused one breaks that link silently.
+  // Collects the errors that block saving, keyed by field.
   function validate(f) {
     const found = {};
     if (!f.name.trim()) found.name = "Full name is required.";
@@ -111,6 +115,7 @@ export default function EmployeeForm() {
     return found;
   }
 
+  // Saves the employee if validation passes, then returns to the list.
   function handleSubmit(e) {
     e.preventDefault();
     const found = validate(form);
@@ -119,7 +124,6 @@ export default function EmployeeForm() {
 
     const payload = {
       ...form,
-      // an open-ended assignment is stored as null rather than an empty string
       assignmentEnd: form.assignmentEnd || null,
       name: form.name.trim(),
       code: form.code.trim(),
@@ -146,6 +150,7 @@ export default function EmployeeForm() {
   const backLabel = isEdit ? "Back to Profile" : "Back to Employees";
   const fallbackPath = isEdit ? `/employees/${existing.id}` : "/employees";
   const hasHistory = location.key !== "default";
+  // Returns to the employee list without saving.
   function handleBack() {
     if (hasHistory) navigate(-1);
     else navigate(fallbackPath);

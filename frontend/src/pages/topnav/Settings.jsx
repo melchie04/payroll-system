@@ -1,3 +1,5 @@
+// Settings page: company profile, system users and roles.
+
 import { useEffect, useRef, useState } from "react";
 import { Modal as BsModal } from "bootstrap";
 import {
@@ -19,7 +21,7 @@ import {
 } from "../../components/ui/index.jsx";
 import { systemUsers, roles as initialRoles } from "../../assets/data/index.js";
 
-// Settings — company profile, system users, and roles, stacked on one page.
+// Holds the company, users and roles tabs and the state they share.
 export default function Settings() {
   const [users, setUsers] = useState(systemUsers);
   const [roleList, setRoleList] = useState(initialRoles);
@@ -31,6 +33,7 @@ export default function Settings() {
     return () => clearTimeout(timer);
   }, [generalSaved]);
 
+  // Saves the company profile and shows the confirmation.
   function handleSaveGeneral(e) {
     e.preventDefault();
     setGeneralSaved(true);
@@ -55,7 +58,7 @@ export default function Settings() {
   );
 }
 
-// GeneralTab — general company/preferences settings tab.
+// The company profile form.
 function GeneralTab({ generalSaved, onSave }) {
   return (
     <>
@@ -128,7 +131,7 @@ function GeneralTab({ generalSaved, onSave }) {
 
 const emptyResetForm = { password: "", confirmPassword: "" };
 
-// UsersTab — system users tab; owns its table and its user modals.
+// The system users list and the dialogs that act on it.
 function UsersTab({ users, setUsers, roleList }) {
   const [userForm, setUserForm] = useState({
     name: "",
@@ -166,10 +169,12 @@ function UsersTab({ users, setUsers, roleList }) {
     };
   }, []);
 
+  // Keeps the new-user form in step with what is typed.
   function handleUserChange(e) {
     setUserForm((f) => ({ ...f, [e.target.name]: e.target.value }));
   }
 
+  // Adds the user once every field passes.
   function handleCreateUser(e) {
     e.preventDefault();
     if (!userForm.name || !userForm.email) return;
@@ -183,6 +188,7 @@ function UsersTab({ users, setUsers, roleList }) {
     document.getElementById("createUserModalClose")?.click();
   }
 
+  // Removes a user once the dialog is confirmed.
   function confirmDeleteUser() {
     if (deleteUserTarget) {
       setUsers((prev) => prev.filter((u) => u.id !== deleteUserTarget.id));
@@ -191,6 +197,7 @@ function UsersTab({ users, setUsers, roleList }) {
     document.getElementById("deleteUserModalClose")?.click();
   }
 
+  // Loads one user into the edit dialog.
   function openEditUser(user) {
     setEditTarget(user);
     setEditForm({
@@ -202,16 +209,19 @@ function UsersTab({ users, setUsers, roleList }) {
     editModalInstance.current?.show();
   }
 
+  // Keeps the edit form in step with what is typed.
   function handleEditChange(e) {
     setEditForm((f) => ({ ...f, [e.target.name]: e.target.value }));
   }
 
+  // Saves the edited user.
   function handleEditUser(e) {
     e.preventDefault();
     setUsers((prev) => prev.map((u) => (u.id === editTarget.id ? { ...u, ...editForm } : u)));
     editModalInstance.current?.hide();
   }
 
+  // Opens the reset dialog for one user.
   function openResetPassword(user) {
     setResetTarget(user);
     setResetForm(emptyResetForm);
@@ -220,10 +230,12 @@ function UsersTab({ users, setUsers, roleList }) {
     resetModalInstance.current?.show();
   }
 
+  // Keeps the reset form in step with what is typed.
   function handleResetChange(e) {
     setResetForm((f) => ({ ...f, [e.target.name]: e.target.value }));
   }
 
+  // Sets the new password once every rule passes.
   function handleResetPassword(e) {
     e.preventDefault();
     setResetTouched(true);
@@ -257,7 +269,7 @@ function UsersTab({ users, setUsers, roleList }) {
   );
 }
 
-// UsersTable — the system users table itself.
+// The table of users, with a row menu on each.
 function UsersTable({ users, onEditUser, onResetPassword, onDeleteUser }) {
   return (
     <section className="mb-3">
@@ -310,7 +322,7 @@ function UsersTable({ users, onEditUser, onResetPassword, onDeleteUser }) {
   );
 }
 
-// CreateUserModal — modal form for creating a system user.
+// Dialog for adding a user.
 function CreateUserModal({ userForm, roleList, onChange, onSubmit }) {
   return (
     <Modal
@@ -381,7 +393,7 @@ function CreateUserModal({ userForm, roleList, onChange, onSubmit }) {
   );
 }
 
-// EditUserModal — modal form for editing a system user.
+// Dialog for editing a user.
 function EditUserModal({ editForm, roleList, onChange, onSubmit }) {
   return (
     <Modal
@@ -454,7 +466,7 @@ function EditUserModal({ editForm, roleList, onChange, onSubmit }) {
   );
 }
 
-// DeleteUserModal — confirmation modal for deleting a user.
+// Dialog confirming a user's removal.
 function DeleteUserModal({ target, onConfirm }) {
   return (
     <Modal
@@ -489,7 +501,7 @@ function DeleteUserModal({ target, onConfirm }) {
   );
 }
 
-// ResetPasswordModal — modal for resetting a user's password.
+// Dialog for setting a user's password.
 function ResetPasswordModal({
   target,
   form,
@@ -553,7 +565,7 @@ function ResetPasswordModal({
         </FormField>
 
         <div className="bg-light rounded-3 px-3 py-3 mb-3">
-          <div className="text-uppercase text-muted fw-semibold mb-2" style={{ fontSize: "var(--app-fs-1)", letterSpacing: 0.5 }}>
+          <div className="app-label mb-2">
             Password Requirements
           </div>
           <div className="row row-cols-1 g-2">
@@ -588,7 +600,7 @@ function ResetPasswordModal({
 
 const modules = ["Dashboard", "Payroll", "Billing", "Timesheet", "Employees", "Clients", "Settings"];
 
-// RolesTab — roles & permissions tab; owns its cards and its role modals.
+// The roles list and the dialogs that act on it.
 function RolesTab({ roleList, setRoleList }) {
   const [roleForm, setRoleForm] = useState({
     name: "",
@@ -612,11 +624,13 @@ function RolesTab({ roleList, setRoleList }) {
     };
   }, []);
 
+  // Keeps the new-role form in step with what is typed.
   function handleRoleChange(e) {
     setRoleForm((f) => ({ ...f, [e.target.name]: e.target.value }));
     if (e.target.name === "name") setRoleNameError("");
   }
 
+  // Adds or removes one permission on the role being created.
   function togglePermission(mod) {
     setRoleForm((f) => ({
       ...f,
@@ -624,6 +638,7 @@ function RolesTab({ roleList, setRoleList }) {
     }));
   }
 
+  // Adds the role once it has a name and at least one permission.
   function handleCreateRole(e) {
     e.preventDefault();
     const trimmedName = roleForm.name.trim();
@@ -639,11 +654,13 @@ function RolesTab({ roleList, setRoleList }) {
     document.getElementById("createRoleModalClose")?.click();
   }
 
+  // Closes the create dialog and clears what was typed.
   function handleCancelCreateRole() {
     setRoleForm({ name: "", description: "", permissions: [] });
     setRoleNameError("");
   }
 
+  // Removes a role once the dialog is confirmed.
   function confirmDeleteRole() {
     if (deleteRoleTarget) {
       setRoleList((prev) => prev.filter((r) => r.id !== deleteRoleTarget.id));
@@ -652,6 +669,7 @@ function RolesTab({ roleList, setRoleList }) {
     document.getElementById("deleteRoleModalClose")?.click();
   }
 
+  // Loads one role into the edit dialog.
   function openEditRole(role) {
     setEditRoleTarget(role);
     setEditRoleForm({
@@ -663,11 +681,13 @@ function RolesTab({ roleList, setRoleList }) {
     editRoleModalInstance.current?.show();
   }
 
+  // Keeps the edit form in step with what is typed.
   function handleEditRoleChange(e) {
     setEditRoleForm((f) => ({ ...f, [e.target.name]: e.target.value }));
     if (e.target.name === "name") setEditRoleNameError("");
   }
 
+  // Adds or removes one permission on the role being edited.
   function toggleEditRolePermission(mod) {
     setEditRoleForm((f) => ({
       ...f,
@@ -675,6 +695,7 @@ function RolesTab({ roleList, setRoleList }) {
     }));
   }
 
+  // Saves the edited role.
   function handleEditRoleSubmit(e) {
     e.preventDefault();
     const trimmedName = editRoleForm.name.trim();
@@ -714,7 +735,7 @@ function RolesTab({ roleList, setRoleList }) {
   );
 }
 
-// RolesList — the role cards themselves.
+// The list of roles, each with its permission count and row menu.
 function RolesList({ roleList, onEditRole, onDeleteRole }) {
   return (
     <section className="mb-3">
@@ -761,7 +782,7 @@ function RolesList({ roleList, onEditRole, onDeleteRole }) {
                 <p className="text-muted small px-3 mb-3">{r.description}</p>
 
                 <div className="mt-auto border-top px-3 py-3">
-                  <div className="text-uppercase text-muted fw-semibold mb-2" style={{ fontSize: "var(--app-fs-1)", letterSpacing: 0.5 }}>
+                  <div className="app-label mb-2">
                     Permissions
                   </div>
                   <div className="d-flex flex-wrap gap-1">
@@ -782,7 +803,7 @@ function RolesList({ roleList, onEditRole, onDeleteRole }) {
   );
 }
 
-// CreateRoleModal — modal form for creating a role with module permissions.
+// Dialog for adding a role.
 function CreateRoleModal({ modules, roleForm, nameError, onChange, onTogglePermission, onSubmit, onCancel }) {
   return (
     <Modal
@@ -856,7 +877,7 @@ function CreateRoleModal({ modules, roleForm, nameError, onChange, onTogglePermi
   );
 }
 
-// EditRoleModal — modal form for editing a role's details and permissions.
+// Dialog for editing a role.
 function EditRoleModal({ modules, editRoleForm, nameError, onChange, onTogglePermission, onSubmit }) {
   return (
     <Modal
@@ -932,7 +953,7 @@ function EditRoleModal({ modules, editRoleForm, nameError, onChange, onTogglePer
   );
 }
 
-// DeleteRoleModal — confirmation modal for deleting a role.
+// Dialog confirming a role's removal.
 function DeleteRoleModal({ target, onConfirm }) {
   return (
     <Modal

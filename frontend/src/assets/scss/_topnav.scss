@@ -1,7 +1,5 @@
-// Top navigation.
-// SB Admin's topnav, then the app's icon buttons, menus, motion and mobile row.
+// The top bar and the dropdown panels that hang from it.
 
-// --- (a) Tokens & variables ----------------------------------------------
 .nav-icon-btn,
 .nav-user-btn,
 #sidebarToggle {
@@ -11,7 +9,6 @@
   --topnav-btn-focus-ring: var(--app-moss-ring);
 }
 
-// --- (b) Layout ----------------------------------------------------------
 .sb-nav-fixed #layoutSidenav #layoutSidenav_content {
   top: var(--topnav-offset, 56px) !important;
 }
@@ -20,19 +17,12 @@
   padding-top: var(--topnav-offset, 56px) !important;
 }
 
-// --- (c) Components ------------------------------------------------------
-// Bar height is dynamic (auto, min 56px); settles in on first paint.
-// bg-white and bg-dark are on the markup and both are !important, so the bar has
-// to be repainted rather than re-pointed. One rule for both, so light and dark
-// are the same token with different values, not two different mechanisms.
 .sb-topnav.bg-white,
 .sb-topnav.bg-dark {
   background-color: var(--app-nav-bg) !important;
 }
 
 .sb-topnav {
-  // The .border-bottom utility on the markup reads this, so pointing the variable
-  // is enough — no need to fight its !important.
   --bs-border-color: var(--app-nav-line);
   padding-left: 0;
   height: auto !important;
@@ -54,7 +44,6 @@
   color: var(--bs-dark);
 }
 
-// Icon buttons: unstyled reset, then a round 40px hit area.
 .nav-icon-btn,
 #sidebarToggle {
   appearance: none;
@@ -83,10 +72,6 @@
 #sidebarToggle:hover,
 #sidebarToggle:focus-visible {
   background-color: var(--topnav-btn-hover-bg);
-  // The bell and the user button are <a> elements, so Bootstrap's a:hover — an
-  // element plus a pseudo-class — outranks the .nav-icon-btn class and turns the
-  // glyph link-blue. Restating the RESTING colour here is what stops hover
-  // changing it; leaving the line out is not the same as leaving the colour alone.
   color: var(--topnav-icon-color);
 }
 
@@ -114,7 +99,6 @@
   border-top: 1px solid var(--bs-border-color);
 }
 
-// Press feedback.
 .nav-icon-btn:active,
 #sidebarToggle:active {
   transform: scale(0.92);
@@ -124,7 +108,6 @@
   transform: scale(0.98);
 }
 
-// Keyboard focus ring, matching each theme's hover tint.
 .nav-icon-btn:focus-visible,
 .nav-user-btn:focus-visible,
 #sidebarToggle:focus-visible {
@@ -132,34 +115,22 @@
   box-shadow: 0 0 0 0.2rem var(--topnav-btn-focus-ring);
 }
 
-// The bar's dropdowns take the bar's own colour, so a panel reads as part of the
-// bar rather than as a card floating over the page. Qualified this deeply on
-// purpose: the dark layer sets --bs-dropdown-bg on .dropdown-menu with two
-// selectors' worth of specificity and loads after this file, so a shorter
-// selector here would lose in dark mode.
 .sb-topnav .dropdown .topnav-dropdown-menu {
   --bs-dropdown-bg: var(--app-menu-bg);
   --bs-dropdown-border-color: var(--app-nav-line);
   --bs-dropdown-divider-bg: var(--app-menu-divider);
   --bs-dropdown-link-hover-bg: var(--app-menu-hover-bg);
   --bs-dropdown-link-active-bg: var(--app-menu-hover-bg);
-  // The label does not change colour on hover — the fill and the keyline carry it.
   --bs-dropdown-link-hover-color: var(--bs-dropdown-link-color);
   --bs-dropdown-link-active-color: var(--bs-dropdown-link-color);
-  // .shadow-sm is on the markup and is !important, so this has to match it.
   box-shadow: 0 6px 16px rgba(10, 15, 13, 0.1) !important;
 }
 
-// The hovered row is marked by a keyline down its left edge rather than a
-// full-width fill. Drawn as an inset shadow, not a border, so the row's text
-// does not shift by 3px on hover.
 .sb-topnav .topnav-dropdown-menu .dropdown-item:hover,
 .sb-topnav .topnav-dropdown-menu .dropdown-item:focus {
   box-shadow: inset 3px 0 0 var(--app-menu-keyline);
 }
 
-// The menu's footer link. Bootstrap's .text-primary is blue and !important, and
-// the dark layer restates it, so this is qualified by the bar to outrank both.
 .sb-topnav .topnav-dropdown-menu .text-primary {
   color: var(--app-accent-ink) !important;
 }
@@ -172,7 +143,6 @@
   animation: topnavMenuIn 0.16s ease-out;
 }
 
-// --- (d) Utilities & helpers ---------------------------------------------
 @media (max-width: 767.98px) {
   .nav-brand-mobile {
     position: absolute;
@@ -202,11 +172,6 @@
   }
 }
 
-// --- Motion & interaction polish -------------------------------------------
-// Static appearance is unchanged; these only affect entrance and interaction.
-
-// The bar eases in on first paint. Opacity only — a transform here would make
-// .sb-topnav a containing block and break the fixed mobile dropdowns below.
 @keyframes topnavSettleIn {
   from {
     opacity: 0;
@@ -216,7 +181,6 @@
   }
 }
 
-// The unread dot breathes so it reads as live state.
 @keyframes topnavDotPulse {
   0% {
     box-shadow: 0 0 0 0 rgba(var(--app-dot-rgb), 0.5);
@@ -229,7 +193,6 @@
   }
 }
 
-// Dropdowns fade in instead of snapping. Opacity only — Popper owns transform.
 @keyframes topnavMenuIn {
   from {
     opacity: 0;
@@ -239,20 +202,11 @@
   }
 }
 
-// --- Mobile ----------------------------------------------------------------
-
 @media (max-width: 767.98px) {
-  // The second control row settles in just after the brand row. Opacity only:
-  // this row is an ancestor of the fixed .topnav-dropdown-menu, so any
-  // transform here would reposition the menu against this row instead of the
-  // viewport.
   .nav-mobile-controls {
     animation: topnavSettleIn 0.3s ease-out 0.08s backwards;
   }
 
-  // Full-width mobile menus drop in rather than fade alone. This uses the
-  // `translate` property, not `transform` — the mobile rule above pins
-  // `transform: none !important`, which an animation cannot override.
   @keyframes topnavMenuInMobile {
     from {
       opacity: 0;
@@ -267,7 +221,6 @@
     animation: topnavMenuInMobile 0.2s ease-out;
   }
 
-  // Menu items respond to taps, where there is no hover to rely on.
   .topnav-dropdown-menu .dropdown-item {
     transition: background-color 0.15s ease-in-out;
   }
@@ -276,7 +229,6 @@
   }
 }
 
-// Touch devices get no hover, so press feedback carries the interaction.
 @media (hover: none) {
   .nav-icon-btn:active,
   #sidebarToggle:active,
@@ -300,7 +252,6 @@
   }
 }
 
-// --- (e) Theme overrides -------------------------------------------------
 [data-bs-theme="dark"] .nav-icon-btn,
 [data-bs-theme="dark"] .nav-user-btn,
 [data-bs-theme="dark"] #sidebarToggle {
@@ -316,4 +267,12 @@
 
 [data-bs-theme="dark"] .nav-mobile-controls {
   border-top-color: rgba(255, 255, 255, 0.12);
+}
+
+@media (pointer: coarse) {
+  .nav-icon-btn,
+  #sidebarToggle {
+    width: 44px;
+    height: 44px;
+  }
 }

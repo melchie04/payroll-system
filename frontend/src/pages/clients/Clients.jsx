@@ -1,3 +1,5 @@
+// Client list with filters, bulk actions and export.
+
 import { Link, useNavigate } from "react-router";
 import { useMemo, useState } from "react";
 import {
@@ -24,21 +26,19 @@ import { exportToCsv } from "../../utils/exportToCsv.js";
 
 const CSV_HEADERS = ["Client", "Contact Person", "Email", "Phone", "Industry", "Employees", "Outstanding", "Status"];
 
+// Flattens the client list into the columns the CSV needs.
 function toCsvRows(list, countFor, outstandingFor) {
   return list.map((c) => [c.name, c.contact, c.email, c.phone, c.industry, countFor(c.code), formatCurrency(outstandingFor(c.code)), c.status]);
 }
 
-// Clients — client list with selection, bulk actions, filters, and export.
+// Lists clients with filters, bulk actions and export.
 export default function Clients() {
   const navigate = useNavigate();
   const { clients, deleteClient, archiveClient, restoreClient } = useClients();
   const { employees } = useEmployees();
-  // Invoices come from the shared store now, so one raised on the Billing page shows
-  // up in these totals straight away instead of only the seeded ones being counted.
   const { invoices, outstandingForClient, hasInvoices } = useInvoices();
   const { logActivity } = useActivity();
 
-  // Live figures so the counts and totals can't drift from the stored records.
   const countForClient = (code) => employees.filter((e) => e.client === code).length;
   const outstandingFor = (code) => outstandingForClient(code);
   const outstanding = invoices.filter((inv) => inv.status !== "Paid").reduce((sum, inv) => sum + parseCurrency(inv.amount), 0);
@@ -66,24 +66,22 @@ export default function Clients() {
 
   const toggleOne = (id) => setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
 
-  // Select-all acts on the rows currently shown, so filtering then ticking the header
-  // never selects clients the operator cannot see.
   const visibleIds = visibleClients.map((c) => c.id);
   const allSelected = visibleClients.length > 0 && visibleIds.every((id) => selected.includes(id));
 
+  // Selects or clears every row currently visible.
   function toggleAll() {
     setSelected(allSelected ? selected.filter((id) => !visibleIds.includes(id)) : [...new Set([...selected, ...visibleIds])]);
   }
 
   const selectedClients = clients.filter((c) => selected.includes(c.id));
-  // Archive keeps clients that have billing or staff history; only clients with neither
-  // can be hard-deleted.
   const hasHistory = (c) => hasInvoices(c.code) || employees.some((e) => e.client === c.code);
   const toArchive = selectedClients.filter((c) => hasHistory(c) && c.status !== "Inactive");
   const toDelete = selectedClients.filter((c) => !hasHistory(c));
 
   const [target, setTarget] = useState(null);
 
+  // Deletes one client once the dialog is confirmed.
   function confirmDelete() {
     if (target) {
       logActivity({ action: "Deleted client", detail: `Deleted ${target.name} (${target.code})`, module: "Clients" });
@@ -93,6 +91,7 @@ export default function Clients() {
     document.getElementById("clientDeleteModalClose")?.click();
   }
 
+  // Archives one client once the dialog is confirmed.
   function confirmArchive() {
     if (target) {
       logActivity({ action: "Archived client", detail: `Archived ${target.name} (${target.code})`, module: "Clients" });
@@ -102,6 +101,7 @@ export default function Clients() {
     document.getElementById("clientArchiveModalClose")?.click();
   }
 
+  // Deletes every selected client once confirmed.
   function confirmBulkDelete() {
     toArchive.forEach((c) => {
       logActivity({ action: "Archived client", detail: `Archived ${c.name} (${c.code})`, module: "Clients" });
@@ -115,10 +115,12 @@ export default function Clients() {
     document.getElementById("bulkDeleteModalClose")?.click();
   }
 
+  // Exports every row matching the current filters.
   function handleExportAll() {
     exportToCsv("clients", CSV_HEADERS, toCsvRows(clients, countForClient, outstandingFor));
   }
 
+  // Exports only the selected rows.
   function handleExportSelected() {
     const rows = clients.filter((c) => selected.includes(c.id));
     exportToCsv("clients-selected", CSV_HEADERS, toCsvRows(rows, countForClient, outstandingFor));

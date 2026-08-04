@@ -1,11 +1,12 @@
+// Notifications page with all/unread tabs and load-more.
+
 import { useState } from "react";
 import { DataCard, BtnSecondary, PageHeader, TabsNav } from "../../components/ui/index.jsx";
 import { useNotifications } from "../../context/NotificationsContext.jsx";
 
-// How many rows the list starts with, and how many each press of Load more adds.
 const PAGE_SIZE = 10;
 
-// Notifications — notification list with all/unread filters and mark-as-read actions.
+// Lists notifications, filtered by tab and revealed a page at a time.
 export default function Notifications() {
   const { notifications, unreadCount, markAllRead, markOneRead } = useNotifications();
   const [filter, setFilter] = useState("All");
@@ -15,8 +16,7 @@ export default function Notifications() {
   const visible = matching.slice(0, shownCount);
   const remaining = matching.length - visible.length;
 
-  // Switching tab starts the list from the top again, so the count under the card
-  // never describes a longer list than the one being shown.
+  // Switches tab and starts the list again from the top.
   function changeFilter(next) {
     setFilter(next);
     setShownCount(PAGE_SIZE);

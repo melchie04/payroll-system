@@ -1,5 +1,4 @@
-// App layer — the shell, its navigation, and the page-level treatments.
-// Loaded after styles.scss so these can override the framework above.
+// The app layer: this project's own styles, loaded after the framework so they can override it.
 
 @use "tokens";
 @use "shell";

@@ -1,14 +1,17 @@
+// Sign-in page.
+
 import { useState } from "react";
 import { BrandLockup } from "../../components/ui/index.jsx";
 import { useNavigate } from "react-router";
 import { useCurrentUser } from "../../context/CurrentUserContext.jsx";
 
-// Login — sign-in form; redirects to Change Password when a password change is required.
+// Renders the sign-in form.
 export default function Login() {
   const navigate = useNavigate();
   const { user } = useCurrentUser();
   const [showPassword, setShowPassword] = useState(false);
 
+  // Signs the user in and sends them to the dashboard.
   function handleSubmit(e) {
     e.preventDefault();
     navigate(user.mustChangePassword ? "/change-password" : "/");
@@ -18,16 +21,7 @@ export default function Login() {
     <div className="w-100" style={{ maxWidth: 360 }}>
       <BrandLockup className="mb-2" />
       <hr className="mx-auto mb-3 opacity-25" style={{ maxWidth: 200 }} />
-      <h1
-        className="text-center fw-normal text-secondary mb-4 tracking-wide text-uppercase"
-        style={{
-          fontSize: "var(--app-fs-6)",
-          color: "var(--app-auth-heading)",
-          letterSpacing: "0.08em",
-        }}
-      >
-        Sign In
-      </h1>
+      <h1 className="auth-heading text-center mb-4 text-uppercase">Sign In</h1>
 
       <form onSubmit={handleSubmit} noValidate>
         <div className="mb-3 position-relative">
@@ -48,7 +42,7 @@ export default function Login() {
             </span>
             <input
               type="email"
-              className="form-control border-start-0 rounded-end-pill py-2.5 fs-6 fw-light"
+              className="form-control border-start-0 rounded-end-pill py-2.5 fw-light"
               style={{ outline: "none" }}
               id="email"
               placeholder="Username"
@@ -75,7 +69,7 @@ export default function Login() {
             </span>
             <input
               type={showPassword ? "text" : "password"}
-              className="form-control border-start-0 border-end-0 py-2.5 fs-6 fw-light"
+              className="form-control border-start-0 border-end-0 py-2.5 fw-light"
               style={{ outline: "none" }}
               id="password"
               placeholder="Password"

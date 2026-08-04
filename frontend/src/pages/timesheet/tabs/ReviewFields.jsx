@@ -1,9 +1,10 @@
-// Small building blocks used only by the timesheet review form.
+// Small field components used on the timesheet review screen.
 
+// A text field offering the values found elsewhere on the sheet.
 export function SuggestField({ label, value, onChange, options, disabled, hint, flagged, children }) {
   return (
     <div className="ts-field">
-      <label className="form-label text-uppercase text-muted fw-semibold mb-1 d-block" style={{ fontSize: "var(--app-fs-1)", letterSpacing: 0.5 }}>
+      <label className="app-label form-label mb-1 d-block">
         {label}
       </label>
       <div className="dropdown ts-suggest">
@@ -25,7 +26,7 @@ export function SuggestField({ label, value, onChange, options, disabled, hint, 
         >
           <i className="fas fa-chevron-down"></i>
         </button>
-        <ul className="dropdown-menu dropdown-menu-end shadow-sm py-2" style={{ fontSize: "var(--app-fs-3)" }}>
+        <ul className="dropdown-menu dropdown-menu-end shadow-sm py-2">
           {options.map((o) => (
             <li key={o}>
               <button
@@ -45,7 +46,7 @@ export function SuggestField({ label, value, onChange, options, disabled, hint, 
   );
 }
 
-// SignatureItem — whether ink was detected in one signature box.
+// Shows whether one signature is present on the scan.
 export function SignatureItem({ signed, label }) {
   return (
     <div className="col-12 col-sm-4">
@@ -62,7 +63,7 @@ export function SignatureItem({ signed, label }) {
   );
 }
 
-// TotalItem — a calculated total, with the handwritten figure beneath it.
+// Shows a printed total beside the computed one, flagging a mismatch.
 export function TotalItem({ label, value, written }) {
   const mismatch = written != null && String(written) !== String(value);
   return (

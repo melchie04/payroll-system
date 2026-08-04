@@ -1,12 +1,9 @@
-// App shell.
-// SB Admin's page scaffolding for the dashboard, auth and error layouts, then the app's own content and footer surfaces.
+// The signed-in page frame and how its content area is positioned.
 
-// --- (a) Tokens & variables ----------------------------------------------
 :root {
   --app-footer-height: 44px;
 }
 
-// --- (b) Layout ----------------------------------------------------------
 html,
 body {
   height: 100%;
@@ -106,24 +103,15 @@ body {
   min-width: 0;
 }
 
-// --- (c) Components ------------------------------------------------------
 .nav .nav-link .sb-nav-link-icon,
 .sb-sidenav-menu .nav-link .sb-nav-link-icon {
   margin-right: 0.5rem;
 }
 
-// --- App surfaces ----------------------------------------------------------
-// The navigation bars share one surface; the content plane sits a step darker
-// so cards, tables and the tab tray read as raised above it.
-
 #layoutSidenav_content {
   background-color: var(--app-content-bg);
 }
 
-// The content wrapper. It used to carry only horizontal padding — px-4, rising to
-// 3rem at xl — which left the page flush against the top bar and the footer and
-// very wide at big sizes. One value on all four sides instead, and the container's
-// own gutter is zeroed so it does not add a second, unequal inset.
 .app-page {
   --bs-gutter-x: 0;
   padding: 1.25rem;
@@ -141,30 +129,17 @@ body {
   }
 }
 
-// On a wide monitor the content otherwise runs the full width of the screen and
-// stops feeling like a page at all.
 @media (min-width: 1400px) {
   .app-page {
     padding: 2.25rem 3rem;
   }
 }
 
-// Pages open with a mt-4 by convention, and it sits on a div INSIDE the first
-// section rather than on the section itself — so zeroing only the section left
-// 1.5rem of space above the page title that no other block had. Both levels.
 .app-page > *:first-child,
 .app-page > *:first-child > *:first-child {
   margin-top: 0 !important;
 }
 
-// ONE gap between every top-level block on a dashboard page — the header, the rule
-// under it, a tab tray, a filter toolbar, a card, a table. The pages set this in
-// markup and they disagree: 38 blocks use mb-3, 16 use mb-4, and the rules use
-// my-3, which is why the rhythm changed from page to page. This overrides all of
-// them with one value, so the gap is set here and nowhere else.
-//
-// !important because the mb-* utilities are themselves !important. Direct children
-// only — nothing inside a card is touched.
 .app-page > * {
   margin-bottom: 1.5rem !important;
 }
@@ -173,29 +148,19 @@ body {
   margin-bottom: 0 !important;
 }
 
-// The rule's own top margin would sit on top of the gap the block above already
-// provides. Its bottom margin is the shared one, like everything else.
 .app-page > hr {
   margin-top: 0 !important;
 }
 
-// py-3 and bg-light carry !important, so these must too. The .bg-light
-// qualifier is what outranks the utility overrides in _dark.scss.
 #layoutSidenav_content > footer.bg-light {
   padding-top: 0.25rem !important;
   padding-bottom: 0.25rem !important;
 }
 
-// The footer is a flex container now, so its row needs to claim the width.
 #layoutSidenav_content > footer > .container-fluid {
   width: 100%;
 }
 
-// In dark mode the sidebar already matches the topnav's bg-dark (#212529).
-// Dark content and footer surfaces live in _dark.scss.
-
-// Shares its height with the sidebar footer so the two line up when long
-// content is scrolled to the bottom.
 #layoutSidenav_content > footer {
   display: flex;
   align-items: center;
@@ -203,7 +168,6 @@ body {
   border-top: 1px solid var(--bs-border-color);
 }
 
-// --- (d) Utilities & helpers ---------------------------------------------
 @media (min-width: 992px) {
   #layoutSidenav #layoutSidenav_nav {
       transform: translateX(0);

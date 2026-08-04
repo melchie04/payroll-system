@@ -1,3 +1,5 @@
+// A single invoice, ready to print or mark paid.
+
 import { Link, useLocation, useNavigate, useParams } from "react-router";
 import { DataCard, Table, Tr, Td, Badge, BtnPrimary, DetailList, DetailRow, PageHeader } from "../../components/ui/index.jsx";
 import { formatCurrency, parseCurrency } from "../../utils/currency.js";
@@ -13,9 +15,8 @@ const COMPANY = {
   address: "8th Floor, One Global Place, Taguig City, Metro Manila",
 };
 
-// Invoice — the printable detail view for one invoice.
+// Renders one invoice, ready to print.
 export default function Invoice() {
-  // Every hook stays above the not-found return below, so the order never changes.
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -26,13 +27,13 @@ export default function Invoice() {
 
   const invoice = getInvoiceById(id);
 
-  // Returns to wherever this was opened from — the billing list, or a client's billing
-  // history — and falls back to the list when the page was loaded from a bare URL.
+  // Returns to the billing list.
   function handleBack() {
     if (location.key !== "default") navigate(-1);
     else navigate("/billing");
   }
 
+  // Marks this invoice paid.
   function markPaid() {
     if (!invoice || invoice.status === "Paid") return;
     const name = clientNameByCode(invoice.clientCode);

@@ -1,5 +1,4 @@
-// Navs and navbar.
-// Bootstrap's nav, tab, pill and navbar components, then the app's TabsNav.
+// Bootstrap's nav components, plus this app's page tab tray.
 
 .nav {
   --bs-nav-link-padding-x: 1rem;
@@ -398,11 +397,6 @@
   --bs-navbar-toggler-icon-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.55%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
 }
 
-// Tabs navigation — shared page tab switcher (TabsNav in components/ui).
-// The tray is a surface like the card below it, so the selected tab is marked by
-// an underline rather than a fill. Every value is an app token, which is why there
-// is no separate dark block: the tokens already carry both themes.
-// The page owns the gap below the tray, so this component sets no margin.
 .tabs-nav {
   --tabs-nav-color: var(--app-nav-icon);
   --tabs-nav-hover-bg: var(--app-nav-btn-hover-bg);
@@ -437,16 +431,12 @@
   transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
 }
 
-// Hover changes the fill and nothing else, as everywhere else in the app.
 .tabs-nav-item:hover,
 .tabs-nav-item:focus-visible {
   background-color: var(--tabs-nav-hover-bg);
   color: var(--tabs-nav-color);
 }
 
-// Declared after :hover on purpose — an active tab that is also hovered keeps its
-// own colour without needing a third rule to win it back. The mark is an inset
-// shadow so the item's height never changes between states.
 .tabs-nav-item.active {
   background-color: var(--tabs-nav-active-bg);
   border-radius: 0.375rem 0.375rem 0 0;
@@ -460,9 +450,6 @@
   text-overflow: ellipsis;
 }
 
-// Mobile: two per row, filling the tray. Half a tray is narrower than a label
-// like "Uploaded Sheets" or "Roles & Permissions" at the desktop size, so the
-// metrics tighten a step here to buy those labels the room to sit on one line.
 @media (max-width: 575.98px) {
   .tabs-nav-item {
     flex: 0 0 calc(50% - 0.125rem);
@@ -473,29 +460,22 @@
     white-space: normal;
   }
 
-  // With an odd number of tabs the last one would sit alone in a half-empty
-  // row. Let it take the full width instead so the tray stays square.
   .tabs-nav-item:last-child:nth-child(odd) {
     flex-basis: 100%;
     max-width: 100%;
   }
 
-  // Wrapping rather than clipping. A label that still cannot fit breaks to a
-  // second line, instead of trailing an ellipsis into the count beside it.
   .tabs-nav-item > span {
     overflow: visible;
     text-overflow: clip;
   }
 
-  // The icon and the count are fixed marks either side of the label, so the
-  // label is the only part that gives way when the row runs short.
   .tabs-nav-item > i,
   .tabs-nav-item > .badge {
     flex-shrink: 0;
   }
 }
 
-// Wider screens: the tray hugs its tabs and scrolls if they run long.
 @media (min-width: 576px) {
   .tabs-nav {
     display: inline-flex;

@@ -1,5 +1,8 @@
-// Builds a CSV file from headers + rows and triggers a browser download.
+// Turns rows of data into a downloadable CSV file.
+
+// Builds a CSV from the rows and triggers the browser download.
 export function exportToCsv(filename, headers, rows) {
+  // Quotes a value so commas and quotes inside it survive the CSV.
   function escapeCell(value) {
     const str = String(value ?? "");
     if (/[",\n]/.test(str)) {
