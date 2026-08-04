@@ -4,9 +4,7 @@
 export function SuggestField({ label, value, onChange, options, disabled, hint, flagged, children }) {
   return (
     <div className="ts-field">
-      <label className="app-label form-label mb-1 d-block">
-        {label}
-      </label>
+      <label className="app-label form-label mb-1 d-block">{label}</label>
       <div className="dropdown ts-suggest">
         <input
           type="text"

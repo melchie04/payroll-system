@@ -22,10 +22,10 @@ import {
 } from "../../components/ui/index.jsx";
 import { timesheetCoverage, payPeriods } from "../../assets/data/index.js";
 import { parseCurrency, formatCurrency } from "../../utils/currency.js";
-import { useClients } from "../../context/ClientsContext.jsx";
-import { useInvoices } from "../../context/InvoicesContext.jsx";
-import { useEmployees } from "../../context/EmployeesContext.jsx";
-import { resolveEmployee, deploymentState, parsePeriodLabel } from "../../context/TimesheetContext.jsx";
+import { useClients } from "../../context/hooks.js";
+import { useInvoices } from "../../context/hooks.js";
+import { useEmployees } from "../../context/hooks.js";
+import { resolveEmployee, deploymentState, parsePeriodLabel } from "../../utils/timesheet.js";
 import { TimesheetCoverage } from "../timesheet/tabs/TimesheetCoverage.jsx";
 
 const fileIcons = { pdf: "📕", img: "🖼️" };

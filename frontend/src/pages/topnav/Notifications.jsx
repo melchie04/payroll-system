@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { DataCard, BtnSecondary, PageHeader, TabsNav } from "../../components/ui/index.jsx";
-import { useNotifications } from "../../context/NotificationsContext.jsx";
+import { useNotifications } from "../../context/hooks.js";
 
 const PAGE_SIZE = 10;
 

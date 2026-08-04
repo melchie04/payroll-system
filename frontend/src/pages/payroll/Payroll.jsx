@@ -25,12 +25,12 @@ import { exportToCsv } from "../../utils/exportToCsv.js";
 import { formatCurrency } from "../../utils/currency.js";
 import { computeDeductions } from "../../utils/payslip.js";
 import { buildPayrollRows } from "../../utils/payrollRun.js";
-import { useClients } from "../../context/ClientsContext.jsx";
-import { useEmployees } from "../../context/EmployeesContext.jsx";
-import { useTimesheets } from "../../context/TimesheetContext.jsx";
-import { usePayroll } from "../../context/PayrollContext.jsx";
-import { useActivity } from "../../context/ActivityContext.jsx";
-import { useNotifications } from "../../context/NotificationsContext.jsx";
+import { useClients } from "../../context/hooks.js";
+import { useEmployees } from "../../context/hooks.js";
+import { useTimesheets } from "../../context/hooks.js";
+import { usePayroll } from "../../context/hooks.js";
+import { useActivity } from "../../context/hooks.js";
+import { useNotifications } from "../../context/hooks.js";
 
 const ALL_CLIENTS = "All Clients";
 const ALL_STATUSES = "All Statuses";
@@ -105,6 +105,7 @@ export default function Payroll() {
   ];
 
   const [selected, setSelected] = useState([]);
+  // Adds one payroll row to the selection, or takes it back out.
   const toggleOne = (key) => setSelected((prev) => (prev.includes(key) ? prev.filter((x) => x !== key) : [...prev, key]));
 
   const visibleKeys = visibleRows.map((r) => r.key);
@@ -179,6 +180,7 @@ export default function Payroll() {
   useEffect(() => {
     const el = document.getElementById("editHoursModal");
     if (!el) return undefined;
+    // Drops the edit target once Bootstrap has finished hiding the dialog.
     const clear = () => setEditTarget(null);
     el.addEventListener("hidden.bs.modal", clear);
     if (editTarget) BsModal.getOrCreateInstance(el).show();

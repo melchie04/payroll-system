@@ -1,7 +1,7 @@
 // Builds the payroll rows for a pay period from approved timesheets.
 
 import { parseCurrency } from "./currency.js";
-import { sheetTotals, resolveEmployee, resolveClient } from "../context/TimesheetContext.jsx";
+import { sheetTotals, resolveEmployee, resolveClient } from "../utils/timesheet.js";
 
 // Says whether a date falls inside the given pay period.
 function withinPeriod(dayRow, from, to) {

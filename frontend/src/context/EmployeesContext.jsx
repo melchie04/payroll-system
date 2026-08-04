@@ -1,9 +1,8 @@
 // Holds the employee roster and their documents.
 
-import { createContext, useContext, useState } from "react";
+import { useState } from "react";
 import { employees as initialEmployees, employeeDocuments as initialDocuments } from "../assets/data/index.js";
-
-const EmployeesContext = createContext(null);
+import { EmployeesContext } from "./contexts.js";
 
 // Holds the employee roster and their documents.
 export function EmployeesProvider({ children }) {
@@ -72,11 +71,4 @@ export function EmployeesProvider({ children }) {
   };
 
   return <EmployeesContext.Provider value={value}>{children}</EmployeesContext.Provider>;
-}
-
-// Reads the employee roster from context.
-export function useEmployees() {
-  const ctx = useContext(EmployeesContext);
-  if (!ctx) throw new Error("useEmployees must be used within an EmployeesProvider");
-  return ctx;
 }

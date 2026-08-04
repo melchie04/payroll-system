@@ -17,10 +17,10 @@ import {
   Modal,
   PageHeader,
 } from "../../components/ui/index.jsx";
-import { useClients } from "../../context/ClientsContext.jsx";
-import { useActivity } from "../../context/ActivityContext.jsx";
-import { useInvoices } from "../../context/InvoicesContext.jsx";
-import { useEmployees } from "../../context/EmployeesContext.jsx";
+import { useClients } from "../../context/hooks.js";
+import { useActivity } from "../../context/hooks.js";
+import { useInvoices } from "../../context/hooks.js";
+import { useEmployees } from "../../context/hooks.js";
 import { parseCurrency, formatCurrency } from "../../utils/currency.js";
 import { exportToCsv } from "../../utils/exportToCsv.js";
 
@@ -39,7 +39,9 @@ export default function Clients() {
   const { invoices, outstandingForClient, hasInvoices } = useInvoices();
   const { logActivity } = useActivity();
 
+  // Counts how many employees are deployed to one client.
   const countForClient = (code) => employees.filter((e) => e.client === code).length;
+  // Returns the unpaid invoice total for one client.
   const outstandingFor = (code) => outstandingForClient(code);
   const outstanding = invoices.filter((inv) => inv.status !== "Paid").reduce((sum, inv) => sum + parseCurrency(inv.amount), 0);
   const clientStats = [
@@ -64,6 +66,7 @@ export default function Clients() {
     });
   }, [clients, status, industry, search]);
 
+  // Adds one client to the selection, or takes it back out.
   const toggleOne = (id) => setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
 
   const visibleIds = visibleClients.map((c) => c.id);
@@ -75,6 +78,7 @@ export default function Clients() {
   }
 
   const selectedClients = clients.filter((c) => selected.includes(c.id));
+  // True when a client still has invoices or deployed staff, so it is archived rather than deleted.
   const hasHistory = (c) => hasInvoices(c.code) || employees.some((e) => e.client === c.code);
   const toArchive = selectedClients.filter((c) => hasHistory(c) && c.status !== "Inactive");
   const toDelete = selectedClients.filter((c) => !hasHistory(c));

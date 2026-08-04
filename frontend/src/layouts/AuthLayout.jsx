@@ -2,7 +2,7 @@
 
 import { Outlet } from "react-router";
 import Footer from "../components/Footer.jsx";
-import { useTheme } from "../context/ThemeContext.jsx";
+import { useTheme } from "../context/hooks.js";
 
 // The light/dark switch pinned to the corner of the auth pages.
 function AuthThemeToggle() {

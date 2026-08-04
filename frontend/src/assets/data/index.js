@@ -242,6 +242,7 @@ function sheetRows(half, month, year, pattern, clean = false, start = "07:30") {
   const first = half === "1-15" ? 1 : 16;
   const count = half === "1-15" ? 15 : 16;
   const [sh, sm] = start.split(":").map(Number);
+  // Adds a number of minutes to the shift start and gives it back as HH:MM.
   const at = (mins) => {
     const total = sh * 60 + sm + mins;
     return `${String(Math.floor(total / 60)).padStart(2, "0")}:${String(total % 60).padStart(2, "0")}`;
@@ -3375,5 +3376,3 @@ export const employeeDocuments = [
   { id: 16, employeeId: 14, name: "Employment Contract.pdf", type: "pdf", uploaded: "Mar 24, 2025" },
   { id: 17, employeeId: 16, name: "Employment Contract.pdf", type: "pdf", uploaded: "Jun 2, 2025" },
 ];
-
-export const employeeNames = employees.map((e) => e.name);

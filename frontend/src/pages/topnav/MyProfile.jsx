@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { DataCard, BtnPrimary, FormField, PageHeader, RequirementRow, SectionHeading } from "../../components/ui/index.jsx";
-import { useCurrentUser } from "../../context/CurrentUserContext.jsx";
-import { useActivity } from "../../context/ActivityContext.jsx";
+import { useCurrentUser } from "../../context/hooks.js";
+import { useActivity } from "../../context/hooks.js";
 
 const AVATAR_COLORS = ["#121212", "#0d6efd", "#198754", "#dc3545", "#997404", "#6f42c1"];
 
@@ -132,9 +132,7 @@ function ChangePasswordCard() {
 
                 <div className="col-12">
                   <div className="bg-light rounded-3 px-3 py-3">
-                    <div className="app-label mb-2">
-                      Password Requirements
-                    </div>
+                    <div className="app-label mb-2">Password Requirements</div>
                     <div className="row row-cols-1 row-cols-md-2 g-2">
                       <div className="col">
                         <RequirementRow met={hasLength} label="At least 8 characters" />
@@ -248,7 +246,6 @@ export default function MyProfile() {
 
         <section className="mb-3">
           <DataCard title="Personal Information">
-            
             <div className="card-body d-flex align-items-center gap-4 flex-wrap">
               <div className="position-relative flex-shrink-0">
                 {avatarImage ? (
@@ -287,10 +284,8 @@ export default function MyProfile() {
 
                 {!avatarImage && (
                   <div>
-                    <div className="app-label mb-2">
-                      Or pick a color for your initials
-                    </div>
-                    
+                    <div className="app-label mb-2">Or pick a color for your initials</div>
+
                     <div className="d-flex gap-2 mb-2">
                       {AVATAR_COLORS.map((color) => (
                         <button

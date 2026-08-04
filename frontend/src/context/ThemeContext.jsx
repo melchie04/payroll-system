@@ -1,6 +1,7 @@
 // Holds the light/dark choice and applies it to the document.
 
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { ThemeContext } from "./contexts.js";
 
 // Holds the light/dark choice and writes it onto the document element.
 export function ThemeProvider({ children }) {
@@ -26,13 +27,4 @@ export function ThemeProvider({ children }) {
   }, [theme]);
 
   return <ThemeContext.Provider value={{ theme, setTheme }}>{children}</ThemeContext.Provider>;
-}
-
-const ThemeContext = createContext(null);
-
-// Reads the current theme from context.
-export function useTheme() {
-  const ctx = useContext(ThemeContext);
-  if (!ctx) throw new Error("useTheme must be used inside a ThemeProvider");
-  return ctx;
 }

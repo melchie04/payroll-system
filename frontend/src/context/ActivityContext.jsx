@@ -1,10 +1,9 @@
 // Records what each user did, feeding the Activity Log page.
 
-import { createContext, useContext, useState } from "react";
+import { useState } from "react";
 import { activityLog as initialEntries } from "../assets/data/index.js";
-import { useCurrentUser } from "./CurrentUserContext.jsx";
-
-const ActivityContext = createContext(null);
+import { ActivityContext } from "./contexts.js";
+import { useCurrentUser } from "./hooks.js";
 
 // Formats the current time the way the Activity Log displays it.
 function stamp(date = new Date()) {
@@ -27,13 +26,4 @@ export function ActivityProvider({ children }) {
   }
 
   return <ActivityContext.Provider value={{ entries, logActivity }}>{children}</ActivityContext.Provider>;
-}
-
-// Reads the activity feed from context.
-export function useActivity() {
-  const ctx = useContext(ActivityContext);
-  if (!ctx) {
-    throw new Error("useActivity must be used within an ActivityProvider");
-  }
-  return ctx;
 }

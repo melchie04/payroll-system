@@ -1,8 +1,7 @@
 // Holds payroll run statuses and any manually edited hours.
 
-import { createContext, useContext, useState } from "react";
-
-const PayrollContext = createContext(null);
+import { useState } from "react";
+import { PayrollContext } from "./contexts.js";
 
 // Holds payroll statuses and any hours edited by hand.
 export function PayrollProvider({ children }) {
@@ -50,13 +49,4 @@ export function PayrollProvider({ children }) {
   const value = { overrides, setStatus, setStatusMany, setHours, clearOverride, clearMany };
 
   return <PayrollContext.Provider value={value}>{children}</PayrollContext.Provider>;
-}
-
-// Reads payroll state from context.
-export function usePayroll() {
-  const ctx = useContext(PayrollContext);
-  if (!ctx) {
-    throw new Error("usePayroll must be used within a PayrollProvider");
-  }
-  return ctx;
 }

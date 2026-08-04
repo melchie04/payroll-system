@@ -1,9 +1,8 @@
 // Holds the client roster and their documents.
 
-import { createContext, useContext, useState } from "react";
+import { useState } from "react";
 import { clients as initialClients, clientDocuments as initialDocuments } from "../assets/data/index.js";
-
-const ClientsContext = createContext(null);
+import { ClientsContext } from "./contexts.js";
 
 // Holds the client roster and their documents.
 export function ClientsProvider({ children }) {
@@ -92,13 +91,4 @@ export function ClientsProvider({ children }) {
   };
 
   return <ClientsContext.Provider value={value}>{children}</ClientsContext.Provider>;
-}
-
-// Reads the client roster from context.
-export function useClients() {
-  const ctx = useContext(ClientsContext);
-  if (!ctx) {
-    throw new Error("useClients must be used within a ClientsProvider");
-  }
-  return ctx;
 }

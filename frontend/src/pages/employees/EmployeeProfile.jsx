@@ -22,9 +22,10 @@ import {
   TabsNav,
 } from "../../components/ui/index.jsx";
 import { payslipHistory } from "../../assets/data/index.js";
-import { useEmployees } from "../../context/EmployeesContext.jsx";
-import { useClients } from "../../context/ClientsContext.jsx";
-import { useTimesheets, resolveEmployee, sheetTotals, parsePeriodLabel } from "../../context/TimesheetContext.jsx";
+import { useEmployees } from "../../context/hooks.js";
+import { useClients } from "../../context/hooks.js";
+import { useTimesheets } from "../../context/hooks.js";
+import { resolveEmployee, sheetTotals, parsePeriodLabel } from "../../utils/timesheet.js";
 import { formatCurrency } from "../../utils/currency.js";
 import { computeDeductions } from "../../utils/payslip.js";
 
@@ -262,7 +263,6 @@ export default function EmployeeProfile() {
                 </DataCard>
               </div>
 
-              
               <div className="flex-grow-1">
                 <DataCard title="Emergency Contact">
                   <div className="card-body">

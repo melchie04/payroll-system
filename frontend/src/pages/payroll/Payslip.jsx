@@ -7,11 +7,11 @@ import { payPeriods } from "../../assets/data/index.js";
 import { formatCurrency } from "../../utils/currency.js";
 import { computeDeductions } from "../../utils/payslip.js";
 import { buildPayrollRows, sheetsForEmployee } from "../../utils/payrollRun.js";
-import { useClients } from "../../context/ClientsContext.jsx";
-import { useEmployees } from "../../context/EmployeesContext.jsx";
-import { useTimesheets } from "../../context/TimesheetContext.jsx";
-import { usePayroll } from "../../context/PayrollContext.jsx";
-import { useActivity } from "../../context/ActivityContext.jsx";
+import { useClients } from "../../context/hooks.js";
+import { useEmployees } from "../../context/hooks.js";
+import { useTimesheets } from "../../context/hooks.js";
+import { usePayroll } from "../../context/hooks.js";
+import { useActivity } from "../../context/hooks.js";
 
 // Renders one payslip, ready to print.
 export default function Payslip() {

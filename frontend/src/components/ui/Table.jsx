@@ -10,6 +10,7 @@ function useStackedTable() {
 
   useEffect(() => {
     const query = window.matchMedia(STACKED_TABLE_QUERY);
+    // Re-reads the media query each time the viewport crosses the breakpoint.
     const handleChange = (e) => setStacked(e.matches);
     query.addEventListener("change", handleChange);
     return () => query.removeEventListener("change", handleChange);
@@ -41,10 +42,7 @@ export function Table({ headers, children, pageSize = 20, mobilePageSize = 5, it
           <thead className="table-head">
             <tr>
               {headers.map((h, i) => (
-                <th
-                  key={i}
-                  className={`app-label text-nowrap ${h.props?.className || ""}`}
-                >
+                <th key={i} className={`app-label text-nowrap ${h.props?.className || ""}`}>
                   {h}
                 </th>
               ))}

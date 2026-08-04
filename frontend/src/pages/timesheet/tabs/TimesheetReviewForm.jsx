@@ -13,10 +13,10 @@ import {
   resolveEmployee,
   deploymentState,
   parsePeriodLabel,
-} from "../../../context/TimesheetContext.jsx";
+} from "../../../utils/timesheet.js";
 import { sheetPeriods } from "../../../assets/data/index.js";
-import { useEmployees } from "../../../context/EmployeesContext.jsx";
-import { useClients } from "../../../context/ClientsContext.jsx";
+import { useEmployees } from "../../../context/hooks.js";
+import { useClients } from "../../../context/hooks.js";
 import { SuggestField, SignatureItem, TotalItem } from "./ReviewFields.jsx";
 
 const PERIOD_OPTIONS = sheetPeriods;
@@ -97,6 +97,7 @@ export function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, on
 
   useEffect(() => {
     if (!isDirty) return undefined;
+    // Asks the browser to confirm before leaving while corrections are still unsaved.
     const warn = (e) => {
       e.preventDefault();
       e.returnValue = "";
@@ -333,22 +334,26 @@ export function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, on
               <DataCard
                 title="Scanned Sheet"
                 action={
-                  <span className="text-muted text-truncate d-inline-block ms-3" style={{ fontSize: "var(--app-fs-1)", maxWidth: 260 }} title={file.name}>
+                  <span
+                    className="text-muted text-truncate d-inline-block ms-3"
+                    style={{ fontSize: "var(--app-fs-1)", maxWidth: 260 }}
+                    title={file.name}
+                  >
                     <i className="fas fa-paperclip me-1"></i>
                     {file.name}
                   </span>
                 }
               >
                 <div className="card-body d-flex flex-column">
-                  <div className={`ts-doc flex-grow-1 d-flex rounded-3 ${hasDocument ? "has-document" : "flex-column align-items-center justify-content-center text-muted"}`}>
+                  <div
+                    className={`ts-doc flex-grow-1 d-flex rounded-3 ${hasDocument ? "has-document" : "flex-column align-items-center justify-content-center text-muted"}`}
+                  >
                     {!hasDocument ? (
                       <>
                         <i className={`fas ${docError ? "fa-file-circle-xmark" : "fa-file-lines"} mb-2`} style={{ fontSize: "var(--app-fs-8)" }}></i>
                         <div className="small">{docError ? "Document could not be displayed" : "Document not available"}</div>
                         <div className="text-center px-3" style={{ fontSize: "var(--app-fs-1)" }}>
-                          {docError
-                            ? "The file may have been moved or is no longer readable."
-                            : "The original file is not stored for this sheet."}
+                          {docError ? "The file may have been moved or is no longer readable." : "The original file is not stored for this sheet."}
                         </div>
                       </>
                     ) : isImage ? (
@@ -412,9 +417,7 @@ export function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, on
                             </div>
                           </div>
 
-                          <span className="app-chip badge rounded-pill py-1 flex-shrink-0">
-                            {a.level}
-                          </span>
+                          <span className="app-chip badge rounded-pill py-1 flex-shrink-0">{a.level}</span>
                         </div>
                       ))}
                     </div>
@@ -483,15 +486,15 @@ export function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, on
                           options={HALF_OPTIONS}
                           disabled={readOnly}
                           flagged={periodConflict}
-                          hint={periodCheck.status === "mismatch" ? `Period Covered reads as ${periodCheck.expected}` : "Detected from the date column"}
+                          hint={
+                            periodCheck.status === "mismatch" ? `Period Covered reads as ${periodCheck.expected}` : "Detected from the date column"
+                          }
                         />
                       </div>
                     </div>
 
                     <div className="mt-3">
-                      <div className="app-label form-label mb-1">
-                        Signatures
-                      </div>
+                      <div className="app-label form-label mb-1">Signatures</div>
                       <div className="row g-2">
                         <SignatureItem signed={file.signatures.employee} label="Employee" />
                         <SignatureItem signed={file.signatures.supervisor} label="Supervisor" />
@@ -657,9 +660,7 @@ export function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, on
           </div>
         </div>
 
-        <label className="app-label form-label mb-1 d-block">
-          Note (optional)
-        </label>
+        <label className="app-label form-label mb-1 d-block">Note (optional)</label>
         <textarea
           className="form-control"
           rows={2}

@@ -1,7 +1,7 @@
 // The collapsible sidebar holding the main navigation.
 
 import { NavLink } from "react-router";
-import { useTheme } from "../context/ThemeContext.jsx";
+import { useTheme } from "../context/hooks.js";
 
 const NAV_ITEMS = [
   { to: "/", label: "Dashboard", icon: "fa-table-cells-large", end: true },

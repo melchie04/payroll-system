@@ -2,12 +2,7 @@
 
 .centered-bg {
   position: relative;
-  overflow: hidden;
-  isolation: isolate;
   background-color: var(--app-auth-bg) !important;
-}
-
-.centered-bg {
   --app-input-bg: var(--app-auth-surface);
 }
 
@@ -60,90 +55,117 @@
 }
 
 .error-mark {
-  background-color: var(--app-error-wash);
+  width: var(--app-icon-xl);
+  height: var(--app-icon-xl);
+  border: 1.5px solid var(--app-auth-field-border);
   color: var(--app-error-ink);
+  font-size: var(--app-fs-8);
 }
 
 .error-mark--neutral {
-  --app-error-wash: var(--app-tone-neutral-wash);
   --app-error-ink: var(--app-tone-neutral);
 }
 
 .error-mark--warning {
-  --app-error-wash: var(--app-tone-warning-wash);
   --app-error-ink: var(--app-tone-warning);
 }
 
 .error-mark--danger {
-  --app-error-wash: var(--app-tone-danger-wash);
   --app-error-ink: var(--app-tone-danger);
 }
 
 .error-code {
-  color: var(--app-obsidian);
+  color: var(--app-auth-heading);
+  font-size: var(--app-fs-display);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.error-title {
+  color: var(--app-auth-heading);
+  font-size: var(--app-fs-7);
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.error-description {
+  max-width: 420px;
+  color: var(--app-auth-muted);
+  font-size: var(--app-fs-3);
 }
 
 .auth-heading {
   color: var(--app-auth-heading);
-  font-size: var(--app-fs-6);
-  font-weight: 400;
-  letter-spacing: 0.08em;
+  font-size: var(--app-fs-7);
+  font-weight: 500;
 }
 
-.centered-bg .auth-requirements {
-  background-color: var(--app-auth-panel);
+.auth-subtitle {
+  color: var(--app-auth-muted);
+  font-size: var(--app-fs-3);
 }
 
-.centered-bg::before,
-.centered-bg::after {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  border-radius: 50%;
-  filter: blur(90px);
-  opacity: 0.3;
-  pointer-events: none;
+.auth-divider {
+  width: 120px;
+  margin: 1rem auto;
+  border: 0;
+  border-top: var(--bs-border-width) solid var(--app-auth-field-border);
+  opacity: 1;
 }
 
-.centered-bg::before {
-  width: 420px;
-  height: 420px;
-  top: -140px;
-  left: -120px;
-  background: var(--app-blob-cool);
+.centered-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--app-auth-radius);
+  padding-top: 0.625rem;
+  padding-bottom: 0.625rem;
+  font-size: var(--app-fs-5);
 }
 
-.centered-bg::after {
-  width: 380px;
-  height: 380px;
-  bottom: -150px;
-  right: -110px;
-  background: var(--app-blob-warm);
+.auth-requirements {
+  border: var(--bs-border-width) solid var(--app-auth-field-border);
+  border-radius: var(--app-auth-radius);
+  padding: 0.75rem 0.875rem;
+}
+
+.auth-requirements.is-complete {
+  border-color: var(--app-accent-ink);
+}
+
+.auth-requirements-label {
+  color: var(--app-auth-muted);
+  font-size: var(--app-fs-1);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.auth-requirements.is-complete .auth-requirements-label {
+  color: var(--app-accent-ink);
+}
+
+.auth-rule {
+  color: var(--app-auth-placeholder);
+  font-size: var(--app-fs-3);
+}
+
+.auth-rule.is-met {
+  color: var(--app-auth-heading);
+}
+
+.auth-rule-icon {
+  color: var(--app-auth-icon-off);
+  font-size: var(--app-fs-1);
+}
+
+.auth-rule.is-met .auth-rule-icon {
+  color: var(--app-accent-ink);
 }
 
 .centered-animate {
   animation: centeredFadeInUp 0.5s ease-out both;
-}
-
-@media (max-width: 575.98px) {
-  .centered-bg::before,
-  .centered-bg::after {
-    filter: blur(60px);
-  }
-
-  .centered-bg::before {
-    width: 240px;
-    height: 240px;
-    top: -90px;
-    left: -80px;
-  }
-
-  .centered-bg::after {
-    width: 220px;
-    height: 220px;
-    bottom: -90px;
-    right: -70px;
-  }
 }
 
 @keyframes centeredFadeInUp {
@@ -167,5 +189,30 @@
   .auth-theme-toggle {
     width: 44px;
     height: 44px;
+  }
+
+  .error-retry {
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .auth-field,
+  .centered-submit {
+    min-height: 48px;
+  }
+
+  .centered-submit {
+    width: 100%;
+  }
+
+  .error-mark {
+    width: var(--app-icon-lg);
+    height: var(--app-icon-lg);
+    font-size: var(--app-fs-7);
+  }
+
+  .error-code {
+    font-size: var(--app-fs-8);
   }
 }

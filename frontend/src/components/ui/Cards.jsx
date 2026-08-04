@@ -7,7 +7,6 @@ export function StatCard({ label, value, sub, valueColor, subColor, icon }) {
   return (
     <div className="card h-100">
       <div className="card-body">
-        
         <div className="d-flex align-items-center gap-2 mb-3">
           {icon && (
             <span
@@ -18,9 +17,7 @@ export function StatCard({ label, value, sub, valueColor, subColor, icon }) {
               <i className={`fas ${icon}`}></i>
             </span>
           )}
-          <span className="app-label">
-            {label}
-          </span>
+          <span className="app-label">{label}</span>
         </div>
         <div className="fw-bold lh-1" style={{ fontSize: "var(--app-fs-8)", ...(valueColor ? { color: valueColor } : null) }}>
           {value}
@@ -97,9 +94,7 @@ export function PayslipDetails({ employeeName, subtitle, status, period, summary
           </DetailRow>
         ))}
       </DetailList>
-      <div className="app-label mt-3 mb-2">
-        Deductions
-      </div>
+      <div className="app-label mt-3 mb-2">Deductions</div>
       <DetailList>
         {deductionRows.map((r) => (
           <DetailRow key={r.label} icon={r.icon} label={r.label}>

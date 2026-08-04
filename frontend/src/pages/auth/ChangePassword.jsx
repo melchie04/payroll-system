@@ -3,17 +3,14 @@
 import { useState } from "react";
 import { BrandLockup } from "../../components/ui/index.jsx";
 import { useNavigate } from "react-router";
-import { useCurrentUser } from "../../context/CurrentUserContext.jsx";
+import { useCurrentUser } from "../../context/hooks.js";
 
 // One password rule, ticked once it is satisfied.
 function RequirementRow({ met, label }) {
   return (
-    <div className="d-flex align-items-center gap-2 mb-1">
-      <i
-        className={met ? "fas fa-circle-check" : "far fa-circle"}
-        style={{ fontSize: "var(--app-fs-1)", color: met ? "var(--app-accent-ink)" : "var(--app-auth-icon-off)" }}
-      ></i>
-      <span style={{ fontSize: "var(--app-fs-3)", color: met ? "var(--bs-body-color)" : "var(--app-auth-placeholder)" }}>{label}</span>
+    <div className={`auth-rule d-flex align-items-center gap-2 mb-1${met ? " is-met" : ""}`}>
+      <i className={`auth-rule-icon ${met ? "fas fa-circle-check" : "far fa-circle"}`}></i>
+      <span>{label}</span>
     </div>
   );
 }
@@ -28,6 +25,7 @@ export default function ChangePassword() {
     newPassword: false,
     confirmPassword: false,
   });
+  // Shows or hides the typed text of one password field.
   const toggleShown = (field) => setShown((s) => ({ ...s, [field]: !s[field] }));
   const [form, setForm] = useState({
     tempPassword: "",
@@ -42,7 +40,8 @@ export default function ChangePassword() {
   const hasNumber = /[0-9]/.test(form.newPassword);
   const hasSpecial = /[^A-Za-z0-9]/.test(form.newPassword);
   const matches = form.newPassword.length > 0 && form.newPassword === form.confirmPassword;
-  const canSubmit = form.tempPassword.length > 0 && hasLength && hasCase && hasNumber && hasSpecial && matches;
+  const allMet = hasLength && hasCase && hasNumber && hasSpecial && matches;
+  const canSubmit = form.tempPassword.length > 0 && allMet;
 
   // Keeps the form state in step with what is typed.
   function handleChange(e) {
@@ -74,16 +73,9 @@ export default function ChangePassword() {
           <i className="fas fa-circle-check"></i>
         </div>
         <h1 className="auth-heading mb-2">Password set</h1>
-        <p className="text-muted mb-4" style={{ fontSize: "var(--app-fs-4)" }}>
-          Your password has been updated. You're all set to continue.
-        </p>
-        <button
-          type="button"
-          className="btn btn-app-primary rounded-pill w-100 text-white py-2 fw-normal shadow-sm"
-          style={{ fontSize: "var(--app-fs-5)" }}
-          onClick={() => navigate("/")}
-        >
-          Continue to Dashboard
+        <p className="auth-subtitle mb-4">Your password has been updated. You're all set to continue.</p>
+        <button type="button" className="btn btn-app-primary centered-submit w-100 text-white fw-normal" onClick={() => navigate("/")}>
+          Continue to dashboard
         </button>
       </div>
     );
@@ -91,33 +83,20 @@ export default function ChangePassword() {
 
   return (
     <div className="w-100" style={{ maxWidth: 360 }}>
-      <BrandLockup className="mb-2" />
-      <hr className="mx-auto mb-3 opacity-25" style={{ maxWidth: 200 }} />
-      <h1 className="auth-heading text-center mb-2 text-uppercase">Change Password</h1>
-      <p className="text-center text-muted mb-4" style={{ fontSize: "var(--app-fs-3)" }}>
-        Enter the temporary password from your administrator, then choose a new one.
-      </p>
+      <BrandLockup />
+      <hr className="auth-divider" />
+      <h1 className="auth-heading text-center mb-1">Change password</h1>
+      <p className="auth-subtitle text-center mb-4">Enter the temporary password from your administrator, then choose a new one.</p>
 
       <form onSubmit={handleSubmit} noValidate>
         <div className="mb-3 position-relative">
-          <div className="input-group">
-            <span className="input-group-text border-end-0 rounded-start-pill text-muted px-3">
-              <div
-                className="d-flex align-items-center justify-content-center border rounded-circle"
-                style={{
-                  width: "var(--app-icon-xs)",
-                  height: "var(--app-icon-xs)",
-                  fontSize: "var(--app-fs-2)",
-                  borderColor: "var(--app-auth-icon)",
-                  color: "var(--app-auth-icon)",
-                }}
-              >
-                <i className="fas fa-key"></i>
-              </div>
+          <div className="input-group auth-field">
+            <span className="input-group-text pe-0">
+              <i className="fas fa-key"></i>
             </span>
             <input
               type={shown.tempPassword ? "text" : "password"}
-              className="form-control border-start-0 border-end-0 py-2.5 fw-light"
+              className="form-control fw-light"
               style={{ outline: "none" }}
               id="tempPassword"
               name="tempPassword"
@@ -127,45 +106,25 @@ export default function ChangePassword() {
               required
             />
             <button
-              className="btn btn-outline-secondary border-start-0 rounded-end-pill bg-transparent text-muted px-3"
+              className="btn"
               type="button"
               tabIndex={-1}
               onClick={() => toggleShown("tempPassword")}
+              aria-label={shown.tempPassword ? "Hide password" : "Show password"}
             >
-              <div
-                className="d-flex align-items-center justify-content-center border rounded-circle text-muted"
-                style={{
-                  width: "var(--app-icon-xs)",
-                  height: "var(--app-icon-xs)",
-                  fontSize: "var(--app-fs-2)",
-                  borderColor: "var(--app-auth-field-border)",
-                }}
-              >
-                <i className={`fas ${shown.tempPassword ? "fa-eye-slash" : "fa-eye"}`}></i>
-              </div>
+              <i className={`fas ${shown.tempPassword ? "fa-eye-slash" : "fa-eye"}`}></i>
             </button>
           </div>
         </div>
 
         <div className="mb-3 position-relative">
-          <div className="input-group">
-            <span className="input-group-text border-end-0 rounded-start-pill text-muted px-3">
-              <div
-                className="d-flex align-items-center justify-content-center border rounded-circle"
-                style={{
-                  width: "var(--app-icon-xs)",
-                  height: "var(--app-icon-xs)",
-                  fontSize: "var(--app-fs-2)",
-                  borderColor: "var(--app-auth-icon)",
-                  color: "var(--app-auth-icon)",
-                }}
-              >
-                <i className="fas fa-lock"></i>
-              </div>
+          <div className="input-group auth-field">
+            <span className="input-group-text pe-0">
+              <i className="fas fa-lock"></i>
             </span>
             <input
               type={shown.newPassword ? "text" : "password"}
-              className="form-control border-start-0 border-end-0 py-2.5 fw-light"
+              className="form-control fw-light"
               style={{ outline: "none" }}
               id="newPassword"
               name="newPassword"
@@ -175,45 +134,25 @@ export default function ChangePassword() {
               required
             />
             <button
-              className="btn btn-outline-secondary border-start-0 rounded-end-pill bg-transparent text-muted px-3"
+              className="btn"
               type="button"
               tabIndex={-1}
               onClick={() => toggleShown("newPassword")}
+              aria-label={shown.newPassword ? "Hide password" : "Show password"}
             >
-              <div
-                className="d-flex align-items-center justify-content-center border rounded-circle text-muted"
-                style={{
-                  width: "var(--app-icon-xs)",
-                  height: "var(--app-icon-xs)",
-                  fontSize: "var(--app-fs-2)",
-                  borderColor: "var(--app-auth-field-border)",
-                }}
-              >
-                <i className={`fas ${shown.newPassword ? "fa-eye-slash" : "fa-eye"}`}></i>
-              </div>
+              <i className={`fas ${shown.newPassword ? "fa-eye-slash" : "fa-eye"}`}></i>
             </button>
           </div>
         </div>
 
         <div className="mb-3 position-relative">
-          <div className="input-group">
-            <span className="input-group-text border-end-0 rounded-start-pill text-muted px-3">
-              <div
-                className="d-flex align-items-center justify-content-center border rounded-circle"
-                style={{
-                  width: "var(--app-icon-xs)",
-                  height: "var(--app-icon-xs)",
-                  fontSize: "var(--app-fs-2)",
-                  borderColor: "var(--app-auth-icon)",
-                  color: "var(--app-auth-icon)",
-                }}
-              >
-                <i className="fas fa-lock"></i>
-              </div>
+          <div className="input-group auth-field">
+            <span className="input-group-text pe-0">
+              <i className="fas fa-lock"></i>
             </span>
             <input
               type={shown.confirmPassword ? "text" : "password"}
-              className="form-control border-start-0 border-end-0 py-2.5 fw-light"
+              className="form-control fw-light"
               style={{ outline: "none" }}
               id="confirmPassword"
               name="confirmPassword"
@@ -223,27 +162,19 @@ export default function ChangePassword() {
               required
             />
             <button
-              className="btn btn-outline-secondary border-start-0 rounded-end-pill bg-transparent text-muted px-3"
+              className="btn"
               type="button"
               tabIndex={-1}
               onClick={() => toggleShown("confirmPassword")}
+              aria-label={shown.confirmPassword ? "Hide password" : "Show password"}
             >
-              <div
-                className="d-flex align-items-center justify-content-center border rounded-circle text-muted"
-                style={{
-                  width: "var(--app-icon-xs)",
-                  height: "var(--app-icon-xs)",
-                  fontSize: "var(--app-fs-2)",
-                  borderColor: "var(--app-auth-field-border)",
-                }}
-              >
-                <i className={`fas ${shown.confirmPassword ? "fa-eye-slash" : "fa-eye"}`}></i>
-              </div>
+              <i className={`fas ${shown.confirmPassword ? "fa-eye-slash" : "fa-eye"}`}></i>
             </button>
           </div>
         </div>
 
-        <div className="auth-requirements rounded-3 px-3 py-2 mb-4">
+        <div className={`auth-requirements mb-4${allMet ? " is-complete" : ""}`}>
+          <p className="auth-requirements-label mb-2">{allMet ? "All requirements met" : "Password must contain"}</p>
           <RequirementRow met={hasLength} label="At least 8 characters" />
           <RequirementRow met={hasCase} label="Contains uppercase and lowercase letters" />
           <RequirementRow met={hasNumber} label="Contains a number" />
@@ -257,12 +188,8 @@ export default function ChangePassword() {
           </div>
         )}
 
-        <button
-          type="submit"
-          className="btn btn-app-primary rounded-pill w-100 text-white py-2 fw-normal shadow-sm"
-          style={{ fontSize: "var(--app-fs-5)" }}
-        >
-          Set New Password
+        <button type="submit" className="btn btn-app-primary centered-submit w-100 text-white fw-normal">
+          Set new password
         </button>
       </form>
     </div>

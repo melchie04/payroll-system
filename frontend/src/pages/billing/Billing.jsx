@@ -23,12 +23,12 @@ import { sheetPeriods } from "../../assets/data/index.js";
 import { exportToCsv } from "../../utils/exportToCsv.js";
 import { parseCurrency, formatCurrency } from "../../utils/currency.js";
 import { billableFor } from "../../utils/billing.js";
-import { useClients } from "../../context/ClientsContext.jsx";
-import { useInvoices } from "../../context/InvoicesContext.jsx";
-import { useTimesheets } from "../../context/TimesheetContext.jsx";
-import { useEmployees } from "../../context/EmployeesContext.jsx";
-import { useActivity } from "../../context/ActivityContext.jsx";
-import { useNotifications } from "../../context/NotificationsContext.jsx";
+import { useClients } from "../../context/hooks.js";
+import { useInvoices } from "../../context/hooks.js";
+import { useTimesheets } from "../../context/hooks.js";
+import { useEmployees } from "../../context/hooks.js";
+import { useActivity } from "../../context/hooks.js";
+import { useNotifications } from "../../context/hooks.js";
 
 const ALL_CLIENTS = "All Clients";
 const ALL_STATUSES = "All Statuses";
@@ -52,6 +52,7 @@ export default function Billing() {
   const { addNotification } = useNotifications();
 
   const stats = useMemo(() => {
+    // Adds up the amounts of a list of invoices.
     const sum = (list) => list.reduce((total, inv) => total + parseCurrency(inv.amount), 0);
     return [
       { label: "Total Invoiced", value: formatCurrency(sum(invoices)), icon: "fa-file-invoice" },
@@ -105,6 +106,7 @@ export default function Billing() {
   }
 
   const [selected, setSelected] = useState([]);
+  // Adds one invoice to the selection, or takes it back out.
   const toggleOne = (id) => setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
 
   const visibleIds = visibleInvoices.map((inv) => inv.id);

@@ -1,8 +1,4 @@
-// The signed-in page frame and how its content area is positioned.
-
-:root {
-  --app-footer-height: 44px;
-}
+// The signed-in page frame, how its content area is positioned, and the light/dark cross-fade.
 
 html,
 body {
@@ -29,11 +25,11 @@ body {
 }
 
 #layoutSidenav #layoutSidenav_nav {
-  flex-basis: 225px;
+  flex-basis: var(--app-sidenav-width);
   flex-shrink: 0;
   transition: transform 0.15s ease-in-out;
   z-index: 1038;
-  transform: translateX(-225px);
+  transform: translateX(calc(-1 * var(--app-sidenav-width)));
 }
 
 #layoutSidenav #layoutSidenav_content {
@@ -43,8 +39,8 @@ body {
   justify-content: space-between;
   min-width: 0;
   flex-grow: 1;
-  min-height: calc(100vh - 56px);
-  margin-left: -225px;
+  min-height: calc(100vh - var(--app-topnav-height));
+  margin-left: calc(-1 * var(--app-sidenav-width));
 }
 
 .sb-sidenav-toggled #layoutSidenav #layoutSidenav_nav {
@@ -70,13 +66,9 @@ body {
 }
 
 .sb-nav-fixed #layoutSidenav #layoutSidenav_nav {
-  width: 225px;
+  width: var(--app-sidenav-width);
   height: 100vh;
   z-index: 1038;
-}
-
-.sb-nav-fixed #layoutSidenav #layoutSidenav_nav .sb-sidenav {
-  padding-top: 56px;
 }
 
 .sb-nav-fixed #layoutSidenav #layoutSidenav_nav .sb-sidenav .sb-sidenav-menu {
@@ -84,8 +76,7 @@ body {
 }
 
 .sb-nav-fixed #layoutSidenav #layoutSidenav_content {
-  padding-left: 225px;
-  top: 56px;
+  padding-left: var(--app-sidenav-width);
 }
 
 #layoutError {
@@ -170,19 +161,26 @@ body {
 
 @media (min-width: 992px) {
   #layoutSidenav #layoutSidenav_nav {
-      transform: translateX(0);
-    }
+    transform: translateX(0);
+  }
   #layoutSidenav #layoutSidenav_content {
-      margin-left: 0;
-      transition: margin 0.15s ease-in-out;
-    }
-  .sb-sidenav-toggled #layoutSidenav #layoutSidenav_nav {
-      transform: translateX(-225px);
-    }
-  .sb-sidenav-toggled #layoutSidenav #layoutSidenav_content {
-      margin-left: -225px;
-    }
-  .sb-sidenav-toggled #layoutSidenav #layoutSidenav_content:before {
-      display: none;
-    }
+    margin-left: 0;
+  }
+}
+
+html.theme-transition,
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
+  transition: background-color 0.25s ease, border-color 0.25s ease,
+    color 0.25s ease, fill 0.25s ease, box-shadow 0.25s ease !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.theme-transition,
+  html.theme-transition *,
+  html.theme-transition *::before,
+  html.theme-transition *::after {
+    transition: none !important;
+  }
 }

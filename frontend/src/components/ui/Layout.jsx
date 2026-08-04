@@ -5,14 +5,8 @@ export function PageHeader({ title, description, actions }) {
   return (
     <div className="d-flex flex-wrap justify-content-between align-items-start mb-4 gap-2">
       <div>
-        <h1 className="page-title fw-bold mb-1">
-          {title}
-        </h1>
-        {description && (
-          <p className="page-description text-muted mb-0">
-            {description}
-          </p>
-        )}
+        <h1 className="page-title fw-bold mb-1">{title}</h1>
+        {description && <p className="page-description text-muted mb-0">{description}</p>}
       </div>
       {actions && <div className="d-flex gap-2">{actions}</div>}
     </div>
@@ -81,9 +75,7 @@ export function BrandLockup({ className = "" }) {
   return (
     <div className={`d-flex align-items-center justify-content-center gap-2 ${className}`}>
       <BrandMark size={26} />
-      <span className="app-brand-name">
-        PAYROLL
-      </span>
+      <span className="app-brand-name">PAYROLL</span>
     </div>
   );
 }

@@ -18,10 +18,11 @@ import {
   Modal,
   PageHeader,
 } from "../../components/ui/index.jsx";
-import { useEmployees } from "../../context/EmployeesContext.jsx";
-import { useActivity } from "../../context/ActivityContext.jsx";
-import { useClients } from "../../context/ClientsContext.jsx";
-import { useTimesheets, resolveEmployee } from "../../context/TimesheetContext.jsx";
+import { useEmployees } from "../../context/hooks.js";
+import { useActivity } from "../../context/hooks.js";
+import { useClients } from "../../context/hooks.js";
+import { useTimesheets } from "../../context/hooks.js";
+import { resolveEmployee } from "../../utils/timesheet.js";
 import { exportToCsv } from "../../utils/exportToCsv.js";
 
 const CSV_HEADERS = ["Code", "Name", "Client", "Position", "Email", "Rate", "Status"];
@@ -59,6 +60,7 @@ export default function Employees() {
     });
   }, [employees, client, position, search, status]);
 
+  // Adds one employee to the selection, or takes them back out.
   const toggleOne = (id) => setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
 
   const visibleIds = visibleEmployees.map((e) => e.id);
@@ -69,6 +71,7 @@ export default function Employees() {
     setSelected(allSelected ? selected.filter((id) => !visibleIds.includes(id)) : [...new Set([...selected, ...visibleIds])]);
   }
 
+  // Ticks or unticks one status in the filter menu, which only takes effect on Apply.
   const toggleStatusDraft = (opt) => setStatusDraft((prev) => (prev.includes(opt) ? prev.filter((s) => s !== opt) : [...prev, opt]));
 
   const [target, setTarget] = useState(null);
@@ -77,6 +80,7 @@ export default function Employees() {
     () => new Set(files.map((f) => resolveEmployee(f.employee, employees)?.id).filter((id) => id != null)),
     [files, employees],
   );
+  // True when an employee already owns timesheets, so they are archived rather than deleted.
   const hasHistory = (emp) => sheetOwnerIds.has(emp.id);
 
   const selectedEmployees = employees.filter((e) => selected.includes(e.id));

@@ -1,9 +1,8 @@
 // Holds the notification list and its unread count.
 
-import { createContext, useContext, useState } from "react";
+import { useState } from "react";
 import { notifications as initialNotifications } from "../assets/data/index.js";
-
-const NotificationsContext = createContext(null);
+import { NotificationsContext } from "./contexts.js";
 
 // Holds the notification list and derives the unread count.
 export function NotificationsProvider({ children }) {
@@ -32,13 +31,4 @@ export function NotificationsProvider({ children }) {
   const value = { notifications, unreadCount, markAllRead, markOneRead, addNotification };
 
   return <NotificationsContext.Provider value={value}>{children}</NotificationsContext.Provider>;
-}
-
-// Reads the notification list from context.
-export function useNotifications() {
-  const ctx = useContext(NotificationsContext);
-  if (!ctx) {
-    throw new Error("useNotifications must be used within a NotificationsProvider");
-  }
-  return ctx;
 }

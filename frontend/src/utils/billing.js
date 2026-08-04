@@ -1,7 +1,7 @@
 // Works out what a client should be billed for a period.
 
 import { parseCurrency } from "./currency.js";
-import { sheetTotals, resolveEmployee, resolveClient } from "../context/TimesheetContext.jsx";
+import { sheetTotals, resolveEmployee, resolveClient } from "../utils/timesheet.js";
 
 // Rounds a figure to two decimal places.
 function money(value) {

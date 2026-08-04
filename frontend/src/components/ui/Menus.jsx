@@ -85,11 +85,8 @@ export function FilterMenu({ children, onReset, onApply }) {
         <i className="fas fa-filter"></i>
       </button>
       <div className="dropdown-menu dropdown-menu-end shadow-sm p-3" style={{ minWidth: 240, maxWidth: "calc(100vw - 2rem)" }}>
-        
         <div onClick={(e) => e.stopPropagation()}>
-          <div className="app-label mb-2 small">
-            Filter Options
-          </div>
+          <div className="app-label mb-2 small">Filter Options</div>
           <div className="d-flex flex-column gap-3">{children}</div>
         </div>
         <hr className="my-3" />
@@ -112,9 +109,7 @@ export function FilterCheckGroup({ label, options, selected, onToggle, single })
   const chosen = Array.isArray(selected) ? selected : selected ? [selected] : [];
   return (
     <div>
-      <div className="app-label mb-1">
-        {label}
-      </div>
+      <div className="app-label mb-1">{label}</div>
       {options.map((opt) => (
         <div className="form-check" key={opt}>
           <input

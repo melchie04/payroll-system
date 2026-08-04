@@ -565,9 +565,7 @@ function ResetPasswordModal({
         </FormField>
 
         <div className="bg-light rounded-3 px-3 py-3 mb-3">
-          <div className="app-label mb-2">
-            Password Requirements
-          </div>
+          <div className="app-label mb-2">Password Requirements</div>
           <div className="row row-cols-1 g-2">
             <div className="col">
               <RequirementRow met={hasLength} label="At least 8 characters" />
@@ -782,9 +780,7 @@ function RolesList({ roleList, onEditRole, onDeleteRole }) {
                 <p className="text-muted small px-3 mb-3">{r.description}</p>
 
                 <div className="mt-auto border-top px-3 py-3">
-                  <div className="app-label mb-2">
-                    Permissions
-                  </div>
+                  <div className="app-label mb-2">Permissions</div>
                   <div className="d-flex flex-wrap gap-1">
                     {r.permissions.length === 0 && <span className="text-muted small">No modules assigned.</span>}
                     {r.permissions.map((p) => (

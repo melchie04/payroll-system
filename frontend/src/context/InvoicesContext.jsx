@@ -1,10 +1,9 @@
 // Holds invoices and what each client still owes.
 
-import { createContext, useContext, useState } from "react";
+import { useState } from "react";
 import { invoices as initialInvoices } from "../assets/data/index.js";
+import { InvoicesContext } from "./contexts.js";
 import { parseCurrency } from "../utils/currency.js";
-
-const InvoicesContext = createContext(null);
 
 // Builds the next invoice number from the highest one already used.
 function nextInvoiceId(list) {
@@ -56,13 +55,4 @@ export function InvoicesProvider({ children }) {
   const value = { invoices, getInvoiceById, invoicesForClient, outstandingForClient, hasInvoices, addInvoice, setInvoiceStatus };
 
   return <InvoicesContext.Provider value={value}>{children}</InvoicesContext.Provider>;
-}
-
-// Reads the invoice list from context.
-export function useInvoices() {
-  const ctx = useContext(InvoicesContext);
-  if (!ctx) {
-    throw new Error("useInvoices must be used within an InvoicesProvider");
-  }
-  return ctx;
 }

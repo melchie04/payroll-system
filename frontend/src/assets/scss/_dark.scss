@@ -1,75 +1,5 @@
-// Dark mode: re-aims the tokens above rather than restating any rule.
+// Dark mode: the few components that need more than the re-aimed tokens in _variables.scss.
 
-[data-bs-theme="dark"] {
-  --app-dark-bg: #0b0b0b;
-  --app-dark-surface: var(--app-obsidian);
-  --app-dark-surface-2: #1e211f;
-  --app-dark-border: #262e29;
-  --app-dark-text: var(--bs-gray-200);
-  --app-dark-text-muted: #9aa4ae;
-
-  --app-chart-track: #2a2f35;
-  --app-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
-  --app-shadow-2: 0 4px 6px -2px rgba(0, 0, 0, 0.45), 0 12px 16px -4px rgba(0, 0, 0, 0.5);
-  --app-row-hover: rgba(255, 255, 255, 0.045);
-  --app-table-head-color: #9aa79f;
-  --app-table-head-line: #262e29;
-  --app-table-row-line: #1e211f;
-
-  --app-brand-name: var(--app-accent-ink);
-
-  --app-dot-color: #ff6b6b;
-
-  --app-accent-ink: #4a8f54;
-
-  --app-nav-bg: var(--app-obsidian);
-  --app-status-success: #75b798;
-  --app-status-warning: #ffc107;
-  --app-status-danger: #ff6b6b;
-  --app-status-neutral: #c3cec6;
-
-  --app-notif-more-bg: rgba(255, 255, 255, 0.03);
-  --app-chip-bg: rgba(255, 255, 255, 0.08);
-  --app-chip-fg: #b6c2ba;
-
-  --app-surface: var(--app-obsidian);
-
-  --app-notice-success-bg: rgba(117, 183, 152, 0.1);
-  --app-notice-danger-bg: rgba(255, 107, 107, 0.1);
-  --app-text: var(--app-dark-text);
-
-  --app-action-success: #75b798;
-  --app-action-info: #7db1ff;
-  --app-action-warning: #ffc107;
-  --app-action-danger: #ff6b6b;
-  --app-action-neutral: #c3cec6;
-
-  --app-input-bg: var(--app-surface);
-  --app-input-fg: var(--app-dark-text);
-  --app-notice-success-border: #2c5138;
-  --app-notice-success-ink: #75b798;
-  --app-notice-danger-border: #5a2a2f;
-  --app-notice-danger-ink: #ff6b6b;
-
-  --app-btn-outline-border: #4d5651;
-  --app-btn-outline-border-hover: #616c66;
-
-  --app-nav-icon: #b6c2ba;
-  --app-nav-heading: #6f7d74;
-  --app-nav-link: #d5ddd8;
-  --app-nav-link-icon: #6f7d74;
-  --app-nav-active-bg: #1e241f;
-  --app-nav-active-color: #7fc98d;
-  --app-nav-btn-hover-bg: rgba(255, 255, 255, 0.06);
-  --app-nav-line: #262e29;
-  --app-footer-text: #9aa79f;
-  --app-footer-link: var(--app-accent-ink);
-  --app-footer-link-hover: #7fc98d;
-  --app-menu-divider: #262e29;
-  --app-menu-keyline: var(--app-accent-ink);
-
-  --app-dot-rgb: 220, 53, 69;
-}
 
 [data-bs-theme="dark"] #layoutSidenav_content {
   --bs-border-color: var(--app-dark-border);
@@ -278,40 +208,27 @@
   box-shadow: 0 0 0 2px var(--app-dark-surface-2);
 }
 
-[data-bs-theme="dark"] {
-  --bs-link-color: #7fb1ff;
-  --bs-link-hover-color: #a5c9ff;
-  --bs-link-color-rgb: 127, 177, 255;
-}
-
 [data-bs-theme="dark"] .text-primary {
   color: #7fb1ff !important;
 }
 
 [data-bs-theme="dark"] .centered-bg {
-  --app-auth-surface: #1c221e;
-  --app-auth-panel: rgba(127, 201, 141, 0.1);
-  --app-auth-field-border: #2c3330;
-  --app-auth-icon: var(--app-nav-icon);
+  --app-auth-surface: var(--app-obsidian);
+  --app-auth-panel: rgba(74, 143, 84, 0.12);
+  --app-auth-field-border: #2a2e2b;
+  --app-auth-icon: var(--app-auth-muted);
 
-  --bs-border-color: #2c3330;
-  --app-auth-placeholder: #8a968e;
-  --app-auth-heading: #9aa79f;
+  --bs-border-color: #2a2e2b;
+  --app-auth-placeholder: #767e7a;
+  --app-auth-heading: #f2f4f3;
+  --app-auth-muted: #9ba3a0;
   --app-auth-icon-off: #3a4740;
 
-  --app-tone-neutral: #c3cec6;
-  --app-tone-neutral-wash: rgba(255, 255, 255, 0.06);
   --app-tone-warning: #ffc107;
-  --app-tone-warning-wash: rgba(255, 193, 7, 0.12);
   --app-tone-danger: #ff6b6b;
-  --app-tone-danger-wash: rgba(255, 107, 107, 0.14);
 
   --bs-body-color: #eef2ef;
   color: #eef2ef;
-}
-
-[data-bs-theme="dark"] .centered-bg .error-code {
-  color: #f1f5f2;
 }
 
 [data-bs-theme="dark"] .centered-bg .text-muted {

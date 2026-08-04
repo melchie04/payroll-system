@@ -3,9 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import { BrandMark } from "./ui/index.jsx";
 import { Link } from "react-router";
-import { useTheme } from "../context/ThemeContext.jsx";
-import { useCurrentUser } from "../context/CurrentUserContext.jsx";
-import { useNotifications } from "../context/NotificationsContext.jsx";
+import { useTheme } from "../context/hooks.js";
+import { useCurrentUser } from "../context/hooks.js";
+import { useNotifications } from "../context/hooks.js";
 
 // Takes the first letter of the first two words of a name.
 function initialsOf(name = "") {
@@ -193,6 +193,7 @@ export default function TopNav({ onToggleSidebar }) {
   const [mobileControlsOpen, setMobileControlsOpen] = useState(false);
   const navRef = useRef(null);
 
+  // Flips the whole app between the light and dark themes.
   const toggleTheme = () => {
     setTheme(isDark ? "light" : "dark");
   };
@@ -201,6 +202,7 @@ export default function TopNav({ onToggleSidebar }) {
     const navEl = navRef.current;
     if (!navEl) return undefined;
 
+    // Publishes the bar's measured height as --topnav-offset so the layout can sit under it.
     const updateOffset = () => {
       document.documentElement.style.setProperty("--topnav-offset", `${navEl.offsetHeight}px`);
     };

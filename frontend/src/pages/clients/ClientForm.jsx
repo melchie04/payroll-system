@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router";
 import { DataCard, BtnPrimary, FormField, PageHeader } from "../../components/ui/index.jsx";
-import { useClients } from "../../context/ClientsContext.jsx";
-import { useActivity } from "../../context/ActivityContext.jsx";
+import { useClients } from "../../context/hooks.js";
+import { useActivity } from "../../context/hooks.js";
 
 const emptyForm = {
   name: "",

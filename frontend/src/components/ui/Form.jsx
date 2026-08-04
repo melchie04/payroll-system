@@ -15,13 +15,8 @@ export function FilterSelect({ label, value, onChange, children, id, ...rest }) 
 
   return (
     <div>
-      {label && (
-        <label className="app-label form-label mb-1 d-block">
-          {label}
-        </label>
-      )}
+      {label && <label className="app-label form-label mb-1 d-block">{label}</label>}
 
-      
       <div className="dropdown app-select">
         <button
           type="button"
@@ -62,11 +57,7 @@ export function FilterSelect({ label, value, onChange, children, id, ...rest }) 
 export function SearchInput({ label, placeholder, value, onChange, ...rest }) {
   return (
     <div className="w-100">
-      {label && (
-        <label className="app-label form-label mb-1 d-block">
-          {label}
-        </label>
-      )}
+      {label && <label className="app-label form-label mb-1 d-block">{label}</label>}
       <div className="input-group input-group-sm w-100">
         <span className="input-group-text">
           <i className="fas fa-search text-muted"></i>
@@ -105,9 +96,7 @@ export function SectionHeading({ children }) {
 export function FormField({ label, children }) {
   return (
     <div className="mb-3">
-      <label className="app-label form-label mb-1 d-block">
-        {label}
-      </label>
+      <label className="app-label form-label mb-1 d-block">{label}</label>
       {children}
     </div>
   );

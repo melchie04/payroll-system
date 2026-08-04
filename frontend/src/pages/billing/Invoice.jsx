@@ -4,10 +4,10 @@ import { Link, useLocation, useNavigate, useParams } from "react-router";
 import { DataCard, Table, Tr, Td, Badge, BtnPrimary, DetailList, DetailRow, PageHeader } from "../../components/ui/index.jsx";
 import { formatCurrency, parseCurrency } from "../../utils/currency.js";
 import { invoiceLines } from "../../utils/billing.js";
-import { useClients } from "../../context/ClientsContext.jsx";
-import { useInvoices } from "../../context/InvoicesContext.jsx";
-import { useActivity } from "../../context/ActivityContext.jsx";
-import { useNotifications } from "../../context/NotificationsContext.jsx";
+import { useClients } from "../../context/hooks.js";
+import { useInvoices } from "../../context/hooks.js";
+import { useActivity } from "../../context/hooks.js";
+import { useNotifications } from "../../context/hooks.js";
 
 const COMPANY = {
   name: "Payroll System Inc.",

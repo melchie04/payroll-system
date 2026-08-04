@@ -1,9 +1,5 @@
 // The sidebar, its active state and its collapse animation.
 
-$sidenav-collapsed-width: 72px;
-
-$sidenav-expanded-width: 225px;
-
 .sb-sidenav {
   display: flex;
   flex-direction: column;
@@ -120,6 +116,7 @@ $sidenav-expanded-width: 225px;
 .help-footer-btn-dark {
   font-size: var(--app-fs-3);
   color: var(--app-footer-link) !important;
+  transition: color 0.15s ease-in-out;
 }
 
 .help-footer-btn-light:hover,
@@ -144,11 +141,6 @@ $sidenav-expanded-width: 225px;
   box-shadow: inset 3px 0 0 var(--app-menu-keyline), 0 0 0 0.2rem var(--app-moss-ring);
 }
 
-.help-footer-btn-light,
-.help-footer-btn-dark {
-  transition: color 0.15s ease-in-out;
-}
-
 @media (min-width: 992px) {
   #layoutSidenav #layoutSidenav_nav {
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -159,16 +151,16 @@ $sidenav-expanded-width: 225px;
 
   .sb-sidenav-toggled #layoutSidenav #layoutSidenav_nav {
     transform: translateX(0);
-    width: $sidenav-collapsed-width;
+    width: var(--app-sidenav-collapsed-width);
   }
   .sb-nav-fixed.sb-sidenav-toggled #layoutSidenav #layoutSidenav_nav {
-    width: $sidenav-collapsed-width;
+    width: var(--app-sidenav-collapsed-width);
   }
   .sb-sidenav-toggled #layoutSidenav #layoutSidenav_content {
     margin-left: 0;
   }
   .sb-nav-fixed.sb-sidenav-toggled #layoutSidenav #layoutSidenav_content {
-    padding-left: $sidenav-collapsed-width;
+    padding-left: var(--app-sidenav-collapsed-width);
   }
   .sb-sidenav-toggled #layoutSidenav #layoutSidenav_content:before {
     display: none;
@@ -190,7 +182,6 @@ $sidenav-expanded-width: 225px;
   }
   .sb-sidenav .nav .nav-link .sb-nav-link-icon {
     flex-shrink: 0;
-    transition: margin-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .sb-sidenav-toggled .sb-sidenav .nav .nav-link .sb-nav-link-icon {
     margin-right: 0 !important;
@@ -232,7 +223,7 @@ $sidenav-expanded-width: 225px;
   }
 
   #layoutSidenav #layoutSidenav_content > main > .container-fluid {
-    max-width: calc(100vw - #{$sidenav-expanded-width});
+    max-width: calc(100vw - var(--app-sidenav-width));
     margin-left: auto;
     margin-right: auto;
     transition: max-width 0.15s ease-in-out;

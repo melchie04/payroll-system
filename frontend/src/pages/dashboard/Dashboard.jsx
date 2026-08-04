@@ -7,12 +7,12 @@ import { formatCurrency } from "../../utils/currency.js";
 import { computeDeductions } from "../../utils/payslip.js";
 import { buildPayrollRows } from "../../utils/payrollRun.js";
 import { billableFor } from "../../utils/billing.js";
-import { useClients } from "../../context/ClientsContext.jsx";
-import { useEmployees } from "../../context/EmployeesContext.jsx";
-import { useTimesheets } from "../../context/TimesheetContext.jsx";
-import { useInvoices } from "../../context/InvoicesContext.jsx";
-import { usePayroll } from "../../context/PayrollContext.jsx";
-import { useActivity } from "../../context/ActivityContext.jsx";
+import { useClients } from "../../context/hooks.js";
+import { useEmployees } from "../../context/hooks.js";
+import { useTimesheets } from "../../context/hooks.js";
+import { useInvoices } from "../../context/hooks.js";
+import { usePayroll } from "../../context/hooks.js";
+import { useActivity } from "../../context/hooks.js";
 
 const SEGMENTS = [
   { label: "Ready", colour: "var(--bs-success)" },
@@ -145,9 +145,7 @@ export default function Dashboard() {
                     <div className="lh-1 fw-bold text-body" style={{ fontSize: "var(--app-fs-7)", letterSpacing: "-0.5px" }}>
                       {total}
                     </div>
-                    <div className="app-label fw-bold mt-1">
-                      Total
-                    </div>
+                    <div className="app-label fw-bold mt-1">Total</div>
                   </div>
                 </div>
                 <div className="d-flex flex-column gap-2 flex-grow-1" style={{ minWidth: "180px" }}>

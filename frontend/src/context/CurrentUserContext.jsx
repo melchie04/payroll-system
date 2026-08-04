@@ -1,8 +1,7 @@
 // Holds the signed-in user's own profile.
 
-import { createContext, useContext, useState } from "react";
-
-const CurrentUserContext = createContext(null);
+import { useState } from "react";
+import { CurrentUserContext } from "./contexts.js";
 
 const defaultUser = {
   name: "Admin",
@@ -23,13 +22,4 @@ export function CurrentUserProvider({ children }) {
   }
 
   return <CurrentUserContext.Provider value={{ user, updateUser }}>{children}</CurrentUserContext.Provider>;
-}
-
-// Reads the signed-in user from context.
-export function useCurrentUser() {
-  const ctx = useContext(CurrentUserContext);
-  if (!ctx) {
-    throw new Error("useCurrentUser must be used within a CurrentUserProvider");
-  }
-  return ctx;
 }

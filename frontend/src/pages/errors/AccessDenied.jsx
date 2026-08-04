@@ -9,7 +9,7 @@ export default function AccessDenied() {
       code="403"
       icon="fa-lock"
       tone="warning"
-      title="Access Denied"
+      title="Access denied"
       description="Your role can't view this page. Contact an administrator if that's wrong."
     >
       <BackToDashboardLink />

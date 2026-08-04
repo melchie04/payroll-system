@@ -10,11 +10,11 @@
 }
 
 .sb-nav-fixed #layoutSidenav #layoutSidenav_content {
-  top: var(--topnav-offset, 56px) !important;
+  top: var(--topnav-offset, var(--app-topnav-height)) !important;
 }
 
 .sb-nav-fixed #layoutSidenav #layoutSidenav_nav .sb-sidenav {
-  padding-top: var(--topnav-offset, 56px) !important;
+  padding-top: var(--topnav-offset, var(--app-topnav-height)) !important;
 }
 
 .sb-topnav.bg-white,
@@ -27,21 +27,13 @@
   padding-left: 0;
   height: auto !important;
   z-index: 1039;
-  min-height: 56px;
+  min-height: var(--app-topnav-height);
   animation: topnavSettleIn 0.3s ease-out;
 }
 
 .sb-topnav .navbar-brand {
-  width: 225px;
+  width: var(--app-sidenav-width);
   margin: 0;
-}
-
-.sb-topnav.navbar-dark #sidebarToggle {
-  color: rgba(255, 255, 255, 0.5);
-}
-
-.sb-topnav.navbar-light #sidebarToggle {
-  color: var(--bs-dark);
 }
 
 .nav-icon-btn,
@@ -73,10 +65,6 @@
 #sidebarToggle:focus-visible {
   background-color: var(--topnav-btn-hover-bg);
   color: var(--topnav-icon-color);
-}
-
-#sidebarToggle {
-  color: var(--topnav-icon-color) !important;
 }
 
 .nav-user-btn {
@@ -153,20 +141,15 @@
     overflow: hidden;
     white-space: nowrap;
   }
-  .nav-brand-mobile .fs-6 {
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
   .topnav-dropdown-menu {
     position: fixed !important;
     inset: auto 16px auto 16px !important;
-    top: var(--topnav-offset, 56px) !important;
+    top: var(--topnav-offset, var(--app-topnav-height)) !important;
     margin-top: 8px !important;
     width: auto !important;
     min-width: 0 !important;
     max-width: none !important;
-    max-height: calc(100vh - var(--topnav-offset, 56px) - 24px);
+    max-height: calc(100vh - var(--topnav-offset, var(--app-topnav-height)) - 24px);
     overflow-y: auto;
     transform: none !important;
   }
@@ -255,9 +238,7 @@
 [data-bs-theme="dark"] .nav-icon-btn,
 [data-bs-theme="dark"] .nav-user-btn,
 [data-bs-theme="dark"] #sidebarToggle {
-  --topnav-icon-color: var(--app-nav-icon);
   --topnav-icon-color-muted: #9aa79f;
-  --topnav-btn-hover-bg: var(--app-nav-btn-hover-bg);
   --topnav-btn-focus-ring: rgba(127, 201, 141, 0.25);
 }
 

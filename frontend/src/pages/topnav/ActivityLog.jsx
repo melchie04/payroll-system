@@ -15,7 +15,7 @@ import {
   PageHeader,
 } from "../../components/ui/index.jsx";
 import { exportToCsv } from "../../utils/exportToCsv.js";
-import { useActivity } from "../../context/ActivityContext.jsx";
+import { useActivity } from "../../context/hooks.js";
 
 const ALL_MODULES = "All Modules";
 const ALL_USERS = "All Users";
@@ -124,7 +124,6 @@ export default function ActivityLog() {
             </FilterSelect>
           </div>
           <div className="col-12 col-md-4">
-            
             <div className="d-flex gap-2 align-items-end w-100">
               <SearchInput label="Search Log" placeholder="Search activity" value={search} onChange={(e) => setSearch(e.target.value)} />
               <FilterMenu

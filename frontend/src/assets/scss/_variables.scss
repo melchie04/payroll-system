@@ -1,72 +1,194 @@
-// Bootstrap's compiled design tokens, exposed as CSS custom properties.
-
-@charset "UTF-8";
+// Every variable in the project: this app's design tokens, the dark palette and the one Bootstrap token we override.
 
 :root {
-  --bs-blue: #0d6efd;
-  --bs-indigo: #6610f2;
-  --bs-purple: #6f42c1;
-  --bs-pink: #d63384;
-  --bs-red: #dc3545;
-  --bs-orange: #fd7e14;
-  --bs-yellow: #ffc107;
-  --bs-green: #198754;
-  --bs-teal: #20c997;
-  --bs-cyan: #0dcaf0;
-  --bs-black: #000;
-  --bs-white: #fff;
-  --bs-gray: #6c757d;
-  --bs-gray-dark: #343a40;
-  --bs-gray-100: #f8f9fa;
-  --bs-gray-200: #e9ecef;
-  --bs-gray-300: #dee2e6;
-  --bs-gray-400: #ced4da;
-  --bs-gray-500: #adb5bd;
-  --bs-gray-600: #6c757d;
-  --bs-gray-700: #495057;
-  --bs-gray-800: #343a40;
-  --bs-gray-900: #212529;
-  --bs-primary: #0d6efd;
-  --bs-secondary: #6c757d;
-  --bs-success: #198754;
-  --bs-info: #0dcaf0;
-  --bs-warning: #ffc107;
-  --bs-danger: #dc3545;
-  --bs-light: #f8f9fa;
-  --bs-dark: #212529;
-  --bs-primary-rgb: 13, 110, 253;
-  --bs-secondary-rgb: 108, 117, 125;
-  --bs-success-rgb: 25, 135, 84;
-  --bs-info-rgb: 13, 202, 240;
-  --bs-warning-rgb: 255, 193, 7;
-  --bs-danger-rgb: 220, 53, 69;
-  --bs-light-rgb: 248, 249, 250;
-  --bs-dark-rgb: 33, 37, 41;
-  --bs-white-rgb: 255, 255, 255;
-  --bs-black-rgb: 0, 0, 0;
-  --bs-body-color-rgb: 33, 37, 41;
-  --bs-body-bg-rgb: 255, 255, 255;
   --bs-font-sans-serif: "Inter Variable", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --bs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  --bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
-  --bs-body-font-family: var(--bs-font-sans-serif);
-  --bs-body-font-size: 1rem;
-  --bs-body-font-weight: 400;
-  --bs-body-line-height: 1.5;
-  --bs-body-color: #212529;
-  --bs-body-bg: #fff;
-  --bs-border-width: 1px;
-  --bs-border-style: solid;
-  --bs-border-color: #dee2e6;
-  --bs-border-color-translucent: rgba(0, 0, 0, 0.175);
-  --bs-border-radius: 0.375rem;
-  --bs-border-radius-sm: 0.25rem;
-  --bs-border-radius-lg: 0.5rem;
-  --bs-border-radius-xl: 1rem;
-  --bs-border-radius-2xl: 2rem;
-  --bs-border-radius-pill: 50rem;
-  --bs-link-color: #0d6efd;
-  --bs-link-hover-color: #0a58ca;
-  --bs-code-color: #d63384;
-  --bs-highlight-bg: #fff3cd;
+
+  --app-sidenav-width: 225px;
+  --app-sidenav-collapsed-width: 72px;
+  --app-topnav-height: 56px;
+  --app-footer-height: 44px;
+
+  --app-obsidian: #121212;
+  --app-moss: #2e7d32;
+  --app-moss-hover: #256428;
+  --app-moss-active: #1e5321;
+  --app-moss-ring: rgba(46, 125, 50, 0.25);
+
+  --app-auth-bg: var(--app-nav-bg);
+  --app-auth-surface: #ffffff;
+  --app-auth-panel: #f1f7f2;
+  --app-accent-ink: var(--app-moss);
+  --app-accent-ink-hover: var(--app-moss-active);
+  --app-auth-field-border: #e5e7eb;
+  --app-auth-icon: var(--app-auth-muted);
+  --app-auth-placeholder: #9ca3af;
+  --app-auth-icon-off: #c9cfcb;
+  --app-auth-muted: #6b7280;
+  --app-auth-radius: 0.5rem;
+
+  --app-tone-neutral: var(--app-auth-muted);
+  --app-tone-warning: #997404;
+  --app-tone-danger: #b02a37;
+  --app-auth-heading: var(--app-obsidian);
+
+  --app-footer-bg: var(--app-nav-bg);
+  --app-footer-line: var(--app-nav-line);
+  --app-footer-text: #6c757d;
+  --app-footer-link: var(--app-moss);
+  --app-footer-link-hover: var(--app-moss-active);
+
+  --app-content-bg: #f4f6f4;
+  --app-surface: #ffffff;
+  --app-dot-rgb: 220, 53, 69;
+  --app-chart-track: #f3f4f6;
+  --app-shadow-1: 0 1px 2px rgba(16, 24, 40, 0.04), 0 1px 3px rgba(16, 24, 40, 0.06);
+  --app-shadow-2: 0 4px 6px -2px rgba(16, 24, 40, 0.05), 0 12px 16px -4px rgba(16, 24, 40, 0.1);
+  --app-row-hover: rgba(16, 24, 40, 0.028);
+  --app-table-head-color: #6c757d;
+  --app-table-head-line: #e3e7ea;
+  --app-table-row-line: #edeff1;
+  --app-surface-radius: 0.625rem;
+
+  --app-brand-bg: var(--app-moss);
+  --app-brand-fg: #ffffff;
+  --app-brand-name: var(--app-moss);
+
+  --app-nav-bg: #ffffff;
+  --app-status-success: #198754;
+  --app-status-warning: #997404;
+  --app-status-danger: #dc3545;
+  --app-status-neutral: #6c757d;
+
+  --app-icon-xs: 24px;
+  --app-icon-sm: 30px;
+  --app-icon-md: 40px;
+  --app-icon-lg: 56px;
+  --app-icon-xl: 72px;
+
+  --app-notif-more-bg: #fcfdfc;
+  --app-chip-bg: #e7e9ec;
+  --app-chip-fg: #6c757d;
+
+  --app-notice-success-bg: rgba(25, 135, 84, 0.06);
+  --app-notice-danger-bg: rgba(220, 53, 69, 0.06);
+  --app-text: #212529;
+
+  --app-action-success: #146c43;
+  --app-action-info: #0a58ca;
+  --app-action-warning: #7a5b00;
+  --app-action-danger: #b02a37;
+  --app-action-neutral: #5f6b62;
+
+  --app-select-max-height: 15rem;
+
+  --app-input-bg: #ffffff;
+  --app-input-fg: #212529;
+  --app-notice-success-border: #beddc8;
+  --app-notice-success-ink: #146c43;
+  --app-notice-danger-border: #f1b0b7;
+  --app-notice-danger-ink: #b02a37;
+
+  --app-btn-outline-border: #adb5bd;
+  --app-btn-outline-border-hover: #8f979d;
+
+  --app-nav-icon: #5f6b62;
+  --app-nav-heading: #8a929a;
+  --app-nav-link: #212529;
+  --app-nav-link-icon: #adb5bd;
+  --app-nav-active-bg: #f1f8f2;
+  --app-nav-active-color: #1f5e23;
+  --app-nav-btn-hover-bg: rgba(0, 0, 0, 0.045);
+  --app-nav-line: #e5e9e6;
+
+  --app-menu-bg: var(--app-nav-bg);
+  --app-menu-divider: #edefee;
+  --app-menu-hover-bg: var(--app-nav-btn-hover-bg);
+  --app-menu-keyline: var(--app-moss);
+  --app-dot-color: #d92d3f;
+
+  --app-fs-1: 0.6875rem;
+  --app-fs-2: 0.75rem;
+  --app-fs-3: 0.8125rem;
+  --app-fs-4: 0.875rem;
+  --app-fs-5: 1rem;
+  --app-fs-6: 1.25rem;
+  --app-fs-7: 1.5rem;
+  --app-fs-8: 2rem;
+  --app-fs-display: 4.5rem;
+}
+
+[data-bs-theme="dark"] {
+  --app-dark-bg: #0b0b0b;
+  --app-dark-surface: var(--app-obsidian);
+  --app-dark-surface-2: #1e211f;
+  --app-dark-border: #262e29;
+  --app-dark-text: var(--bs-gray-200);
+  --app-dark-text-muted: #9aa4ae;
+
+  --app-chart-track: #2a2f35;
+  --app-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --app-shadow-2: 0 4px 6px -2px rgba(0, 0, 0, 0.45), 0 12px 16px -4px rgba(0, 0, 0, 0.5);
+  --app-row-hover: rgba(255, 255, 255, 0.045);
+  --app-table-head-color: #9aa79f;
+  --app-table-head-line: #262e29;
+  --app-table-row-line: #1e211f;
+
+  --app-brand-name: var(--app-accent-ink);
+
+  --app-dot-color: #ff6b6b;
+
+  --app-accent-ink: #4a8f54;
+  --app-accent-ink-hover: #7fc98d;
+
+  --app-nav-bg: var(--app-obsidian);
+  --app-status-success: #75b798;
+  --app-status-warning: #ffc107;
+  --app-status-danger: #ff6b6b;
+  --app-status-neutral: #c3cec6;
+
+  --app-notif-more-bg: rgba(255, 255, 255, 0.03);
+  --app-chip-bg: rgba(255, 255, 255, 0.08);
+  --app-chip-fg: #b6c2ba;
+
+  --app-surface: var(--app-obsidian);
+
+  --app-notice-success-bg: rgba(117, 183, 152, 0.1);
+  --app-notice-danger-bg: rgba(255, 107, 107, 0.1);
+  --app-text: var(--app-dark-text);
+
+  --app-action-success: #75b798;
+  --app-action-info: #7db1ff;
+  --app-action-warning: #ffc107;
+  --app-action-danger: #ff6b6b;
+  --app-action-neutral: #c3cec6;
+
+  --app-input-bg: var(--app-surface);
+  --app-input-fg: var(--app-dark-text);
+  --app-notice-success-border: #2c5138;
+  --app-notice-success-ink: #75b798;
+  --app-notice-danger-border: #5a2a2f;
+  --app-notice-danger-ink: #ff6b6b;
+
+  --app-btn-outline-border: #4d5651;
+  --app-btn-outline-border-hover: #616c66;
+
+  --app-nav-icon: #b6c2ba;
+  --app-nav-heading: #6f7d74;
+  --app-nav-link: #d5ddd8;
+  --app-nav-link-icon: #6f7d74;
+  --app-nav-active-bg: #1e241f;
+  --app-nav-active-color: #7fc98d;
+  --app-nav-btn-hover-bg: rgba(255, 255, 255, 0.06);
+  --app-nav-line: #262e29;
+  --app-footer-text: #9aa79f;
+  --app-footer-link: var(--app-accent-ink);
+  --app-footer-link-hover: #7fc98d;
+  --app-menu-divider: #262e29;
+  --app-menu-keyline: var(--app-accent-ink);
+
+  --app-dot-rgb: 220, 53, 69;
+
+  --bs-link-color: #7fb1ff;
+  --bs-link-hover-color: #a5c9ff;
+  --bs-link-color-rgb: 127, 177, 255;
 }

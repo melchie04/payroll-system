@@ -15,9 +15,10 @@ import {
   FilterSelect,
   SearchInput,
 } from "../../../components/ui/index.jsx";
-import { useTimesheets, findDuplicateSheets, isSheetClean, sheetTotals } from "../../../context/TimesheetContext.jsx";
-import { useEmployees } from "../../../context/EmployeesContext.jsx";
-import { useClients } from "../../../context/ClientsContext.jsx";
+import { useTimesheets } from "../../../context/hooks.js";
+import { findDuplicateSheets, isSheetClean, sheetTotals } from "../../../utils/timesheet.js";
+import { useEmployees } from "../../../context/hooks.js";
+import { useClients } from "../../../context/hooks.js";
 
 const ALL_STATUSES = "All Statuses";
 const ALL_SOURCES = "All Sources";
