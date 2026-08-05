@@ -21,12 +21,12 @@ a:focus-visible > .card {
   border-radius: var(--bs-border-radius-pill);
 }
 
-.modal-content,
-.dropdown-menu {
+.modal-content {
   border-radius: var(--app-surface-radius);
 }
 
 .dropdown-menu {
+  border-radius: var(--app-surface-radius);
   box-shadow: var(--app-shadow-2);
   --bs-dropdown-font-size: var(--app-fs-3);
 }

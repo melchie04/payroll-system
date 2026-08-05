@@ -17,24 +17,20 @@ function initialsOf(name = "") {
     .join("");
 }
 
-// Lists the five most recent notifications with a link to the full page.
+// Lists the three most recent notifications with a link to the full page.
 function NotificationsMenu({ id, align = "end" }) {
   const { notifications } = useNotifications();
   const recent = notifications.slice(0, 3);
 
   return (
     <ul
-      className={`topnav-dropdown-menu dropdown-menu dropdown-menu-${align} position-absolute shadow-sm`}
+      className={`topnav-dropdown-menu dropdown-menu dropdown-menu-${align} position-absolute`}
       aria-labelledby={id}
-      style={{
-        minWidth: "280px",
-        maxWidth: "calc(100vw - 32px)",
-        fontSize: "var(--app-fs-4)",
-      }}
+      style={{ minWidth: "280px", maxWidth: "calc(100vw - 32px)" }}
     >
       <li>
-        <div className="dropdown-header d-flex align-items-center gap-2 py-2 text-body fw-bold text-decoration-none" style={{ fontSize: "inherit" }}>
-          <i className="fas fa-bell fa-fw opacity-75 pt-1"></i>
+        <div className="dropdown-header app-label d-flex align-items-center gap-2 py-2">
+          <i className="fas fa-bell fa-fw"></i>
           Notifications
         </div>
       </li>
@@ -43,7 +39,7 @@ function NotificationsMenu({ id, align = "end" }) {
       </li>
       {recent.length === 0 && (
         <li>
-          <div className="dropdown-item-text py-2 text-muted small">No notifications yet.</div>
+          <div className="dropdown-item-text py-2 text-muted">No notifications yet.</div>
         </li>
       )}
       {recent.map((n, i) => (
@@ -69,11 +65,11 @@ function NotificationsMenu({ id, align = "end" }) {
       </li>
       <li>
         <Link
-          className="dropdown-item d-flex align-items-center justify-content-center gap-2 py-2 text-center text-primary fw-semibold"
+          className="dropdown-item topnav-menu-action d-flex align-items-center justify-content-center gap-2 py-2 text-center"
           to="/notifications"
         >
           View all notifications
-          <i className="fas fa-arrow-right fa-fw small"></i>
+          <i className="fas fa-arrow-right fa-fw"></i>
         </Link>
       </li>
     </ul>
@@ -91,7 +87,7 @@ function NotificationsTrigger({ id }) {
         {unreadCount > 0 && (
           <span
             className="nav-badge-dot position-absolute top-0 start-100 translate-middle rounded-circle"
-            style={{ width: 8, height: 8, background: "var(--app-dot-color)", border: "1.5px solid var(--bs-body-bg)" }}
+            style={{ width: 8, height: 8, background: "var(--app-dot-color)", border: "1.5px solid var(--app-nav-bg)" }}
           >
             <span className="visually-hidden">New notifications</span>
           </span>
@@ -128,7 +124,7 @@ function UserTrigger({ id, user, nameClassName = "d-none d-sm-inline" }) {
           {initialsOf(user.name)}
         </span>
       )}
-      <span className={`text-body ${nameClassName}`}>{user.name}</span>
+      <span className={`nav-user-name ${nameClassName}`}>{user.name}</span>
       <i className="fas fa-chevron-down text-secondary" style={{ fontSize: "var(--app-fs-1)" }}></i>
     </a>
   );
@@ -138,17 +134,14 @@ function UserTrigger({ id, user, nameClassName = "d-none d-sm-inline" }) {
 function UserMenu({ id, user }) {
   return (
     <ul
-      className="topnav-dropdown-menu dropdown-menu dropdown-menu-end position-absolute shadow-sm"
+      className="topnav-dropdown-menu dropdown-menu dropdown-menu-end position-absolute"
       aria-labelledby={id}
-      style={{ maxWidth: "calc(100vw - 32px)", fontSize: "var(--app-fs-4)" }}
+      style={{ maxWidth: "calc(100vw - 32px)" }}
     >
       <li>
-        <div className="dropdown-header py-2 text-decoration-none" style={{ fontSize: "inherit" }}>
-          <div className="d-flex align-items-center gap-2 text-body fw-bold">
-            <i className="fas fa-user-shield fa-fw opacity-75"></i>
-            {user.name}
-          </div>
-          <div className="text-muted small ps-4">{user.role}</div>
+        <div className="dropdown-header py-2">
+          <div className="topnav-menu-name">{user.name}</div>
+          <div className="topnav-menu-role">{user.role}</div>
         </div>
       </li>
       <li>
@@ -156,20 +149,20 @@ function UserMenu({ id, user }) {
       </li>
       <li>
         <Link className="dropdown-item d-flex align-items-center gap-2 py-2" to="/profile">
-          <i className="fas fa-id-badge fa-fw opacity-75"></i>
-          My Profile
+          <i className="fas fa-id-badge fa-fw topnav-menu-icon"></i>
+          My profile
         </Link>
       </li>
       <li>
         <Link className="dropdown-item d-flex align-items-center gap-2 py-2" to="/settings">
-          <i className="fas fa-gear fa-fw opacity-75"></i>
+          <i className="fas fa-gear fa-fw topnav-menu-icon"></i>
           Settings
         </Link>
       </li>
       <li>
         <Link className="dropdown-item d-flex align-items-center gap-2 py-2" to="/activity-log">
-          <i className="fas fa-list-check fa-fw opacity-75"></i>
-          Activity Log
+          <i className="fas fa-list-check fa-fw topnav-menu-icon"></i>
+          Activity log
         </Link>
       </li>
       <li>
@@ -177,8 +170,8 @@ function UserMenu({ id, user }) {
       </li>
       <li>
         <Link className="dropdown-item d-flex align-items-center gap-2 py-2 text-danger" to="/login">
-          <i className="fas fa-right-from-bracket fa-fw opacity-75"></i>
-          Logout
+          <i className="fas fa-right-from-bracket fa-fw"></i>
+          Log out
         </Link>
       </li>
     </ul>
