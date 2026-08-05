@@ -9,10 +9,6 @@
   --topnav-btn-focus-ring: var(--app-moss-ring);
 }
 
-.sb-nav-fixed #layoutSidenav #layoutSidenav_nav .sb-sidenav {
-  padding-top: var(--topnav-offset, var(--app-topnav-height)) !important;
-}
-
 .sb-topnav.bg-white,
 .sb-topnav.bg-dark {
   background-color: var(--app-nav-bg) !important;

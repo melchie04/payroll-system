@@ -27,19 +27,20 @@ body {
 #layoutSidenav #layoutSidenav_nav {
   flex-basis: var(--app-sidenav-width);
   flex-shrink: 0;
-  transition: transform 0.15s ease-in-out;
+  transition: transform var(--app-shell-duration) var(--app-shell-ease);
+  will-change: transform, width, flex-basis;
   z-index: 1038;
   transform: translateX(calc(-1 * var(--app-sidenav-width)));
 }
 
 #layoutSidenav #layoutSidenav_content {
   position: relative;
+  will-change: margin;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   min-width: 0;
   flex-grow: 1;
-  min-height: calc(100vh - var(--app-topnav-height));
   margin-left: calc(-1 * var(--app-sidenav-width));
 }
 
@@ -67,12 +68,51 @@ body {
 
 .sb-nav-fixed #layoutSidenav #layoutSidenav_nav {
   width: var(--app-sidenav-width);
-  height: calc(100vh - var(--app-topnav-height));
+  height: 100%;
   z-index: 1038;
 }
 
 .sb-nav-fixed #layoutSidenav #layoutSidenav_nav .sb-sidenav .sb-sidenav-menu {
   overflow-y: auto;
+}
+
+// Sticky shell: the frame is pinned to the viewport and only the content column scrolls.
+.sb-nav-fixed,
+.sb-nav-fixed #root {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.sb-nav-fixed #root {
+  display: flex;
+  flex-direction: column;
+}
+
+.sb-nav-fixed .sb-topnav {
+  flex-shrink: 0;
+}
+
+.sb-nav-fixed #layoutSidenav {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.sb-nav-fixed #layoutSidenav #layoutSidenav_content {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.sb-nav-fixed #layoutSidenav_content > main {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.sb-nav-fixed #layoutSidenav_content > main > .app-footer {
+  flex-shrink: 0;
 }
 
 #layoutError {

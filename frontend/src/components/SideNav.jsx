@@ -1,7 +1,6 @@
 // The collapsible sidebar holding the main navigation.
 
 import { NavLink } from "react-router";
-import { useTheme } from "../context/hooks.js";
 
 const NAV_ITEMS = [
   { to: "/", label: "Dashboard", icon: "fa-table-cells-large", end: true },
@@ -14,8 +13,6 @@ const NAV_ITEMS = [
 
 // Renders the nav items, marking the one matching the current route.
 export default function SideNav({ onNavItemSelect }) {
-  const { theme } = useTheme();
-
   // Adds the active class when React Router says this link is the current page.
   function navLinkClass({ isActive }) {
     const baseClasses = "nav-link mx-2 rounded py-2 py-md-3";
@@ -23,7 +20,7 @@ export default function SideNav({ onNavItemSelect }) {
   }
 
   return (
-    <nav className={`sb-sidenav accordion sb-sidenav-${theme} border-end`} id="sidenavAccordion">
+    <nav className="sb-sidenav accordion border-end" id="sidenavAccordion">
       <div className="sb-sidenav-menu">
         <div className="nav">
           <div className="sb-sidenav-menu-heading">Menu</div>
@@ -43,15 +40,7 @@ export default function SideNav({ onNavItemSelect }) {
       </div>
 
       <div className="sb-sidenav-footer">
-        <div
-          className={`d-flex align-items-center w-100 text-decoration-none ${theme === "light" ? "help-footer-btn-light" : "help-footer-btn-dark"}`}
-          style={{
-            cursor: "pointer",
-            transition: "color 0.15s ease-in-out",
-          }}
-          title="Help"
-          onClick={() => console.log("Help clicked")}
-        >
+        <div className="help-footer-btn d-flex align-items-center w-100 text-decoration-none" title="Help">
           <div className="sb-nav-link-icon me-2 d-flex align-items-center" style={{ minWidth: "1.5rem" }}>
             <i className="far fa-circle-question fa-fw"></i>
           </div>

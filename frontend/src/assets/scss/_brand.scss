@@ -8,7 +8,8 @@
 }
 
 .app-brand-mark {
-  background: var(--app-brand-bg);
+  background-color: var(--app-brand-bg);
+  background-image: var(--app-accent-gradient);
   color: var(--app-brand-fg);
   border-radius: 0.4375rem;
   line-height: 1;

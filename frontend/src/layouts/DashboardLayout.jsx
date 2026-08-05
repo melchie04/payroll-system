@@ -38,8 +38,8 @@ export default function DashboardLayout({ fixed = true }) {
             <div className="container-fluid app-page">
               <Outlet />
             </div>
+            <Footer />
           </main>
-          <Footer />
         </div>
       </div>
     </>

@@ -17,9 +17,10 @@
 }
 
 .sb-sidenav .sb-sidenav-menu .nav .sb-sidenav-menu-heading {
-  padding: 1.75rem 1rem 0.75rem;
-  font-size: var(--app-fs-3);
-  font-weight: bold;
+  padding: 1rem 1rem 0.5rem;
+  font-size: var(--app-fs-1);
+  font-weight: 600;
+  letter-spacing: 0.5px;
   text-transform: uppercase;
 }
 
@@ -32,7 +33,7 @@
   padding-bottom: 0.75rem;
   position: relative;
   transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out, transform 0.15s ease-out,
-    padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding var(--app-shell-duration) var(--app-shell-ease);
   margin-left: 0.5rem;
   margin-right: 0.5rem;
   margin-bottom: 0.25rem;
@@ -55,103 +56,87 @@
 
 .sb-sidenav {
   --bs-border-color: var(--app-nav-line);
-}
-
-.sb-sidenav-light,
-.sb-sidenav-dark {
   background-color: var(--app-nav-bg);
   color: var(--app-nav-link);
 }
 
-.sb-sidenav-light .sb-sidenav-menu .sb-sidenav-menu-heading,
-.sb-sidenav-dark .sb-sidenav-menu .sb-sidenav-menu-heading {
+.sb-sidenav .sb-sidenav-menu .sb-sidenav-menu-heading {
   color: var(--app-nav-heading);
 }
 
-.sb-sidenav-light .sb-sidenav-menu .nav-link,
-.sb-sidenav-dark .sb-sidenav-menu .nav-link {
+.sb-sidenav .sb-sidenav-menu .nav-link {
   color: var(--app-nav-link);
 }
 
-.sb-sidenav-light .sb-sidenav-menu .nav-link .sb-nav-link-icon,
-.sb-sidenav-dark .sb-sidenav-menu .nav-link .sb-nav-link-icon {
-  color: var(--app-nav-link-icon);
+.sb-sidenav .sb-sidenav-menu .nav-link .sb-nav-link-icon {
+  color: var(--app-nav-icon);
 }
 
-.sb-sidenav-light .sb-sidenav-menu .nav-link.active,
-.sb-sidenav-dark .sb-sidenav-menu .nav-link.active {
+.sb-sidenav .sb-sidenav-menu .nav-link.active {
   color: var(--app-nav-active-color);
   background-color: var(--app-nav-active-bg);
-  box-shadow: inset 3px 0 0 var(--app-menu-keyline);
+  background-image: var(--app-accent-gradient);
+  box-shadow: var(--app-accent-highlight), var(--app-accent-shadow);
 }
 
-.sb-sidenav-light .sb-sidenav-menu .nav-link.active .sb-nav-link-icon,
-.sb-sidenav-dark .sb-sidenav-menu .nav-link.active .sb-nav-link-icon {
-  color: var(--app-menu-keyline);
+.sb-sidenav .sb-sidenav-menu .nav-link.active .sb-nav-link-icon {
+  color: var(--app-nav-active-color);
 }
 
-.sb-sidenav-light .sb-sidenav-menu .nav-link:hover,
-.sb-sidenav-light .sb-sidenav-menu .nav-link:focus-visible,
-.sb-sidenav-dark .sb-sidenav-menu .nav-link:hover,
-.sb-sidenav-dark .sb-sidenav-menu .nav-link:focus-visible {
+.sb-sidenav .sb-sidenav-menu .nav-link:hover,
+.sb-sidenav .sb-sidenav-menu .nav-link:focus-visible {
   color: var(--app-nav-link);
   background-color: var(--app-nav-btn-hover-bg);
 }
 
-.sb-sidenav-light .sb-sidenav-menu .nav-link.active:hover,
-.sb-sidenav-light .sb-sidenav-menu .nav-link.active:focus-visible,
-.sb-sidenav-dark .sb-sidenav-menu .nav-link.active:hover,
-.sb-sidenav-dark .sb-sidenav-menu .nav-link.active:focus-visible {
+.sb-sidenav .sb-sidenav-menu .nav-link.active:hover,
+.sb-sidenav .sb-sidenav-menu .nav-link.active:focus-visible {
   color: var(--app-nav-active-color);
   background-color: var(--app-nav-active-bg);
 }
 
-.sb-sidenav-light .sb-sidenav-footer,
-.sb-sidenav-dark .sb-sidenav-footer {
+.sb-sidenav .sb-sidenav-footer {
   background-color: var(--app-nav-bg);
   border-top-color: var(--app-nav-line);
 }
 
-.help-footer-btn-light,
-.help-footer-btn-dark {
+.help-footer-btn {
+  cursor: pointer;
   font-size: var(--app-fs-3);
-  color: var(--app-accent-ink) !important;
+  color: var(--app-footer-text);
   transition: color 0.15s ease-in-out;
 }
 
-.help-footer-btn-light:hover,
-.help-footer-btn-dark:hover {
-  color: var(--app-accent-ink-hover) !important;
+.help-footer-btn:hover {
+  color: var(--app-accent-ink-hover);
 }
 
-.sb-sidenav-light .sb-sidenav-footer > div:focus-visible,
-.sb-sidenav-dark .sb-sidenav-footer > div:focus-visible {
+.sb-sidenav .sb-sidenav-footer > div:focus-visible {
   outline: none;
   box-shadow: 0 0 0 0.2rem var(--app-moss-ring);
 }
 
-.sb-sidenav-light .sb-sidenav-menu .nav-link:focus-visible,
-.sb-sidenav-dark .sb-sidenav-menu .nav-link:focus-visible {
+.sb-sidenav .sb-sidenav-menu .nav-link:focus-visible {
   outline: none;
   box-shadow: 0 0 0 0.2rem var(--app-moss-ring);
 }
 
-.sb-sidenav-light .sb-sidenav-menu .nav-link.active:focus-visible,
-.sb-sidenav-dark .sb-sidenav-menu .nav-link.active:focus-visible {
-  box-shadow: inset 3px 0 0 var(--app-menu-keyline), 0 0 0 0.2rem var(--app-moss-ring);
+.sb-sidenav .sb-sidenav-menu .nav-link.active:focus-visible {
+  box-shadow: var(--app-accent-highlight), var(--app-accent-shadow), 0 0 0 0.2rem var(--app-moss-ring);
 }
 
 @media (min-width: 992px) {
   #layoutSidenav #layoutSidenav_nav {
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform var(--app-shell-duration) var(--app-shell-ease), width var(--app-shell-duration) var(--app-shell-ease), flex-basis var(--app-shell-duration) var(--app-shell-ease);
   }
   #layoutSidenav #layoutSidenav_content {
-    transition: margin 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: margin var(--app-shell-duration) var(--app-shell-ease);
   }
 
   .sb-sidenav-toggled #layoutSidenav #layoutSidenav_nav {
     transform: translateX(0);
     width: var(--app-sidenav-collapsed-width);
+    flex-basis: var(--app-sidenav-collapsed-width);
   }
   .sb-nav-fixed.sb-sidenav-toggled #layoutSidenav #layoutSidenav_nav {
     width: var(--app-sidenav-collapsed-width);
@@ -167,7 +152,7 @@
     overflow: hidden;
     white-space: nowrap;
     opacity: 1;
-    transition: opacity 0.15s linear;
+    transition: opacity var(--app-shell-duration) var(--app-shell-ease);
   }
   .sb-sidenav-toggled .sb-sidenav-menu .nav .sb-sidenav-menu-heading {
     opacity: 0;
@@ -190,7 +175,7 @@
     text-overflow: clip;
     max-width: 160px;
     opacity: 1;
-    transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.15s linear;
+    transition: max-width var(--app-shell-duration) var(--app-shell-ease), opacity var(--app-shell-duration) var(--app-shell-ease);
   }
   .sb-sidenav-toggled .sb-sidenav .nav .nav-link .text-wrap {
     max-width: 0;
@@ -201,7 +186,7 @@
   }
   .sb-sidenav-footer .sb-nav-link-icon {
     flex-shrink: 0;
-    transition: margin-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: margin-right var(--app-shell-duration) var(--app-shell-ease);
   }
   .sb-sidenav-toggled .sb-sidenav-footer .sb-nav-link-icon {
     margin-right: 0 !important;
@@ -212,7 +197,7 @@
     overflow: hidden;
     max-width: 100px;
     opacity: 1;
-    transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.15s linear;
+    transition: max-width var(--app-shell-duration) var(--app-shell-ease), opacity var(--app-shell-duration) var(--app-shell-ease);
   }
   .sb-sidenav-toggled .sb-sidenav-footer > div > span {
     max-width: 0;
@@ -223,7 +208,7 @@
     max-width: calc(100vw - var(--app-sidenav-width));
     margin-left: auto;
     margin-right: auto;
-    transition: max-width 0.15s ease-in-out;
+    transition: max-width var(--app-shell-duration) var(--app-shell-ease);
   }
 }
 
@@ -267,8 +252,7 @@
 }
 
 @media (hover: none) {
-  .sb-sidenav-light .sb-sidenav-menu .nav-link:active,
-  .sb-sidenav-dark .sb-sidenav-menu .nav-link:active {
+.sb-sidenav .sb-sidenav-menu .nav-link:active {
     background-color: var(--app-nav-btn-hover-bg);
   }
   .sb-sidenav-footer > div:active {
@@ -291,7 +275,7 @@
 
 @media (max-width: 991.98px) {
   #layoutSidenav #layoutSidenav_nav {
-    transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: transform var(--app-shell-duration) var(--app-shell-ease);
   }
 
   #layoutSidenav #layoutSidenav_content:before {
@@ -317,15 +301,15 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #layoutSidenav #layoutSidenav_nav,
-  #layoutSidenav #layoutSidenav_content,
-  #layoutSidenav #layoutSidenav_content:before,
-  .sb-sidenav .sb-sidenav-menu .nav .nav-link,
-  .sb-sidenav .nav .nav-link .text-wrap,
-  .sb-sidenav .nav .nav-link .sb-nav-link-icon,
-  .sb-sidenav-menu .nav .sb-sidenav-menu-heading,
-  .sb-sidenav-footer > div > span,
-  .sb-sidenav-footer .sb-nav-link-icon {
+#layoutSidenav #layoutSidenav_nav,
+#layoutSidenav #layoutSidenav_content,
+#layoutSidenav #layoutSidenav_content:before,
+.sb-sidenav .sb-sidenav-menu .nav .nav-link,
+.sb-sidenav .nav .nav-link .text-wrap,
+.sb-sidenav .nav .nav-link .sb-nav-link-icon,
+.sb-sidenav-menu .nav .sb-sidenav-menu-heading,
+.sb-sidenav-footer > div > span,
+.sb-sidenav-footer .sb-nav-link-icon {
     transition: none;
   }
 }

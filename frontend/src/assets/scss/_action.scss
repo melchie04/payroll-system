@@ -13,7 +13,15 @@
   --bs-btn-disabled-color: #ffffff;
   --bs-btn-disabled-bg: var(--app-moss);
   --bs-btn-disabled-border-color: var(--app-moss);
+  background-image: var(--app-accent-gradient);
+  box-shadow: var(--app-accent-highlight), var(--app-accent-shadow);
   transition: background-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.btn-app-primary:hover,
+.btn-app-primary:active,
+.btn-app-primary:disabled {
+  background-image: none;
 }
 
 .btn-app-primary:hover {

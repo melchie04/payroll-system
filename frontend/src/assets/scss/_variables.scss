@@ -13,6 +13,11 @@
   --app-moss-hover: #256428;
   --app-moss-active: #1e5321;
   --app-moss-ring: rgba(46, 125, 50, 0.25);
+  --app-accent-gradient: linear-gradient(180deg, #3a8f3f 0%, #2e7d32 100%);
+  --app-accent-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  --app-accent-shadow: 0 2px 6px rgba(46, 125, 50, 0.28);
+  --app-shell-ease: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --app-shell-duration: 0.42s;
 
   --app-auth-bg: var(--app-nav-bg);
   --app-auth-surface: #ffffff;
@@ -93,9 +98,8 @@
   --app-nav-icon: #6b7280;
   --app-nav-heading: #8a929a;
   --app-nav-link: #212529;
-  --app-nav-link-icon: #adb5bd;
-  --app-nav-active-bg: #f1f8f2;
-  --app-nav-active-color: #1f5e23;
+  --app-nav-active-bg: var(--app-moss);
+  --app-nav-active-color: #ffffff;
   --app-nav-btn-hover-bg: rgba(0, 0, 0, 0.045);
   --app-nav-line: #e5e7eb;
 
@@ -117,6 +121,7 @@
 }
 
 [data-bs-theme="dark"] {
+  --app-accent-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
   --app-dark-bg: #0b0b0b;
   --app-dark-surface: var(--app-obsidian);
   --app-dark-surface-2: #1e211f;
@@ -174,9 +179,8 @@
   --app-nav-icon: #b6c2ba;
   --app-nav-heading: #6f7d74;
   --app-nav-link: #d5ddd8;
-  --app-nav-link-icon: #6f7d74;
-  --app-nav-active-bg: #1e241f;
-  --app-nav-active-color: #7fc98d;
+  --app-nav-active-bg: var(--app-moss);
+  --app-nav-active-color: #ffffff;
   --app-nav-btn-hover-bg: rgba(255, 255, 255, 0.06);
   --app-nav-line: #262e29;
   --app-footer-text: #9aa79f;
