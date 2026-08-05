@@ -40,7 +40,7 @@ export default function Notifications() {
         </div>
       </section>
 
-      <hr className="my-3 opacity-25" />
+      <hr className="my-3" />
 
       <section>
         <TabsNav
@@ -56,29 +56,24 @@ export default function Notifications() {
       <section className="mb-3">
         <DataCard>
           <div className="list-group list-group-flush">
-            {visible.length === 0 && <div className="text-center text-muted py-5 small">You're all caught up!</div>}
+            {visible.length === 0 && <div className="notif-empty text-center py-5">You're all caught up!</div>}
             {visible.map((n) => (
               <div className={`notif-row list-group-item d-flex align-items-start gap-3 px-3 ${!n.read ? "notif-row-unread" : ""}`} key={n.id}>
                 <div className="flex-grow-1" style={{ minWidth: 0 }}>
-                  <div className="text-dark lh-base mb-2" style={{ fontSize: "var(--app-fs-4)", overflowWrap: "anywhere" }}>
+                  <div className="notif-text lh-base mb-2">
                     <span>{n.title} </span>
                     <strong className="fw-semibold">{n.bold}</strong> <span>{n.sub}</span>
                   </div>
 
                   <div className="d-flex align-items-center flex-wrap gap-2">
                     <span className="app-chip badge rounded-pill py-1">{n.type}</span>
-                    <span className="text-muted text-nowrap" style={{ fontSize: "var(--app-fs-2)" }}>
-                      {n.time}
-                    </span>
+                    <span className="notif-meta text-nowrap">{n.time}</span>
                     {!n.read && (
                       <>
-                        <span className="text-muted" style={{ fontSize: "var(--app-fs-2)" }}>
-                          &middot;
-                        </span>
+                        <span className="notif-meta">&middot;</span>
                         <button
                           type="button"
-                          className="btn btn-sm btn-link p-0 text-decoration-none"
-                          style={{ fontSize: "var(--app-fs-2)" }}
+                          className="btn btn-sm btn-link notif-action p-0 text-decoration-none"
                           onClick={() => markOneRead(n.id)}
                         >
                           Mark as read
@@ -102,12 +97,6 @@ export default function Notifications() {
             )}
           </div>
         </DataCard>
-
-        {matching.length > 0 && (
-          <div className="text-muted mt-2" style={{ fontSize: "var(--app-fs-2)" }}>
-            Showing {visible.length} of {matching.length} notification{matching.length === 1 ? "" : "s"}
-          </div>
-        )}
       </section>
     </>
   );

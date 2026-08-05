@@ -55,7 +55,7 @@ export function ProfileHeader({ name, subtitle, subtitleIcon, status }) {
       <div className="position-relative flex-shrink-0">
         <div
           className="d-flex align-items-center justify-content-center rounded-circle bg-dark text-white fw-semibold"
-          style={{ width: "var(--app-icon-lg)", height: "var(--app-icon-lg)", fontSize: "var(--app-fs-6)" }}
+          style={{ width: "var(--app-icon-lg)", height: "var(--app-icon-lg)", fontSize: "var(--app-fs-5)" }}
         >
           {initials}
         </div>

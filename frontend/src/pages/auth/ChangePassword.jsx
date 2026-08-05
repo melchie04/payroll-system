@@ -65,7 +65,7 @@ export default function ChangePassword() {
           style={{
             width: "var(--app-icon-lg)",
             height: "var(--app-icon-lg)",
-            fontSize: "var(--app-fs-7)",
+            fontSize: "var(--app-fs-6)",
             background: "var(--app-auth-panel)",
             color: "var(--app-accent-ink)",
           }}

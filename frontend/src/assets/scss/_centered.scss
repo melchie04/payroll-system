@@ -27,7 +27,7 @@
   width: 34px;
   height: 34px;
   color: var(--app-nav-icon);
-  font-size: var(--app-fs-5);
+  font-size: var(--app-fs-4);
   line-height: 1;
   cursor: pointer;
   transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out, transform 0.15s ease-out;
@@ -59,7 +59,7 @@
   height: var(--app-icon-xl);
   border: 1.5px solid var(--app-auth-field-border);
   color: var(--app-error-ink);
-  font-size: var(--app-fs-8);
+  font-size: var(--app-fs-7);
 }
 
 .error-mark--neutral {
@@ -84,7 +84,7 @@
 
 .error-title {
   color: var(--app-auth-heading);
-  font-size: var(--app-fs-7);
+  font-size: var(--app-fs-6);
   font-weight: 500;
   line-height: 1.2;
 }
@@ -97,7 +97,7 @@
 
 .auth-heading {
   color: var(--app-auth-heading);
-  font-size: var(--app-fs-7);
+  font-size: var(--app-fs-6);
   font-weight: 500;
 }
 
@@ -121,11 +121,11 @@
   border-radius: var(--app-auth-radius);
   padding-top: 0.625rem;
   padding-bottom: 0.625rem;
-  font-size: var(--app-fs-5);
+  font-size: var(--app-fs-4);
 }
 
 .auth-requirements {
-  border: var(--bs-border-width) solid var(--app-auth-field-border);
+  border: var(--bs-border-width) solid var(--bs-border-color);
   border-radius: var(--app-auth-radius);
   padding: 0.75rem 0.875rem;
 }
@@ -135,7 +135,7 @@
 }
 
 .auth-requirements-label {
-  color: var(--app-auth-muted);
+  color: var(--app-table-head-color);
   font-size: var(--app-fs-1);
   font-weight: 500;
   letter-spacing: 0.05em;
@@ -147,16 +147,16 @@
 }
 
 .auth-rule {
-  color: var(--app-auth-placeholder);
+  color: var(--app-table-head-color);
   font-size: var(--app-fs-3);
 }
 
 .auth-rule.is-met {
-  color: var(--app-auth-heading);
+  color: var(--app-text);
 }
 
 .auth-rule-icon {
-  color: var(--app-auth-icon-off);
+  color: var(--app-table-head-color);
   font-size: var(--app-fs-1);
 }
 
@@ -209,10 +209,10 @@
   .error-mark {
     width: var(--app-icon-lg);
     height: var(--app-icon-lg);
-    font-size: var(--app-fs-7);
+    font-size: var(--app-fs-6);
   }
 
   .error-code {
-    font-size: var(--app-fs-8);
+    font-size: var(--app-fs-7);
   }
 }

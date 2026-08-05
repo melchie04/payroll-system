@@ -33,7 +33,7 @@ export function TimesheetCoverage({ rows = [], period, onUploadFor }) {
                 <div className="text-muted fw-semibold" style={{ fontSize: "var(--app-fs-2)" }}>
                   Pay Period
                 </div>
-                <div className="fw-bold mt-auto" style={{ fontSize: "var(--app-fs-4)", lineHeight: 1.4 }}>
+                <div className="fw-bold mt-auto" style={{ fontSize: "var(--app-fs-3)", lineHeight: 1.4 }}>
                   {period}
                 </div>
               </div>

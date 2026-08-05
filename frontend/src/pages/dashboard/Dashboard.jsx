@@ -142,7 +142,7 @@ export default function Dashboard() {
                     ))}
                   </svg>
                   <div className="position-absolute top-50 start-50 translate-middle text-center">
-                    <div className="lh-1 fw-bold text-body" style={{ fontSize: "var(--app-fs-7)", letterSpacing: "-0.5px" }}>
+                    <div className="lh-1 fw-bold text-body" style={{ fontSize: "var(--app-fs-6)", letterSpacing: "-0.5px" }}>
                       {total}
                     </div>
                     <div className="app-label fw-bold mt-1">Total</div>
@@ -191,7 +191,7 @@ export default function Dashboard() {
                     <div className="list-group-item d-flex align-items-start gap-3 py-3 py-md-2" key={entry.id}>
                       <div
                         className="d-flex align-items-center justify-content-center flex-shrink-0 border rounded-2 bg-light text-secondary"
-                        style={{ width: "var(--app-icon-md)", height: "var(--app-icon-md)", fontSize: "var(--app-fs-4)" }}
+                        style={{ width: "var(--app-icon-md)", height: "var(--app-icon-md)", fontSize: "var(--app-fs-3)" }}
                       >
                         {MODULE_ICON[entry.module] || "\ud83d\udcdd"}
                       </div>

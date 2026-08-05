@@ -486,7 +486,7 @@ function DeleteUserModal({ target, onConfirm }) {
       <div className="d-flex align-items-start gap-3">
         <div
           className="d-flex align-items-center justify-content-center flex-shrink-0 rounded-3 bg-danger bg-opacity-10 text-danger"
-          style={{ width: "var(--app-icon-md)", height: "var(--app-icon-md)", fontSize: "var(--app-fs-4)" }}
+          style={{ width: "var(--app-icon-md)", height: "var(--app-icon-md)", fontSize: "var(--app-fs-3)" }}
         >
           <i className="fas fa-triangle-exclamation"></i>
         </div>
@@ -753,7 +753,7 @@ function RolesList({ roleList, onEditRole, onDeleteRole }) {
                 <div className="d-flex align-items-center gap-3 p-3">
                   <div
                     className="d-flex align-items-center justify-content-center flex-shrink-0 border rounded-3 bg-light text-secondary"
-                    style={{ width: "var(--app-icon-md)", height: "var(--app-icon-md)", fontSize: "var(--app-fs-4)" }}
+                    style={{ width: "var(--app-icon-md)", height: "var(--app-icon-md)", fontSize: "var(--app-fs-3)" }}
                   >
                     <i className="fas fa-shield-halved"></i>
                   </div>
@@ -969,7 +969,7 @@ function DeleteRoleModal({ target, onConfirm }) {
       <div className="d-flex align-items-start gap-3">
         <div
           className="d-flex align-items-center justify-content-center flex-shrink-0 rounded-3 bg-danger bg-opacity-10 text-danger"
-          style={{ width: "var(--app-icon-md)", height: "var(--app-icon-md)", fontSize: "var(--app-fs-4)" }}
+          style={{ width: "var(--app-icon-md)", height: "var(--app-icon-md)", fontSize: "var(--app-fs-3)" }}
         >
           <i className="fas fa-triangle-exclamation"></i>
         </div>

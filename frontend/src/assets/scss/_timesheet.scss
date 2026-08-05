@@ -8,7 +8,7 @@
   border-radius: 0.25rem;
   background-color: transparent;
   color: inherit;
-  font-size: var(--app-fs-4);
+  font-size: var(--app-fs-3);
   text-align: center;
   transition: border-color 0.15s ease-in-out, background-color 0.15s ease-in-out;
 }
@@ -63,7 +63,7 @@
 }
 
 .ts-notice-icon {
-  font-size: var(--app-fs-4);
+  font-size: var(--app-fs-3);
 }
 
 .card .ts-notice {
@@ -121,7 +121,7 @@
   height: 48px;
   background-color: rgba(0, 0, 0, 0.04);
   color: var(--bs-secondary);
-  font-size: var(--app-fs-7);
+  font-size: var(--app-fs-6);
 }
 
 .ts-dropzone-meta {

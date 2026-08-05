@@ -62,7 +62,7 @@ export function BrandMark({ size = 40, className = "" }) {
   return (
     <span
       className={`app-brand-mark d-inline-flex align-items-center justify-content-center fw-bold ${className}`}
-      style={{ width: size, height: size, fontSize: "var(--app-fs-6)" }}
+      style={{ width: size, height: size, fontSize: "var(--app-fs-5)" }}
       aria-hidden="true"
     >
       P

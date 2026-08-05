@@ -19,7 +19,7 @@ export function StatCard({ label, value, sub, valueColor, subColor, icon }) {
           )}
           <span className="app-label">{label}</span>
         </div>
-        <div className="fw-bold lh-1" style={{ fontSize: "var(--app-fs-8)", ...(valueColor ? { color: valueColor } : null) }}>
+        <div className="fw-bold lh-1" style={{ fontSize: "var(--app-fs-7)", ...(valueColor ? { color: valueColor } : null) }}>
           {value}
         </div>
         {sub && (
@@ -104,7 +104,7 @@ export function PayslipDetails({ employeeName, subtitle, status, period, summary
       </DetailList>
       <div className="d-flex justify-content-between align-items-center border-top pt-3 mt-3">
         <span className="fw-semibold">Net Pay</span>
-        <span className="fw-bold" style={{ fontSize: "var(--app-fs-6)" }}>
+        <span className="fw-bold" style={{ fontSize: "var(--app-fs-5)" }}>
           {netPay}
         </span>
       </div>

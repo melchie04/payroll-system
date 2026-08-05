@@ -350,7 +350,7 @@ export function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, on
                   >
                     {!hasDocument ? (
                       <>
-                        <i className={`fas ${docError ? "fa-file-circle-xmark" : "fa-file-lines"} mb-2`} style={{ fontSize: "var(--app-fs-8)" }}></i>
+                        <i className={`fas ${docError ? "fa-file-circle-xmark" : "fa-file-lines"} mb-2`} style={{ fontSize: "var(--app-fs-7)" }}></i>
                         <div className="small">{docError ? "Document could not be displayed" : "Document not available"}</div>
                         <div className="text-center px-3" style={{ fontSize: "var(--app-fs-1)" }}>
                           {docError ? "The file may have been moved or is no longer readable." : "The original file is not stored for this sheet."}
@@ -692,7 +692,7 @@ export function TimesheetReviewForm({ file, files, onBack, onApprove, onSave, on
         <div className="d-flex align-items-start gap-3">
           <div
             className="d-flex align-items-center justify-content-center flex-shrink-0 rounded-3 bg-warning bg-opacity-10 text-warning"
-            style={{ width: "var(--app-icon-md)", height: "var(--app-icon-md)", fontSize: "var(--app-fs-4)" }}
+            style={{ width: "var(--app-icon-md)", height: "var(--app-icon-md)", fontSize: "var(--app-fs-3)" }}
           >
             <i className="fas fa-triangle-exclamation"></i>
           </div>

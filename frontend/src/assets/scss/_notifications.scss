@@ -9,6 +9,26 @@
   box-shadow: inset 3px 0 0 var(--app-menu-keyline);
 }
 
+.notif-text {
+  color: var(--app-text);
+  font-size: var(--app-fs-3);
+  overflow-wrap: anywhere;
+}
+
+.notif-meta {
+  color: var(--app-table-head-color);
+  font-size: var(--app-fs-2);
+}
+
+.notif-action {
+  font-size: var(--app-fs-2);
+}
+
+.notif-empty {
+  color: var(--app-table-head-color);
+  font-size: var(--app-fs-3);
+}
+
 .notif-dot {
   width: 8px;
   height: 8px;
@@ -28,9 +48,9 @@
   border-left: 0;
   border-right: 0;
   border-bottom: 0;
-  background-color: var(--app-notif-more-bg);
+  background-color: transparent;
   color: var(--app-accent-ink);
-  font-size: var(--app-fs-4);
+  font-size: var(--app-fs-3);
   font-weight: 500;
   text-align: center;
   cursor: pointer;
