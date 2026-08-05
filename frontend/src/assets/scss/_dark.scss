@@ -72,14 +72,6 @@
   background-color: var(--app-dark-surface-2) !important;
 }
 
-[data-bs-theme="dark"] #layoutSidenav_content > footer.bg-light {
-  background-color: var(--app-footer-bg) !important;
-}
-
-[data-bs-theme="dark"] #layoutSidenav_content > footer.bg-light .text-muted {
-  color: var(--app-footer-text) !important;
-}
-
 [data-bs-theme="dark"] #layoutSidenav_content .text-dark,
 [data-bs-theme="dark"] #layoutSidenav_content .text-body,
 [data-bs-theme="dark"] .modal-content .text-dark,

@@ -1,20 +1,28 @@
 // The footer bar shown at the bottom of every layout.
 
-// Renders the copyright line and the policy links.
+// Set to false to remove the developer credit before handing the project to a client.
+const SHOW_CREDIT = true;
+
+// Renders the copyright line, the optional developer credit and the policy links.
 export default function Footer() {
   return (
-    <footer className="py-3 bg-light mt-auto border-top">
+    <footer className="app-footer mt-auto">
       <div className="container-fluid px-4">
-        <div
-          className="d-flex flex-column flex-sm-row align-items-center justify-content-between gap-1 text-center text-sm-start"
-          style={{ fontSize: "var(--app-fs-3)" }}
-        >
-          <div className="text-muted">Copyright &copy; Payroll System 2026</div>
-          <div className="d-flex align-items-center gap-1 justify-content-center">
+        <div className="d-flex flex-column flex-sm-row align-items-center justify-content-between gap-1 text-center text-sm-start">
+          <div>
+            Copyright &copy; Payroll System 2026
+            {SHOW_CREDIT && (
+              <>
+                <span className="app-footer-sep"> &middot; </span>
+                <span className="app-footer-credit">Designed &amp; developed by Melchor Callos</span>
+              </>
+            )}
+          </div>
+          <div className="app-footer-links d-flex align-items-center gap-1 justify-content-center">
             <a href="#" className="text-decoration-none">
               Privacy Policy
             </a>
-            <span className="text-muted">&middot;</span>
+            <span aria-hidden="true">&middot;</span>
             <a href="#" className="text-decoration-none">
               Terms &amp; Conditions
             </a>

@@ -1,20 +1,58 @@
 // The footer bar, shared by every layout.
 
-footer.bg-light {
-  background-color: var(--app-footer-bg) !important;
-  border-top-color: var(--app-footer-line) !important;
+.app-footer {
+  display: flex;
+  align-items: center;
+  min-height: var(--app-footer-height);
+  padding: 0.25rem 0;
+  background-color: var(--app-footer-bg);
+  border-top: 1px solid var(--app-footer-line);
+  color: var(--app-footer-text);
+  font-size: var(--app-fs-3);
 }
 
-footer.bg-light .text-muted {
-  color: var(--app-footer-text) !important;
+.app-footer .container-fluid {
+  width: 100%;
 }
 
-footer.bg-light a {
-  color: var(--app-footer-link);
+.app-footer-credit {
+  color: var(--app-footer-credit);
+  font-size: var(--app-fs-2);
+}
+
+.app-footer a {
+  color: inherit;
   transition: color 0.15s ease-in-out;
 }
 
-footer.bg-light a:hover,
-footer.bg-light a:focus-visible {
-  color: var(--app-footer-link-hover);
+.app-footer a:hover,
+.app-footer a:focus-visible {
+  color: var(--app-accent-ink-hover);
+}
+
+@media (max-width: 575.98px) {
+  .app-footer {
+    padding: 0.75rem 0;
+  }
+
+  .app-footer-sep {
+    display: none;
+  }
+
+  .app-footer-credit {
+    display: block;
+    margin-top: 0.125rem;
+  }
+
+  .app-footer-links {
+    width: 100%;
+    margin-top: 0.625rem;
+    padding-top: 0.625rem;
+    border-top: 1px solid var(--app-footer-line);
+  }
+
+  .app-footer-links a {
+    color: var(--app-nav-link);
+    font-weight: 500;
+  }
 }

@@ -139,31 +139,12 @@ body {
   margin-top: 0 !important;
 }
 
-#layoutSidenav_content > footer.bg-light {
-  padding-top: 0.25rem !important;
-  padding-bottom: 0.25rem !important;
-}
-
-#layoutSidenav_content > footer > .container-fluid {
-  width: 100%;
-}
-
-#layoutSidenav_content > footer {
-  display: flex;
-  align-items: center;
-  min-height: var(--app-footer-height);
-  border-top: 1px solid var(--bs-border-color);
-}
-
 @media (min-width: 992px) {
   #layoutSidenav #layoutSidenav_nav {
     transform: translateX(0);
   }
   #layoutSidenav #layoutSidenav_content {
     margin-left: 0;
-  }
-  .sb-nav-fixed #layoutSidenav #layoutSidenav_content {
-    padding-left: var(--app-sidenav-width);
   }
 }
 

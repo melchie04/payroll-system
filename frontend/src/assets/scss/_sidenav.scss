@@ -115,13 +115,13 @@
 .help-footer-btn-light,
 .help-footer-btn-dark {
   font-size: var(--app-fs-3);
-  color: var(--app-footer-link) !important;
+  color: var(--app-accent-ink) !important;
   transition: color 0.15s ease-in-out;
 }
 
 .help-footer-btn-light:hover,
 .help-footer-btn-dark:hover {
-  color: var(--app-footer-link-hover) !important;
+  color: var(--app-accent-ink-hover) !important;
 }
 
 .sb-sidenav-light .sb-sidenav-footer > div:focus-visible,
@@ -146,7 +146,7 @@
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   #layoutSidenav #layoutSidenav_content {
-    transition: margin 0.3s cubic-bezier(0.4, 0, 0.2, 1), padding-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: margin 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .sb-sidenav-toggled #layoutSidenav #layoutSidenav_nav {
@@ -158,9 +158,6 @@
   }
   .sb-sidenav-toggled #layoutSidenav #layoutSidenav_content {
     margin-left: 0;
-  }
-  .sb-nav-fixed.sb-sidenav-toggled #layoutSidenav #layoutSidenav_content {
-    padding-left: var(--app-sidenav-collapsed-width);
   }
   .sb-sidenav-toggled #layoutSidenav #layoutSidenav_content:before {
     display: none;
