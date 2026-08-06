@@ -28,13 +28,12 @@ export default function Notifications() {
         <div className="mt-4">
           <PageHeader
             title="Notifications"
+            badge={unreadCount > 0 ? `${unreadCount} unread` : null}
             description={`You have ${unreadCount} unread notification${unreadCount === 1 ? "" : "s"}.`}
             actions={
-              <div className="mt-2 mt-sm-0">
-                <BtnSecondary onClick={markAllRead} disabled={unreadCount === 0} className="w-100 w-sm-auto">
-                  <i className="fas fa-check-double me-1"></i> Mark all as read
-                </BtnSecondary>
-              </div>
+              <BtnSecondary onClick={markAllRead} disabled={unreadCount === 0}>
+                <i className="fas fa-check-double me-1"></i> Mark all as read
+              </BtnSecondary>
             }
           />
         </div>

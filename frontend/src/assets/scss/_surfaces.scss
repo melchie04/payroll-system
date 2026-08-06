@@ -229,6 +229,19 @@ a:focus-visible > .card {
 }
 
 @media (max-width: 767.98px) {
+  .page-header-actions,
+  .page-header-actions > .btn {
+    width: 100%;
+  }
+
+  .page-header-actions > .btn {
+    justify-content: center;
+  }
+
+  .page-header-badge {
+    display: inline-flex;
+  }
+
   .table-stack > thead {
     display: none;
   }
@@ -271,6 +284,10 @@ a:focus-visible > .card {
   .table-stack > tbody > tr > td:not([data-label])::before {
     content: none;
   }
+}
+
+.page-header-badge {
+  display: none;
 }
 
 .tabs-nav {

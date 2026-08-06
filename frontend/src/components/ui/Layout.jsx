@@ -1,14 +1,17 @@
 // Page-level building blocks: header, tabs, modal and the brand lockup.
 
 // The page title, its description and any action buttons.
-export function PageHeader({ title, description, actions }) {
+export function PageHeader({ title, badge, description, actions }) {
   return (
     <div className="d-flex flex-wrap justify-content-between align-items-start mb-4 gap-2">
       <div>
-        <h1 className="page-title fw-bold mb-1">{title}</h1>
+        <div className="d-flex align-items-center gap-2 mb-1">
+          <h1 className="page-title fw-bold mb-0">{title}</h1>
+          {badge && <span className="page-header-badge app-chip badge rounded-pill">{badge}</span>}
+        </div>
         {description && <p className="page-description text-muted mb-0">{description}</p>}
       </div>
-      {actions && <div className="d-flex gap-2">{actions}</div>}
+      {actions && <div className="page-header-actions d-flex gap-2">{actions}</div>}
     </div>
   );
 }
