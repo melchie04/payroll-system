@@ -22,3 +22,28 @@
   color: var(--app-table-head-color);
   font-size: var(--app-fs-1);
 }
+
+@media (max-width: 767.98px) {
+  .profile-photo-body {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .profile-photo-controls {
+    width: 100%;
+  }
+
+  .profile-photo-actions {
+    flex-direction: column;
+  }
+
+  .profile-photo-actions > .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .profile-swatches {
+    justify-content: center;
+  }
+}

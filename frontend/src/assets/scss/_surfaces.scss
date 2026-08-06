@@ -138,6 +138,10 @@ a:focus-visible > .card {
   color: rgba(var(--bs-body-color-rgb), 0.55);
 }
 
+.app-avatar {
+  border: var(--bs-border-width) solid var(--bs-border-color);
+}
+
 .status-badge {
   display: inline-flex;
   align-items: center;
@@ -234,8 +238,13 @@ a:focus-visible > .card {
     width: 100%;
   }
 
-  .page-header-actions > .btn {
+  .page-header-actions > .btn,
+  .app-submit-btn {
     justify-content: center;
+  }
+
+  .app-submit-btn {
+    width: 100%;
   }
 
   .page-header-badge {

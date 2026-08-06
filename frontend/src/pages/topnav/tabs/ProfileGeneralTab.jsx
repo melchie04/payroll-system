@@ -55,18 +55,18 @@ function ProfilePhotoCard({ user, updateUser, notify }) {
   return (
     <section className="mb-3">
       <DataCard title="Profile Photo">
-        <div className="card-body d-flex align-items-center gap-4 flex-wrap">
+        <div className="card-body profile-photo-body d-flex align-items-center gap-4 flex-wrap">
           <div className="flex-shrink-0">
             {user.avatarImage ? (
               <img
                 src={user.avatarImage}
                 alt="Profile"
-                className="rounded-circle"
+                className="app-avatar rounded-circle"
                 style={{ width: "var(--app-icon-lg)", height: "var(--app-icon-lg)", objectFit: "cover" }}
               />
             ) : (
               <div
-                className="profile-avatar d-flex align-items-center justify-content-center rounded-circle"
+                className="profile-avatar app-avatar d-flex align-items-center justify-content-center rounded-circle"
                 style={{ background: user.avatarColor }}
               >
                 {initialsOf(user.name)}
@@ -74,9 +74,9 @@ function ProfilePhotoCard({ user, updateUser, notify }) {
             )}
           </div>
 
-          <div className="flex-grow-1">
+          <div className="profile-photo-controls flex-grow-1">
             <input type="file" id="avatar-file-input" className="d-none" accept=".jpg,.jpeg,.png" onChange={handlePhotoChange} />
-            <div className="d-flex gap-2 mb-3">
+            <div className="profile-photo-actions d-flex gap-2 mb-3">
               <button
                 type="button"
                 className="btn btn-outline-secondary btn-sm d-inline-flex align-items-center gap-2"
@@ -94,7 +94,7 @@ function ProfilePhotoCard({ user, updateUser, notify }) {
             {!user.avatarImage && (
               <>
                 <div className="app-label mb-2">Or pick a colour for your initials</div>
-                <div className="d-flex gap-2">
+                <div className="profile-swatches d-flex gap-2">
                   {AVATAR_COLORS.map((color) => (
                     <button
                       key={color}
@@ -165,7 +165,7 @@ function PersonalInformationCard({ user, updateUser, logActivity, notify }) {
           </div>
 
           <div className="col-12">
-            <BtnPrimary type="submit">
+            <BtnPrimary type="submit" className="app-submit-btn">
               <i className="fas fa-floppy-disk"></i> Save changes
             </BtnPrimary>
           </div>
