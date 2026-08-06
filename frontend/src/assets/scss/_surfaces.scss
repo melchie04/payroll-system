@@ -138,6 +138,13 @@ a:focus-visible > .card {
   color: rgba(var(--bs-body-color-rgb), 0.55);
 }
 
+.card-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
 .app-avatar {
   border: var(--bs-border-width) solid var(--bs-border-color);
 }
@@ -238,13 +245,12 @@ a:focus-visible > .card {
     width: 100%;
   }
 
-  .page-header-actions > .btn,
-  .app-submit-btn {
-    justify-content: center;
+  .btn-label {
+    display: none;
   }
 
-  .app-submit-btn {
-    width: 100%;
+  .page-header-actions > .btn {
+    justify-content: center;
   }
 
   .page-header-badge {
@@ -263,8 +269,9 @@ a:focus-visible > .card {
   }
 
   .table-stack > tbody > tr {
-    padding: 0.5rem 0;
-    border-bottom: 1px solid var(--bs-border-color);
+    position: relative;
+    padding: 0;
+    border-bottom: 0.5rem solid var(--app-content-bg);
   }
 
   .table-stack > tbody > tr:last-child {
@@ -273,16 +280,41 @@ a:focus-visible > .card {
 
   .table-stack > tbody > tr > td {
     display: flex;
-    align-items: center;
+    align-items: baseline;
     justify-content: space-between;
-    gap: 1rem;
-    padding: 0.25rem var(--bs-card-spacer-x, 1rem);
+    gap: 1.5rem;
+    padding: 0.5rem var(--bs-card-spacer-x, 1rem);
     border: 0;
+    text-align: right;
+    overflow-wrap: anywhere;
+    border-bottom: 1px solid var(--bs-border-color);
+  }
+
+  .table-stack > tbody > tr > td:nth-last-child(2) {
+    border-bottom: 0;
+  }
+
+  .table-stack > tbody > tr > td:first-child {
+    padding-right: 3.25rem;
+  }
+
+  .table-stack > tbody > tr > td:last-child {
+    position: absolute;
+    top: 0;
+    right: 0.5rem;
+    padding: 0;
+    border: 0;
+    line-height: 1;
+  }
+
+  .table-stack > tbody > tr > td:last-child::before {
+    content: none;
   }
 
   .table-stack > tbody > tr > td::before {
     content: attr(data-label);
     flex: 0 0 auto;
+    text-align: left;
     color: var(--app-table-head-color);
     font-size: var(--app-fs-1);
     font-weight: 600;
@@ -551,5 +583,18 @@ input:-webkit-autofill:focus {
   .app-icon-btn {
     min-width: 44px;
     min-height: 44px;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .modal-footer {
+    flex-direction: column-reverse;
+    flex-wrap: nowrap;
+  }
+
+  .modal-footer > * {
+    width: 100%;
+    margin: 0;
+    justify-content: center;
   }
 }

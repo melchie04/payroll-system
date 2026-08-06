@@ -121,7 +121,7 @@ export default function ProfileSecurityTab({ notify }) {
             </div>
           </div>
 
-          <BtnPrimary type="submit" className="app-submit-btn">
+          <BtnPrimary type="submit">
             <i className="fas fa-key"></i> Update password
           </BtnPrimary>
         </form>

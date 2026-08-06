@@ -155,8 +155,8 @@ function UsersTable({ users, onEditUser, onResetPassword, onDeleteUser }) {
       <DataCard
         title="System Users"
         action={
-          <BtnPrimary data-bs-toggle="modal" data-bs-target="#createUserModal">
-            <i className="fas fa-user-plus"></i> Create User
+          <BtnPrimary data-bs-toggle="modal" data-bs-target="#createUserModal" title="Create user">
+            <i className="fas fa-user-plus"></i> <span className="btn-label">Create User</span>
           </BtnPrimary>
         }
       >

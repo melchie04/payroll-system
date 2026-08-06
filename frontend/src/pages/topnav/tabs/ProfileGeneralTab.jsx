@@ -165,7 +165,7 @@ function PersonalInformationCard({ user, updateUser, logActivity, notify }) {
           </div>
 
           <div className="col-12">
-            <BtnPrimary type="submit" className="app-submit-btn">
+            <BtnPrimary type="submit">
               <i className="fas fa-floppy-disk"></i> Save changes
             </BtnPrimary>
           </div>

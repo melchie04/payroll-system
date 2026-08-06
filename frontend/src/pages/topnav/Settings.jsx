@@ -24,6 +24,7 @@ export default function Settings() {
   // Raises one message above the cards.
   function notify(tone, message) {
     setNotice({ tone, message });
+    document.querySelector("main")?.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   // Switches tab and clears any message left over from the other one.

@@ -37,9 +37,9 @@ export function DataCard({ title, action, children }) {
   return (
     <div className="card h-100">
       {title && (
-        <div className="card-header d-flex align-items-center justify-content-between">
+        <div className="card-header card-header-bar">
           <span className="fw-semibold">{title}</span>
-          {action}
+          {action && <div className="card-header-actions">{action}</div>}
         </div>
       )}
       {children}
