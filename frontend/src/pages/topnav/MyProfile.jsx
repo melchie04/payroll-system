@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { AppAlert, PageHeader, TabsNav } from "../../components/ui/index.jsx";
-import GeneralTab from "./tabs/GeneralTab.jsx";
-import SecurityTab from "./tabs/SecurityTab.jsx";
+import ProfileGeneralTab from "./tabs/ProfileGeneralTab.jsx";
+import ProfileSecurityTab from "./tabs/ProfileSecurityTab.jsx";
 
 // The signed-in user's own details, split into General and Security tabs.
 export default function MyProfile() {
@@ -55,7 +55,7 @@ export default function MyProfile() {
         </section>
       )}
 
-      {tab === "General" ? <GeneralTab notify={notify} /> : <SecurityTab notify={notify} />}
+      {tab === "General" ? <ProfileGeneralTab notify={notify} /> : <ProfileSecurityTab notify={notify} />}
     </>
   );
 }

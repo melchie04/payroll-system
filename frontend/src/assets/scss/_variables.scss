@@ -47,7 +47,7 @@
   --app-chart-track: #f3f4f6;
   --app-shadow-1: 0 1px 2px rgba(16, 24, 40, 0.04), 0 1px 3px rgba(16, 24, 40, 0.06);
   --app-shadow-2: 0 4px 6px -2px rgba(16, 24, 40, 0.05), 0 12px 16px -4px rgba(16, 24, 40, 0.1);
-  --app-row-hover: rgba(16, 24, 40, 0.028);
+  --app-row-hover: #f1f8f2;
   --app-table-head-color: #6c757d;
   --app-table-head-line: #e3e7ea;
   --app-table-row-line: #edeff1;
@@ -61,6 +61,7 @@
   --app-status-success: #198754;
   --app-status-warning: #997404;
   --app-status-danger: #dc3545;
+  --app-status-info: #0d6efd;
   --app-status-neutral: #6c757d;
 
   --app-icon-xs: 24px;
@@ -72,8 +73,6 @@
   --app-chip-bg: #e7e9ec;
   --app-chip-fg: #6c757d;
 
-  --app-notice-success-bg: rgba(25, 135, 84, 0.06);
-  --app-notice-danger-bg: rgba(220, 53, 69, 0.06);
   --app-text: #212529;
 
   --app-action-success: #146c43;
@@ -86,10 +85,6 @@
 
   --app-input-bg: #ffffff;
   --app-input-fg: #212529;
-  --app-notice-success-border: #beddc8;
-  --app-notice-success-ink: #146c43;
-  --app-notice-danger-border: #f1b0b7;
-  --app-notice-danger-ink: #b02a37;
 
   --app-btn-outline-border: #adb5bd;
   --app-btn-outline-border-hover: #8f979d;
@@ -104,7 +99,7 @@
 
   --app-menu-bg: var(--app-nav-bg);
   --app-menu-divider: #edefee;
-  --app-menu-hover-bg: var(--app-nav-btn-hover-bg);
+  --app-menu-hover-bg: #e4f1e7;
   --app-menu-keyline: var(--app-moss);
   --app-dot-color: #d92d3f;
 
@@ -119,6 +114,7 @@
 }
 
 [data-bs-theme="dark"] {
+  --app-menu-hover-bg: #12251a;
   --app-accent-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
   --app-dark-bg: #0b0b0b;
   --app-dark-surface: var(--app-obsidian);
@@ -130,7 +126,7 @@
   --app-chart-track: #2a2f35;
   --app-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
   --app-shadow-2: 0 4px 6px -2px rgba(0, 0, 0, 0.45), 0 12px 16px -4px rgba(0, 0, 0, 0.5);
-  --app-row-hover: rgba(255, 255, 255, 0.045);
+  --app-row-hover: #101f15;
   --app-table-head-color: #9aa79f;
   --app-table-head-line: #262e29;
   --app-table-row-line: #1e211f;
@@ -146,6 +142,7 @@
   --app-status-success: #75b798;
   --app-status-warning: #ffc107;
   --app-status-danger: #ff6b6b;
+  --app-status-info: #6ea8fe;
   --app-status-neutral: #c3cec6;
 
   --app-chip-bg: rgba(255, 255, 255, 0.08);
@@ -153,8 +150,6 @@
 
   --app-surface: var(--app-obsidian);
 
-  --app-notice-success-bg: rgba(117, 183, 152, 0.1);
-  --app-notice-danger-bg: rgba(255, 107, 107, 0.1);
   --app-text: var(--app-dark-text);
 
   --app-action-success: #75b798;
@@ -165,10 +160,6 @@
 
   --app-input-bg: var(--app-surface);
   --app-input-fg: var(--app-dark-text);
-  --app-notice-success-border: #2c5138;
-  --app-notice-success-ink: #75b798;
-  --app-notice-danger-border: #5a2a2f;
-  --app-notice-danger-ink: #ff6b6b;
 
   --app-btn-outline-border: #4d5651;
   --app-btn-outline-border-hover: #616c66;

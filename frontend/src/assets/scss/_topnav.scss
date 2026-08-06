@@ -109,11 +109,6 @@
   --bs-dropdown-link-active-color: var(--bs-dropdown-link-color);
 }
 
-.sb-topnav .topnav-dropdown-menu .dropdown-item:hover,
-.sb-topnav .topnav-dropdown-menu .dropdown-item:focus {
-  box-shadow: inset 3px 0 0 var(--app-menu-keyline);
-}
-
 .topnav-menu-action {
   color: var(--app-accent-ink);
   font-weight: 500;

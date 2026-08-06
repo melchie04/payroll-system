@@ -176,7 +176,7 @@ function PersonalInformationCard({ user, updateUser, logActivity, notify }) {
 }
 
 // Renders both General cards, sharing the page's message banner.
-export default function GeneralTab({ notify }) {
+export default function ProfileGeneralTab({ notify }) {
   const { user, updateUser } = useCurrentUser();
   const { logActivity } = useActivity();
 

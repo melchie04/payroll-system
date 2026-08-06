@@ -4,7 +4,7 @@ import { useState } from "react";
 import { BtnPrimary, DataCard, FormField, RequirementRow, SectionHeading } from "../../../components/ui/index.jsx";
 
 // Renders the change password form, reporting outcomes through the page banner.
-export default function SecurityTab({ notify }) {
+export default function ProfileSecurityTab({ notify }) {
   const [form, setForm] = useState({ currentPassword: "", newPassword: "", confirmPassword: "" });
   const [showPassword, setShowPassword] = useState(false);
 

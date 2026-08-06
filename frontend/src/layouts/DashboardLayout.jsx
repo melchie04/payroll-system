@@ -1,14 +1,19 @@
 // The signed-in shell: top bar, sidebar, page content and footer.
 
 import { useEffect, useState } from "react";
-import { Outlet } from "react-router";
+import { Outlet, useLocation } from "react-router";
 import TopNav from "../components/TopNav.jsx";
 import SideNav from "../components/SideNav.jsx";
 import Footer from "../components/Footer.jsx";
 
+const OVERLAY_SIDEBAR_QUERY = "(max-width: 991.98px)";
+
 // Assembles the signed-in shell and tracks whether the sidebar is collapsed.
 export default function DashboardLayout({ fixed = true }) {
   const [toggled, setToggled] = useState(false);
+  const [overlay, setOverlay] = useState(() => window.matchMedia(OVERLAY_SIDEBAR_QUERY).matches);
+  const location = useLocation();
+  const [lastPath, setLastPath] = useState(location.pathname);
 
   useEffect(() => {
     document.body.classList.toggle("sb-nav-fixed", fixed);
@@ -19,9 +24,26 @@ export default function DashboardLayout({ fixed = true }) {
     document.body.classList.toggle("sb-sidenav-toggled", toggled);
   }, [toggled]);
 
-  // Closes the sidebar after a tap, but only on small screens.
+  // Follows the viewport, so the sidebar only behaves as an overlay on small screens.
+  useEffect(() => {
+    const query = window.matchMedia(OVERLAY_SIDEBAR_QUERY);
+    const handleChange = (e) => setOverlay(e.matches);
+    query.addEventListener("change", handleChange);
+    return () => query.removeEventListener("change", handleChange);
+  }, []);
+
+  // Closes the overlay sidebar whenever the page behind it changes, however that happened.
+  // Adjusted during render rather than in an effect, which would cascade an extra commit.
+  if (lastPath !== location.pathname) {
+    setLastPath(location.pathname);
+    if (overlay && toggled) {
+      setToggled(false);
+    }
+  }
+
+  // Closes the sidebar as soon as an item is tapped, without waiting for the route to change.
   function handleNavItemSelect() {
-    if (window.innerWidth < 992) {
+    if (overlay) {
       setToggled(false);
     }
   }

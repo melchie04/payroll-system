@@ -1,0 +1,18 @@
+// The Settings page's notes, role tiles and permission labels.
+
+.settings-note {
+  color: var(--app-table-head-color);
+  font-size: var(--app-fs-3);
+}
+
+.settings-check-label {
+  font-size: var(--app-fs-3);
+}
+
+.settings-role-icon {
+  width: var(--app-icon-md);
+  height: var(--app-icon-md);
+  border: 1.5px solid var(--bs-border-color);
+  color: var(--app-table-head-color);
+  font-size: var(--app-fs-3);
+}

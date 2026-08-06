@@ -18,12 +18,17 @@ export function ThemeProvider({ children }) {
       return;
     }
 
-    root.classList.add("theme-transition");
-    void root.offsetWidth;
-    root.setAttribute("data-bs-theme", theme);
+    // Writes the theme onto the document element.
+    const apply = () => root.setAttribute("data-bs-theme", theme);
 
-    const id = window.setTimeout(() => root.classList.remove("theme-transition"), 300);
-    return () => window.clearTimeout(id);
+    // A view transition cross-fades two rendered snapshots of the page, so nothing
+    // interpolates its own colours and no surface passes through a mid grey.
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!reduced && typeof document.startViewTransition === "function") {
+      document.startViewTransition(apply);
+    } else {
+      apply();
+    }
   }, [theme]);
 
   return <ThemeContext.Provider value={{ theme, setTheme }}>{children}</ThemeContext.Provider>;

@@ -28,14 +28,12 @@ body {
   flex-basis: var(--app-sidenav-width);
   flex-shrink: 0;
   transition: transform var(--app-shell-duration) var(--app-shell-ease);
-  will-change: transform, width, flex-basis;
   z-index: 1038;
   transform: translateX(calc(-1 * var(--app-sidenav-width)));
 }
 
 #layoutSidenav #layoutSidenav_content {
   position: relative;
-  will-change: margin;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -188,19 +186,18 @@ body {
   }
 }
 
-html.theme-transition,
-html.theme-transition *,
-html.theme-transition *::before,
-html.theme-transition *::after {
-  transition: background-color 0.25s ease, border-color 0.25s ease,
-    color 0.25s ease, fill 0.25s ease, box-shadow 0.25s ease !important;
+// The theme swap is cross-faded by the browser's view transition (see ThemeContext),
+// which blends two snapshots of the page. Nothing here may transition colour: doing so
+// made every surface interpolate independently and meet on the same mid grey mid-swap.
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.22s;
+  animation-timing-function: ease;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html.theme-transition,
-  html.theme-transition *,
-  html.theme-transition *::before,
-  html.theme-transition *::after {
-    transition: none !important;
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
   }
 }
