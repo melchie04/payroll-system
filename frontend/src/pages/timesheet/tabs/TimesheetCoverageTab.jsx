@@ -3,7 +3,7 @@
 import { DataCard, Table, Tr, Td, Badge, BtnSecondary } from "../../../components/ui/index.jsx";
 
 // Lists the employees still missing a sheet for the period.
-export function TimesheetCoverage({ rows = [], period, onUploadFor }) {
+export default function TimesheetCoverageTab({ rows = [], period, onUploadFor }) {
   const expected = rows.filter((r) => r.expected !== false);
   const covered = expected.filter((r) => !r.gap).length;
   const gaps = expected.length - covered;

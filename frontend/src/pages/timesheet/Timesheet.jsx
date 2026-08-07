@@ -8,9 +8,9 @@ import { useTimesheets } from "../../context/hooks.js";
 import { resolveEmployee, deploymentState, parsePeriodLabel } from "../../utils/timesheet.js";
 import { useEmployees } from "../../context/hooks.js";
 import { useClients } from "../../context/hooks.js";
-import { TimesheetUpload } from "./tabs/TimesheetUpload.jsx";
-import { TimesheetFiles } from "./tabs/TimesheetFiles.jsx";
-import { TimesheetCoverage } from "./tabs/TimesheetCoverage.jsx";
+import TimesheetUploadTab from "./tabs/TimesheetUploadTab.jsx";
+import TimesheetFilesTab from "./tabs/TimesheetFilesTab.jsx";
+import TimesheetCoverageTab from "./tabs/TimesheetCoverageTab.jsx";
 
 const ALL_CLIENTS = "All Clients";
 
@@ -156,7 +156,7 @@ export default function Timesheet() {
       )}
 
       {tab === "upload" && (
-        <TimesheetUpload
+        <TimesheetUploadTab
           summary={extractionSummary}
           client={client}
           clientCode={selectedClient?.code}
@@ -165,9 +165,9 @@ export default function Timesheet() {
         />
       )}
 
-      {tab === "sheets" && <TimesheetFiles files={visibleFiles} />}
+      {tab === "sheets" && <TimesheetFilesTab files={visibleFiles} />}
 
-      {tab === "coverage" && <TimesheetCoverage rows={visibleCoverage} period={period} onUploadFor={uploadFor} />}
+      {tab === "coverage" && <TimesheetCoverageTab rows={visibleCoverage} period={period} onUploadFor={uploadFor} />}
     </>
   );
 }

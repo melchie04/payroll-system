@@ -26,7 +26,7 @@ const STATUS_OPTIONS = ["Needs Review", "Approved", "Processing", "Rejected", "F
 const SOURCE_OPTIONS = ["Scan", "Photo"];
 
 // Lists every filed sheet with its status and the actions open to it.
-export function TimesheetFiles({ files = [] }) {
+export default function TimesheetFilesTab({ files = [] }) {
   const navigate = useNavigate();
   const { files: allFiles, retryFile, discardFile, approveMany } = useTimesheets();
   const { employees } = useEmployees();

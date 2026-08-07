@@ -3,7 +3,7 @@
 import { Link, useLocation, useNavigate, useParams } from "react-router";
 import { useTimesheets } from "../../context/hooks.js";
 import { useActivity } from "../../context/hooks.js";
-import { TimesheetReviewForm } from "./tabs/TimesheetReviewForm.jsx";
+import { TimesheetReviewForm } from "./review/TimesheetReviewForm.jsx";
 
 // Loads the sheet named in the URL and hands it to the review form.
 export default function TimesheetReview() {

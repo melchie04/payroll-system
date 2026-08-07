@@ -26,7 +26,7 @@ import { useClients } from "../../context/hooks.js";
 import { useInvoices } from "../../context/hooks.js";
 import { useEmployees } from "../../context/hooks.js";
 import { resolveEmployee, deploymentState, parsePeriodLabel } from "../../utils/timesheet.js";
-import { TimesheetCoverage } from "../timesheet/tabs/TimesheetCoverage.jsx";
+import TimesheetCoverageTab from "../timesheet/tabs/TimesheetCoverageTab.jsx";
 
 const fileIcons = { pdf: "📕", img: "🖼️" };
 
@@ -365,7 +365,7 @@ export default function ClientProfile() {
               </FilterSelect>
             </div>
           </div>
-          <TimesheetCoverage rows={coverageRows} period={coveragePeriod} onUploadFor={() => navigate("/timesheet")} />
+          <TimesheetCoverageTab rows={coverageRows} period={coveragePeriod} onUploadFor={() => navigate("/timesheet")} />
         </section>
       )}
 

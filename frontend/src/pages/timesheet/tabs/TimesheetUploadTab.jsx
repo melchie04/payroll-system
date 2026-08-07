@@ -86,7 +86,7 @@ function screen(file, taken) {
 }
 
 // Takes dropped files, runs them through extraction and files the results.
-export function TimesheetUpload({ summary, client, clientCode, canUpload = true, onOpenSheets }) {
+export default function TimesheetUploadTab({ summary, client, clientCode, canUpload = true, onOpenSheets }) {
   const { addSheets } = useTimesheets();
 
   const [drag, setDrag] = useState(false);
